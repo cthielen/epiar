@@ -9,7 +9,7 @@ mingw32-make
 mkdir -p epiar-win32
 cp ./epiar.exe epiar-win32/
 cp -r Resources epiar-win32/
-cp README NEWS LICENSE* PACKAGING AUTHORS ChangeLog epiar-win32/
+cp README NEWS LICENSE* PACKAGING AUTHORS ChangeLog CREDITS.GNU-FreeType epiar-win32/
 rm -f epiar-win32/Resources/Graphics/*.xcf
 rm -f epiar-win32/Resources/Definitions/saved-games.xml
 
