@@ -10,6 +10,7 @@
 #include "common.h"
 #include "Audio/music.h"
 #include "Audio/audio_lua.h"
+#include "Engine/calendar.h"
 #include "Engine/hud.h"
 #include "Engine/simulation.h"
 #include "Engine/simulation_lua.h"
@@ -60,7 +61,7 @@ Simulation::Simulation( void ) {
 	player = NULL;
 
 	camera = Camera::Instance();
-  calendar = new Calendar();
+	calendar = new Calendar();
 	console = new Console( L );
 
 	folderpath = "";
@@ -330,7 +331,7 @@ bool Simulation::Run() {
 				// Logical update cycle
 				sprites->Update( L, lowFps );
         
-        calendar->Update();
+				calendar->Update();
 			}
 		}
 
