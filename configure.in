@@ -1,5 +1,5 @@
 PACKAGE=epiar
-VERSION=0.4.2
+VERSION=0.5.1
 
 dnl Init
 AC_INIT(README)
@@ -38,7 +38,8 @@ case "$target" in
 	LIBS="$LIBS $freetype2_LIBS"
 esac
 case "$target" in *-apple-darwin*)
-	CFLAGS="$CFLAGS -I/usr/X11/include -I/usr/X11/include/freetype2"
+	PKG_CHECK_MODULES([freetype2], [freetype2 >= 9.22])
+	CFLAGS="$CFLAGS"
 	LIBS="$LIBS -L/usr/X11/lib"
 esac
 
