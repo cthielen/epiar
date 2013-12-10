@@ -64,7 +64,7 @@ case "$target" in *-*-freebsd*)
 	CFLAGS="$CFLAGS -I/usr/local/include/"
 esac
 case "$target" in *-apple-darwin*)
-	CFLAGS="$CFLAGS -I/opt/local/include/ -L/opt/local/lib"
+	CFLAGS="$CFLAGS -I/opt/local/include/"
 esac
 
 dnl Include FTGL
