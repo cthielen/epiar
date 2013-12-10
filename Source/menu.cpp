@@ -151,20 +151,20 @@ void Menu::SetupGUI()
 	UI::Add( new Picture(20, Video::GetHeight() - 120, Image::Get("Resources/Art/logo.png") ) );
 
 	// New Button
-	play = PictureButton( button_x, button_y, Menu::CreateNewWindow,
+	play = PictureButton( button_x, button_y + 50, Menu::CreateNewWindow,
 	                      Image::Get( "Resources/Graphics/txt_new_game_active.png"),
 	                      Image::Get( "Resources/Graphics/txt_new_game_inactive.png") );
 
 	// Load Button
 	if( (Players::Instance()->Size() > 0) )
 	{
-		load = PictureButton( button_x, button_y + 50, Menu::CreateLoadWindow,
+		load = PictureButton( button_x, button_y + 100, Menu::CreateLoadWindow,
 		                       Image::Get( "Resources/Graphics/txt_load_game_active.png"),
 		                       Image::Get( "Resources/Graphics/txt_load_game_inactive.png") );
 	}
 
 	// Editor Button
-	edit = PictureButton( button_x, button_y + 100, Menu::CreateEditWindow,
+	edit = PictureButton( button_x, button_y + 150, Menu::CreateEditWindow,
 	                       Image::Get( "Resources/Graphics/txt_editor_active.png"),
 	                       Image::Get( "Resources/Graphics/txt_editor_inactive.png") );
 
@@ -174,7 +174,7 @@ void Menu::SetupGUI()
 	                          Image::Get( "Resources/Graphics/txt_options_inactive.png") );
 
 	// Exit Button
-	exit = PictureButton( button_x, button_y + 300, QuitMenu,
+	exit = PictureButton( button_x, button_y + 250, QuitMenu,
 	                      Image::Get( "Resources/Graphics/txt_exit_active.png"),
 	                      Image::Get( "Resources/Graphics/txt_exit_inactive.png") );
 
