@@ -122,7 +122,7 @@ list<string> Filesystem::Enumerate( const string& path, const string &suffix )
 {
 	list<string> files;
 	char **rc = NULL;
-    string fname;
+	string fname;
 
 	rc = PHYSFS_enumerateFiles(path.c_str());
 	if (rc == NULL) {
@@ -138,6 +138,7 @@ list<string> Filesystem::Enumerate( const string& path, const string &suffix )
             fname = string(*i);
             // Skip Makefiles
 			if( fname == "Makefile.am") continue;
+			if( fname == "Makefile.in") continue;
 			// Skip hidden files
 			if( fname[0] == '.' ) continue;
 			// Check if the suffix matches
