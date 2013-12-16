@@ -1,15 +1,18 @@
-PACKAGE=epiar
-VERSION=0.5.1
+PACKAGE='epiar'
+VERSION='0.5.1'
 
 dnl Init
-AC_INIT(README)
+dnl AC_INIT(README)
+AC_INIT(epiar, 0.5.1)
+AC_CONFIG_SRCDIR(README)
 AC_PREREQ(2.50)
 
 dnl Detect the canonical host and target build environment
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET 
 
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+dnl AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
 
 AC_PROG_CPP
@@ -66,6 +69,20 @@ esac
 case "$target" in *-apple-darwin*)
 	CFLAGS="$CFLAGS -I/opt/local/include/"
 esac
+
+AC_CHECK_HEADER(physfs.h, have_physfs_hdr=yes)
+AC_CHECK_LIB(physfs, PHYSFS_init, have_physfs_lib=yes)
+
+if test x$have_physfs_hdr = xyes -a x$have_physfs_lib = xyes; then
+	enable_physfs="yes"
+else
+dnl if test "$ac_cv_prog_cxx_g" == no
+dnl then
+	AC_MSG_ERROR([Could not find PhysicsFS])
+dnl fi
+	enable_physfs="no"
+fi
+
 
 dnl Include FTGL
 case "$target" in
