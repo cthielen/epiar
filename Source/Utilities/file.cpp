@@ -263,7 +263,7 @@ File::~File() {
  * \return true if successful, false otherwise*/
 bool File::Close() {
 	if ( validName.compare( "" ) == 0 )
-		return NULL;
+		return false;
 
 	if ( fp == NULL )
 		return false;
