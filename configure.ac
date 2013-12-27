@@ -35,15 +35,10 @@ fi
 
 dnl Check for Freetype
 case "$target" in
-	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd*)
+	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd* | *-apple-darwin*)
 	PKG_CHECK_MODULES([freetype2], [freetype2 >= 9.22])
 	CFLAGS="$CFLAGS $freetype2_CFLAGS"
 	LIBS="$LIBS $freetype2_LIBS"
-esac
-case "$target" in *-apple-darwin*)
-	PKG_CHECK_MODULES([freetype2], [freetype2 >= 9.22])
-	CFLAGS="$CFLAGS"
-	LIBS="$LIBS -L/usr/X11/lib"
 esac
 
 dnl Some additional flags for Freetype
