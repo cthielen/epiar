@@ -60,8 +60,4 @@ class Tabs : public Container {
 		Color edge;
 };
 
-
-
-
-
 #endif // __H_TABS__

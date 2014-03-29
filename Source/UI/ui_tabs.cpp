@@ -17,6 +17,7 @@
  */
 
 #define TAB_HEADER 20
+#define TAB_PADDING_W 10 /* applies to left and right (doubled) */
 
 /**\class Tab
  * \brief A single tab.
@@ -39,7 +40,7 @@ Tab::Tab( const string& _caption ) {
 	inactive_middle = Image::Get("Resources/Skin/inactive-tab-middle.png");
 	inactive_right = Image::Get("Resources/Skin/inactive-tab-right.png");
 
-	this->capw = UI::font->TextWidth( _caption );
+	this->capw = UI::font->TextWidth( _caption ) + (TAB_PADDING_W * 2);
 }
 
 Tab::~Tab() {
@@ -69,7 +70,7 @@ void Tab::DrawHandle( int realx, int realy, bool active ) {
 	middle->DrawTiled( realx + left->GetWidth(), realy, capw, middle->GetHeight() );
 	right->Draw( realx + left->GetWidth() + capw , realy );
 
-	UI::font->Render( realx + left->GetWidth(), realy - 2, GetName() );
+	UI::font->Render( realx + left->GetWidth() + TAB_PADDING_W, realy - 2, GetName() );
 }
 
 int Tab::GetHandleWidth( bool active ) {
