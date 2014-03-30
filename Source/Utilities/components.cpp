@@ -112,6 +112,7 @@ void Components::AddOrReplace(string oldname, Component* component) {
 	list<string>::iterator n;
 	string name = component->GetName();
 	map<string,Component*>::iterator val = components.find( oldname );
+
 	if( val == components.end() ) { // new
 		LogMsg(INFO,"Creating new Component '%s'",component->GetName().c_str());
 		names.push_back( name );

@@ -15,6 +15,7 @@
 class Component {
 	public:
 		Component();
+		virtual ~Component() {};
 		string GetName() const { return name; }
 		void SetName(string _name) { name = _name; }
 		virtual bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) = 0;

@@ -209,8 +209,6 @@ Animation::Animation( string filename ) {
  * Note: if looping is turned on, the animation will always return true.
  */
 bool Animation::Update() {
-	
-	Image *frame = NULL;
 	bool finished = false;
 
 	if( startTime ) {
@@ -226,8 +224,9 @@ bool Animation::Update() {
 
 	} else {
 		startTime = SDL_GetTicks();
-		frame = ani->GetFrame(0);
+		//frame = ani->GetFrame(0);
 	}
+
 	return finished;
 }
 

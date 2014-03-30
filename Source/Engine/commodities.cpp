@@ -40,6 +40,10 @@ Commodity::Commodity( string _name, int _msrp )
 	SetName(_name);
 }
 
+Commodity::~Commodity() {
+
+}
+
 /**\brief Parser to parse the XML file.
  */
 bool Commodity::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {

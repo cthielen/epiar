@@ -15,6 +15,7 @@
 class Action {
 	public:
 		virtual void Activate( int x, int y ) = 0;
+		virtual ~Action() {};
 };
 
 class LuaAction : public Action {

@@ -79,7 +79,7 @@ void Console::HandleInput( list<InputEvent> & events ) {
 					break;
 					case SDLK_RETURN:
 					case SDLK_KP_ENTER:
-					case '\n': // this shouldn't be necessary but on os x the two above it don't seem to catch
+					case '\n': // this shouldn't be necessary but on os x and fedora the two above it don't seem to catch
 						RunCommand();
 					break;
 					case SDLK_BACKSPACE:
