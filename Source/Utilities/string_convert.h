@@ -16,17 +16,6 @@
  #include <typeinfo>
  #include <stdexcept>
 
-template<typename T> inline std::string stringify( const T& x ) {
-	std::ostringstream o;
-
-	if (!(o << x)) {
-		std::cout << std::string("stringify(") << typeid(x).name() << ")";
-		return "";
-	}
-		
-	return o.str();
-} 
-
 template<typename T> inline void convert(const std::string& s, T& x, bool failIfLeftoverChars = true) {
 	std::istringstream i( s );
 	char c;
