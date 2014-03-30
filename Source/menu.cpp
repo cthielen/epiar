@@ -231,21 +231,25 @@ void Menu::CreateLoadWindow()
 	list<string>::iterator iter;
 	for( iter = names->begin(); iter != names->end(); ++iter, ++p ) {
 		PlayerInfo *info = Players::Instance()->GetPlayerInfo( *iter );
+
 		win->AddChild( (new Frame( 25, 155*p + 30, 400, 130 ))
-			->AddChild( (new Picture(20, 20, 80, 80, info->avatar )) )
+			->AddChild( (new Picture(60, 50, 80, 80, info->avatar, false, true) ) )
 			->AddChild( (new Label(120, 20, "Player Name:" )) ) ->AddChild( (new Label(210, 20, info->GetName() )) )
 			->AddChild( (new Label(120, 45, "Simulation:" )) ) ->AddChild( (new Label(210, 45, info->simulation )) )
-			->AddChild( (new Button(280, 80, 100, 30, "Play", StartGame, info )) )
-			->AddChild( (new Button(170, 80, 100, 30, "Erase", ErasePlayer, info ) ) )
+			->AddChild( (new Button(280, 85, 100, 25, "Play", StartGame, info )) )
+			->AddChild( (new Button(175, 85, 100, 25, "Erase", ErasePlayer, info ) ) )
 		);
 		if( info == last ) {
 			win->SetFormButton( (Button*) win->Search("/Frame/Button'Play'/") );
 		}
 	}
-	win->AddChild( (new Button( 200, 155*names->size() + 20, 100, 30, "Cancel", &UI::Close, win)) );
+
+	// Add the 'Cancel' button
+	win->AddChild( (new Button( 175, 155*names->size() + 20, 100, 30, "Cancel", &UI::Close, win)) );
+
 	win->AddCloseButton();
+
 	UI::RegisterKeyboardFocus(win);
-	return;
 }
 
 /** Start a Game Simulation
