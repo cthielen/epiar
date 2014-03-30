@@ -851,27 +851,31 @@ function playerInformation()
 	end
 	local height = 500
 	local width = 300
-	infoWin = UI.newWindow( 500,200, width,height, "Player Info")
+	infoWin = UI.newWindow( 500,200, width,height, "Player Info", true, true)
 	local y = 30
 
+	local infoTabs = UI.newTabContainer( 15, y, width-30, height-y-30, "Info Tabs" )
+
+	infoWin:add( infoTabs )
+	infoWin:addCloseButton()
+
+    -- The Summary Tab
+    local summaryTab = UI.newTab( "Summary" )
 	local name = PLAYER:GetName()
 	local model = PLAYER:GetModelName()
 	local engine = PLAYER:GetEngine()
 	local credits = PLAYER:GetCredits()
-	infoWin:add( UI.newLabel(20, y, "Name:     ".. name) )
+	summaryTab:add( UI.newLabel(20, y, "Name:     ".. name) )
 	local y = y+20
-	infoWin:add( UI.newLabel(20, y, "Model:    ".. model) )
+	summaryTab:add( UI.newLabel(20, y, "Model:    ".. model) )
 	local y = y+20
-	infoWin:add( UI.newLabel(20, y, "Engine:   ".. engine) )
+	summaryTab:add( UI.newLabel(20, y, "Engine:   ".. engine) )
 	local y = y+20
-	infoWin:add( UI.newLabel(20, y, "Credits:  ".. credits) )
+	summaryTab:add( UI.newLabel(20, y, "Credits:  ".. credits) )
 	local y = y+20
-	infoWin:add( UI.newPicture( 20, y, width-40,100, model, 0,0,0,1) )
+	summaryTab:add( UI.newPicture( 20, y, width-40,100, model, 0,0,0,1) )
 	local y = y+110
-
-	local infoTabs = UI.newTabContainer( 15, y, width-30, height-y-30, "Info Tabs" )
-	infoWin:add( infoTabs )
-	infoWin:addCloseButton()
+	infoTabs:add( summaryTab )
 
 	-- The Outfit Tab
 	local outfitTab = UI.newTab( "Outfit" )

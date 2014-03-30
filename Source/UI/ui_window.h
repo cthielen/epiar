@@ -25,6 +25,8 @@ class Window : public Container {
 		void AddCloseButton();
 		bool HasCloseButton() { return closeButton != NULL; }
 
+		void Center();
+
 		string GetType( void ) { return string("Window"); }
 		virtual int GetMask( void ) { return WIDGET_WINDOW | WIDGET_CONTAINER; }
 

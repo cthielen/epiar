@@ -93,6 +93,11 @@ Window *Window::AddChild( Widget *widget ){
 	return this;
 }
 
+void Window::Center() {
+	this->x = Video::GetHalfWidth() - (this->w / 2);
+	this->y = Video::GetHalfHeight() - (this->h / 2);
+}
+
 /**\brief Draws the current window.
  */
 void Window::Draw( int relx, int rely ) {

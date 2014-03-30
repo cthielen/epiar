@@ -157,7 +157,7 @@ int UI_Lua::newWindow(lua_State *L){
 	int arg = 6;
 	int n = lua_gettop(L);  // Number of arguments
 	if (n < 5)
-		return luaL_error(L, "Got %d arguments expected 5 (x, y, w, h, caption,[draggable], [ Widgets ... ])", n);
+		return luaL_error(L, "Got %d arguments expected 5 (x, y, w, h, caption,[draggable], [centered], [widgets ... ])", n);
 
 	int x = int(luaL_checknumber (L, 1));
 	int y = int(luaL_checknumber (L, 2));
@@ -175,6 +175,14 @@ int UI_Lua::newWindow(lua_State *L){
 		bool draggable = lua_toboolean(L, 6);
 		(*win)->SetDragability( draggable );
 		arg = 7;
+	}
+
+	if( lua_isboolean(L, 7) ){
+		bool centered = lua_toboolean(L, 7);
+		if(centered) {
+			(*win)->Center();
+		}
+		arg = 8;
 	}
 
 	UI::Add(*win);

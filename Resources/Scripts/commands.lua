@@ -54,7 +54,7 @@ function keyboardCommands()
 	local tabheight=height-100
 
 	local optionTabs = UI.newTabContainer( 10, 30, tabwidth, tabheight,"Options Tabs")
-	local optionWin = UI.newWindow( 30,100,width,height,"Keyboad Commands",
+	local optionWin = UI.newWindow( 30,100,width,height,"Keyboad Commands", true, true,
 		optionTabs,
 		UI.newButton( 160, height-50, 60, 30, "Cancel", "closeOptions()" )
 	)
