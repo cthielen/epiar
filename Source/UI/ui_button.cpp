@@ -43,6 +43,7 @@ void Button::Initialize( int x, int y, int w, int h, string label ) {
 
 	assert(bitmap_normal);
 	assert(bitmap_mouseover);
+	assert(bitmap_pressed);
 }
 
 /**\brief Constructs a button with a C++ callback.*/
