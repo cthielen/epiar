@@ -1,7 +1,7 @@
 /**\file			hud.cpp
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created  : Sunday, July 23, 2006
- * \date			Modified: Sunday, November 22, 2009
+ * \date			Modified: Saturday, March 29, 2014
  * \brief			Handles the Heads-Up-Display
  * \details
  */
@@ -36,6 +36,9 @@
 /* Width/height of radar. Derrived from hud_radarnav.png */
 #define RADAR_WIDTH        122
 #define RADAR_HEIGHT       122
+
+/* Number of additional, fading reticle boxes to draw while zooming in on a newly-selected target */
+#define RETICLE_BLUR       9
 
 list<AlertMessage> Hud::AlertMessages;
 StatusBar* Hud::Bars[MAX_STATUS_BARS] = {};
@@ -413,10 +416,10 @@ void Hud::DrawTarget( SpriteManager* sprites ) {
 
 		if( (Timer::GetTicks() - timeTargeted) < OPTION(Uint32, "options/timing/target-zoom")) {
 			r += Video::GetHalfHeight() - Video::GetHalfHeight()*(Timer::GetTicks()-timeTargeted)/OPTION(Uint32,"options/timing/target-zoom");
-			int max = Video::GetHalfHeight() * (1 - (Timer::GetTicks()-timeTargeted)/OPTION(Uint32,"options/timing/target-zoom") );
-			for( ; r < max; r = (r*11)/10) {
+			for( int i = 0; i < RETICLE_BLUR; i++ ) {
 				c = c * .9f;
 				edge += 3;
+				r *= 1.1f;
 				Video::DrawTarget(x,y,r,r,edge,c.r,c.g,c.b);
 			}
 		} else {
