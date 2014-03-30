@@ -39,7 +39,7 @@ void Picture::Default( int x, int y, int w, int h ) {
 
 /**\brief Initialize from an Image pointer.
  */
-Picture::Picture( int x, int y, int w, int h, Image* pic, bool allow_stretching ) {
+Picture::Picture( int x, int y, int w, int h, Image* pic, bool allow_stretching, bool center ) {
 	Default(x, y, w, h);
 
 	bitmap = pic;
@@ -57,6 +57,10 @@ Picture::Picture( int x, int y, int w, int h, Image* pic, bool allow_stretching 
 	}
 
 	stretch = allow_stretching;
+
+	if(center) {
+		Center(x, y);
+	}
 }
 
 /**\brief Initialize from an Image pointer.
@@ -94,6 +98,13 @@ Picture::Picture( int x, int y, int w, int h, string filename ) {
 	// If the bitmap exists, this must have a name.  Otherwise the name should be blank.
 	if(bitmap) assert(name != "");
 	else assert(name == "");
+}
+
+/**\brief Initialize from an Image name with centering
+ */
+Picture::Picture( int x, int y, int w, int h, string filename, bool center ) {
+	Picture(x, y, w, h, filename);
+	Center(x, y);
 }
 
 /**\brief Initialize from an Image name using the Image size

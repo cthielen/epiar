@@ -17,7 +17,8 @@
 class Picture: public Widget {
 	public:
 		Picture( int x, int y, int w, int h, string filename );
-		Picture( int x, int y, int w, int h, Image *pic, bool allow_stretching = false );
+		Picture( int x, int y, int w, int h, string filename, bool center );
+		Picture( int x, int y, int w, int h, Image *pic, bool allow_stretching = false, bool center = false );
 		Picture( int w, int h, string filename );
 		Picture( int x, int y, Image *pic );
 
