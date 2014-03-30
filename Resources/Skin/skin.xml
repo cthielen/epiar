@@ -6,6 +6,7 @@
   <UI>
     <Default>
       <Font>Resources/Fonts/FreeSans.ttf</Font>
+      <BoldFont>Resources/Fonts/FreeSansBold.ttf</BoldFont>
       <Color>0xFFFFFF</Color>
       <Size>12</Size>
     </Default>

@@ -49,6 +49,7 @@ class UI {
 		static void SwapScreens(string newname, Image* oldBackground, Image* newBackground );
 
 		static Font* font;
+		static Font* boldFont;
 		static Sound* beep;
 		static Sound* hover;
 
