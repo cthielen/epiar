@@ -148,7 +148,7 @@ void Scrollbar::ScrollDown( int pix ){
 int Scrollbar::GetMarkerSize( void ){
 	int visiblelen;
 
-	visiblelen = this->h;
+	visiblelen = this->h - bitmaps[1]->GetHeight() - bitmaps[2]->GetHeight();
 
 	// Calculate the size of the marker
 	int markersize = this->h * visiblelen / maxpos;
