@@ -282,7 +282,7 @@ bool File::Close() {
 	}
 	contentSize = 0;
 
-	LogMsg(INFO, "File '%s' saved successfully.", validName.c_str());
+	LogMsg(INFO, "File '%s' closed/saved successfully.", validName.c_str());
 
 	return true;
 }
