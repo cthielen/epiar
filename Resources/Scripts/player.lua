@@ -849,12 +849,12 @@ function playerInformation()
 		infoWin = nil
 		return
 	end
-	local height = 500
-	local width = 300
-	infoWin = UI.newWindow( 500,200, width,height, "Player Info", true, true)
-	local y = 30
+	local height = 275
+	local width = 400
+	infoWin = UI.newWindow( 300,200, width,height, "Player Info", true, true)
+	local y = 5
 
-	local infoTabs = UI.newTabContainer( 15, y, width-30, height-y-30, "Info Tabs" )
+	local infoTabs = UI.newTabContainer( 15, 30, width-30, height-y-35, "Info Tabs" )
 
 	infoWin:add( infoTabs )
 	infoWin:addCloseButton()
