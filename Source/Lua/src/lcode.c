@@ -1,5 +1,5 @@
 /*
-** $Id: lcode.c,v 1.1 2008/01/05 09:59:11 chris_thielen Exp $
+** $Id: lcode.c,v 2.25.1.5 2011/01/31 14:53:16 roberto Exp $
 ** Code generator for Lua
 ** See Copyright Notice in lua.h
 */
@@ -544,10 +544,6 @@ void luaK_goiftrue (FuncState *fs, expdesc *e) {
       pc = NO_JUMP;  /* always true; do nothing */
       break;
     }
-    case VFALSE: {
-      pc = luaK_jump(fs);  /* always jump */
-      break;
-    }
     case VJMP: {
       invertjump(fs, e);
       pc = e->u.s.info;
@@ -570,10 +566,6 @@ static void luaK_goiffalse (FuncState *fs, expdesc *e) {
   switch (e->k) {
     case VNIL: case VFALSE: {
       pc = NO_JUMP;  /* always false; do nothing */
-      break;
-    }
-    case VTRUE: {
-      pc = luaK_jump(fs);  /* always jump */
       break;
     }
     case VJMP: {
@@ -699,7 +691,7 @@ void luaK_prefix (FuncState *fs, UnOpr op, expdesc *e) {
   e2.t = e2.f = NO_JUMP; e2.k = VKNUM; e2.u.nval = 0;
   switch (op) {
     case OPR_MINUS: {
-      if (e->k == VK)
+      if (!isnumeral(e))
         luaK_exp2anyreg(fs, e);  /* cannot operate on non-numeric constants */
       codearith(fs, OP_UNM, e, &e2);
       break;

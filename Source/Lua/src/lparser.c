@@ -1,5 +1,5 @@
 /*
-** $Id: lparser.c,v 1.1 2008/01/05 09:59:11 chris_thielen Exp $
+** $Id: lparser.c,v 2.42.1.4 2011/10/21 19:31:42 roberto Exp $
 ** Lua Parser
 ** See Copyright Notice in lua.h
 */
@@ -374,9 +374,9 @@ static void close_func (LexState *ls) {
   lua_assert(luaG_checkcode(f));
   lua_assert(fs->bl == NULL);
   ls->fs = fs->prev;
-  L->top -= 2;  /* remove table and prototype from the stack */
   /* last token read was anchored in defunct function; must reanchor it */
   if (fs) anchor_token(ls);
+  L->top -= 2;  /* remove table and prototype from the stack */
 }
 
 
@@ -938,6 +938,8 @@ static void assignment (LexState *ls, struct LHS_assign *lh, int nvars) {
     primaryexp(ls, &nv.v);
     if (nv.v.k == VLOCAL)
       check_conflict(ls, lh, &nv.v);
+    luaY_checklimit(ls->fs, nvars, LUAI_MAXCCALLS - ls->L->nCcalls,
+                    "variables in assignment");
     assignment(ls, &nv, nvars+1);
   }
   else {  /* assignment -> `=' explist1 */

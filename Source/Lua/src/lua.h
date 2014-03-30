@@ -1,5 +1,5 @@
 /*
-** $Id: lua.h,v 1.1 2008/01/05 09:59:10 chris_thielen Exp $
+** $Id: lua.h,v 1.218.1.7 2012/01/13 20:36:20 roberto Exp $
 ** Lua - An Extensible Extension Language
 ** Lua.org, PUC-Rio, Brazil (http://www.lua.org)
 ** See Copyright Notice at the end of this file
@@ -12,17 +12,14 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include "luaconf.h"
 
 
 #define LUA_VERSION	"Lua 5.1"
-#define LUA_RELEASE	"Lua 5.1.2"
+#define LUA_RELEASE	"Lua 5.1.5"
 #define LUA_VERSION_NUM	501
-#define LUA_COPYRIGHT	"Copyright (C) 1994-2007 Lua.org, PUC-Rio"
+#define LUA_COPYRIGHT	"Copyright (C) 1994-2012 Lua.org, PUC-Rio"
 #define LUA_AUTHORS 	"R. Ierusalimschy, L. H. de Figueiredo & W. Celes"
 
 
@@ -297,6 +294,9 @@ LUA_API void lua_setallocf (lua_State *L, lua_Alloc f, void *ud);
 #define lua_Chunkwriter		lua_Writer
 
 
+/* hack */
+LUA_API void lua_setlevel	(lua_State *from, lua_State *to);
+
 
 /*
 ** {======================================================================
@@ -360,12 +360,9 @@ struct lua_Debug {
 
 /* }====================================================================== */
 
-#ifdef __cplusplus
-}
-#endif
 
 /******************************************************************************
-* Copyright (C) 1994-2007 Lua.org, PUC-Rio.  All rights reserved.
+* Copyright (C) 1994-2012 Lua.org, PUC-Rio.  All rights reserved.
 *
 * Permission is hereby granted, free of charge, to any person obtaining
 * a copy of this software and associated documentation files (the

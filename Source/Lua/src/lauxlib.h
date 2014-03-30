@@ -1,5 +1,5 @@
 /*
-** $Id: lauxlib.h,v 1.1 2008/01/05 09:59:11 chris_thielen Exp $
+** $Id: lauxlib.h,v 1.88.1.1 2007/12/27 13:02:25 roberto Exp $
 ** Auxiliary functions for building Lua libraries
 ** See Copyright Notice in lua.h
 */
@@ -8,14 +8,12 @@
 #ifndef lauxlib_h
 #define lauxlib_h
 
+
 #include <stddef.h>
 #include <stdio.h>
 
 #include "lua.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #if defined(LUA_COMPAT_GETN)
 LUALIB_API int (luaL_getn) (lua_State *L, int t);
@@ -170,10 +168,6 @@ LUALIB_API void (luaL_pushresult) (luaL_Buffer *B);
 
 
 #define luaL_reg	luaL_Reg
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
 
