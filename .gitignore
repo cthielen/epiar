@@ -35,6 +35,9 @@ tags
 luatags
 .vimrc
 
+### Ignore core dumps
+core*
+
 ### Epiar Binaries
 Epiar*.exe*
 epiar*.pdb
