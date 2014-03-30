@@ -44,10 +44,12 @@ registerCommands(defaultCommands)
 --- List of Commands
 function keyboardCommands()
 	Epiar.pause()
+
 	if UI.search("/Window'Keyboad Commands'/") ~= nil then
 		closeOptions()
 		return
 	end
+
 	local width=300
 	local height=400
 	local tabwidth=width-20
@@ -61,7 +63,7 @@ function keyboardCommands()
 	local savebutton = UI.newButton( 60, height-50, 60, 30, "Save", "saveOptions(); closeOptions()" )
 	optionWin:add( savebutton )
 	optionWin:setFormButton( savebutton )
-	optionWin:addCloseButton()
+	optionWin:addCallback( Action_Close, 'Epiar.unpause()' )
 
 	-- Command Keys
 	keyTab = UI.newTab( "Keyboard")
