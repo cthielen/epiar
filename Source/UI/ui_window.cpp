@@ -97,7 +97,7 @@ Window *Window::AddChild( Widget *widget ){
  */
 void Window::Draw( int relx, int rely ) {
 	int x, y;
-	static float alpha = 0.95f;
+	static float alpha = 0.85f;
 	
 	x = GetX() + relx;
 	y = GetY() + rely;
@@ -157,7 +157,7 @@ void Window::CloseWindow( void* win)
  * \todo On windows that scroll, having the Close Button scroll with the Window is wrong. How to Fix?
  */
 void Window::AddCloseButton() {
-	closeButton = new Button( this->GetW() - 28, 5, 15, 15, "x", Window::CloseWindow, this );
+	closeButton = new Button( this->GetW() - 31, 4, 17, 17, "x", Window::CloseWindow, this );
 	AddChild( closeButton );
 }
 
