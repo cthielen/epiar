@@ -4,9 +4,14 @@ usage() {
 	echo "USAGE: update.sh MAJOR MINOR MICRO"
 }
 
+if [ "$#" -ne 3 ]; then
+	usage
+	exit 0
+fi
+
 if [ "$1" = "-h" ]
 then
-	echo "USAGE"	
+	usage
 	exit 0
 fi
 
