@@ -394,7 +394,7 @@ The Kartanal was designed for lightning fast hit-and-run maneuvers.</description
     <mass>1.00</mass>
     <rotationsPerSecond>0.20</rotationsPerSecond>
     <thrustOffset>15</thrustOffset>
-    <maxSpeed>4.0</maxSpeed>
+    <maxSpeed>12.0</maxSpeed>
     <hullStrength>300</hullStrength>
     <shieldStrength>300</shieldStrength>
     <msrp>1000</msrp>

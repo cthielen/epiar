@@ -426,6 +426,7 @@ void Ship::Update( lua_State *L ) {
 void Ship::Draw( void ) {
 	Trig *trig = Trig::Instance();
 	Coordinate position = GetWorldPosition();
+	Coordinate screenPosition = GetScreenPosition();
 
 	/*
     // Shields
@@ -451,11 +452,11 @@ void Ship::Draw( void ) {
 		float direction = GetAngle();
 		float tx, ty;
 
-		trig->RotatePoint( static_cast<float>((position.GetScreenX() -
+		trig->RotatePoint( static_cast<float>((screenPosition.GetX() -
 						(flareAnimation->GetHalfWidth() + model->GetThrustOffset()) )),
-				static_cast<float>(position.GetScreenY()),
-				static_cast<float>(position.GetScreenX()),
-				static_cast<float>(position.GetScreenY()), &tx, &ty,
+				static_cast<float>(screenPosition.GetY()),
+				static_cast<float>(screenPosition.GetX()),
+				static_cast<float>(screenPosition.GetY()), &tx, &ty,
 				static_cast<float>( trig->DegToRad( direction ) ));
 		flareAnimation->Draw( (int)tx, (int)ty, direction );
 

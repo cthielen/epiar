@@ -13,11 +13,10 @@
 /**\class Timer
  * \brief Timer class. */
 
-Uint32 Timer::lastLoopLength = 25;
+Uint32 Timer::lastLoopLength = 0;
 Uint32 Timer::lastLoopTick = SDL_GetTicks();
-Uint32 Timer::ticksPerFrame = 0;
-float Timer::logicFPS = LOGIC_FPS;
-double Timer::virtualTime = 0;
+double Timer::frames = 0;
+double Timer::fframe = 0;
 Uint32 Timer::logicalFrameCount = 0;
 
 void Timer::Initialize( void ) {
@@ -25,22 +24,30 @@ void Timer::Initialize( void ) {
 	lastLoopTick = SDL_GetTicks();
 	Uint32 fps = OPTION( Uint32, "options/video/fps" );
 	if( fps == 0 ) fps = 30;
-	ticksPerFrame = 1000 / OPTION( Uint32, "options/video/fps" );
 }
 
+// Updates the Timer class and returns the number of logical loops to run.
 int Timer::Update( void ) {
 	Uint32 tick = SDL_GetTicks();
 
 	lastLoopLength = tick - lastLoopTick;
 	lastLoopTick = tick;
 
-	float dt = lastLoopLength * 0.001f;
-	float frames = dt * Timer::logicFPS;
+	double dt = (double)lastLoopLength * 0.001f;
+	double new_frames = dt * LOGIC_FPS;
 
-	int i = static_cast<int>(floor(virtualTime + frames) - floor(virtualTime));
-	virtualTime += frames;
+	int logical_loops = static_cast<int>(floor(frames + new_frames) - floor(frames));
+	frames += new_frames;
+
+	fframe = frames - floor(frames);
 	
-	return i;
+	return logical_loops;
+}
+
+// Returns the fraction of a frame at this point in the draw cycle.
+// Used to interpolate graphic screen coordinates.
+double Timer::GetFFrame( void ) {
+	return fframe;
 }
 
 Uint32 Timer::GetTicks( void )
@@ -59,32 +66,15 @@ Uint32 Timer::GetRealTicks( void )
 }
 
 void Timer::Delay( int waitMS ) {
-//#ifdef EPIAR_CAP_FRAME
-//	Uint32 ticksElapsed = SDL_GetTicks() - lastLoopTick;
-// Require a definition to activate frame cap (so we can check performance)
-//	if(ticksElapsed < ticksPerFrame)
-//	{
-//		Uint32 ticksToSleep = ticksPerFrame - ticksElapsed;
-//		SDL_Delay(ticksToSleep);
-//	}
-//#else
 	SDL_Delay( waitMS );
-//#endif
 }
 
-float Timer::GetDelta( void ) {
-	return 1.f / Timer::logicFPS;
-	//return( static_cast<float>(lastLoopLength / 1000. ));
+double Timer::GetDelta( void ) {
+	return LOGIC_FPS * 0.001f;
 }
 
 Uint32 Timer::GetLogicalFrameCount( void )
 {
 	return logicalFrameCount;
-}
-
-void Timer::IncrementFrameCount ( void )
-{
-			//we don't mind if it wraps - up to whoever's using it to deal with it
-	++ logicalFrameCount;
 }
 

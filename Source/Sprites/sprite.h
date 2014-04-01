@@ -33,6 +33,8 @@ class Sprite {
 		Coordinate GetWorldPosition( void ) const;
 		void SetWorldPosition( Coordinate coord );
 
+		Coordinate GetScreenPosition( void ) const;
+
 		virtual void Update( lua_State *L );
 		virtual void Draw( void );
 
@@ -72,6 +74,7 @@ class Sprite {
 		static long int sprite_ids; ///< The ID for the next Sprite.
 
 		int id; ///< The unique ID of this Sprite.
+		Coordinate oldScreenPosition, screenPosition; ///< The Current position of this Sprite.
 		Coordinate worldPosition; ///< The Current position of this Sprite.
 		Coordinate momentum; ///< The current Speed and Direction that this Sprite is moving (not pointing).
 		Coordinate acceleration; ///< The ammount that the Sprite accelerated during the previous Update.

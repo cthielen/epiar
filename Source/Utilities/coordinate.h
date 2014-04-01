@@ -30,10 +30,6 @@ class Coordinate {
 		void  SetX ( double x );
 		void  SetY ( double y );
 	
-		/* Returns coords converted to screen universe by Camera class */
-	 	int GetScreenX();
-	 	int GetScreenY();
-
 		float GetAngle();
 		float GetMagnitude();
 		inline float GetMagnitudeSquared() {
@@ -119,7 +115,6 @@ class Coordinate {
 	//// end math operators
 	
 	private:
-	 
 		double  m_x;
 		double  m_y;
 };

@@ -408,9 +408,10 @@ void Hud::DrawTarget( SpriteManager* sprites ) {
 
 	if(target != NULL) {
 		int edge = (target->GetImage())->GetWidth() / 6;
+		Coordinate targetScreenPosition = target->GetScreenPosition();
 		if(edge > 25) edge = 25;
-		int x = target->GetWorldPosition().GetScreenX();
-		int y = target->GetWorldPosition().GetScreenY();
+		int x = targetScreenPosition.GetX();
+		int y = targetScreenPosition.GetY();
 		int r = target->GetRadarSize();
 		Color c = target->GetRadarColor();
 

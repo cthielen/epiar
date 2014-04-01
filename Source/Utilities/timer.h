@@ -20,20 +20,18 @@ class Timer {
 		static void Delay( int waitMS );
 		static Uint32 GetTicks( void );
 		static Uint32 GetRealTicks( void );
+		static double GetFFrame( void );
 		
-		static float GetDelta( void );
+		static double GetDelta( void );
 
 		static Uint32 GetLogicalFrameCount( void );
-		static void IncrementFrameCount ( void );
 	
   	private:
   		static Uint32 lastLoopLength;
   		static Uint32 lastLoopTick;
-		static Uint32 ticksPerFrame;
 		static Uint32 logicalFrameCount;
-		static int frame;
-		static double virtualTime;
-		static float logicFPS;
+		static double frames;
+		static double fframe;
 };
 
 #endif // __h_timer__

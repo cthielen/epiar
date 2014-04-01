@@ -318,16 +318,16 @@ bool Simulation::Run() {
 		//logicLoops is the number of times we need to run logical updates to get 50 logical updates per second
 		//if the draw fps is >50 then logicLoops will always be 1 (ie 1 logical update per draw)
 		int logicLoops = Timer::Update();
-		bool anyUpdate = (logicLoops>0);
+		bool anyUpdate = (logicLoops > 0);
 		if( !paused ) {
-			if(logicLoops > 10) {
-				LogMsg(WARN, "Running %d logic loops. Capping to 1", logicLoops);
-				logicLoops = 1;
-			}
+			//if(logicLoops > 10) {
+			//	LogMsg(WARN, "Running %d logic loops. Capping to 1", logicLoops);
+			//	logicLoops = 1;
+			//}
 			while(logicLoops--) {
 				if (lowFps)
 					lowFpsFrameCount --;
-				Timer::IncrementFrameCount();
+				//Timer::IncrementFrameCount();
 				// Logical update cycle
 				sprites->Update( L, lowFps );
         

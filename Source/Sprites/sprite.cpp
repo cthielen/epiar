@@ -8,6 +8,7 @@
 
 #include "includes.h"
 #include "common.h"
+#include "Engine/camera.h"
 #include "Sprites/sprite.h"
 #include "Utilities/log.h"
 #include "Utilities/timer.h"
@@ -63,7 +64,7 @@ Sprite::Sprite() {
 	radarSize = 1;
 	radarColor = WHITE * 0.7f;
 
-	lastUpdateFrame = Timer::GetLogicalFrameCount();
+	//lastUpdateFrame = Timer::GetLogicalFrameCount();
 }
 
 Coordinate Sprite::GetWorldPosition( void ) const {
@@ -74,23 +75,15 @@ void Sprite::SetWorldPosition( Coordinate coord ) {
 	worldPosition = coord;
 }
 
+Coordinate Sprite::GetScreenPosition( void ) const {
+	return screenPosition;
+}
 
 /**\brief Move this Sprite in the direction of their current momentum.
  * \details Since this is a space simulation, there is no Friction; momentum does not decrease over time.
  */
 void Sprite::Update( lua_State *L ) {
-	Uint32 currentFrame = Timer::GetLogicalFrameCount();
-
-	Uint32 framesSinceUpdate = (currentFrame > lastUpdateFrame) 
-						? (currentFrame - lastUpdateFrame) 
-						: (lastUpdateFrame - currentFrame);
-
-	lastUpdateFrame = currentFrame;
-
-	// Apply their momentum to change their coordinates - apply it as often as the num frames that we've skipped
-	worldPosition += (momentum * framesSinceUpdate);
-	
-	// update acceleration - we do not care about the framesSinceUpdate for updating thesef
+	worldPosition += momentum;
 	acceleration = lastMomentum - momentum; 
 	lastMomentum = momentum;
 }
@@ -103,15 +96,21 @@ void Sprite::Update( lua_State *L ) {
  */
 void Sprite::Draw( void ) {
 	int wx, wy;
-
-	wx = worldPosition.GetScreenX();
-	wy = worldPosition.GetScreenY();
+	Camera *camera = Camera::Instance();
+	double fframe = Timer::GetFFrame();
 	
+	camera->TranslateWorldToScreen( worldPosition, screenPosition );
+
+	wx = oldScreenPosition.GetX() * (1.0f - fframe) + screenPosition.GetX() * fframe;
+	wy = oldScreenPosition.GetY() * (1.0f - fframe) + screenPosition.GetY() * fframe;
+
 	if( image ) {
 		image->DrawCentered( wx, wy, angle );
 	} else {
 		LogMsg(WARN, "Attempt to draw a sprite before an image was assigned." );
 	}
+
+	oldScreenPosition = screenPosition;
 }
 
 /** @} */

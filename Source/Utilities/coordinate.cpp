@@ -62,24 +62,6 @@ SDL_Rect  Coordinate::getRectWithDim ( int w, int h ) {
 	return ( rect );
 }
 
-int Coordinate::GetScreenX() {
-	Camera *camera = Camera::Instance();
-	Coordinate screen;
-	
-	camera->TranslateWorldToScreen( *this, screen );
-
-	return( (int)screen.GetX() );
-}
-
-int Coordinate::GetScreenY() {
-	Camera *camera = Camera::Instance();
-	Coordinate screen;
-	
-	camera->TranslateWorldToScreen( *this, screen );
-	
-	return( (int)screen.GetY() );
-}
-
 float Coordinate::GetAngle() {
 	// 0 is right, 90 is up
 	// Due to the way coordinates are displayed, use negative Y

@@ -10,6 +10,7 @@
 #include "Graphics/video.h"
 #include "Engine/camera.h"
 #include "Utilities/log.h"
+#include "Utilities/timer.h"
 #include "Utilities/trig.h"
 #include "Sprites/player.h"
 #include "Utilities/coordinate.h"
