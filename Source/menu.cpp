@@ -78,18 +78,21 @@ void Menu::Main_Menu( void )
 		UI::HandleInput( events );
 
 		// Draw Things
-		Video::Erase();
-		Video::PreDraw();
-		UI::Draw();
-		Video::PostDraw();
-		Video::Update();
+		int loops = Timer::Update();
+		if(loops) {
+			Video::Erase();
+			Video::PreDraw();
+			UI::Draw();
+			Video::PostDraw();
+			Video::Update();
+		}
 
 		if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_ESCAPE ) ) ) {
 			quitSignal = true;
 		}
 
 		// Wait until the next click
-		Timer::Delay(75);
+		Timer::Delay();
 	} while(!quitSignal);
 }
 

@@ -340,34 +340,29 @@ bool Simulation::Run() {
 			starfield.Update( camera );
 			camera->Update( sprites );
 			Hud::Update( L );
+
+			// Erase cycle
+			Video::Erase();
+
+			// Draw cycle
+			Video::PreDraw();
+			starfield.Draw();
+			sprites->Draw( camera->GetFocusCoordinate() );
+			Hud::Draw( HUD_ALL, currentFPS, camera, sprites );
+			UI::Draw();
+			console->Draw();
+			Video::PostDraw();
+			Video::Update();
 		}
 
-		// Erase cycle
-		Video::Erase();
-
-		// Draw cycle
-		Video::PreDraw();
-		starfield.Draw();
-		sprites->Draw( camera->GetFocusCoordinate() );
-		Hud::Draw( HUD_ALL, currentFPS, camera, sprites );
-		UI::Draw();
-		console->Draw();
-		Video::PostDraw();
-		Video::Update();
-
-		// Don't kill the CPU (play nice)
-		if( paused ) {
-			Timer::Delay(50);
-		} else {
-			Timer::Delay(10);
-		}
+		Timer::Delay();
 
 		// Counting Frames
 		fpsCount++;
 		fpsTotal++;
 
 		// Update the fps once per second
-		if( (Timer::GetTicks() - fpsTS) >1000 ) {
+		if( (Timer::GetTicks() - fpsTS) > 1000 ) {
 			currentFPS = static_cast<float>(1000.0 *
 					((float)fpsCount / (Timer::GetTicks() - fpsTS)));
 			fpsTS = Timer::GetTicks();

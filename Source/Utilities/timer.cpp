@@ -18,12 +18,14 @@ Uint32 Timer::lastLoopTick = SDL_GetTicks();
 double Timer::frames = 0;
 double Timer::fframe = 0;
 Uint32 Timer::logicalFrameCount = 0;
+int Timer::lastLogicalLoops = 0;
+int Timer::delayMS = INITIAL_DELAY;
 
 void Timer::Initialize( void ) {
 	lastLoopLength = 0;
 	lastLoopTick = SDL_GetTicks();
-	Uint32 fps = OPTION( Uint32, "options/video/fps" );
-	if( fps == 0 ) fps = 30;
+	//Uint32 fps = OPTION( Uint32, "options/video/fps" );
+	//if( fps > 0 ) desiredFPS = fps;
 }
 
 // Updates the Timer class and returns the number of logical loops to run.
@@ -40,6 +42,8 @@ int Timer::Update( void ) {
 	frames += new_frames;
 
 	fframe = frames - floor(frames);
+
+	lastLogicalLoops = logical_loops;
 	
 	return logical_loops;
 }
@@ -63,6 +67,27 @@ Uint32 Timer::GetTicks( void )
 Uint32 Timer::GetRealTicks( void )
 {
 	return SDL_GetTicks();
+}
+
+inline int clamp(int x, int a, int b)
+{
+    return x < a ? a : (x > b ? b : x);
+}
+
+// Adaptive timer. Adjusts the sleep count to always ensure at least
+// one logical loop was needed. If too many logical loops are needed,
+// it will decrease the sleep time.
+// This attempts to balance game performance and energy savings/CPU usage.
+void Timer::Delay() {
+	if(lastLogicalLoops == 0) {
+		// If the machine is too fast, we can delay longer
+		delayMS += 5;
+	} else if(lastLogicalLoops > 5) {
+		delayMS -= 5;
+	}
+	delayMS = clamp(delayMS, 10, (int)(1000.0 / LOGIC_FPS));
+
+	SDL_Delay( delayMS );
 }
 
 void Timer::Delay( int waitMS ) {
