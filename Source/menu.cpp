@@ -136,6 +136,7 @@ void Menu::SetupGUI()
 		"Resources/Art/menu3.png",
 		"Resources/Art/menu4.png",
 		"Resources/Art/menu5.png",
+		"Resources/Art/menu6.png",
 	};
 
 	int numScreens = (sizeof(splashScreens) / sizeof(splashScreens[0]));
