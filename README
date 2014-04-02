@@ -1,12 +1,12 @@
 Epiar
-Version 0.5.0
+Version 0.5.1
 Written by Christopher Thielen, Matthew Zweig, others (see AUTHORS)
 
 http://epiar.net/
 
-Copyright (C) 2002-2012 Christopher Thielen.
+Copyright (C) 2002-2014 Christopher Thielen, others.
 Licensed under GNU GPL version 2. Some parts (e.g. fonts, sounds) licensed differently
-and indicated where appropriate.
+and indicated in this package.
 
 ----------------------
 -       NOTICE       -
@@ -33,17 +33,21 @@ series for the Mac was the major point of inspiration for this game.  Other
 notable games of this genre include:
 
 - Elite (the original game EV was based on)
-- Star control 1/2 (and it's now open source successor Ur-Quan masters)
+- Star Control 1/2 (and it's now open source successor Ur-Quan masters)
 - Star Flight
 - Solar Winds
 
+This micro-genre can also be found in more modern games (as of this writing):
+
+- Galaxy on Fire 1/2 for mobile platforms
+
 2. System Requirements
 ----------------------
-Epiar has been tested on Linux, OS X 10.6/10.7 and Windows XP/Vista/7.
+Epiar has been tested on Linux (Fedora), OS X 10.6-10.9 and Windows XP/Vista/7.
 
 3. Playing Epiar
 ----------------
-Epiar is still under development and so the gameplay is in flux. If you
+Epiar is still under development, so gameplay is in flux. If you
 have any suggestions, please let us know.
 
 i. Controls
@@ -80,7 +84,7 @@ ii. Single Player Epiar
 
 iii. Multi-Player Epiar
 -----------------------
-We don't have any Multi-Player right now.  Sorry.
+We don't have any Multi-Player right now. Sorry.
 
 4. Epiar Editor
 ---------------
@@ -116,10 +120,11 @@ When you're done, hit the "Save" button to save all of your changes.
 5. Reporting Problems
 ---------------------
 See http://epiar.net/
-Please visit the IRC channel #epiar on freenode.
+
+Please visit the IRC channel #epiar on irc.freenode.net.
+
 You can also sign up for the developer email list by visiting http://epiar.net/mailinglists and subscribing to epiar-devel.
 
 6. Credits
 ----------
 See AUTHORS file.
-
