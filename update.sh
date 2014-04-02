@@ -39,8 +39,12 @@ echo "Updating the version number in the README"
 sed "s/Version .*/Version $EPIAR_VERSION_NEW/" < README > README.new
 mv README.new README
 
-echo "Update the version Number in the Info.plist to $EPIAR_VERSION_NEW."
-defaults write `pwd`/Build/OS\ X/Info CFBundleShortVersionString "$EPIAR_VERSION_NEW"
-defaults read `pwd`/Build/OS\ X/Info
+if hash defaults 2>/dev/null; then
+	echo "Update the version Number in the Info.plist to $EPIAR_VERSION_NEW."
+	defaults write `pwd`/Build/OS\ X/Info CFBundleShortVersionString "$EPIAR_VERSION_NEW"
+	defaults read `pwd`/Build/OS\ X/Info
+else
+	echo "Warning: Unable to update OS X Info.plist as your system does not have the OS X 'defaults' utility."
+fi
 
 echo "TODO: Update all of the .xml files to $EPIAR_VERSION_NEW."
