@@ -2,11 +2,26 @@ This document describes how to compile Epiar.
 
 Contents
 --------
-i. Generic Unix Instructions
-	ia. Mac OS X Notes
+i. Generic Requirements
+ii. Generic Unix Instructions
+iii. Mac OS X Instructions
+iv. Fedora Linux Instructions
+v. Ubuntu Linux Instructions
 
-i. Generic Unix Instructions
-----------------------------
+i. Generic Requirements
+-----------------------
+  Please see platform-specific instructions if available. This section merely documents the package requirements for all platforms and is useful if you do not see working instructions for your platform.
+
+  SDL 1.2.x (with OpenGL support)
+  SDL_image 1.x
+  SDL_mixer 1.x
+  FTGL (for OpenGL font rendering)
+  libxml2 (for XML processing)
+  Freetype (required by FTGL)
+  PhysicsFS (for convenient game data file handling)
+
+ii. Generic Unix Instructions
+-----------------------------
 	Epiar uses the GNU automake/autoconf environment. In general, this requires the presence of gcc, make (or gmake on *BSD), autoconf, automake, and aclocal, among other tools.
 	Epiar also requires the following popular open source libraries. They are available for most common Unixes (various Linuxes, OS X, FreeBSD, etc.): SDL (libsdl.org), SDL_image (libsdl.org), SDL_mixer (libsdl.org), libxml2 (xmlsoft.org), and PhysicsFS. OpenGL compatible development libraries are also required, with SDL being built to utilize them.
 	Given the proper installation of these tools & libraries, the build process is as follows:
@@ -17,8 +32,31 @@ i. Generic Unix Instructions
 
 	The epiar binary will then appear in the root of the source tree. You can launch it by typing ./epiar.
 
-ia. Mac OS X Notes
-------------------
-	To meet all needed requirements above, installation of the Apple XCode package is needed. This is available from apple.com. XCode will install GNU gcc, automake, autoconf, aclocal and other needed tools. Libxml2 is also provided on OS X (note: OS X 10.5 and above, though 10.4 should work and compilation on 10.3 is likely possible with some work).
-	In addition to XCode, you must also obtain the three SDL "frameworks" from libsdl.org. Download the SDL, SDL_image, and SDL_mixer OS X frameworks and place them either in /Library/Frameworks or ~/Library/Frameworks. That should complete OS X setup. Proceed with the ./autogen.sh step above to build Epiar.
-	Epiar can render fonts in one of two ways: FreeType or our own AFont implementation.  To build using the FreeType, use "./configure --enable-freetype".  This requires that you have FreeType and FTGL installed on your computer.  I suggest MacPorts "sudo port install freetype" and "sudo port install ftgl".  Other installation methods have not been tested but should work if the install paths are added to the configure.in file.
+iii. Mac OS X Instructions
+--------------------------
+	To meet all needed requirements above, installation of the Apple XCode package is needed. This is available from apple.com or the OS X App Store for free. XCode will install GNU gcc, automake, autoconf, aclocal and other needed tools. You may need to download and install the "Command Line" package from within XCode. Libxml2 is also provided on OS X (note: OS X 10.5 and above, though 10.4 should work and compilation on 10.3 is likely possible with some work).
+
+  There are a number of ways to install the needed requirements but the easiest and perhaps most popular way is to use 'Homebrew', a free package manager for developers on OS X. Install it by visiting http://brew.sh/.
+
+  Once brew is installed:
+    brew install sdl sdl_mixer sdl_image ftgl physfs freetype
+
+  Assuming all dependencies install successfully, proceed with the Generic Unix Instructions found in Section ii.
+
+iv. Fedora Linux Instructions
+-----------------------------
+
+
+v. Ubuntu Linux Instructions
+----------------------------
+  These instructions were written and checked using Ubuntu 12.04. If you use a different version of Ubuntu which requires different instructions, please send us updates (epiar.net/contact).
+
+  1. Ensure the essential build tools (like the C++ compiler) are installed:
+
+		    sudo apt-get install build-essential
+
+  2. Install the needed dependencies:
+
+        sudo apt-get install libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev ftgl-dev libfreetype6-dev libphysfs-dev autoconf automake libxml2-dev
+
+  3. Proceed with the Generic Unix Instructions found in Section ii.
