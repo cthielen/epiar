@@ -61,7 +61,7 @@ bool XMLFile::Open( const string& filename ) {
 	bufSize = xmlfile.GetLength();
 	if( buf == NULL ) {
 		LogMsg(ERR, "Could not load XML from archive. Buffer failed to allocate." );
-		return( NULL );
+		return( false );
 	}
 
 	xmlPtr = xmlParseMemory( buf, bufSize );
@@ -205,7 +205,7 @@ vector<string> TokenizedString( const string& path, const string& tokens ) {
 		}
 		prevpos = pos+1; // record where to start next time.
 	} while ( pos != string::npos );
-	
+
 	return tokenized;
 }
 
@@ -240,7 +240,7 @@ xmlNodePtr XMLFile::FindNode( const string& path, bool createIfMissing ) {
 		LogMsg(WARN, "XML file (%s) appears to be empty.", filename.c_str() );
 		return( (xmlNodePtr)NULL );
 	}
-	
+
 	tokenized = TokenizedString(path, tokens);
 	iter = tokenized.begin();
 
@@ -319,14 +319,14 @@ xmlNodePtr NextSiblingNamed( xmlNodePtr child, const char* text )
 		}
 		child = child->next;
 	}
-	
+
 	return (xmlNodePtr )NULL;
 }
 
 /**\brief Extract the text from a XML Node as a String.
  * \param doc The document that contains this node.
  * \param node The node itself
- * 
+ *
  * It's easier to deal with C++ strings than xmlStrings, since the C++ strings have destructors.
  *
  * \sa NodeToInt, NodeToFloat
