@@ -64,7 +64,7 @@ Sprite::Sprite() {
 	radarSize = 1;
 	radarColor = WHITE * 0.7f;
 
-	//lastUpdateFrame = Timer::GetLogicalFrameCount();
+  firstDraw = true;
 }
 
 Coordinate Sprite::GetWorldPosition( void ) const {
@@ -101,8 +101,14 @@ void Sprite::Draw( void ) {
 	
 	camera->TranslateWorldToScreen( worldPosition, screenPosition );
 
-	wx = oldScreenPosition.GetX() * (1.0f - fframe) + screenPosition.GetX() * fframe;
-	wy = oldScreenPosition.GetY() * (1.0f - fframe) + screenPosition.GetY() * fframe;
+  if(firstDraw) {
+    wx = screenPosition.GetX();
+    wy = screenPosition.GetY();
+    firstDraw = false;
+  } else {
+	  wx = oldScreenPosition.GetX() * (1.0f - fframe) + screenPosition.GetX() * fframe;
+	  wy = oldScreenPosition.GetY() * (1.0f - fframe) + screenPosition.GetY() * fframe;
+  }
 
 	if( image ) {
 		image->DrawCentered( wx, wy, angle );
