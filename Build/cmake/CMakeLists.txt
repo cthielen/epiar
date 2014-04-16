@@ -13,8 +13,8 @@ set (SCRIPT_DIR "${PROJECT_SOURCE_DIR}/CMakeScripts")
 # Directory for custom Modules
 set(CMAKE_MODULE_PATH "${SCRIPT_DIR}/CustomModules")
 
-find_path(Epiar_SRC_DIR includes.h PATHS "../../Source")
-find_path(Epiar_OUT_DIR Source/includes.h PATHS "../../.")
+find_path(Epiar_SRC_DIR includes.h PATHS "../../source")
+find_path(Epiar_OUT_DIR source/includes.h PATHS "../../.")
 
 # Include external functions
 include ("${SCRIPT_DIR}/IncludeFunctions.txt")

@@ -9,7 +9,7 @@
 #ifndef __h_timer__
 #define __h_timer__
 
-#define LOGIC_FPS     50.0
+#define LOGIC_FPS     50.0 /* DO NOT CHANGE THIS. THE VELOCITIES IN THIS GAME ARE BASED ON A LOGICAL FPS of 50 / s. THIS IS THE GAME LOGIC RATE, NOT THE VIDEO FRAME RATE! */
 #define INITIAL_DELAY 10
 
 #include "includes.h"

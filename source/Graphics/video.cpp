@@ -355,12 +355,6 @@ void Video::PreDraw( void ) {
 	glLoadIdentity();
 }
 
-/**\brief Post-draw commands.
- */
-void Video::PostDraw( void ) {
-
-}
-
 void Video::Blur( void ) {
 	float q = .6f;
 

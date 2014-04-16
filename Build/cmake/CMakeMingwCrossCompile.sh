@@ -11,7 +11,7 @@ LUAJIT="ON"
 # For some reason, cross compiler can't detect base dir
 BASEDIR=$(dirname $(dirname $(pwd)))
 echo $BASEDIR
-CROSS="-DCMAKE_TOOLCHAIN_FILE=`pwd`/CMakeScripts/CrossCompile/Mingw_Toolchain.cmake -DEpiar_SRC_DIR=$BASEDIR/Source -DEpiar_OUT_DIR=$BASEDIR"
+CROSS="-DCMAKE_TOOLCHAIN_FILE=`pwd`/CMakeScripts/CrossCompile/Mingw_Toolchain.cmake -DEpiar_SRC_DIR=$BASEDIR/source -DEpiar_OUT_DIR=$BASEDIR"
 
 # Intermedia directory
 IDIR="`pwd`/buildWin"

@@ -7,7 +7,7 @@ build:
 	+ Epiar
 		- Doxygen
 		- Resources
-		- Source
+		- source
 		- (etc)...
 	+ EpiarBuild
 		- CMake
@@ -18,7 +18,7 @@ build:
 
 Of course you can have any arbitrary directory structure you want, but you have
 to modify `Epiar_OUT_DIR` ( Needs to point to Epiar base directory) and
-`Epiar_SRC_DIR` ( Needs to point to Epiar/Source).
+`Epiar_SRC_DIR` ( Needs to point to Epiar/source).
 
 
 Windows

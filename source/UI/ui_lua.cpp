@@ -529,10 +529,14 @@ int UI_Lua::newPicture(lua_State *L) {
 	Picture **pic= (Picture**)lua_newuserdata(L, sizeof(Picture**));
 	luaL_getmetatable(L, EPIAR_UI);
 	lua_setmetatable(L, -2);
-	if (w + h > 0)
-		*pic = new Picture(x,y,w,h, picname );
-	else
-		*pic = new Picture(x,y, picname );
+	
+	if (w + h > 0) {
+		*pic = new Picture(x, y, w, h, picname);
+		cout << "New picture from lua, x, y, w, h: " << x << ", " << y << ", " << w << ", " << h << endl;
+	} else {
+		*pic = new Picture(x,y, picname);
+	}
+
 	(*pic)->SetColor(red,blue,green,alpha);
 
 	UI::Add(*pic);

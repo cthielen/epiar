@@ -95,12 +95,12 @@
     <imageName>Resources/Graphics/laser_grey.png</imageName>
     <picName>Resources/Graphics/mark3_laser.png</picName>
     <payload>2</payload>
-    <velocity>10</velocity>
+    <velocity>15</velocity>
     <acceleration>0</acceleration>
     <ammoType>Bullet</ammoType>
     <ammoConsumption>0</ammoConsumption>
-    <fireDelay>70</fireDelay>
-    <lifetime>1000</lifetime>
+    <fireDelay>350</fireDelay>
+    <lifetime>1500</lifetime>
     <tracking>0.0000</tracking>
     <sound>Resources/Audio/Weapons/iceball.ogg</sound>
     <msrp>1000</msrp>

@@ -12,11 +12,14 @@ function landingDialog(id)
 	Epiar.pause()
 
 	local landingWin = UI.newWindow( WIDTH/2-width/2,HEIGHT/2-height/2,width,height, string.format("%s",planet:GetName()))
-	landingTabs = UI.newTabContainer( 10, 30, width - 20, height - 80,"Store")
+	landingTabs = UI.newTabContainer( 10, 30, width - 20, height - 80, "Store" )
 	landingWin:add(landingTabs)
 
 	function addToStoreList( storeList, list, yoff, cmd, container )
 		local boxsize = width/4 - 40
+
+		print("width is  : %d\n", width)
+		print("boxsize is: %d\n", boxsize)
 		for i,name in ipairs(list) do
 			local callback = string.format( cmd, container, name )
 			local pic = UI.newPicture( 0, yoff, boxsize, boxsize, name, 0, 0, 0, 1)

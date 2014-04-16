@@ -290,7 +290,6 @@ void UI::SwapScreens(string newname, Image* oldBackground, Image* newBackground 
 			newScreen->Draw( );
 			DrawDeferred();
 			
-			Video::PostDraw();
 			Video::Update();
 			Timer::Delay(10);
 			Timer::Update();
@@ -439,7 +438,6 @@ void UI::ModalDialog( Window *window ) {
 	// Draw Things Once
 	Video::PreDraw();
 	UI::Draw();
-	Video::PostDraw();
 	Video::Update();
 
 	// UI Input

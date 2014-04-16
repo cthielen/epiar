@@ -42,7 +42,7 @@ class Menu {
 	static bool AutoLoad( void );
 
 	// GUI Setup and Actions
-	static void SetupGUI();
+	static void SetupUI();
 	static void CreateNewWindow();
 	static void CreateLoadWindow();
 	static void StartGame( void* playerInfo );

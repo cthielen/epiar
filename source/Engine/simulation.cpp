@@ -351,7 +351,6 @@ bool Simulation::Run() {
 			Hud::Draw( HUD_ALL, currentFPS, camera, sprites );
 			UI::Draw();
 			console->Draw();
-			Video::PostDraw();
 			Video::Update();
 		}
 

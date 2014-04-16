@@ -69,7 +69,7 @@ void Menu::Main_Menu( void )
 		}
 	}
 
-	SetupGUI();
+	SetupUI();
 
 	// Input Loop
 	do {
@@ -83,7 +83,9 @@ void Menu::Main_Menu( void )
 			Video::Erase();
 			Video::PreDraw();
 			UI::Draw();
-			Video::PostDraw();
+
+			Video::DrawRect(0, 0, 100, 100, 1., 1., 1., 1.);
+
 			Video::Update();
 		}
 
@@ -128,7 +130,7 @@ bool Menu::AutoLoad()
 /** Create the Basic Main Menu
  *  \details The Splash Screen is random.
  */
-void Menu::SetupGUI()
+void Menu::SetupUI()
 {
 	int button_x = Video::GetWidth() - 300;
 	int button_y = Video::GetHalfHeight() - 175; // the menu buttons are about 500px tall
