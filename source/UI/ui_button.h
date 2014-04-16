@@ -9,7 +9,7 @@
 #ifndef __H_BUTTON__
 #define __H_BUTTON__
 
-#include "Audio/sound.h"
+#include "audio/sound.h"
 #include "Graphics/image.h"
 #include "UI/ui.h"
 

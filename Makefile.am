@@ -4,10 +4,10 @@ bin_PROGRAMS = epiar
 
 epiar_SOURCES = source/main.cpp \
 		source/menu.cpp \
-                source/Audio/audio.cpp \
-                source/Audio/audio_lua.cpp \
-                source/Audio/music.cpp \
-                source/Audio/sound.cpp \
+                source/audio/audio.cpp \
+                source/audio/audio_lua.cpp \
+                source/audio/music.cpp \
+                source/audio/sound.cpp \
                 source/Engine/alliances.cpp \
                 source/Engine/commodities.cpp \
                 source/Engine/console.cpp \
@@ -79,7 +79,7 @@ epiar_LDADD = source/lua/src/liblua.a
 SUBDIRS=source/lua
 
 include resources/Animations/Makefile.am
-include resources/Audio/Makefile.am
+include resources/audio/Makefile.am
 include resources/Definitions/Makefile.am
 include resources/Graphics/Makefile.am
 include resources/Scripts/Makefile.am

@@ -229,7 +229,7 @@ function showComponent(kind, name)
 			field = UI.newDropdown( 90, yoff, 100, 20, Epiar.listSounds(subgroup) )
 			if value ~= "" then 
 				-- Chop off the path part
-				local subpath = "resources/Audio/"..subgroup.."/"
+				local subpath = "resources/audio/"..subgroup.."/"
 				value = value:sub( value:find(subpath) + string.len(subpath) )
 				field:setText( value )
 			end
@@ -237,7 +237,7 @@ function showComponent(kind, name)
 			function previewSound( subgroup, searchPath )
 				local dropdown = UI.search( searchPath )
 				if dropdown then
-					local sound = string.format("resources/Audio/%s/%s", subgroup, dropdown:GetText() )
+					local sound = string.format("resources/audio/%s/%s", subgroup, dropdown:GetText() )
 					Audio.playSound( sound )
 				end
 			end
@@ -353,7 +353,7 @@ function saveInfo(name)
 				info[title] = texts[title]:GetText()
 			elseif fieldType == "Sound" then
 				local subgroup = layout[3]
-				info[title] = "resources/Audio/"..subgroup.."/" .. texts[title]:GetText()
+				info[title] = "resources/audio/"..subgroup.."/" .. texts[title]:GetText()
 			elseif fieldType == "Animation" then
 				info[title] = "resources/Animations/" .. texts[title]:GetText()
 			elseif fieldType == "Technologies" then

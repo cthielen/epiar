@@ -14,7 +14,7 @@
 #include "ui_widget.h"
 #include "ui_container.h"
 #include "ui_window.h"
-#include "Audio/sound.h"
+#include "audio/sound.h"
 #include "Graphics/font.h"
 
 // Macro to check if xi, yi point is inside a rectangle x,y,w,h

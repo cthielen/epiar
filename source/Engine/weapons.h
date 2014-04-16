@@ -10,7 +10,7 @@
 #define __H_WEAPON__
 
 #include "Sprites/sprite.h"
-#include "Audio/sound.h"
+#include "audio/sound.h"
 #include "Utilities/components.h"
 #include "Engine/outfit.h"
 

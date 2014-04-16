@@ -9,8 +9,8 @@
 #include "includes.h"
 #include "common.h"
 
-#include "Audio/audio.h"
-#include "Audio/audio_lua.h"
+#include "audio/audio.h"
+#include "audio/audio_lua.h"
 #include "Engine/console.h"
 #include "Engine/simulation.h"
 #include "Engine/simulation_lua.h"
@@ -1501,7 +1501,7 @@ int Simulation_Lua::ListAnimations(lua_State *L) {
  */
 int Simulation_Lua::ListSounds(lua_State *L) {
 	string subfolder = luaL_checkstring(L,1);
-	list<string> oggs = Filesystem::Enumerate("resources/Audio/"+subfolder ,".ogg");
+	list<string> oggs = Filesystem::Enumerate("resources/audio/"+subfolder ,".ogg");
 	Lua::pushStringList(L, &oggs);
 	return 1;
 }

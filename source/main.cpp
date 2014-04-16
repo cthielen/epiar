@@ -11,7 +11,7 @@
 
 #include "includes.h"
 #include "common.h"
-#include "Audio/audio.h"
+#include "audio/audio.h"
 #include "Tests/graphics.h"
 #include "Graphics/font.h"
 #include "Graphics/video.h"

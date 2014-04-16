@@ -10,7 +10,7 @@
 #define __H_MUSIC__
 
 #include "includes.h"
-#include "Audio/audio.h"
+#include "audio/audio.h"
 
 class Song {
 	public:

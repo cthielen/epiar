@@ -12,8 +12,8 @@
 #include "UI/ui.h"
 #include "UI/widgets.h"
 #include "Utilities/log.h"
-#include "Audio/audio.h"
-#include "Audio/sound.h"
+#include "audio/audio.h"
+#include "audio/sound.h"
 
 /** \addtogroup UI
  * @{

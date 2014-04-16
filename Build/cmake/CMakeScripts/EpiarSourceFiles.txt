@@ -11,14 +11,14 @@ set (Epiar_src
 set (Epiar_src ${Epiar_src}
 	)
 set (Epiar_src ${Epiar_src}
-	${Epiar_SRC_DIR}/Audio/audio.cpp
-	${Epiar_SRC_DIR}/Audio/audio_lua.cpp
-	${Epiar_SRC_DIR}/Audio/music.cpp
-	${Epiar_SRC_DIR}/Audio/sound.cpp
-	${Epiar_SRC_DIR}/Audio/audio.h
-	${Epiar_SRC_DIR}/Audio/audio_lua.h
-	${Epiar_SRC_DIR}/Audio/music.h
-	${Epiar_SRC_DIR}/Audio/sound.h
+	${Epiar_SRC_DIR}/audio/audio.cpp
+	${Epiar_SRC_DIR}/audio/audio_lua.cpp
+	${Epiar_SRC_DIR}/audio/music.cpp
+	${Epiar_SRC_DIR}/audio/sound.cpp
+	${Epiar_SRC_DIR}/audio/audio.h
+	${Epiar_SRC_DIR}/audio/audio_lua.h
+	${Epiar_SRC_DIR}/audio/music.h
+	${Epiar_SRC_DIR}/audio/sound.h
 	)
 set (Epiar_src ${Epiar_src}
 	${Epiar_SRC_DIR}/Engine/alliances.h
@@ -187,7 +187,7 @@ endif (COMPILE_TESTS)
 
 # Add groups for source file
 source_group(AI REGULAR_EXPRESSION ".*/AI/.*")
-source_group(Audio REGULAR_EXPRESSION ".*/Audio/.*")
+source_group(audio REGULAR_EXPRESSION ".*/audio/.*")
 source_group(Engine REGULAR_EXPRESSION ".*/Engine/.*")
 source_group(Graphics REGULAR_EXPRESSION ".*/Graphics/.*")
 source_group(Input REGULAR_EXPRESSION ".*/Input/.*")

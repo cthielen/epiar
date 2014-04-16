@@ -16,7 +16,7 @@
 #include "Sprites/spritemanager.h"
 #include "Utilities/xml.h"
 #include "Sprites/effects.h"
-#include "Audio/sound.h"
+#include "audio/sound.h"
 #include "Engine/hud.h"
 
 /** \addtogroup Sprites
@@ -363,8 +363,8 @@ bool Ship::Jump( Coordinate position, bool jumpDrive ) {
 	// TODO Start playing a sound
 	if (isPlayer()) {
 		Sound *aSound;
-		if (jumpDrive) aSound = Sound::Get("resources/Audio/Effects/128590__corsica-s__transport-edit.wav");
-		else aSound = Sound::Get("resources/Audio/Effects/55853__sergenious__teleport.wav");
+		if (jumpDrive) aSound = Sound::Get("resources/audio/Effects/128590__corsica-s__transport-edit.wav");
+		else aSound = Sound::Get("resources/audio/Effects/55853__sergenious__teleport.wav");
         aSound -> SetVolume(10);
         aSound -> Play();
 	}
@@ -619,7 +619,7 @@ void Ship::Explode( lua_State *L )
 
 	// Play explode sound
 	if(OPTION(int, "options/sound/explosions")) {
-		Sound *explodesnd = Sound::Get("resources/Audio/Effects/18384__inferno__largex.wav.ogg");
+		Sound *explodesnd = Sound::Get("resources/audio/Effects/18384__inferno__largex.wav.ogg");
 		explodesnd->Play( GetWorldPosition() - camera->GetFocusCoordinate());
 	}
 

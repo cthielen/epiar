@@ -12,7 +12,7 @@ It doesn't have enough force to propel large or carrier class starships.</descri
     <msrp>500</msrp>
     <foldDrive>0</foldDrive>
     <flareAnimation>resources/Animations/thrust.ani</flareAnimation>
-    <thrustSound>resources/Audio/Engines/22455__nathanshadow__Thruster_Level_II.ogg</thrustSound>
+    <thrustSound>resources/audio/Engines/22455__nathanshadow__Thruster_Level_II.ogg</thrustSound>
     <picName>resources/Graphics/thruster.png</picName>
   </engine>
   <engine>
@@ -26,7 +26,7 @@ Some Carrier class starships in the Terran Navy also use Ion Engines as nothing 
     <msrp>2000</msrp>
     <foldDrive>1</foldDrive>
     <flareAnimation>resources/Animations/thrust2.ani</flareAnimation>
-    <thrustSound>resources/Audio/Engines/22455__nathanshadow__Thruster_Level_II.ogg</thrustSound>
+    <thrustSound>resources/audio/Engines/22455__nathanshadow__Thruster_Level_II.ogg</thrustSound>
     <picName>resources/Graphics/engine_upgrade.png</picName>
   </engine>
 </engines>

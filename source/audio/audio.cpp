@@ -9,7 +9,7 @@
  */
 
 #include "includes.h"
-#include "Audio/audio.h"
+#include "audio/audio.h"
 #include "Utilities/log.h"
 
 /**\class Audio

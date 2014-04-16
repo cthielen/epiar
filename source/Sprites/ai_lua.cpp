@@ -14,7 +14,7 @@
 #include "Sprites/planets.h"
 #include "Sprites/planets_lua.h"
 #include "Sprites/ai_lua.h"
-#include "Audio/sound.h"
+#include "audio/sound.h"
 #include "Engine/camera.h"
 #include "Utilities/trig.h"
 #include "Engine/commodities.h"

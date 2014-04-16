@@ -8,8 +8,8 @@
 
 #include "includes.h"
 #include "common.h"
-#include "Audio/music.h"
-#include "Audio/audio_lua.h"
+#include "audio/music.h"
+#include "audio/audio_lua.h"
 #include "Engine/calendar.h"
 #include "Engine/hud.h"
 #include "Engine/simulation.h"

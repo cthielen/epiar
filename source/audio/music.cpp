@@ -7,7 +7,7 @@
  */
 
 #include "includes.h"
-#include "Audio/music.h"
+#include "audio/music.h"
 #include "Utilities/log.h"
 #include "Utilities/resource.h"
 

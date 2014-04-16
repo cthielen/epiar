@@ -16,7 +16,7 @@
 #include "Tests/ui.h"
 #include "Tests/font.h"
 // Header files for various subsystems
-#include "Audio/audio.h"
+#include "audio/audio.h"
 #include "Graphics/font.h"
 #include "Graphics/video.h"
 #include "Input/input.h"

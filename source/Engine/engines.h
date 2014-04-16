@@ -9,7 +9,7 @@
 #ifndef __h_engines__
 #define __h_engines__
 
-#include "Audio/sound.h"
+#include "audio/sound.h"
 #include "Graphics/animation.h"
 #include "Utilities/components.h"
 #include "Engine/outfit.h"

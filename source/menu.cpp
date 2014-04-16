@@ -30,7 +30,7 @@ Picture *Menu::options = NULL;
 Picture *Menu::exit = NULL;
 Picture *Menu::continueButton = NULL;
 
-//if(OPTION(int, "options/sound/buttons")) Sound::Get( "resources/Audio/Interface/28853__junggle__btn043.ogg" )->Play();
+//if(OPTION(int, "options/sound/buttons")) Sound::Get( "resources/audio/Interface/28853__junggle__btn043.ogg" )->Play();
 
 /**\class Menu
  *  \brief Epiar's Main Menu
@@ -473,7 +473,7 @@ void Menu::CreateNewPlayer( )
 	int israndom = ((Checkbox*)UI::Search("/Window'New Game'/Frame/Checkbox'Random Universe'/"))->IsChecked();
 	int seed = atoi( ((Textbox*)UI::Search("/Window'New Game'/Frame/Textbox'Random Universe Seed'/"))->GetText().c_str() );
 
-	if(OPTION(int, "options/sound/buttons")) Sound::Get( "resources/Audio/Interface/28853__junggle__btn043.ogg" )->Play();
+	if(OPTION(int, "options/sound/buttons")) Sound::Get( "resources/audio/Interface/28853__junggle__btn043.ogg" )->Play();
 
 	if(players->PlayerExists(playerName)) {
 		Dialogs::Alert("A player with that name exists.");
