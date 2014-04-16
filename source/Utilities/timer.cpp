@@ -90,10 +90,6 @@ void Timer::Delay() {
 	SDL_Delay( delayMS );
 }
 
-void Timer::Delay( int waitMS ) {
-	SDL_Delay( waitMS );
-}
-
 double Timer::GetDelta( void ) {
 	return LOGIC_FPS * 0.001f;
 }

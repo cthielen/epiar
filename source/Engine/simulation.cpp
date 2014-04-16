@@ -506,8 +506,7 @@ bool Simulation::Edit() {
 		console->Draw();
 		Video::Update();
 
-		// Don't kill the CPU (play nice)
-		Timer::Delay( 50 );
+		Timer::Delay();
 	}
 
 	LogMsg(INFO, "Simulation Edit Stopping");

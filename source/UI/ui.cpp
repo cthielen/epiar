@@ -251,6 +251,8 @@ void UI::SwapScreens(string newname, Image* oldBackground, Image* newBackground 
 	// Swap in the new Screen
 	currentScreen = newScreen;
 
+	return;
+
 	// Animate one screen sliding over another
 	// Since anything less than 10ms is unreliable from the timer perspective, 
 	// There is a 10ms delay between frames.
@@ -291,7 +293,7 @@ void UI::SwapScreens(string newname, Image* oldBackground, Image* newBackground 
 			DrawDeferred();
 			
 			Video::Update();
-			Timer::Delay(10);
+			Timer::Delay();
 			Timer::Update();
 		}
 		oldScreen->SetX( 0 );
@@ -444,7 +446,7 @@ void UI::ModalDialog( Window *window ) {
 	while( modalEnabled )
 	{
 		// Wait for some input
-		Timer::Delay(75);
+		Timer::Delay();
 
 		// Collect user input events
 		events = inputs.Update();
