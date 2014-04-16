@@ -85,16 +85,12 @@ Picture::Picture( int x, int y, Image* pic ) {
 Picture::Picture( int x, int y, int w, int h, string filename ) {
 	Default(x, y, w, h);
 
-	cout << "new picture (" << filename << ") requested to be: " << x << ", " << y << ", " << w << ", " << h << endl;
-
 	bitmap = Image::Get(filename);
 	if( bitmap )
 	{
 		// Only allow down-sampling
 		if(w > bitmap->GetWidth()) this->w = bitmap->GetWidth();
 		if(h > bitmap->GetHeight()) this->h = bitmap->GetHeight();
-
-		cout << "decided to be: " << x << ", " << y << ", " << this->w << ", " << this->h << endl;
 
 		name = bitmap->GetPath();
 	}
@@ -156,10 +152,6 @@ void Picture::Draw( int relx, int rely ) {
 			if(stretch) {
 				bitmap->DrawStretch( x, y, w, h, static_cast<float>(rotation));
 			} else {
-				if(name != "") {
-					cout << "Drawing fit for: " << name << endl;
-					cout << "Passing x, y, w, h: " << x << ", " << y << ", " << w << ", " << h << endl;
-				}
 				bitmap->DrawFit( x, y, w, h, static_cast<float>(rotation));
 			}
 		}

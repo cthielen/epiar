@@ -83,9 +83,6 @@ void Menu::Main_Menu( void )
 			Video::Erase();
 			Video::PreDraw();
 			UI::Draw();
-
-			Video::DrawRect(0, 0, 100, 100, 1., 1., 1., 1.);
-
 			Video::Update();
 		}
 

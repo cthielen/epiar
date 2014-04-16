@@ -16,14 +16,12 @@ function landingDialog(id)
 	landingWin:add(landingTabs)
 
 	function addToStoreList( storeList, list, yoff, cmd, container )
-		local boxsize = width/4 - 40
+		local boxsize = (width / 4) - 40
 
-		print("width is  : %d\n", width)
-		print("boxsize is: %d\n", boxsize)
 		for i,name in ipairs(list) do
 			local callback = string.format( cmd, container, name )
-			local pic = UI.newPicture( 0, yoff, boxsize, boxsize, name, 0, 0, 0, 1)
-			pic:setPictureCenter( 60, yoff + 50 )
+			local pic = UI.newPicture( 0, yoff, boxsize * 0.75, boxsize * 0.75, name, 0, 0, 0, 1)
+			pic:setPictureCenter( boxsize / 2, yoff + (boxsize / 2) )
 			pic:addCallback( Action_MouseLUp, callback )
 			storeList:add( pic )
 			storeList:add( UI.newButton( 0, yoff+boxsize, boxsize, 20, name, callback ))

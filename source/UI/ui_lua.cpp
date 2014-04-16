@@ -532,7 +532,6 @@ int UI_Lua::newPicture(lua_State *L) {
 	
 	if (w + h > 0) {
 		*pic = new Picture(x, y, w, h, picname);
-		cout << "New picture from lua, x, y, w, h: " << x << ", " << y << ", " << w << ", " << h << endl;
 	} else {
 		*pic = new Picture(x,y, picname);
 	}
