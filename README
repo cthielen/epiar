@@ -90,7 +90,7 @@ We don't have any Multi-Player right now. Sorry.
 ---------------
 You can start the Editor by opening Epiar with the command line option
 "--editor-mode".  You can also change the <editor-mode>0</editor-mode> option
-in the settings file (Resources/Definitions/options.xml).
+in the settings file (resources/Definitions/options.xml).
 
 The controls in Editor Mode are a bit different than in the Normal mode.  The
 Options (?), Pause(?), Map (m or M), Radar (0 through 9) keys all work

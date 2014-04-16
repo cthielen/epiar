@@ -77,7 +77,7 @@ Simulation::Simulation( void ) {
 bool Simulation::New( string newname ) {
 	LogMsg(INFO, "New Simulation: '%s'.", newname.c_str() );
 
-	folderpath = "Resources/Simulation/" + newname + "/";
+	folderpath = "resources/Simulation/" + newname + "/";
 
 	XMLFile::New( folderpath + string("simulation.xml"), "simulation" );
 
@@ -110,7 +110,7 @@ bool Simulation::New( string newname ) {
 	Set("defaultPlayer/engine", "");
 	Set("defaultPlayer/credits", 0);
 
-	Set("simulation/players", "Resources/Definitions/saved-games.xml" );
+	Set("simulation/players", "resources/Definitions/saved-games.xml" );
 
 	loaded = true;
 	return true;
@@ -121,7 +121,7 @@ bool Simulation::New( string newname ) {
  * \return true if success
  */
 bool Simulation::Load( string simName ) {
-	folderpath = "Resources/Simulation/" + simName + "/";
+	folderpath = "resources/Simulation/" + simName + "/";
 	if( !Open( folderpath + string("simulation.xml") ) ) {
 		return false;
 	}
@@ -137,7 +137,7 @@ void Simulation::pause(){
 }
 
 void Simulation::Save(){
-	if( PHYSFS_mkdir( ("Resources/Simulation/" + GetName() + "/").c_str() ) == 0) {
+	if( PHYSFS_mkdir( ("resources/Simulation/" + GetName() + "/").c_str() ) == 0) {
 		LogMsg(ERR, "Cannot create folder '%s'.", folderpath.c_str() );
 		return;
 	}
@@ -183,15 +183,15 @@ bool Simulation::SetupToRun(){
 	// Load ::Run()-specific Lua registers
 	AI_Lua::RegisterAI(L);
 
-	luaLoad = Lua::Load("Resources/Scripts/utilities.lua")
-	       && Lua::Load("Resources/Scripts/universe.lua")
-	       && Lua::Load("Resources/Scripts/landing.lua")
-	       && Lua::Load("Resources/Scripts/commands.lua")
-	       && Lua::Load("Resources/Scripts/ai.lua")
-	       && Lua::Load("Resources/Scripts/missions.lua")
-	       && Lua::Load("Resources/Scripts/player.lua")
-	       && Lua::Load("Resources/Scripts/autopilot.lua")
-	       && Lua::Load("Resources/Scripts/fleet.lua");
+	luaLoad = Lua::Load("resources/Scripts/utilities.lua")
+	       && Lua::Load("resources/Scripts/universe.lua")
+	       && Lua::Load("resources/Scripts/landing.lua")
+	       && Lua::Load("resources/Scripts/commands.lua")
+	       && Lua::Load("resources/Scripts/ai.lua")
+	       && Lua::Load("resources/Scripts/missions.lua")
+	       && Lua::Load("resources/Scripts/player.lua")
+	       && Lua::Load("resources/Scripts/autopilot.lua")
+	       && Lua::Load("resources/Scripts/fleet.lua");
 
 	if (!luaLoad) {
 		LogMsg(ERR,"Fatal error starting Lua.");
@@ -217,7 +217,7 @@ bool Simulation::SetupToRun(){
 			// Add Asteroids near planets
 			unsigned int a;
 			for( a = 0; a < 100; a++ ){
-				Effect* asteroid = new Effect( p->GetWorldPosition() + GaussianCoordinate() * p->GetInfluence(), "Resources/Animations/asteroid.ani", 1.0 );
+				Effect* asteroid = new Effect( p->GetWorldPosition() + GaussianCoordinate() * p->GetInfluence(), "resources/Animations/asteroid.ani", 1.0 );
 				asteroid->SetMomentum( GaussianCoordinate() *2 );
 				asteroid->SetAngle( float( rand() %360 ) );
 				sprites->Add( asteroid );
@@ -236,7 +236,7 @@ bool Simulation::SetupToRun(){
 
 	// Preloading this animation prevents an FPS
 	// drop the first time that a ship explodes.
-	Ani::Get("Resources/Animations/explosion1.ani");
+	Ani::Get("resources/Animations/explosion1.ani");
 
 	// Randomize the Lua Seed
 	Lua::Call("randomizeseed");
@@ -444,10 +444,10 @@ bool Simulation::SetupToEdit() {
 	// Load ::Edit()-specific Lua registers
 	Simulation_Lua::RegisterEditor(L);
 
-	luaLoad = Lua::Load("Resources/Scripts/utilities.lua")
-	       && Lua::Load("Resources/Scripts/universe.lua")
-	       && Lua::Load("Resources/Scripts/commands.lua")
-	       && Lua::Load("Resources/Scripts/editor.lua");
+	luaLoad = Lua::Load("resources/Scripts/utilities.lua")
+	       && Lua::Load("resources/Scripts/universe.lua")
+	       && Lua::Load("resources/Scripts/commands.lua")
+	       && Lua::Load("resources/Scripts/editor.lua");
 
 	if (!luaLoad) {
 		LogMsg(ERR,"Fatal error starting Lua.");

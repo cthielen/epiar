@@ -85,7 +85,7 @@ void Test::LoadRequirements( void ){
 	long testreqs = tests[this->testname].second;
 	if( testreqs & REQUIRE_OPTIONS ){
 		cout<<"  Initializing options subsystem..."<<endl;
-		optionsfile = new XMLFile( "Resources/Definitions/options.xml" );
+		optionsfile = new XMLFile( "resources/Definitions/options.xml" );
 	}
 	if( testreqs & REQUIRE_VIDEO ){
 		cout<<"  Initializing video subsystem..."<<endl;
@@ -100,10 +100,10 @@ void Test::LoadRequirements( void ){
 	}
 	if( testreqs & REQUIRE_FONTS ){
 		cout<<"  Initializing font subsystem..."<<endl;
-		SansSerif       = new Font( "Resources/Fonts/FreeSans.ttf" );
-		BitType         = new Font( "Resources/Fonts/visitor2.ttf" );
-		Serif           = new Font( "Resources/Fonts/FreeSerif.ttf" );
-		Mono            = new Font( "Resources/Fonts/ConsolaMono.ttf" );
+		SansSerif       = new Font( "resources/Fonts/FreeSans.ttf" );
+		BitType         = new Font( "resources/Fonts/visitor2.ttf" );
+		Serif           = new Font( "resources/Fonts/FreeSerif.ttf" );
+		Mono            = new Font( "resources/Fonts/ConsolaMono.ttf" );
 	}
 }
 

@@ -32,7 +32,7 @@
  */
 Gate::Gate(Coordinate pos, string _name) {
 	top = true;
-	SetImage( Image::Get("Resources/Graphics/gate1_top.png") );
+	SetImage( Image::Get("resources/Graphics/gate1_top.png") );
 	
 	// Create the PartnerID Gate
 	Gate* partner = new Gate(GetID());
@@ -56,7 +56,7 @@ Gate::Gate(Coordinate pos, string _name) {
  */
 Gate::Gate(int topID) {
 	top = false;
-	SetImage( Image::Get("Resources/Graphics/gate1_bottom.png") );
+	SetImage( Image::Get("resources/Graphics/gate1_bottom.png") );
 	partnerID = topID;
 }
 

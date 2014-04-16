@@ -252,7 +252,7 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 
 	// Set the application icon (must be done before SDL_SetVideoMode)
 	SDL_Surface *icon = NULL;
-	File icon_file( "Resources/Graphics/icon.bmp" ); // File is used to calculate path
+	File icon_file( "resources/Graphics/icon.bmp" ); // File is used to calculate path
 	icon = SDL_LoadBMP( icon_file.GetAbsolutePath().c_str() );
 	SDL_WM_SetIcon(icon, NULL);
 	SDL_FreeSurface(icon); // presumably we can do this

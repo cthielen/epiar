@@ -62,7 +62,7 @@ stdout.txt
 stderr.txt
 
 ### Epiar Saved Games
-Resources/Definitions/*.xml
+resources/Definitions/*.xml
 
 .DS_Store
 Epiar.tmproj

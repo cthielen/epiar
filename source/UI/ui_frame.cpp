@@ -31,15 +31,15 @@ Frame::Frame( int x, int y, int w, int h )
 	this->h = h;
 
 	// Load the bitmaps needed for drawing
-	bitmaps[0] = Image::Get( "Resources/Skin/ui_frame_up_left.png" );
-	bitmaps[1] = Image::Get( "Resources/Skin/ui_frame_up.png" );
-	bitmaps[2] = Image::Get( "Resources/Skin/ui_frame_up_right.png" );
-	bitmaps[3] = Image::Get( "Resources/Skin/ui_frame_left.png" );
-	bitmaps[4] = Image::Get( "Resources/Skin/ui_frame_right.png" );
-	bitmaps[5] = Image::Get( "Resources/Skin/ui_frame_low_left.png" );
-	bitmaps[6] = Image::Get( "Resources/Skin/ui_frame_low.png" );
-	bitmaps[7] = Image::Get( "Resources/Skin/ui_frame_low_right.png" );
-	bitmaps[8] = Image::Get( "Resources/Skin/ui_frame_back.png" );
+	bitmaps[0] = Image::Get( "resources/Skin/ui_frame_up_left.png" );
+	bitmaps[1] = Image::Get( "resources/Skin/ui_frame_up.png" );
+	bitmaps[2] = Image::Get( "resources/Skin/ui_frame_up_right.png" );
+	bitmaps[3] = Image::Get( "resources/Skin/ui_frame_left.png" );
+	bitmaps[4] = Image::Get( "resources/Skin/ui_frame_right.png" );
+	bitmaps[5] = Image::Get( "resources/Skin/ui_frame_low_left.png" );
+	bitmaps[6] = Image::Get( "resources/Skin/ui_frame_low.png" );
+	bitmaps[7] = Image::Get( "resources/Skin/ui_frame_low_right.png" );
+	bitmaps[8] = Image::Get( "resources/Skin/ui_frame_back.png" );
 
 	// All of these must exist
 	assert( bitmaps[0] != NULL );

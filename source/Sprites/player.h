@@ -32,7 +32,7 @@ class Player : public Ship {
 		// Generic Getters
 		string GetLastPlanet() { return lastPlanet; }
 		string GetName() { return name; }
-		string GetFileName() { return "Resources/Definitions/"+ GetName() +".xml"; }
+		string GetFileName() { return "resources/Definitions/"+ GetName() +".xml"; }
 		time_t GetLoadTime() { return lastLoadTime; }
 		virtual int GetDrawOrder( void ) { return( DRAW_ORDER_PLAYER ); }
 		Color GetRadarColor( void ) { return GOLD; }

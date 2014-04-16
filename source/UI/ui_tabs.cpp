@@ -32,13 +32,13 @@ Tab::Tab( const string& _caption ) {
 	this->w = 0;
 	this->name = _caption;
 
-	active_left = Image::Get("Resources/Skin/active-tab-left.png");
-	active_middle = Image::Get("Resources/Skin/active-tab-middle.png");
-	active_right = Image::Get("Resources/Skin/active-tab-right.png");
+	active_left = Image::Get("resources/Skin/active-tab-left.png");
+	active_middle = Image::Get("resources/Skin/active-tab-middle.png");
+	active_right = Image::Get("resources/Skin/active-tab-right.png");
 
-	inactive_left = Image::Get("Resources/Skin/inactive-tab-left.png");
-	inactive_middle = Image::Get("Resources/Skin/inactive-tab-middle.png");
-	inactive_right = Image::Get("Resources/Skin/inactive-tab-right.png");
+	inactive_left = Image::Get("resources/Skin/inactive-tab-left.png");
+	inactive_middle = Image::Get("resources/Skin/inactive-tab-middle.png");
+	inactive_right = Image::Get("resources/Skin/inactive-tab-right.png");
 
 	this->capw = UI::font->TextWidth( _caption ) + (TAB_PADDING_W * 2);
 }

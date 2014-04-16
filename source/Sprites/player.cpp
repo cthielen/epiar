@@ -776,7 +776,7 @@ xmlNodePtr PlayerInfo::ConvertOldVersion( xmlDocPtr doc, xmlNodePtr node ) {
 	xmlDocPtr xmlPtr;
 	xmlNodePtr  attr;
 	xmlNodePtr  copy = xmlCopyNode( node, 1);
-	string filename = "Resources/Definitions/"+ name +".xml";
+	string filename = "resources/Definitions/"+ name +".xml";
 
 	LogMsg(INFO, "Converting %s to an xml file: %s ", name.c_str(), filename.c_str() );
 
@@ -876,7 +876,7 @@ bool Players::DeletePlayer(string playerName) {
 	}
 	
 	// delete the separate player xml
-	string filename = "Resources/Definitions/" + playerName + ".xml";
+	string filename = "resources/Definitions/" + playerName + ".xml";
 	if( Filesystem::DeleteFile( filename ) != true ) {
 		LogMsg(ERR, "Could not remove player XML file.\n");
 		return false;

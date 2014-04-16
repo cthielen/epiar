@@ -30,7 +30,7 @@ Picture *Menu::options = NULL;
 Picture *Menu::exit = NULL;
 Picture *Menu::continueButton = NULL;
 
-//if(OPTION(int, "options/sound/buttons")) Sound::Get( "Resources/Audio/Interface/28853__junggle__btn043.ogg" )->Play();
+//if(OPTION(int, "options/sound/buttons")) Sound::Get( "resources/Audio/Interface/28853__junggle__btn043.ogg" )->Play();
 
 /**\class Menu
  *  \brief Epiar's Main Menu
@@ -58,7 +58,7 @@ void Menu::Main_Menu( void )
 	quitSignal = false;
 
 	Players *players = Players::Instance();
-	players->Load( "Resources/Definitions/saved-games.xml", true, true);
+	players->Load( "resources/Definitions/saved-games.xml", true, true);
 
 	if( OPTION(int,"options/simulation/automatic-load") )
 	{
@@ -136,12 +136,12 @@ void Menu::SetupUI()
 	int button_y = Video::GetHalfHeight() - 175; // the menu buttons are about 500px tall
 
 	string splashScreens[] = {
-		"Resources/Art/menu1.png",
-		"Resources/Art/menu2.png",
-		"Resources/Art/menu3.png",
-		"Resources/Art/menu4.png",
-		"Resources/Art/menu5.png",
-		"Resources/Art/menu6.png",
+		"resources/Art/menu1.png",
+		"resources/Art/menu2.png",
+		"resources/Art/menu3.png",
+		"resources/Art/menu4.png",
+		"resources/Art/menu5.png",
+		"resources/Art/menu6.png",
 	};
 
 	int numScreens = (sizeof(splashScreens) / sizeof(splashScreens[0]));
@@ -154,35 +154,35 @@ void Menu::SetupUI()
 	UI::Add( new Picture( 0, 0, Video::GetWidth(), Video::GetHeight(), menuSplash, true ) );
 
 	// Add the logo
-	UI::Add( new Picture(20, Video::GetHeight() - 120, Image::Get("Resources/Art/logo.png") ) );
+	UI::Add( new Picture(20, Video::GetHeight() - 120, Image::Get("resources/Art/logo.png") ) );
 
 	// New Button
 	play = PictureButton( button_x, button_y + 50, Menu::CreateNewWindow,
-	                      Image::Get( "Resources/Graphics/txt_new_game_active.png"),
-	                      Image::Get( "Resources/Graphics/txt_new_game_inactive.png") );
+	                      Image::Get( "resources/Graphics/txt_new_game_active.png"),
+	                      Image::Get( "resources/Graphics/txt_new_game_inactive.png") );
 
 	// Load Button
 	if( (Players::Instance()->Size() > 0) )
 	{
 		load = PictureButton( button_x, button_y + 100, Menu::CreateLoadWindow,
-		                       Image::Get( "Resources/Graphics/txt_load_game_active.png"),
-		                       Image::Get( "Resources/Graphics/txt_load_game_inactive.png") );
+		                       Image::Get( "resources/Graphics/txt_load_game_active.png"),
+		                       Image::Get( "resources/Graphics/txt_load_game_inactive.png") );
 	}
 
 	// Editor Button
 	edit = PictureButton( button_x, button_y + 150, Menu::CreateEditWindow,
-	                       Image::Get( "Resources/Graphics/txt_editor_active.png"),
-	                       Image::Get( "Resources/Graphics/txt_editor_inactive.png") );
+	                       Image::Get( "resources/Graphics/txt_editor_active.png"),
+	                       Image::Get( "resources/Graphics/txt_editor_inactive.png") );
 
 	// Options Button
 	options = PictureButton( button_x, button_y + 200, Dialogs::OptionsWindow,
-	                          Image::Get( "Resources/Graphics/txt_options_active.png"),
-	                          Image::Get( "Resources/Graphics/txt_options_inactive.png") );
+	                          Image::Get( "resources/Graphics/txt_options_active.png"),
+	                          Image::Get( "resources/Graphics/txt_options_inactive.png") );
 
 	// Exit Button
 	exit = PictureButton( button_x, button_y + 250, QuitMenu,
-	                      Image::Get( "Resources/Graphics/txt_exit_active.png"),
-	                      Image::Get( "Resources/Graphics/txt_exit_inactive.png") );
+	                      Image::Get( "resources/Graphics/txt_exit_active.png"),
+	                      Image::Get( "resources/Graphics/txt_exit_inactive.png") );
 
 #ifdef EPIAR_UI_TESTS
 	// Test that the GUI features work
@@ -208,7 +208,7 @@ void Menu::CreateNewWindow()
 	win->AddChild( (new Frame( 25, 90, 200, 150 ))
 		->AddChild( (new Label(15, 15, "Simulation:")) )
 		->AddChild( (new Dropdown( 80, 15, 100, 30 ))
-			->AddOptions( Filesystem::Enumerate("Resources/Simulation/") ) )
+			->AddOptions( Filesystem::Enumerate("resources/Simulation/") ) )
 		->AddChild( (new Checkbox(15, 60, 0, "Random Universe")) )
 		->AddChild( (new Label(15, 80, "Seed:")) )
 		->AddChild( (new Textbox(50, 80, 80, 1, "0", "Random Universe Seed")) )
@@ -316,8 +316,8 @@ void Menu::StartGame( void *info )
 	{
 		// Continue Button
 		continueButton = PictureButton( Video::GetWidth() - 300, 200, Menu::ContinueGame,
-		                                Image::Get( "Resources/Graphics/txt_continue_active.png"),
-		                                Image::Get( "Resources/Graphics/txt_continue_inactive.png") );
+		                                Image::Get( "resources/Graphics/txt_continue_active.png"),
+		                                Image::Get( "resources/Graphics/txt_continue_inactive.png") );
 	} else {
 		// Restore play/load/edit buttons
 		play->Show();
@@ -369,7 +369,7 @@ void Menu::CreateEditWindow()
 			->AddChild( (new Tab( "Edit" ))
 				->AddChild( (new Label(15, 15, "Pick the Simulation to Edit:")) )
 				->AddChild( (new Dropdown( 45, 45, 100, 30 ))
-					->AddOptions( Filesystem::Enumerate("Resources/Simulation/") ) )
+					->AddOptions( Filesystem::Enumerate("resources/Simulation/") ) )
 			)
 			->AddChild( (new Tab( "Create" ))
 				->AddChild( (new Label(15, 10, "Simulation Name:")) )
@@ -476,7 +476,7 @@ void Menu::CreateNewPlayer( )
 	int israndom = ((Checkbox*)UI::Search("/Window'New Game'/Frame/Checkbox'Random Universe'/"))->IsChecked();
 	int seed = atoi( ((Textbox*)UI::Search("/Window'New Game'/Frame/Textbox'Random Universe Seed'/"))->GetText().c_str() );
 
-	if(OPTION(int, "options/sound/buttons")) Sound::Get( "Resources/Audio/Interface/28853__junggle__btn043.ogg" )->Play();
+	if(OPTION(int, "options/sound/buttons")) Sound::Get( "resources/Audio/Interface/28853__junggle__btn043.ogg" )->Play();
 
 	if(players->PlayerExists(playerName)) {
 		Dialogs::Alert("A player with that name exists.");
@@ -595,7 +595,7 @@ void UI_Test() {
 				->AddChild( (new Label(10, 600, "Scroll Up")) )
 			)
 			->AddChild( (new Tab("A Picture"))
-				->AddChild( (new Picture(10, 0, 400, 400, "Resources/Art/menu2.png")) )
+				->AddChild( (new Picture(10, 0, 400, 400, "resources/Art/menu2.png")) )
 			)
 			->AddChild( (new Tab("Inputs"))
 				->AddChild( (new Textbox(30, 30, 100, 1, "Some Text Goes Here", "A Textbox")) )
@@ -626,7 +626,7 @@ void UI_Test() {
 	);
 
 	Tab* clickTestTab = new Tab("Click Test");
-	clickTestTab->RegisterAction( Action_MouseLUp, new PositionalAction( AddImage, clickTestTab, Image::Get("Resources/Graphics/shuttle.png") ) );
+	clickTestTab->RegisterAction( Action_MouseLUp, new PositionalAction( AddImage, clickTestTab, Image::Get("resources/Graphics/shuttle.png") ) );
 	((Container*)UI::Search("/'A Window'/'TEST TABS'/"))->AddChild( clickTestTab );
 
 	// Check that the UI Searching is working

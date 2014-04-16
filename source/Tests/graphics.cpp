@@ -34,10 +34,10 @@ int test_graphics(int argc, char **argv) {
 		Video::DrawCircle(750, 550, 50, 1., 1., 1., 1.);
 
 		// load an image and draw it in the center of the screen
-		Image planet2("Resources/Graphics/planet2.png");
+		Image planet2("resources/Graphics/planet2.png");
 		planet2.DrawCentered(400+cnt*50, 300, 0.);
 
-		Image frigate("Resources/Graphics/terran-frigate.png");
+		Image frigate("resources/Graphics/terran-frigate.png");
 		frigate.DrawCentered(400+cnt*50, 300, 45.);
 
 		Video::Update();

@@ -556,7 +556,7 @@ Sprite* SpriteManager::GetNearestSprite(Sprite* obj, float r, int type) {
 
 Sprite* SpriteManager::GetNearestSprite(Coordinate c, float r, int type) {
 	// This dummy variable is a local variable and will be deleted immediately after.
-	Effect dummy( c, "Resources/Animations/shield.ani", 0);
+	Effect dummy( c, "resources/Animations/shield.ani", 0);
 	return GetNearestSprite( &dummy, r, type );
 }
 

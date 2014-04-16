@@ -340,12 +340,12 @@ int AI_Lua::ShipExplode(lua_State* L){
 		if(ai==NULL) return 0;
 		LogMsg(INFO,"A %s Exploded!",(ai)->GetModelName().c_str());
 		// Play explode sound
-		Sound *explodesnd = Sound::Get("Resources/Audio/Effects/18384__inferno__largex.wav.ogg");
+		Sound *explodesnd = Sound::Get("resources/Audio/Effects/18384__inferno__largex.wav.ogg");
 		if(OPTION(int, "options/sound/explosions"))
 			explodesnd->Play(
 				(ai)->GetWorldPosition() - Simulation_Lua::GetSimulation(L)->GetCamera()->GetFocusCoordinate());
 		Simulation_Lua::GetSimulation(L)->GetSpriteManager()->Add(
-			new Effect((ai)->GetWorldPosition(), "Resources/Animations/explosion1.ani", 0) );
+			new Effect((ai)->GetWorldPosition(), "resources/Animations/explosion1.ani", 0) );
 		Simulation_Lua::GetSimulation(L)->GetSpriteManager()->Delete((Sprite*)(ai));
 	} else {
 		luaL_error(L, "Got %d arguments expected 1 (ship)", n);

@@ -8,10 +8,10 @@ mingw32-configure
 mingw32-make
 mkdir -p epiar-win32
 cp ./epiar.exe epiar-win32/
-cp -r Resources epiar-win32/
+cp -r resources epiar-win32/
 cp README NEWS LICENSE* PACKAGING AUTHORS ChangeLog CREDITS.GNU-FreeType epiar-win32/
-rm -f epiar-win32/Resources/Graphics/*.xcf
-rm -f epiar-win32/Resources/Definitions/saved-games.xml
+rm -f epiar-win32/resources/Graphics/*.xcf
+rm -f epiar-win32/resources/Definitions/saved-games.xml
 
 # The following assumes Fedora 16-based MinGW. If this becomes a
 # problem (i.e. other MinGW developers), we can expand this

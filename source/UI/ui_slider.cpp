@@ -26,11 +26,11 @@
 Slider::Slider( int x, int y, int w, int h, const string& label, float value):
 		minval( 0.000f ), maxval( 1.000f ), val( value )
 {
-	left = Image::Get( "Resources/Skin/ui_slider_left.png" );
-	right = Image::Get( "Resources/Skin/ui_slider_right.png" );
-	background = Image::Get( "Resources/Skin/ui_slider_background.png" );
-	bar = Image::Get( "Resources/Skin/ui_slider_bar.png" );
-	handle = Image::Get( "Resources/Skin/ui_slider_handle.png" );
+	left = Image::Get( "resources/Skin/ui_slider_left.png" );
+	right = Image::Get( "resources/Skin/ui_slider_right.png" );
+	background = Image::Get( "resources/Skin/ui_slider_background.png" );
+	bar = Image::Get( "resources/Skin/ui_slider_bar.png" );
+	handle = Image::Get( "resources/Skin/ui_slider_handle.png" );
 
 	this->x = x;
 	this->y = y;

@@ -33,7 +33,7 @@ Create the directory structure below:
 
 Epiar.app/Frameworks/
 Epiar.app/MacOS/
-Epiar.app/Resources/
+Epiar.app/resources/
 Epiar.app/Info.plist
 
 Info.plist is an XML file specially crafted with various OS X-specific
@@ -49,7 +49,7 @@ standard libraries are statically linked. (FIXME: This should be a
 configure script option, e.g. static-link).
 
 Copy the Epiar resources folders (Animations, etc.) into
-Epiar.app/Resources/.
+Epiar.app/resources/.
 
 Set the icon via Finder's "Get Info". (FIXME: Info.plist defines this
 normally but I was unable to get this working.)

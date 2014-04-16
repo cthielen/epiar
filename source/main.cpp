@@ -117,7 +117,7 @@ void Main_OS( int argc, char **argv ) {
  *  \todo If these files do not exist, reasonable defaults should be loaded instead.
  */
 void Main_Load_Settings() {
-	Options::Initialize( "Resources/Definitions/options.xml" );
+	Options::Initialize( "resources/Definitions/options.xml" );
 
 	// Logging
 	Options::AddDefault( "options/log/xml", 0 );
@@ -164,18 +164,18 @@ void Main_Load_Settings() {
 	Options::Unlock();
 
 	skinfile = new XMLFile();
-	if( !skinfile->Open("Resources/Skin/skin.xml") )
+	if( !skinfile->Open("resources/Skin/skin.xml") )
 	{
 		// Create the default Skin file
-		skinfile->New("Resources/Skin/skin.xml", "Skin");
+		skinfile->New("resources/Skin/skin.xml", "Skin");
 
 		// UI - Default
-		skinfile->Set( "Skin/UI/Default/Font", "Resources/Fonts/FreeSans.ttf");
+		skinfile->Set( "Skin/UI/Default/Font", "resources/Fonts/FreeSans.ttf");
 		skinfile->Set( "Skin/UI/Default/Color", "0xFFFFFF");
 		skinfile->Set( "Skin/UI/Default/Size", 12);
 
 		// UI - Textbox
-		skinfile->Set( "Skin/UI/Textbox/Font", "Resources/Fonts/ConsolaMono.ttf");
+		skinfile->Set( "Skin/UI/Textbox/Font", "resources/Fonts/ConsolaMono.ttf");
 		skinfile->Set( "Skin/UI/Textbox/Color/Foreground", "0xCCCCCC");
 		skinfile->Set( "Skin/UI/Textbox/Color/Background", "0x666666");
 		skinfile->Set( "Skin/UI/Textbox/Color/Edge", "0x262626");
@@ -185,7 +185,7 @@ void Main_Load_Settings() {
 		skinfile->Set( "Skin/UI/Tab/Color/Inactive", "0x262626");
 
 		// HUD - Alert
-		skinfile->Set( "Skin/HUD/Alert/Font", "Resources/Fonts/FreeSans.ttf");
+		skinfile->Set( "Skin/HUD/Alert/Font", "resources/Fonts/FreeSans.ttf");
 		skinfile->Set( "Skin/HUD/Alert/Color", "0xFFFFFF");
 		skinfile->Set( "Skin/HUD/Alert/Size", 12);
 
@@ -219,10 +219,10 @@ void Main_Init_Singletons() {
 	Timer::Initialize();
 	Video::Initialize();
 
-	SansSerif       = new Font( "Resources/Fonts/FreeSans.ttf" );
-	BitType         = new Font( "Resources/Fonts/visitor2.ttf" );
-	Serif           = new Font( "Resources/Fonts/FreeSerif.ttf" );
-	Mono            = new Font( "Resources/Fonts/ConsolaMono.ttf" );
+	SansSerif       = new Font( "resources/Fonts/FreeSans.ttf" );
+	BitType         = new Font( "resources/Fonts/visitor2.ttf" );
+	Serif           = new Font( "resources/Fonts/FreeSerif.ttf" );
+	Mono            = new Font( "resources/Fonts/ConsolaMono.ttf" );
 
 	UI::Initialize("Main Screen");
 
