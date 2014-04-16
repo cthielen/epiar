@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -I$(top_srcdir)/source/ -I$(top_srcdir)/source/Lua/src
+AM_CXXFLAGS = -I$(top_srcdir)/source/ -I$(top_srcdir)/source/lua/src
 
 bin_PROGRAMS = epiar
 
@@ -74,9 +74,9 @@ epiar_SOURCES = source/main.cpp \
                 source/Utilities/trig.cpp \
                 source/Utilities/xml.cpp
 
-epiar_LDADD = source/Lua/src/liblua.a
+epiar_LDADD = source/lua/src/liblua.a
 
-SUBDIRS=source/Lua
+SUBDIRS=source/lua
 
 include resources/Animations/Makefile.am
 include resources/Audio/Makefile.am
