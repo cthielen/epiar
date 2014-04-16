@@ -345,23 +345,24 @@ void Hud::DrawMessages() {
 /**\brief Draw the current framerate (calculated in simulation.cpp).
  */
 void Hud::DrawFPS( float fps, SpriteManager* sprites ) {
-	char frameRate[16];
+	char frameRate[18] = {0};
 	BitType->SetColor( WHITE );
-	snprintf(frameRate, sizeof(frameRate), "%f fps", fps );
-	BitType->Render( Video::GetWidth()-100, Video::GetHeight() - 15, frameRate );
+	snprintf(frameRate, sizeof(frameRate) - 1, "%f fps", fps );
+	BitType->Render( Video::GetWidth() - 100, Video::GetHeight() - 15, frameRate );
 
-	snprintf(frameRate, sizeof(frameRate), "%d Quadrants", sprites->GetNumQuadrants());
-	BitType->Render( Video::GetWidth()-100, Video::GetHeight() - 30, frameRate );
+	snprintf(frameRate, sizeof(frameRate) - 1, "%d Quadrants", sprites->GetNumQuadrants());
+	BitType->Render( Video::GetWidth() - 100, Video::GetHeight() - 30, frameRate );
 
-	snprintf(frameRate, sizeof(frameRate), "%d Sprites", sprites->GetNumSprites());
-	BitType->Render( Video::GetWidth()-100, Video::GetHeight() - 45, frameRate );
+	snprintf(frameRate, sizeof(frameRate) - 1, "%d Sprites", sprites->GetNumSprites());
+	BitType->Render( Video::GetWidth() - 100, Video::GetHeight() - 45, frameRate );
 }
 
 /**\brief Draws the status bar.
  */
 void Hud::DrawStatusBars() {
 	// Initialize the starting Coordinates
-	int barHeight = Image::Get( "resources/Skin/hud_bar_left.png" )->GetHeight()+5;
+	int barHeight = Image::Get( "resources/Skin/hud_bar_left.png" )->GetHeight() + 5;
+
 	Coordinate startCoords[4];
 	startCoords[UPPER_LEFT]  = Coordinate(5, Image::Get( "resources/Skin/hud_shieldintegrity.png" )->GetHeight() + 9);
 	startCoords[UPPER_RIGHT] = Coordinate(5, Radar::GetHeight() + 9);
