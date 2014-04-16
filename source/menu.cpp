@@ -30,6 +30,8 @@ Picture *Menu::options = NULL;
 Picture *Menu::exit = NULL;
 Picture *Menu::continueButton = NULL;
 
+Song *Menu::bgMusic = NULL;
+
 //if(OPTION(int, "options/sound/buttons")) Sound::Get( "resources/audio/Interface/28853__junggle__btn043.ogg" )->Play();
 
 /**\class Menu
@@ -69,7 +71,15 @@ void Menu::Main_Menu( void )
 		}
 	}
 
+	// Set up music
+	bgMusic = Song::Get( "resources/audio/Music/holst_mars.ogg" );
+	if( bgMusic == NULL ) {
+		LogMsg(WARN, "There was an error loading music from 'resources/audio/Music/holst_mars.ogg'." );
+	}
+
 	SetupUI();
+
+	bgMusic->Play(); // play the music
 
 	// Input Loop
 	do {

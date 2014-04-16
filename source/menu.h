@@ -9,6 +9,7 @@
 #ifndef __H_MENU
 #define __H_MENU
 
+#include "audio/music.h"
 #include "Engine/simulation.h"
 #include "Graphics/image.h"
 #include "UI/ui.h"
@@ -37,6 +38,9 @@ class Menu {
 	static Picture *options;
 	static Picture *exit;
 	static Picture *continueButton;
+
+	// Music
+	static Song* bgMusic;
 
 	// Skip straight to the Game
 	static bool AutoLoad( void );
