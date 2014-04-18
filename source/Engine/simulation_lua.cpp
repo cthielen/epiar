@@ -257,6 +257,7 @@ int Simulation_Lua::Setoption(lua_State *L) {
  */
 int Simulation_Lua::RegisterKey(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
+  
 	if(n == 3) {
 		Simulation *sim = GetSimulation(L);
 		int triggerKey;
@@ -703,7 +704,7 @@ int Simulation_Lua::GetGates(lua_State *L){
 }
 
 /** Get the nearest Sprite to another sprite
- * \details 
+ * \details
  * This takes 2 lua arguments:
 *  - A Sprite: used as the base location for the search.
 *             This sprite will be ignored while searching.
@@ -893,7 +894,7 @@ int Simulation_Lua::GetModelInfo(lua_State *L) {
 		assert( table == lua_gettop(L) );
 
 	}
-	
+
 	free(rowKey);
 
 	lua_settable(L, -3);
@@ -1512,4 +1513,3 @@ int Simulation_Lua::SetDescription(lua_State *L) {
 	sim->SetDescription( description );
 	return 0;
 }
-

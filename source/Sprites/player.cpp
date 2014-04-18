@@ -72,7 +72,7 @@ Player* Player::Load( string filename ) {
 		newPlayer->GetCredits(),
 		newPlayer->GetWorldPosition().GetX(), newPlayer->GetWorldPosition().GetY()
 	);
-	
+
 	return newPlayer;
 }
 
@@ -153,8 +153,7 @@ void Player::UpdateFavor( string allianceName, int deltaFavor ) {
 void Player::Land( lua_State *L, Planet* planet ){
 	assert( planet );
 
-	if( planet->GetLandable() == false
-	 || planet->GetForbidden() == true ) {
+	if( planet->GetLandable() == false || planet->GetForbidden() == true ) {
 		return;
 	}
 
@@ -168,8 +167,8 @@ void Player::Land( lua_State *L, Planet* planet ){
 	// Run Land function for each Mission
 	bool missionOver;
 	list<Mission*>::iterator i = missions.begin();
-	while( i != missions.end() )
-	{
+
+	while( i != missions.end() ) {
 		missionOver = (*i)->Land();
 		if( missionOver ) {
 			LogMsg(INFO, "Completed the Mission '%s'", (*i)->GetName().c_str() );
@@ -182,7 +181,7 @@ void Player::Land( lua_State *L, Planet* planet ){
 
 	lastPlanet = planet->GetName();
 	Save( Simulation_Lua::GetSimulation(L)->GetName() );
-  
+
   //AdvanceFromLand
 }
 
@@ -204,10 +203,12 @@ Player::~Player() {
 void Player::Update( lua_State *L ) {
 	bool missionOver;
 	list<Mission*>::iterator i;
+
 	for( i = missions.begin(); i != missions.end(); ++i ) {
 		missionOver = (*i)->Update();
 		if( missionOver ) {
 			LogMsg(INFO, "Completed the Mission %s", (*i)->GetName().c_str() );
+
 			// Remove this completed mission from the list
 			i = missions.erase( i );
 		}
@@ -270,7 +271,7 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 			return false;
 		}
 	} else return false;
-	
+
 	if( (attr = FirstChildNamed(node,"engine")) ){
 		value = NodeToString(doc,attr);
 		Engine* engine = Engines::Instance()->GetEngine( value );
@@ -382,7 +383,7 @@ bool Player::ConfigureWeaponSlots( xmlDocPtr doc, xmlNodePtr node ) {
 	// This makes a copy, not a pointer or reference, so we don't have to worry
 	// that it might alter the slots in the model.
 	this->weaponSlots = this->GetModel()->GetWeaponSlots();
-			
+
 
 	for( slotPtr = FirstChildNamed(node,"weapSlot"); slotPtr != NULL; slotPtr = NextSiblingNamed(slotPtr,"weapSlot") ){
 		WeaponSlot *existingSlot = NULL;
@@ -447,13 +448,13 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 	xmlNewChild(section, NULL, BAD_CAST "name", BAD_CAST GetName().c_str() );
 
 	xmlNodePtr planet = xmlNewNode(NULL, BAD_CAST "planet" );
-	xmlNewChild(planet, NULL, BAD_CAST "name", BAD_CAST lastPlanet.c_str()); 
+	xmlNewChild(planet, NULL, BAD_CAST "name", BAD_CAST lastPlanet.c_str());
 	snprintf(buff, sizeof(buff), "%d", (int)GetWorldPosition().GetX() );
 	xmlNewChild(planet, NULL, BAD_CAST "x", BAD_CAST buff );
 	snprintf(buff, sizeof(buff), "%d", (int)GetWorldPosition().GetY() );
 	xmlNewChild(planet, NULL, BAD_CAST "y", BAD_CAST buff );
 	xmlAddChild(section,planet);
-	
+
 	xmlNewChild(section, NULL, BAD_CAST "model", BAD_CAST GetModelName().c_str() );
 	xmlNewChild(section, NULL, BAD_CAST "engine", BAD_CAST GetEngineName().c_str() );
 	snprintf(buff, sizeof(buff), "%d", this->GetCredits() );
@@ -800,7 +801,7 @@ xmlNodePtr PlayerInfo::ConvertOldVersion( xmlDocPtr doc, xmlNodePtr node ) {
 	if( (attr = FirstChildNamed(copy, "lastLoadTime")) ){
 		xmlNewChild(new_node, NULL, BAD_CAST "lastLoadTime", BAD_CAST NodeToString(doc,attr).c_str() );
 	}
-	
+
 	return new_node;
 }
 
@@ -874,7 +875,7 @@ bool Players::DeletePlayer(string playerName) {
 		LogMsg(ERR, "Removed player from list but could not save list.\n");
 		return false;
 	}
-	
+
 	// delete the separate player xml
 	string filename = "resources/Definitions/" + playerName + ".xml";
 	if( Filesystem::DeleteFile( filename ) != true ) {
@@ -929,4 +930,3 @@ Player* Players::LoadPlayer(string playerName) {
 }
 
 /** @} */
-
