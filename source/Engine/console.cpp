@@ -40,16 +40,6 @@ void Console::HandleInput( list<InputEvent> & events ) {
 
 		switch( i->type ) {
 		case KEY:
-      if( (i->key == SDLK_u) && (i->kstate == KEYTYPED)) {
-        if(interpolateOn) {
-          cout << "turning off interpolation" << endl;
-          interpolateOn = false;
-        } else {
-          cout << "turning on interpolation" << endl;
-          interpolateOn = true;
-        }
-      }
-
 			if( (i->key == SDLK_BACKQUOTE) && (i->kstate == KEYTYPED)) {
 				enabled = enabled ? false : true;
 			} else if(( i->kstate == KEYDOWN ) || ( i->kstate == KEYUP ) || ( i->kstate == KEYPRESSED )) {
