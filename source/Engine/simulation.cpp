@@ -311,12 +311,12 @@ bool Simulation::Run() {
 	bool lowFps = false;
 	int lowFpsFrameCount = 0;
 	while( !quit ) {
-		HandleInput();
-
 		int logicLoops = Timer::Update();
 		if( !paused ) {
       // Logical update cycle
 			while(logicLoops--) {
+        HandleInput();
+
 				if (lowFps) {
 					lowFpsFrameCount--;
         }
@@ -327,7 +327,11 @@ bool Simulation::Run() {
 				calendar->Update();
         starfield.Update( camera );
 			}
-		}
+		} else {
+      // We prefer input to be inside the logic loop (for the Hz) but
+      // we need to respond to input outside it as well.
+      HandleInput();
+    }
 
 		Hud::Update( L );
 
@@ -479,6 +483,7 @@ bool Simulation::Edit() {
 		HandleInput();
 
 		Timer::Update();
+
 		sprites->Update( L, true );
 		camera->Update( sprites );
     sprites->UpdateScreenCoordinates();
