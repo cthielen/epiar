@@ -134,6 +134,7 @@ bool Simulation::Load( string simName ) {
 void Simulation::pause(){
 	LogMsg(INFO, "Pausing.");
 	paused = true;
+  interpolateOn = false;
 }
 
 void Simulation::Save(){
@@ -167,8 +168,9 @@ void Simulation::Save(){
  */
 void Simulation::unpause(){
 	LogMsg(INFO, "Unpausing.");
-	Timer::Update();
+	//Timer::Update();
 	paused = false;
+  interpolateOn = true;
 }
 
 bool Simulation::SetupToRun(){
