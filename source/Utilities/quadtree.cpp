@@ -300,7 +300,7 @@ Sprite* QuadTree::GetNearestSprite(Sprite* obj, float distance, int type){
  * \returns List of all Sprites outside of this QuadTree.
  */
 
-list<Sprite*> *QuadTree::FixOutOfBounds(){
+list<Sprite*> *QuadTree::FixOutOfBounds() {
 	list<Sprite*>::iterator i;
 	list<Sprite*> *other;
 	list<Sprite*> *stillinside = new list<Sprite*>();
@@ -347,7 +347,7 @@ list<Sprite*> *QuadTree::FixOutOfBounds(){
 /** \brief Update all Sprites in this QuadTree
  */
 
-void QuadTree::Update( lua_State *L ){
+void QuadTree::Update( lua_State *L ) {
 	list<Sprite*>::iterator i;
 	// Update all internal sprites
 	if(!isLeaf){ // Node
@@ -459,13 +459,13 @@ void QuadTree::InsertSubTree(Sprite *obj){
 void QuadTree::ReBallance(){
 	unsigned int numObjects = this->Count();
 	list<Sprite*>::iterator i;
-	
+
 	if( isDirty && isLeaf && numObjects>QUADMAXOBJECTS && radius>MIN_QUAD_SIZE){
 		//cout << "LEAF at "<<center<<" is becoming a NODE.\n";
 		isLeaf = false;
 
 		assert(0 != objects->size()); // The Leaf list should not be empty
-		
+
 		for( i = objects->begin(); i != objects->end(); ++i ) {
 			InsertSubTree(*i);
 		}
@@ -523,7 +523,7 @@ xmlNodePtr QuadTree::ToNode() {
 	xmlSetProp( thisNode, BAD_CAST "y", BAD_CAST buff );
 	snprintf(buff, sizeof(buff), "%d", (int) this->radius );
 	xmlSetProp( thisNode, BAD_CAST "r", BAD_CAST buff );
-	
+
 	if(!isLeaf){ // Node
 		for(int t=0;t<4;t++){
 			if(NULL != (subtrees[t])){
@@ -571,4 +571,3 @@ xmlNodePtr QuadTree::ToNode() {
 
 	return thisNode;
 }
-

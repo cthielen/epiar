@@ -33,6 +33,7 @@ XMLFile *skinfile = NULL;
 // main font used throughout the game
 Font *SansSerif = NULL, *BitType = NULL, *Serif = NULL, *Mono = NULL;
 ArgParser *argparser = NULL;
+bool interpolateOn = true;
 
 void Main_OS                ( int argc, char **argv ); ///< Run OS Specific setup code
 void Main_Load_Settings     (); ///< Load the settings files
@@ -74,7 +75,7 @@ int main( int argc, char **argv ) {
 /** \details
  *  The OS Specific code here sets up OS specific environment variables and
  *  paths that are vital for normal operation.
- * 	
+ *
  *  Since nothing has is loaded or initialized before this code, do not use any
  *  code that is epiar specific (OPTIONS, Log, Lua, etc).
  *
@@ -259,7 +260,7 @@ void Main_Close_Singletons( void ) {
  *   - Help Arguments that print the version, usage, etc.
  *   - OPTION Arguments that override a normal OPTION value.
  *   - Test Arguments that run Epiar Unit tests and then exit.
- *  
+ *
  *  \warn This may exit early.
  */
 void Main_Parse_Args( int argc, char **argv ) {
@@ -376,4 +377,3 @@ void Main_Log_Environment( void ) {
 
 	LogMsg(INFO,"Executable Path: %s", argparser->GetPath().c_str() );
 }
-

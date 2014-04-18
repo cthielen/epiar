@@ -82,17 +82,17 @@ SpriteManager::SpriteManager() :
  */
 SpriteManager& SpriteManager::operator=( SpriteManager& object ){
 	if ( this == &object ) return * this; //block self assignment
-	
+
 	trees = object.trees;
 	spritelist = object.spritelist;
 	spritelookup = object.spritelookup;
-	
+
 	spritesToDelete = object.spritesToDelete;
-	
+
 	tickCount = object.tickCount;
 //	semiRegularPeriod = object.semiRegularPeriod;
 //	fullUpdatePeriod = object.fullUpdatePeriod;
-	
+
 //	numRegularBands = object.numRegularBands;
 //	numSemiRegularBands = object.numSemiRegularBands;
 	ticksToBandNum = object.ticksToBandNum;
@@ -160,7 +160,16 @@ bool SpriteManager::DeleteSprite( Sprite *sprite ) {
  */
 bool SpriteManager::Delete( Sprite *sprite ) {
 	spritesToDelete.push_back(sprite);
+
 	return true;
+}
+
+void SpriteManager::UpdateScreenCoordinates( void ) {
+  list<Sprite *>::iterator i;
+
+  for( i = spritelist->begin(); i != spritelist->end(); ++i ) {
+    (*i)->UpdateScreenCoordinates();
+  }
 }
 
 /**\brief SpriteManager update function.
@@ -170,7 +179,7 @@ bool SpriteManager::Delete( Sprite *sprite ) {
 void SpriteManager::Update( lua_State *L, bool lowFps) {
 	//this will contain every quadrant that we will potentially want to update
 	list<QuadTree*> quadList;
-	
+
 	//if update-all is given then we update every quadrant
 	//we do the same if tickCount == 0 even if update-all is not given
 	// (in wave update mode, tickCount == 0 is when we want to update all quadrants)
@@ -230,7 +239,7 @@ void SpriteManager::Update( lua_State *L, bool lowFps) {
 	if (!spritesToDelete.empty()) {
 		spritesToDelete.sort(); // The list has to be sorted or unique doesn't work correctly.
 		spritesToDelete.unique();
-	
+
 		// Tell the AI that they've been killed
 		for( i = spritesToDelete.begin(); i != spritesToDelete.end(); ++i ) {
 			if( (*i)->GetDrawOrder() == DRAW_ORDER_SHIP ) {
@@ -251,7 +260,7 @@ void SpriteManager::Update( lua_State *L, bool lowFps) {
 	DeleteEmptyQuadrants();
 
 	// Update the tick count after all updates for this tick are done
-	UpdateTickCount ();
+	UpdateTickCount();
 }
 
 /**\brief Deletes empty QuadTrees (Internal use)
@@ -259,10 +268,10 @@ void SpriteManager::Update( lua_State *L, bool lowFps) {
 void SpriteManager::DeleteEmptyQuadrants() {
 	map<Coordinate,QuadTree*>::iterator iter;
 	// Delete QuadTrees that are empty
-	// TODO: Delete QuadTrees that are far away from 
+	// TODO: Delete QuadTrees that are far away from
 	list<QuadTree*> emptyTrees;
 	// Collect empty trees
-	for ( iter = trees.begin(); iter != trees.end(); ++iter ) { 
+	for ( iter = trees.begin(); iter != trees.end(); ++iter ) {
 		if ( iter->second->Count() == 0 ) {
 			emptyTrees.push_back(iter->second);
 		}
@@ -306,7 +315,7 @@ bool compareSpritePtrs(Sprite* a, Sprite* b){
 void SpriteManager::Draw( Coordinate focus ) {
 	list<Sprite *>::iterator i;
 	list<Sprite*> *onscreen;
-	float r = (Video::GetHalfHeight() < Video::GetHalfWidth() ? Video::GetHalfWidth() : Video::GetHalfHeight()) *V_SQRT2;
+	float r = (Video::GetHalfHeight() < Video::GetHalfWidth() ? Video::GetHalfWidth() : Video::GetHalfHeight()) * V_SQRT2;
 	onscreen = GetSpritesNear( focus, r, DRAW_ORDER_ALL);
 
 	onscreen->sort(compareSpritePtrs);
@@ -314,6 +323,7 @@ void SpriteManager::Draw( Coordinate focus ) {
 	for( i = onscreen->begin(); i != onscreen->end(); ++i ) {
 		(*i)->Draw();
 	}
+
 	delete onscreen;
 }
 
@@ -371,13 +381,13 @@ list<QuadTree*> SpriteManager::GetQuadrantsInBand ( Coordinate c, int bandIndex)
 	//note that the QUADRANTSIZE define is the
 	//	distance from the middle to the edge of a quadrant
 	//to get the square band of co-ordinates we have to
-	//		- start at bottom left 
+	//		- start at bottom left
 	//			loop over increasing Y (to get 'west' line)
 	//			loop over increasing X (to get 'south' line)
 	//		- start at top right
 	//			loop over decreasing Y (to get 'east' line)
 	//			loop over decreasing X (to get 'north' line)
-			
+
 	int edgeDistance = bandIndex * QUADRANTSIZE * 2;		//number of pixels from middle to the band
 	Coordinate bottomLeft (c - Coordinate (edgeDistance, edgeDistance));
 	Coordinate topLeft (c + Coordinate (-edgeDistance, edgeDistance));
@@ -389,7 +399,7 @@ list<QuadTree*> SpriteManager::GetQuadrantsInBand ( Coordinate c, int bandIndex)
 	int bandLength = (bandIndex * 2);
 
 	//deal with the un-included corners first
-	//we're using bottomLeft and topRight as the anchors, 
+	//we're using bottomLeft and topRight as the anchors,
 	// so topLeft and bottomRight are added here
 	possibleQuadrants.insert (GetQuadrantCenter (topLeft));
 	possibleQuadrants.insert (GetQuadrantCenter (bottomRight));
@@ -418,11 +428,11 @@ list<QuadTree*> SpriteManager::GetQuadrantsInBand ( Coordinate c, int bandIndex)
 		if(iter != trees.end()) {
 			nearbyQuadrants.push_back(iter->second);
 		}
-		
+
 	}
 	return nearbyQuadrants;
 }
-	
+
 
 /**\brief Retrieves nearby QuadTrees
  * \param c Coordinate
@@ -497,7 +507,7 @@ struct compareSpriteDistFromPoint
  */
 list<Sprite*> *SpriteManager::GetSpritesNear(Coordinate c, float r, int type) {
 	list<Sprite*> *sprites = new list<Sprite*>();
-	
+
 	// Search the possible quadrants
 	list<QuadTree*> nearbyQuadrants = GetQuadrantsNear(c,r);
 	list<QuadTree*>::iterator it;
@@ -518,7 +528,7 @@ list<Sprite*> *SpriteManager::GetSpritesNear(Coordinate c, float r, int type) {
  *          because the common usage is to look for a nearby enemy or
  *          collision.  Since a Sprite is by definition the closest thing to
  *          its own position, this function needs to know what sprite to ignore.
- * 
+ *
  *          The Usual use for this is to find the nearest sprite of a certain type.
 \verbatim
  	Sprite* found = GetNearestSprite(mySprite, 1000, DRAW_ORDER_SHIP);
@@ -578,7 +588,7 @@ Coordinate SpriteManager::GetQuadrantCenter(Coordinate point){
 int SpriteManager::GetNumSprites() {
 	unsigned int total = 0;
 	map<Coordinate,QuadTree*>::iterator iter;
-	for ( iter = trees.begin(); iter != trees.end(); ++iter ) { 
+	for ( iter = trees.begin(); iter != trees.end(); ++iter ) {
 		total += iter->second->Count();
 	}
 	assert( total == spritelist->size() );
@@ -631,7 +641,7 @@ void SpriteManager::AdjustBoundaries()
 	map<Coordinate,QuadTree*>::iterator iter;
 
 	northEdge = southEdge = eastEdge = westEdge = 0;
-	for ( iter = trees.begin(); iter != trees.end(); ++iter ) { 
+	for ( iter = trees.begin(); iter != trees.end(); ++iter ) {
 		c = iter->first;
 		if( c.GetY() > northEdge) northEdge = c.GetY();
 		if( c.GetY() < southEdge) southEdge = c.GetY();
@@ -657,7 +667,7 @@ void SpriteManager::Save() {
 	root_node = xmlNewNode(NULL, BAD_CAST "Sprites" );
 	xmlDocSetRootElement(doc, root_node);
 
-	for ( iter = trees.begin(); iter != trees.end(); ++iter ) { 
+	for ( iter = trees.begin(); iter != trees.end(); ++iter ) {
 		xmlAddChild( root_node, iter->second->ToNode() );
 	}
 
@@ -694,4 +704,3 @@ void SpriteManager::GetAllQuadrants (list<QuadTree*> *newList)
 }
 
 /** @} */
-

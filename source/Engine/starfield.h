@@ -18,11 +18,11 @@ class Starfield {
 
 		void Draw( void );
 		void Update( Camera *camera );
-		void drawStar( float x, float y, float brightness);
+		void drawStar( float ox, float oy, float x, float y, float brightness);
 
 	private:
 		struct _stars {
-			float x, y;
+			float x, y, ox, oy;
 			float clr;
 		} *stars;
 
@@ -30,4 +30,3 @@ class Starfield {
 };
 
 #endif // __h_starfield__
-

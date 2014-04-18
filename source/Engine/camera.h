@@ -29,17 +29,17 @@ class Camera {
 		Coordinate GetFocusCoordinate();
 
 		void Update( SpriteManager *sprites );
-	
+
 		// moves the camera given a delta. this is not the common method to
 		// move the camera, you should use Focus()
 		void Move( int dx, int dy );
 		void setZoom(float z){
-			if(zoom+z > .68 && zoom+z < 1.22){
+			if(zoom+z > 0.68 && zoom+z < 1.22) {
 				zoom = zoom+z;
 			}
 		}
-		float getZoom(){return zoom;}
-		/*shakes the camera (duration= how long to shake in updates), 
+		float getZoom() { return zoom; }
+		/*shakes the camera (duration= how long to shake in updates),
 		(intesity multiplyer is how hard to shake eg. 3)
 		(source is the coordinate of the object that hit the ship)  */
 		void Shake( Uint32 duration, int intensity, Coordinate* source );

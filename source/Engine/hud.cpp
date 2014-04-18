@@ -100,8 +100,8 @@ StatusBar::StatusBar(string _title, int _width, QuadPosition _pos, string _updat
 	memset( name, '\0', sizeof(name) );
 	lua_updater = _updater;
 	LogMsg (DEBUG4, "Creating a new StatusBar '%s' : Name(%s) / Ratio( %f)\n",title, name, ratio);
-	assert(pos>=0);
-	assert(pos<=4);
+	assert(pos >= 0);
+	assert(pos <= 4);
 
 	if( font == NULL ) {
 		font = Font::Get( SKIN("Skin/HUD/StatusBar/Font") );
@@ -329,7 +329,7 @@ void Hud::DrawMessages() {
 	Uint32 age;
 	Uint32 alertFade = OPTION(Uint32,"options/timing/alert-fade");
 	Uint32 alertDrop = OPTION(Uint32,"options/timing/alert-drop");
-	
+
 	for( i= AlertMessages.rbegin(), j=1; (i != AlertMessages.rend()) && (j <= MAX_ALERTS); ++i,++j ){
 		//printf("[%d] %s\n", j, (*i).message.c_str() );
 		age = now - (*i).start;
@@ -603,7 +603,7 @@ int Hud::newStatus(lua_State *L) {
 
 	// Add the Bar to the Hud
 	AddStatus(bar);
-	
+
 	return 0;
 }
 
@@ -729,21 +729,21 @@ void Radar::Draw( Camera* camera, SpriteManager* sprites ) {
 	{
 		Coordinate blip;
 		Sprite *sprite = *iter;
-		
+
 		//if( sprite->GetDrawOrder() == DRAW_ORDER_PLAYER ) continue;
-		
+
 		// Calculate the blip coordinate for this sprite
 		Coordinate wpos = sprite->GetWorldPosition();
 		WorldToBlip( focus, wpos, blip );
-		
+
 		// Use the OpenGL Crop Rectangle to ensure that the blip is on the radar
-		
+
 		/* Convert to screen coords */
 		blip.SetX( blip.GetX() + radar_mid_x );
 		blip.SetY( blip.GetY() + radar_mid_y );
-		
+
 		radarSize = int((sprite->GetRadarSize() / float(visibility)) * (RADAR_HEIGHT/4.0));
-		
+
 		if( radarSize >= 1 ) {
 			if(sprite->GetID() == Hud::GetTarget() && Timer::GetTicks() % 1000 < 100)
 				Video::DrawCircle( blip, radarSize, 2, WHITE );
@@ -764,7 +764,7 @@ void Radar::Draw( Camera* camera, SpriteManager* sprites ) {
  * \retval b Pointer to radar coordinate
  */
 void Radar::WorldToBlip( Coordinate focus, Coordinate &w, Coordinate &b ) {
-	
+
 	b.SetX( ( ( w.GetX() - focus.GetX() ) / float(visibility) ) * ( RADAR_WIDTH / 2.0 ) );
 	b.SetY( ( ( w.GetY() - focus.GetY() ) / float(visibility) ) * ( RADAR_HEIGHT / 2.0 ) );
 }
@@ -776,4 +776,3 @@ int Radar::GetHeight() {
 		return Image::Get( "resources/Skin/hud_radarnav.png" )->GetHeight();
 	}
 }
-

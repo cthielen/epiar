@@ -23,6 +23,7 @@ extern Font *SansSerif;
 extern Font *BitType;
 extern Font *Serif;
 extern Font *Mono;
+extern bool interpolateOn;
 
 #define SKIN(path) (skinfile->Get(path) )
 

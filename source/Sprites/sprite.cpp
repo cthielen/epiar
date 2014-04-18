@@ -35,7 +35,7 @@ long int Sprite::sprite_ids = 1;
  *          means that all Planets are drawn below all ships, which are drawn
  *          below all Effects.  The Draw Order should also be used to detect
  *          the kind of Sprite given just a Sprite pointer.
- * 
+ *
  *          Sprites share Image objects to save on memory usage.
  *
  * \TODO Move function implementations to the .cpp file.
@@ -45,7 +45,6 @@ long int Sprite::sprite_ids = 1;
  *       corruption by accessing Sprites that have been deleted.
  * \sa SpriteManager
  */
-
 
 
 /**\brief Default Sprite Constructor
@@ -58,17 +57,17 @@ Sprite::Sprite() {
 	// Momentum caps
 
 	angle = 0.;
-	
+
 	image = NULL;
-	
+
 	radarSize = 1;
 	radarColor = WHITE * 0.7f;
 
-  firstDraw = true;
+  interpolationUpdateCheck = 0;
 }
 
 Coordinate Sprite::GetWorldPosition( void ) const {
-	return worldPosition;
+  return worldPosition;
 }
 
 void Sprite::SetWorldPosition( Coordinate coord ) {
@@ -84,8 +83,17 @@ Coordinate Sprite::GetScreenPosition( void ) const {
  */
 void Sprite::Update( lua_State *L ) {
 	worldPosition += momentum;
-	acceleration = lastMomentum - momentum; 
+	acceleration = lastMomentum - momentum;
 	lastMomentum = momentum;
+}
+
+void Sprite::UpdateScreenCoordinates( void ) {
+  Camera *camera = Camera::Instance();
+
+  oldScreenPosition = screenPosition;
+  camera->TranslateWorldToScreen( worldPosition, screenPosition );
+
+  if(interpolationUpdateCheck < 2) interpolationUpdateCheck++;
 }
 
 /**\brief Draw
@@ -95,29 +103,22 @@ void Sprite::Update( lua_State *L ) {
  * \sa SpriteManager::Draw
  */
 void Sprite::Draw( void ) {
-	int wx, wy;
-	Camera *camera = Camera::Instance();
-	double fframe = Timer::GetFFrame();
-	
-	camera->TranslateWorldToScreen( worldPosition, screenPosition );
-
-  if(firstDraw) {
-    wx = screenPosition.GetX();
-    wy = screenPosition.GetY();
-    firstDraw = false;
-  } else {
-	  wx = oldScreenPosition.GetX() * (1.0f - fframe) + screenPosition.GetX() * fframe;
-	  wy = oldScreenPosition.GetY() * (1.0f - fframe) + screenPosition.GetY() * fframe;
-  }
+  double fframe = Timer::GetFFrame();
 
 	if( image ) {
-		image->DrawCentered( wx, wy, angle );
+    if(interpolateOn && (interpolationUpdateCheck >= 2)) {
+      Coordinate interpolatedScreenPosition;
+
+      interpolatedScreenPosition.SetX(oldScreenPosition.GetX() * (1.0f - fframe) + screenPosition.GetX() * fframe);
+      interpolatedScreenPosition.SetY(oldScreenPosition.GetY() * (1.0f - fframe) + screenPosition.GetY() * fframe);
+
+      image->DrawCentered( interpolatedScreenPosition.GetX(), interpolatedScreenPosition.GetY(), angle );
+    } else {
+      image->DrawCentered( screenPosition.GetX(), screenPosition.GetY(), angle );
+    }
 	} else {
 		LogMsg(WARN, "Attempt to draw a sprite before an image was assigned." );
 	}
-
-	oldScreenPosition = screenPosition;
 }
 
 /** @} */
-

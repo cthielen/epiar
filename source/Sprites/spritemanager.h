@@ -15,12 +15,13 @@ class SpriteManager {
 	public:
 		static SpriteManager *Instance();
 		SpriteManager& operator=( SpriteManager& object );
-		
+
 		void Add( Sprite *sprite );
 		void AddPlayer( Sprite *sprite );
 		bool Delete( Sprite *sprite );
-		
+
 		void Update( lua_State *L, bool lowFps);
+    void UpdateScreenCoordinates( void );
 		void Draw( Coordinate focus );
 		void DrawQuadrantMap( Coordinate focus );
 
@@ -36,7 +37,7 @@ class SpriteManager {
 		void GetBoundaries(float *northEdge, float *southEdge, float *eastEdge, float *westEdge);
 
 		void Save();
-		
+
 	protected:
 		SpriteManager();
 	private:
@@ -47,7 +48,7 @@ class SpriteManager {
 		map<int,Sprite*> *spritelookup;     ///< Collection of all Sprites.  Use the map when referring to sprites by their unique ID.
 
 		Sprite *player;                     ///< The Player Sprite.
-		
+
 		list<Sprite *> spritesToDelete;     ///< The list of Sprites that should be deleted at the end of this Update.
 		static SpriteManager *pInstance;    ///< The Static SpriteManager Instance.
 
@@ -73,4 +74,3 @@ class SpriteManager {
 };
 
 #endif // __H_SPRITEMANAGER__
-	

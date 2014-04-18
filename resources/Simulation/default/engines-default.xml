@@ -8,7 +8,7 @@
     <description>The NM66 has been established as the standard engine for all small and medium ships.
 
 It doesn't have enough force to propel large or carrier class starships.</description>
-    <forceOutput>15.0</forceOutput>
+    <forceOutput>10.0</forceOutput>
     <msrp>500</msrp>
     <foldDrive>0</foldDrive>
     <flareAnimation>resources/Animations/thrust.ani</flareAnimation>

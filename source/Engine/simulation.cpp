@@ -231,7 +231,7 @@ bool Simulation::SetupToRun(){
 		    sprites->Add(  gates->GetGate(*gname) );
 	    }
 
-		
+
 	}
 
 	// Preloading this animation prevents an FPS
@@ -313,46 +313,35 @@ bool Simulation::Run() {
 	while( !quit ) {
 		HandleInput();
 
-		//_ASSERTE(_CrtCheckMemory());
-
-		//logicLoops is the number of times we need to run logical updates to get 50 logical updates per second
-		//if the draw fps is >50 then logicLoops will always be 1 (ie 1 logical update per draw)
 		int logicLoops = Timer::Update();
-		bool anyUpdate = (logicLoops > 0);
 		if( !paused ) {
-			//if(logicLoops > 10) {
-			//	LogMsg(WARN, "Running %d logic loops. Capping to 1", logicLoops);
-			//	logicLoops = 1;
-			//}
+      // Logical update cycle
 			while(logicLoops--) {
-				if (lowFps)
-					lowFpsFrameCount --;
-				//Timer::IncrementFrameCount();
-				// Logical update cycle
+				if (lowFps) {
+					lowFpsFrameCount--;
+        }
+
 				sprites->Update( L, lowFps );
-        
+        camera->Update( sprites );
+        sprites->UpdateScreenCoordinates();
 				calendar->Update();
+        starfield.Update( camera );
 			}
 		}
 
-		// These only need to be updated once pre Draw cycle, but they can be skipped if there are no Sprite update cycles.
-		if( anyUpdate ) {
-			starfield.Update( camera );
-			camera->Update( sprites );
-			Hud::Update( L );
+		Hud::Update( L );
 
-			// Erase cycle
-			Video::Erase();
+		// Erase cycle
+		Video::Erase();
 
-			// Draw cycle
-			Video::PreDraw();
-			starfield.Draw();
-			sprites->Draw( camera->GetFocusCoordinate() );
-			Hud::Draw( HUD_ALL, currentFPS, camera, sprites );
-			UI::Draw();
-			console->Draw();
-			Video::Update();
-		}
+		// Draw cycle
+		Video::PreDraw();
+		starfield.Draw();
+		sprites->Draw( camera->GetFocusCoordinate() );
+		Hud::Draw( HUD_ALL, currentFPS, camera, sprites );
+		UI::Draw();
+		console->Draw();
+		Video::Update();
 
 		Timer::Delay();
 
@@ -426,7 +415,7 @@ bool Simulation::Run() {
 			}
 		}
 	}
-	
+
 	Hud::Close();
 
 	LogMsg(INFO,"Simulation Stopped: Average Framerate: %f Frames/Second", 1000.0 *((float)fpsTotal / Timer::GetTicks() ) );
@@ -464,7 +453,7 @@ bool Simulation::SetupToEdit() {
 		for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
 			sprites->Add(  planets->GetPlanet(*pname) );
 		}
-		
+
 		list<string>* gateNames = gates->GetNames();
 		for( list<string>::iterator gname = gateNames->begin(); gname != gateNames->end(); ++gname){
 			sprites->Add(  gates->GetGate(*gname) );
@@ -490,9 +479,10 @@ bool Simulation::Edit() {
 		HandleInput();
 
 		Timer::Update();
-		starfield.Update( camera );
 		sprites->Update( L, true );
 		camera->Update( sprites );
+    sprites->UpdateScreenCoordinates();
+    starfield.Update( camera );
 		Hud::Update( L );
 
 		// Erase cycle
@@ -673,7 +663,7 @@ void Simulation::HandleInput() {
 		Planet* p = planets->GetPlanet(*pName);
 		player->Jump( p->GetWorldPosition() + GaussianCoordinate()*p->GetInfluence(), true );
 	}
-	
+
 	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_ESCAPE ) ) )
 	{
 		quit = true;
@@ -743,7 +733,7 @@ void Simulation::SetDefaultPlayer( string startPlanet, string modelName, string 
 		LogMsg(WARN, "Setting the Player's start model to '%s', but this model does not exist.", modelName.c_str() );
 	if( engines->Get( engineName ) == NULL )
 		LogMsg(WARN, "Setting the Player's start engine to '%s', but this engine does not exist.", engineName.c_str() );
-	
+
 	// Set player defaults in the simulation xml
 	Set("defaultPlayer/start", startPlanet);
 	Set("defaultPlayer/model", modelName);
@@ -758,6 +748,7 @@ void Simulation::SetDefaultPlayer( string startPlanet, string modelName, string 
  */
 void Simulation::CreateDefaultPlayer(string playerName) {
 	Coordinate startPos(0,0);
+
 	string startPlanet = Get("defaultPlayer/start");
 	if( planets->GetPlanet( startPlanet ) ) {
 		startPos = planets->GetPlanet( startPlanet )->GetWorldPosition();
@@ -766,12 +757,13 @@ void Simulation::CreateDefaultPlayer(string playerName) {
 	assert( player == NULL );
 	assert( models->GetModel( Get("defaultPlayer/model") ) );
 	assert( engines->GetEngine( Get("defaultPlayer/engine") ) );
-	player = players->CreateNew(
-        GetName(),
+
+  player = players->CreateNew(
+    GetName(),
 		playerName,
 		models->GetModel( Get("defaultPlayer/model") ),
 		engines->GetEngine( Get("defaultPlayer/engine") ),
-		convertTo<int>( Get("defaultPlayer/credits")),
+		convertTo<int>( Get("defaultPlayer/credits") ),
 		startPos
 	);
 
@@ -791,7 +783,7 @@ void Simulation::LoadPlayer(string playerName) {
 	camera->Focus( player );
 }
 
-/**\brief 
+/**\brief
  * \return true if the player wants to quit
  */
 Player *Simulation::GetPlayer() {

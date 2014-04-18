@@ -1031,4 +1031,3 @@ map<string,string> Ship::GetWeaponSlotContents(){
 }
 
 /** @} */
-

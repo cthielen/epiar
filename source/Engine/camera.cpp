@@ -95,7 +95,7 @@ void Camera::Focus( Sprite *sprite ) {
 /**\brief Get the current Camera Coordinate
  */
 Coordinate Camera::GetFocusCoordinate() {
-	return Coordinate(x,y);
+	return Coordinate(x, y);
 }
 
 /**\brief Translate a given World Coordinate into the relative Screen Coordinate
@@ -111,7 +111,7 @@ void Camera::TranslateWorldToScreen( Coordinate &world, Coordinate &screen ) {
 
 	tx = (int)(world.GetX() - x + Video::GetHalfWidth());
 	ty = (int)(world.GetY() - y + Video::GetHalfHeight());
-	
+
 	screen.SetX( tx );
 	screen.SetY( ty );
 }
@@ -129,7 +129,7 @@ void Camera::TranslateScreenToWorld( Coordinate &screen, Coordinate &world ) {
 
 	tx = (int)(screen.GetX() + x - Video::GetHalfWidth());
 	ty = (int)(screen.GetY() + y - Video::GetHalfHeight());
-	
+
 	world.SetX( tx );
 	world.SetY( ty );
 }
@@ -144,7 +144,7 @@ void Camera::GetDelta( double *dx, double *dy ) {
 
 		return;
 	}
-	
+
 	*dx = this->dx;
 	*dy = this->dy;
 }
@@ -163,18 +163,19 @@ void Camera::Move( int dx, int dy ) {
 /**\brief Updates camera, including currently focused position
  */
 void Camera::Update( SpriteManager *sprites ) {
-	Sprite* focusSprite;
-	dx = 0;
+	Sprite* focusSprite = NULL;
+
+  dx = 0;
 	dy = 0;
+
 	focusSprite = sprites->GetSpriteByID( focusID );
 	if( focusSprite ) {
 		Coordinate pos = focusSprite->GetWorldPosition();
-		Focus( pos.GetX() + cameraShakeXOffset, 
+		Focus( pos.GetX() + cameraShakeXOffset,
 		       pos.GetY() + cameraShakeYOffset);
 
 		UpdateShake();
 	}
-	
 }
 
 /**\brief "Shakes" the camera based on the duration, intensity, source specified
@@ -187,7 +188,7 @@ void Camera::Shake( Uint32 duration, int intensity, Coordinate* source ) {
 	angle = position.GetAngle();
 
 	cameraShakeXOffset = (int)(intensity * trig->GetCos(angle));
-	cameraShakeYOffset = (int)(intensity * trig->GetSin(angle));	
+	cameraShakeYOffset = (int)(intensity * trig->GetSin(angle));
 
 	cameraShakeDur = duration;
 
@@ -197,7 +198,7 @@ void Camera::Shake( Uint32 duration, int intensity, Coordinate* source ) {
 	}
 }
 
-/**\brief "Shakes" the camera 
+/**\brief "Shakes" the camera
 */
 void Camera::UpdateShake() {
 	if (cameraShakeDur < 1) {
@@ -216,6 +217,6 @@ void Camera::UpdateShake() {
 		}
 		cameraShakeXOffset *= -1;
 		cameraShakeYOffset *= -1;
-	} 
+	}
 	cameraShakeDur--;
 }

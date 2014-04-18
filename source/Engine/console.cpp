@@ -40,6 +40,16 @@ void Console::HandleInput( list<InputEvent> & events ) {
 
 		switch( i->type ) {
 		case KEY:
+      if( (i->key == SDLK_u) && (i->kstate == KEYTYPED)) {
+        if(interpolateOn) {
+          cout << "turning off interpolation" << endl;
+          interpolateOn = false;
+        } else {
+          cout << "turning on interpolation" << endl;
+          interpolateOn = true;
+        }
+      }
+
 			if( (i->key == SDLK_BACKQUOTE) && (i->kstate == KEYTYPED)) {
 				enabled = enabled ? false : true;
 			} else if(( i->kstate == KEYDOWN ) || ( i->kstate == KEYUP ) || ( i->kstate == KEYPRESSED )) {
@@ -95,7 +105,7 @@ void Console::HandleInput( list<InputEvent> & events ) {
 					// remove it from the queue
 					i = events.erase( i );
 					skipIncrement = true;
-					
+
 				}
 			}
 		break;
@@ -114,14 +124,14 @@ void Console::Draw() {
 	if( enabled ) {
 		int pos = 8;
 		// draw bg
-		Video::DrawRect(150, 5, 550, Mono->LineHeight()*(pos+1), 
+		Video::DrawRect(150, 5, 550, Mono->LineHeight()*(pos+1),
 				static_cast<float>(.5), static_cast<float>(.5),
 				static_cast<float>(.5), static_cast<float>(.3) );
 
 		Mono->SetColor(.9f,.9f,.9f,1.0);
 
 		Mono->Render(155, pos-- * Mono->LineHeight() + 5,  PROMPT + command.substr(0,cursor) + CURSOR + command.substr(cursor)  );
-	
+
 		for(int i = Buffer.size() - 1; i >= 0 && pos > 0; --i, --pos) {
 			Mono->Render(155, pos * Mono->LineHeight() + 5, Buffer[i]);
 		}
@@ -132,7 +142,7 @@ void Console::Draw() {
  */
 void Console::Update() {
 	if( enabled ) {
-		
+
 	}
 }
 
@@ -168,4 +178,3 @@ void Console::InsertResult(string result) {
 	// insert result into buffer
 	Buffer.push_back(result);
 }
-
