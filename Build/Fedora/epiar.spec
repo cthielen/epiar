@@ -1,5 +1,5 @@
 Name:           epiar
-Version:        0.5.0
+Version:        0.5.1
 Release:        1%{?dist}
 Summary:        A space trading/exploring arcade game
 
@@ -58,6 +58,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/epiar.png
 
 %changelog
+* Mon April 28 2014 Christopher Thielen <chris@epiar.net> 0.5.1
+- Minor bugfix release.
 * Mon May 16 2011 Christopher Thielen <chris@epiar.net> 0.5.0
 - Initial creation using Epiar version 0.5.0.
 

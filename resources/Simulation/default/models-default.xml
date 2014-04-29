@@ -490,7 +490,7 @@ The Kartanal was designed for lightning fast hit-and-run maneuvers.</description
     <image>resources/Graphics/tugship.png</image>
     <engine>Altaire Corp. NM66 Sublight Thrusters</engine>
     <mass>2.20</mass>
-    <rotationsPerSecond>0.25</rotationsPerSecond>
+    <rotationsPerSecond>0.10</rotationsPerSecond>
     <thrustOffset>40</thrustOffset>
     <maxSpeed>5.0</maxSpeed>
     <hullStrength>800</hullStrength>
