@@ -10,6 +10,8 @@ shopt -s extglob
 
 # First, clean up
 make clean
+rm -f core.*
+rm configure # let them run autogen.sh
 
 # Extract version number from source/version.h
 VERSION=$(cat source/version.h | grep EPIAR_VERSION_FULL | cut -d'"' -f2)
