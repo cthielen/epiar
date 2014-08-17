@@ -706,7 +706,7 @@ function goto(x,y)
 		end
 	end
 	local px,py = PLAYER:GetPosition()
-	Epiar.NewGatePair(x,y,px,py)
+	-- Epiar.NewGatePair(x,y,px,py)
 end
 
 --- Register the player functions
@@ -774,15 +774,11 @@ function HudTargetName()
 		local spritetype = targettedSprite:GetType()
 		if spritetype == SPRITE_PLANET then -- Planet
 			return targettedSprite:GetName()
-		elseif spritetype == SPRITE_GATE_BOTTOM then -- Gate Bottom
-			return "Jump Gate"
 		elseif spritetype == SPRITE_WEAPON then -- Projectile
 		elseif spritetype == SPRITE_SHIP then -- Ship
 			return targettedSprite:GetModelName()
 		elseif spritetype == SPRITE_PLAYER then -- Player
 			return "You"
-		elseif spritetype == SPRITE_GATE_TOP then -- Gate Top
-			return "Jump Gate"
 		elseif spritetype == SPRITE_EFFECT then -- Effect
 		else -- Nothing?
 		end

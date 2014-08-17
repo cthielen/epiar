@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<technologies>
+  <version-major>0</version-major>
+  <version-minor>5</version-minor>
+  <version-macro>0</version-macro>
+  <technology>
+    <name>Questionable Legality</name>
+    <model>Sector Enforcer</model>
+    <model>Patitu</model>
+    <model>Kartanal</model>
+    <weapon>Neon Flares</weapon>
+    <weapon>Magnetic Mine</weapon>
+    <weapon>Plasma Cannon</weapon>
+    <engine>Altaire Corp. NM66 Sublight Thrusters</engine>
+    <outfit>Nav Aid</outfit>
+    <outfit>Organic Plating</outfit>
+  </technology>
+  <technology>
+    <name>Solaran Defence</name>
+    <model>Solaran Battle Cruiser</model>
+    <model>Patitu</model>
+    <model>Kartanal</model>
+    <weapon>Slow Missile</weapon>
+    <weapon>Plasma Cannon</weapon>
+    <weapon>Strong Laser</weapon>
+    <engine>Ion Engines</engine>
+    <outfit>Directional Thrusters</outfit>
+    <outfit>Shield Generator</outfit>
+    <outfit>Copper Plating</outfit>
+    <outfit>Organic Plating</outfit>
+  </technology>
+  <technology>
+    <name>Solaran Outpost</name>
+    <model>Sector Enforcer</model>
+    <model>Raven</model>
+    <weapon>Strong Laser</weapon>
+    <engine>Ion Engines</engine>
+    <outfit>Directional Thrusters</outfit>
+    <outfit>Booster</outfit>
+    <outfit>Nav Aid</outfit>
+    <outfit>Copper Plating</outfit>
+  </technology>
+  <technology>
+    <name>Terran Defence</name>
+    <model>Terran Corvert Mark I</model>
+    <model>Uber</model>
+    <model>Terran Corvert Mark II</model>
+    <model>Fleet Guard</model>
+    <weapon>Missile</weapon>
+    <engine>Altaire Corp. NM66 Sublight Thrusters</engine>
+    <outfit>Steel Plating</outfit>
+    <outfit>Copper Plating</outfit>
+  </technology>
+  <technology>
+    <name>Terran Medium-Scale Commerce</name>
+    <model>Hammer Freighter</model>
+    <model>Terran Assist</model>
+    <model>Terran Miner</model>
+    <model>Terran FV-5 Frigate</model>
+    <model>Terran Explorer</model>
+    <weapon>Laser</weapon>
+    <engine>Altaire Corp. NM66 Sublight Thrusters</engine>
+    <outfit>Mass Shipping License</outfit>
+    <outfit>Nav Aid</outfit>
+    <outfit>Carbon Plating</outfit>
+    <outfit>Shipping License</outfit>
+  </technology>
+  <technology>
+    <name>Terran Small-Scale Commerce</name>
+    <model>Shuttle</model>
+    <model>Terran Miner</model>
+    <model>Terran FV-5 Frigate</model>
+    <model>Terran Explorer</model>
+    <weapon>Minigun</weapon>
+    <engine>Altaire Corp. NM66 Sublight Thrusters</engine>
+    <outfit>Copper Plating</outfit>
+    <outfit>Shipping License</outfit>
+  </technology>
+  <technology>
+    <name>Terran War Fleet</name>
+    <model>Uber</model>
+    <model>Terran Corvert Mark II</model>
+    <weapon>Slow Missile</weapon>
+    <weapon>Missile</weapon>
+    <engine>Ion Engines</engine>
+    <outfit>Titanium Plating</outfit>
+    <outfit>Steel Plating</outfit>
+  </technology>
+  <technology>
+    <name>Vespian</name>
+    <model>Terran XV</model>
+    <model>Mid Vesper</model>
+    <weapon>Plasma Cannon</weapon>
+    <engine>Altaire Corp. NM66 Sublight Thrusters</engine>
+    <outfit>Directional Thrusters</outfit>
+    <outfit>Booster</outfit>
+    <outfit>Organic Plating</outfit>
+  </technology>
+  <technology>
+    <name>Vespian Exploration</name>
+    <model>Terran XV</model>
+    <model>Large Vesper</model>
+    <model>Mid Vesper</model>
+    <weapon>Neon Flares</weapon>
+    <weapon>Plasma Cannon</weapon>
+    <engine>Altaire Corp. NM66 Sublight Thrusters</engine>
+    <outfit>Directional Thrusters</outfit>
+    <outfit>Booster</outfit>
+    <outfit>Nav Aid</outfit>
+  </technology>
+  <technology>
+    <name>Vespian Guard</name>
+    <model>Vespan Carrier</model>
+    <model>Mid Vesper</model>
+    <weapon>Missile</weapon>
+    <weapon>Plasma Cannon</weapon>
+    <engine>Altaire Corp. NM66 Sublight Thrusters</engine>
+    <outfit>Booster</outfit>
+    <outfit>Organic Plating</outfit>
+  </technology>
+</technologies>

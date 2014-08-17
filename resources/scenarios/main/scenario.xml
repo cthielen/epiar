@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<scenario>
+	<version-major>0</version-major>
+	<version-minor>6</version-minor>
+	<version-macro>0</version-macro>
+	<name>Main Scenario</name>
+	<description>This is the main scenario for Epiar. It is an open-ended Universe with many optional narratives.</description>
+	<commodities>commodities.xml</commodities>
+	<map>map.xml</map>
+	<models>models.xml</models>
+	<engines>engines.xml</engines>
+	<alliances>alliances.xml</alliances>
+	<weapons>weapons.xml</weapons>
+	<technologies>technologies.xml</technologies>
+	<outfits>outfits.xml</outfits>
+	<players>resources/definitions/saved-games.xml</players>
+	<music></music>
+	<defaultPlayer>
+		<start>Antikythera</start>
+		<model>Shuttle</model>
+		<engine>Altaire Corp. NM66 Sublight Thrusters</engine>
+		<credits>3000</credits>
+	</defaultPlayer>
+</scenario>
