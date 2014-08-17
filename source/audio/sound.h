@@ -9,9 +9,9 @@
 #ifndef __H_SOUND__
 #define __H_SOUND__
 
-#include "Utilities/coordinate.h"
-#include "Utilities/file.h"
-#include "Utilities/resource.h"
+#include "utilities/coordinate.h"
+#include "utilities/file.h"
+#include "utilities/resource.h"
 
 class Sound : public Resource {
 	public:

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<simulation>
+	<version-major>0</version-major>
+	<version-minor>5</version-minor>
+	<version-macro>0</version-macro>
+	<name>default</name>
+	<description>The default simulation is improving, but still needs a lot of work.</description>
+	<commodities>commodities-default.xml</commodities>
+	<planets>planets-default.xml</planets>
+	<gates>gates-default.xml</gates>
+	<models>models-default.xml</models>
+	<engines>engines-default.xml</engines>
+	<alliances>alliances-default.xml</alliances>
+	<weapons>weapons-default.xml</weapons>
+	<technologies>technologies-default.xml</technologies>
+	<outfits>outfits-default.xml</outfits>
+	<players>resources/definitions/saved-games.xml</players>
+	<music></music>
+	<defaultPlayer>
+		<start>Antikythera</start>
+		<model>Shuttle</model>
+		<engine>Altaire Corp. NM66 Sublight Thrusters</engine>
+		<credits>3000</credits>
+	</defaultPlayer>
+</simulation>

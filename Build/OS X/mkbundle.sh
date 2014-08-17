@@ -11,7 +11,7 @@ mkdir -p $APP_LOC/Contents/MacOS
 cp Epiar $APP_LOC/Contents/MacOS
 cp -r resources $APP_LOC/Contents/
 cp Info.plist $APP_LOC/Contents/
-cp resources/Icons/Epiar_Icon.icns $APP_LOC/Contents/resources/
+cp resources/icons/Epiar_Icon.icns $APP_LOC/Contents/resources/
 
 # The Blueprint files are used for creating the Art.
 echo "Removing blueprint files."

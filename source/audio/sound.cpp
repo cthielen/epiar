@@ -9,8 +9,8 @@
 #include "includes.h"
 #include "audio/audio.h"
 #include "audio/sound.h"
-#include "Utilities/log.h"
-#include "Utilities/resource.h"
+#include "utilities/log.h"
+#include "utilities/resource.h"
 
 /**\class Sound
  * \brief This represents a sound object.

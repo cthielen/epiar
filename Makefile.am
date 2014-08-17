@@ -8,86 +8,86 @@ epiar_SOURCES = source/main.cpp \
                 source/audio/audio_lua.cpp \
                 source/audio/music.cpp \
                 source/audio/sound.cpp \
-                source/Engine/alliances.cpp \
-                source/Engine/commodities.cpp \
-                source/Engine/console.cpp \
-                source/Engine/calendar.cpp \
-                source/Engine/camera.cpp \
-                source/Engine/engines.cpp \
-                source/Engine/hud.cpp \
-                source/Engine/models.cpp \
-                source/Engine/mission.cpp \
-                source/Engine/outfit.cpp \
-                source/Engine/simulation.cpp \
-                source/Engine/simulation_lua.cpp \
-                source/Engine/starfield.cpp \
-                source/Engine/technologies.cpp \
-                source/Engine/weapons.cpp \
-                source/Graphics/animation.cpp \
-                source/Graphics/font.cpp \
-                source/Graphics/image.cpp \
-                source/Graphics/video.cpp \
-                source/Input/input.cpp \
-                source/Sprites/ai.cpp \
-                source/Sprites/ai_lua.cpp \
-                source/Sprites/effects.cpp \
-                source/Sprites/gate.cpp \
-                source/Sprites/planets.cpp \
-                source/Sprites/planets_lua.cpp \
-                source/Sprites/player.cpp \
-                source/Sprites/projectile.cpp \
-                source/Sprites/ship.cpp \
-                source/Sprites/sprite.cpp \
-                source/Sprites/spritemanager.cpp \
-                source/UI/ui.cpp \
-                source/UI/ui_action.cpp \
-                source/UI/ui_button.cpp \
-                source/UI/ui_checkbox.cpp \
-                source/UI/ui_container.cpp \
-                source/UI/ui_dropdown.cpp \
-                source/UI/ui_label.cpp \
-                source/UI/ui_lua.cpp \
-                source/UI/ui_map.cpp \
-                source/UI/ui_picture.cpp \
-                source/UI/ui_paragraph.cpp \
-                source/UI/ui_scrollbar.cpp \
-                source/UI/ui_slider.cpp \
-                source/UI/ui_tabs.cpp \
-                source/UI/ui_text.cpp \
-                source/UI/ui_textarea.cpp \
-                source/UI/ui_textbox.cpp \
-                source/UI/ui_widget.cpp \
-                source/UI/ui_window.cpp \
-                source/UI/ui_frame.cpp \
-		source/UI/ui_dialogs.cpp \
-                source/Utilities/argparser.cpp \
-                source/Utilities/components.cpp \
-                source/Utilities/coordinate.cpp \
-                source/Utilities/file.cpp \
-                source/Utilities/filesystem.cpp \
-                source/Utilities/log.cpp \
-                source/Utilities/lua.cpp \
-                source/Utilities/options.cpp \
-                source/Utilities/quadtree.cpp \
-                source/Utilities/resource.cpp \
-                source/Utilities/timer.cpp \
-                source/Utilities/trig.cpp \
-                source/Utilities/xml.cpp
+                source/engine/alliances.cpp \
+                source/engine/commodities.cpp \
+                source/engine/console.cpp \
+                source/engine/calendar.cpp \
+                source/engine/camera.cpp \
+                source/engine/engines.cpp \
+                source/engine/hud.cpp \
+                source/engine/models.cpp \
+                source/engine/mission.cpp \
+                source/engine/outfit.cpp \
+                source/engine/simulation.cpp \
+                source/engine/simulation_lua.cpp \
+                source/engine/starfield.cpp \
+                source/engine/technologies.cpp \
+                source/engine/weapons.cpp \
+                source/graphics/animation.cpp \
+                source/graphics/font.cpp \
+                source/graphics/image.cpp \
+                source/graphics/video.cpp \
+                source/input/input.cpp \
+                source/sprites/ai.cpp \
+                source/sprites/ai_lua.cpp \
+                source/sprites/effects.cpp \
+                source/sprites/gate.cpp \
+                source/sprites/planets.cpp \
+                source/sprites/planets_lua.cpp \
+                source/sprites/player.cpp \
+                source/sprites/projectile.cpp \
+                source/sprites/ship.cpp \
+                source/sprites/sprite.cpp \
+                source/sprites/spritemanager.cpp \
+                source/ui/ui.cpp \
+                source/ui/ui_action.cpp \
+                source/ui/ui_button.cpp \
+                source/ui/ui_checkbox.cpp \
+                source/ui/ui_container.cpp \
+                source/ui/ui_dropdown.cpp \
+                source/ui/ui_label.cpp \
+                source/ui/ui_lua.cpp \
+                source/ui/ui_map.cpp \
+                source/ui/ui_picture.cpp \
+                source/ui/ui_paragraph.cpp \
+                source/ui/ui_scrollbar.cpp \
+                source/ui/ui_slider.cpp \
+                source/ui/ui_tabs.cpp \
+                source/ui/ui_text.cpp \
+                source/ui/ui_textarea.cpp \
+                source/ui/ui_textbox.cpp \
+                source/ui/ui_widget.cpp \
+                source/ui/ui_window.cpp \
+                source/ui/ui_frame.cpp \
+                source/ui/ui_dialogs.cpp \
+                source/utilities/argparser.cpp \
+                source/utilities/components.cpp \
+                source/utilities/coordinate.cpp \
+                source/utilities/file.cpp \
+                source/utilities/filesystem.cpp \
+                source/utilities/log.cpp \
+                source/utilities/lua.cpp \
+                source/utilities/options.cpp \
+                source/utilities/quadtree.cpp \
+                source/utilities/resource.cpp \
+                source/utilities/timer.cpp \
+                source/utilities/trig.cpp \
+                source/utilities/xml.cpp
 
 epiar_LDADD = source/lua/src/liblua.a
 
 SUBDIRS=source/lua
 
-include resources/Animations/Makefile.am
+include resources/animations/Makefile.am
 include resources/audio/Makefile.am
-include resources/Definitions/Makefile.am
-include resources/Graphics/Makefile.am
-include resources/Scripts/Makefile.am
-include resources/Skin/Makefile.am
-include resources/Art/Makefile.am
-include resources/Fonts/Makefile.am
-include resources/Icons/Makefile.am
-include resources/Simulation/Makefile.am
+include resources/definitions/Makefile.am
+include resources/graphics/Makefile.am
+include resources/scripts/Makefile.am
+include resources/skin/Makefile.am
+include resources/art/Makefile.am
+include resources/fonts/Makefile.am
+include resources/icons/Makefile.am
+include resources/simulation/Makefile.am
 
 AM_CPPFLAGS = -DDATADIR="\"$(datadir)/epiar\""
 

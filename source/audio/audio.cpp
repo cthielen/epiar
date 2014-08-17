@@ -10,7 +10,7 @@
 
 #include "includes.h"
 #include "audio/audio.h"
-#include "Utilities/log.h"
+#include "utilities/log.h"
 
 /**\class Audio
  * \brief This class is responsible for overall Audio system configuration.

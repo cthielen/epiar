@@ -1,0 +1,452 @@
+/**\file			image.cpp
+ * \author			Chris Thielen (chris@epiar.net)
+ * \date			Created: Saturday, January 31, 2009
+ * \date			Modified: Saturday, November 21, 2009
+ * \brief			Image loading and display
+ * \details
+ * See this note section in image.h for an important clarification about the handling
+ * of non-power of two image sizes and the difference between virtual/effective dimensions
+ * and real dimensions.
+ */
+
+#include "includes.h"
+#include "graphics/image.h"
+#include "graphics/video.h"
+#include "utilities/file.h"
+#include "utilities/log.h"
+#include "utilities/trig.h"
+
+/**\class Image
+ * \brief Image handling. */
+
+/**\brief Constructor, initialize default values
+ */
+Image::Image() {
+	// Initialize variables
+	w = h = real_w = real_h = image = 0;
+	scale_w = scale_h = 1.;
+	filepath="";
+}
+
+/**\brief Create instance by loading image from file
+ */
+Image::Image( const string& filename ) {
+	// Initialize variables
+	w = h = real_w = real_h = image = 0;
+	scale_w = scale_h = 1.;
+	filepath="";
+
+	Load(filename);
+}
+
+/**\brief Create instance from existing OpenGL texture
+ */
+Image::Image( GLuint texture, int w, int h ) {
+	this->w = real_w = w;
+	this->h = real_h = h;
+	scale_w = scale_h = 1.;
+	filepath="";
+
+	image = texture;
+}
+
+/**\brief Deallocate allocations
+ */
+Image::~Image() {
+	if ( image ) {
+		glDeleteTextures( 1, &image );
+		image = 0;
+	}
+}
+
+/**\brief Lazy fetch an Image
+ */
+Image* Image::Get( string filename ) {
+	Image* value;
+	value = static_cast<Image*>(Resource::Get(filename));
+	if( value == NULL ) {
+		value = new Image();
+		if(value->Load(filename)){
+			Resource::Store(filename,(Resource*)value);
+		} else {
+			LogMsg(DEBUG1,"Couldn't Find Image '%s'",filename.c_str());
+			delete value;
+			return NULL;
+		}
+	}
+	return value;
+}
+
+/**\brief Load image from file
+ */
+bool Image::Load( const string& filename ) {
+	File file = File();
+
+	if( filename == "" ) {
+		return false; // No File to load.
+	}
+
+	if( !file.OpenRead(filename ) ) {
+		return false; // File could not be opened or found.
+	}
+
+	char* buffer = file.Read();
+	int bytesread = file.GetLength();
+
+	if ( buffer == NULL ) {
+		return false; // File could not be Read.
+	}
+
+	int retval = Load( buffer, bytesread );
+	delete [] buffer;
+	if ( retval ){
+        filepath=filename;
+		return true;
+	}
+	return false; // Image could not be loaded. (It might not be an Image)
+}
+
+/**\brief Load image from buffer
+ */
+bool Image::Load( char *buf, int bufSize ) {
+	SDL_RWops *rw;
+	SDL_Surface *s = NULL;
+
+	rw = SDL_RWFromMem( buf, bufSize );
+	if( !rw ) {
+		LogMsg(WARN, "Image loading failed. Could not create RWops" );
+		return( false );
+	}
+
+	s = IMG_Load_RW( rw, 0 );
+	SDL_FreeRW(rw);
+
+	if( !s ) {
+		LogMsg(WARN, "Image loading failed. Could not load image from RWops" );
+		return( false );
+	}
+
+	w = s->w;
+	h = s->h;
+
+	if( ConvertToTexture( s ) == false ) {
+		LogMsg(WARN, "Failed to load image from buffer" );
+		SDL_FreeSurface( s );
+		return( false );
+	}
+
+
+	return( true );
+}
+
+/**\brief Draw the image (angle is in degrees)
+ */
+void Image::Draw( int x, int y, float angle ) {
+	_Draw( x, y, 1.f, 1.f, 1.f, 1.f, angle );
+}
+
+/**\brief Draw the image (angle is in degrees, alpha is between 0.0 and 1.0)
+ */
+void Image::DrawAlpha( int x, int y, float alpha ) {
+	_Draw( x, y, 1.f, 1.f, 1.f, alpha );
+}
+
+/**\brief Draw the image (angle is in degrees)
+ */
+void Image::_Draw( int x, int y, float r, float g, float b, float alpha, float angle, float resize_ratio_w, float resize_ratio_h) {
+	// the four rotated (if needed) corners of the image
+	float ulx, urx, llx, lrx, uly, ury, lly, lry;
+
+	assert(image);
+	if( !image ) {
+		LogMsg(WARN, "Trying to draw without loading an image first." );
+		return;
+	}
+
+	glPushMatrix();
+
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Clear The Background Color To Black
+	glClearDepth(1.0); // Enables Clearing Of The Depth Buffer
+	glShadeModel(GL_SMOOTH); // Enables Smooth Color Shading
+	glEnable(GL_TEXTURE_2D); // Enable 2D Texture Mapping
+ 	glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+
+	// calculate the coordinates of the quad	
+	// avoid trig when you can
+	if( angle != 0.f ) {
+		Trig *trig = Trig::Instance();
+		float a = (float)trig->DegToRad( angle );
+		// ax/ay are the coordinate to rotate "about", hence "about points", "about x", "about y"
+		float ax = static_cast<float>(x + (w / 2.));
+		float ay = static_cast<float>(y + (h / 2.));
+
+		trig->RotatePoint( (float)x, (float)y + h, ax, ay, (float *)&ulx, (float *)&uly, a );
+		trig->RotatePoint( (float)x + w, (float)y + h, ax, ay, (float *)&urx, (float *)&ury, a );
+		trig->RotatePoint( (float)x, (float)y, ax, ay, (float *)&llx, (float *)&lly, a );
+		trig->RotatePoint( (float)x + w, (float)y, ax, ay, (float *)&lrx, (float *)&lry, a );
+	} else {
+		ulx = static_cast<float>(x);
+		urx = static_cast<float>(x + w);
+		llx = static_cast<float>(x);
+		lrx = static_cast<float>(x + w);
+		uly = static_cast<float>(y + h);
+		ury = static_cast<float>(y + h);
+		lly = static_cast<float>(y);
+		lry = static_cast<float>(y);
+	}
+
+	// draw!
+	glColor4f(r, g, b, alpha);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture( GL_TEXTURE_2D, image );
+
+	//glPushMatrix();
+	
+	// the deltas are the differences needed in width, e.g. a resize_ratio_w of 1.1 would produce a value
+	// equal to the original width of the image but adding 10%. 0.9 would then be 10% smaller, etc.
+	float resize_w_delta = (w * resize_ratio_w) - w;
+	float resize_h_delta = (h * resize_ratio_h) - h;
+
+	glBegin( GL_QUADS );
+	glTexCoord2f( 0., 0. ); glVertex2f( llx, lly );
+	glTexCoord2f( scale_w, 0. ); glVertex2f( lrx + resize_w_delta, lry );
+	glTexCoord2f( scale_w, scale_h ); glVertex2f( urx + resize_w_delta, ury + resize_h_delta );
+	glTexCoord2f( 0., scale_h ); glVertex2f( ulx, uly + resize_h_delta );
+	glEnd();
+
+	//glPopMatrix();
+
+	glEnable(GL_DEPTH_TEST); // Enable Depth Testing
+	glDisable(GL_BLEND); // Disable Blending
+
+	glDisable(GL_TEXTURE_2D); // Disable 2D Texture Mapping
+	glBindTexture(GL_TEXTURE_2D,0); // Unbind The Blur Texture
+
+	glPopMatrix();
+}
+
+/**\brief Draw the image centered on (x,y)
+ */
+void Image::DrawCentered( int x, int y, float angle ) {
+	Draw( x - (w / 2), y - (h / 2), angle );
+}
+
+/**\brief Draw the image stretched within to a box
+ */
+void Image::DrawStretch( int x, int y, int box_w, int box_h, float angle ) {
+	if(!this) return;
+	assert(this);
+	assert(this->w);
+	assert(this->h);
+
+	float wf = static_cast<float>(this->w);
+	float hf = static_cast<float>(this->h);
+
+	float resize_ratio_w = static_cast<float>(box_w) / wf;
+	float resize_ratio_h = static_cast<float>(box_h) / hf;
+
+	_Draw(x, y, 1.f, 1.f, 1.f, 1.f, angle, resize_ratio_w, resize_ratio_h);
+}
+
+/**\brief Draw the image within a box but not stretched
+ */
+void Image::DrawFit( int x, int y, int box_w, int box_h, float angle ) {
+	float resize_ratio_w = (float)box_w / (float)this->w;
+	float resize_ratio_h = (float)box_h / (float)this->h;
+	// Use Minimum of the two ratios
+	float resize_ratio = resize_ratio_w<resize_ratio_h ? resize_ratio_w : resize_ratio_h;
+
+	_Draw(x, y, 1.f, 1.f, 1.f, 1.f, angle, resize_ratio, resize_ratio);
+}
+
+/**\brief Returns the next highest power of two if num is not a power of two
+ */
+int Image::PowerOfTwo(int num) {
+	if (!(num & (num - 1)) && num) {
+		return num;
+	} else {
+		// num is not a power of two
+		int c = 1;
+		while(c < num) c *= 2;
+		return(c);
+	}
+}
+
+/**\brief Converts an SDL surface to an OpenGL texture. Will free 's' by design. Do not do anything with it after this point.
+ */
+bool Image::ConvertToTexture( SDL_Surface *s ) {
+	assert(s);
+
+	// delete an old loaded image if one eixsts
+	if( image ) {
+		glDeleteTextures( 1, &image );
+		image = 0;
+
+		LogMsg(WARN, "Loading an image after another is loaded already. Deleting old ... " );
+	}
+
+	// Check to see if we need to expand the image
+	int expanded_w = PowerOfTwo(s->w);
+	int expanded_h = PowerOfTwo(s->h);
+
+	if(expanded_w == 1) expanded_w = 2; // many cards won't accept 1 as a power of two
+	if(expanded_h == 1) expanded_h = 2;
+
+	if((expanded_w != s->w) || (expanded_h != s->h)) {
+		// Expand the canvas (needed)
+		SDL_Surface *newSurface = NULL;
+		newSurface = ExpandCanvas( s, expanded_w, expanded_h ); // ExpandCavas will set new scale_w/scale_h
+		s = newSurface;
+	}
+
+	// real width/height always equal the expanded canvas (or original canvas if no expansion)'s w/h
+	real_w = s->w;
+	real_h = s->h;
+
+	// check the pixel format, since it could depend on the file format:
+	GLenum internal_format;
+ 	GLenum img_format, img_type;
+	switch (s->format->BitsPerPixel) {
+		case 32:
+			img_format = GL_RGBA;
+			if(s->format->Bmask != 0x00ff0000)
+				img_format = GL_BGRA;
+			img_type = GL_UNSIGNED_BYTE;
+			internal_format = GL_RGBA8;
+			break;
+		case 24:
+			img_format = GL_RGB;
+			img_type = GL_UNSIGNED_BYTE;
+			internal_format = GL_RGB8;
+			break;
+		case 16:
+			img_format = GL_RGBA;
+			img_type = GL_UNSIGNED_SHORT;
+			internal_format = GL_RGB5_A1;
+			break;
+		default:
+			img_format = GL_LUMINANCE;
+			img_type = GL_UNSIGNED_BYTE;
+			internal_format=GL_LUMINANCE8;
+			break;
+	}
+
+	// generate the texture
+	glGenTextures( 1, &image );
+
+	// use the bitmap data stored in the SDL_Surface
+	glBindTexture( GL_TEXTURE_2D, (unsigned int)image );
+
+	// upload the texture data, letting OpenGL do any required conversion.
+	glTexImage2D( GL_TEXTURE_2D, 0, internal_format, real_w, real_h, 0, img_format, img_type, s->pixels );
+
+	// linear filtering
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+	SDL_FreeSurface( s );
+
+	return( true );
+}
+
+/**\brief Draw the image tiled to fill a rectangle of w/h - will crop to meet w/h and won't overflow
+ */
+void Image::DrawTiled( int x, int y, int fill_w, int fill_h, float alpha ) {
+	if( !image ) {
+		LogMsg(WARN, "Trying to draw without loading an image first." );
+		return;
+	}
+
+	glPushMatrix();
+
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Clear The Background Color To Black
+	glClearDepth(1.0); // Enables Clearing Of The Depth Buffer
+	glShadeModel(GL_SMOOTH); // Enables Smooth Color Shading
+	glEnable(GL_TEXTURE_2D); // Enable 2D Texture Mapping
+ 	glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+
+	// draw it
+	glColor4f(1, 1, 1, alpha);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture( GL_TEXTURE_2D, image );
+
+	//glPushMatrix();
+
+	Video::SetCropRect(x, y, fill_w, fill_h); // don't need to invert y here
+
+	glBegin( GL_QUADS );
+	for( int j = 0; j < fill_h; j += h) {
+		for( int i = 0; i < fill_w; i += w) {
+			glTexCoord2f( 0., 0. ); glVertex2f( static_cast<GLfloat>(x+i), static_cast<GLfloat>(y+j) ); // Lower Left
+			glTexCoord2f( scale_w, 0. ); glVertex2f( static_cast<GLfloat>(x+w+i) , static_cast<GLfloat>(y+j)); // Lower Right
+			glTexCoord2f( scale_w, scale_h ); glVertex2f( static_cast<GLfloat>(x+w+i) , static_cast<GLfloat>(y+h+j) ); // Upper Right
+			glTexCoord2f( 0., scale_h ); glVertex2f( static_cast<GLfloat>(x+i), static_cast<GLfloat>(y+h+j) ); // Upper Left
+		}
+	}
+	glEnd();
+
+	Video::UnsetCropRect();
+
+	//glPopMatrix();
+
+	glEnable(GL_DEPTH_TEST); // Enable Depth Testing
+	glDisable(GL_BLEND); // Disable Blending
+
+	glDisable(GL_TEXTURE_2D); // Disable 2D Texture Mapping
+	glBindTexture(GL_TEXTURE_2D,0); // Unbind The Blur Texture
+
+	glPopMatrix();
+}
+
+
+/**\brief Will destroy 's' so don't do anything with it after this and don't worry about freeing it (it's freed here)
+ * e.g. proper usage: convert = ExpandCanvas( convert, w, h );
+ */
+SDL_Surface *Image::ExpandCanvas( SDL_Surface *s, int w, int h ) {
+	SDL_Surface *expanded = NULL;
+	SDL_Surface *original = s;
+	
+	// create the expanded surface
+	expanded = SDL_CreateRGBSurface(original->flags, w, h, original->format->BitsPerPixel,
+	                                original->format->Rmask, original->format->Gmask, original->format->Bmask,
+	                                original->format->Amask);
+	assert( expanded );
+
+	// make sure alpha values are copied properly
+	SDL_SetAlpha( original, 0, SDL_ALPHA_OPAQUE );
+
+	// copy the old image to the upper-left corner of the expanded canvas
+	SDL_Rect area;
+	area.x = 0;
+	area.y = 0;
+	area.w = original->w;
+	area.h = original->h;
+	SDL_BlitSurface( original, &area, expanded, &area );
+	
+	// re-calculate the texture coordinates given to opengl during drawing (u/v coordinates)
+	scale_w = (float)original->w / (float)w;
+	scale_h = (float)original->h / (float)h;
+	
+	// update the callee's pointer to the new image and free the old one
+	SDL_FreeSurface( original );
+	
+	return( expanded );
+}
+
+/**\fn Image::GetWidth()
+ *  \brief Returns width of image.
+ * \fn Image::GetHeight()
+ *  \brief Returns height of image.
+ * \fn Image::GetHalfWidth()
+ *  \brief Returns half the width of image.
+ * \fn Image::GetHalfHeight()
+ *  \brief Returns half the height of image.
+ * \fn Image::GetPath()
+ *  \brief Returns the path to the image.
+ */

@@ -10,10 +10,10 @@
 #define __H_MENU
 
 #include "audio/music.h"
-#include "Engine/simulation.h"
-#include "Graphics/image.h"
-#include "UI/ui.h"
-#include "UI/ui_picture.h"
+#include "engine/simulation.h"
+#include "graphics/image.h"
+#include "ui/ui.h"
+#include "ui/ui_picture.h"
 
 class Menu {
 	public:

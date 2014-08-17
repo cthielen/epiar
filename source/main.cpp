@@ -12,17 +12,17 @@
 #include "includes.h"
 #include "common.h"
 #include "audio/audio.h"
-#include "Tests/graphics.h"
-#include "Graphics/font.h"
-#include "Graphics/video.h"
+#include "tests/graphics.h"
+#include "graphics/font.h"
+#include "graphics/video.h"
 #include "menu.h"
-#include "UI/ui.h"
-#include "Utilities/argparser.h"
-#include "Utilities/filesystem.h"
-#include "Utilities/log.h"
-#include "Utilities/lua.h"
-#include "Utilities/xml.h"
-#include "Utilities/timer.h"
+#include "ui/ui.h"
+#include "utilities/argparser.h"
+#include "utilities/filesystem.h"
+#include "utilities/log.h"
+#include "utilities/lua.h"
+#include "utilities/xml.h"
+#include "utilities/timer.h"
 
 #ifdef EPIAR_COMPILE_TESTS
 #include "Tests/tests.h"
@@ -118,7 +118,7 @@ void Main_OS( int argc, char **argv ) {
  *  \todo If these files do not exist, reasonable defaults should be loaded instead.
  */
 void Main_Load_Settings() {
-	Options::Initialize( "resources/Definitions/options.xml" );
+	Options::Initialize( "resources/definitions/options.xml" );
 
 	// Logging
 	Options::AddDefault( "options/log/xml", 0 );
@@ -165,18 +165,18 @@ void Main_Load_Settings() {
 	Options::Unlock();
 
 	skinfile = new XMLFile();
-	if( !skinfile->Open("resources/Skin/skin.xml") )
+	if( !skinfile->Open("resources/skin/skin.xml") )
 	{
 		// Create the default Skin file
-		skinfile->New("resources/Skin/skin.xml", "Skin");
+		skinfile->New("resources/skin/skin.xml", "Skin");
 
 		// UI - Default
-		skinfile->Set( "Skin/UI/Default/Font", "resources/Fonts/FreeSans.ttf");
+		skinfile->Set( "Skin/UI/Default/Font", "resources/fonts/FreeSans.ttf");
 		skinfile->Set( "Skin/UI/Default/Color", "0xFFFFFF");
 		skinfile->Set( "Skin/UI/Default/Size", 12);
 
 		// UI - Textbox
-		skinfile->Set( "Skin/UI/Textbox/Font", "resources/Fonts/ConsolaMono.ttf");
+		skinfile->Set( "Skin/UI/Textbox/Font", "resources/fonts/ConsolaMono.ttf");
 		skinfile->Set( "Skin/UI/Textbox/Color/Foreground", "0xCCCCCC");
 		skinfile->Set( "Skin/UI/Textbox/Color/Background", "0x666666");
 		skinfile->Set( "Skin/UI/Textbox/Color/Edge", "0x262626");
@@ -186,7 +186,7 @@ void Main_Load_Settings() {
 		skinfile->Set( "Skin/UI/Tab/Color/Inactive", "0x262626");
 
 		// HUD - Alert
-		skinfile->Set( "Skin/HUD/Alert/Font", "resources/Fonts/FreeSans.ttf");
+		skinfile->Set( "Skin/HUD/Alert/Font", "resources/fonts/FreeSans.ttf");
 		skinfile->Set( "Skin/HUD/Alert/Color", "0xFFFFFF");
 		skinfile->Set( "Skin/HUD/Alert/Size", 12);
 
@@ -220,10 +220,10 @@ void Main_Init_Singletons() {
 	Timer::Initialize();
 	Video::Initialize();
 
-	SansSerif       = new Font( "resources/Fonts/FreeSans.ttf" );
-	BitType         = new Font( "resources/Fonts/visitor2.ttf" );
-	Serif           = new Font( "resources/Fonts/FreeSerif.ttf" );
-	Mono            = new Font( "resources/Fonts/ConsolaMono.ttf" );
+	SansSerif       = new Font( "resources/fonts/FreeSans.ttf" );
+	BitType         = new Font( "resources/fonts/visitor2.ttf" );
+	Serif           = new Font( "resources/fonts/FreeSerif.ttf" );
+	Mono            = new Font( "resources/fonts/ConsolaMono.ttf" );
 
 	UI::Initialize("Main Screen");
 

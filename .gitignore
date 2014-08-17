@@ -62,7 +62,7 @@ stdout.txt
 stderr.txt
 
 ### Epiar Saved Games
-resources/Definitions/*.xml
+resources/definitions/*.xml
 
 .DS_Store
 Epiar.tmproj
@@ -80,3 +80,7 @@ mingw32-config.cache
 
 ### Include XCode IDE files
 !Build/OS X/XCode/Epiar
+
+### Eclipse IDE files
+.settings
+

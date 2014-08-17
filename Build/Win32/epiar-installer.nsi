@@ -134,10 +134,10 @@ file SDL_image.dll
 file SDL_mixer.dll
 file zlib1.dll
 
-setOutPath $INSTDIR\resources\Animations
-file resources\Animations\*
-setOutPath $INSTDIR\resources\Art
-file resources\Art\*
+setOutPath $INSTDIR\resources\animations
+file resources\animations\*
+setOutPath $INSTDIR\resources\art
+file resources\art\*
 setOutPath $INSTDIR\resources\audio\Effects
 file resources\audio\Effects\*
 setOutPath $INSTDIR\resources\audio\Engines
@@ -148,22 +148,22 @@ setOutPath $INSTDIR\resources\audio\Music
 file resources\audio\Music\*
 setOutPath $INSTDIR\resources\audio\Weapons
 file resources\audio\Weapons\*
-setOutPath $INSTDIR\resources\Blueprints
-file resources\Blueprints\*
-setOutPath $INSTDIR\resources\Definitions
-file resources\Definitions\*
-setOutPath $INSTDIR\resources\Fonts
-file resources\Fonts\*
-setOutPath $INSTDIR\resources\Graphics
-file resources\Graphics\*
-setOutPath $INSTDIR\resources\Icons
-file resources\Icons\*
-setOutPath $INSTDIR\resources\Scripts
-file resources\Scripts\*
-setOutPath $INSTDIR\resources\Simulation\default
-file resources\Simulation\default\*
-setOutPath $INSTDIR\resources\Skin
-file resources\Skin\*
+setOutPath $INSTDIR\resources\blueprints
+file resources\blueprints\*
+setOutPath $INSTDIR\resources\definitions
+file resources\definitions\*
+setOutPath $INSTDIR\resources\fonts
+file resources\fonts\*
+setOutPath $INSTDIR\resources\graphics
+file resources\graphics\*
+setOutPath $INSTDIR\resources\icons
+file resources\icons\*
+setOutPath $INSTDIR\resources\scripts
+file resources\scripts\*
+setOutPath $INSTDIR\resources\simulation\default
+file resources\simulation\default\*
+setOutPath $INSTDIR\resources\skin
+file resources\skin\*
 
 setOutPath $INSTDIR
 

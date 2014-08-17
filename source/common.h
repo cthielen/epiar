@@ -12,9 +12,9 @@
 #ifndef __H_COMMON__
 #define __H_COMMON__
 
-#include "Graphics/font.h"
-#include "Utilities/xml.h"
-#include "Utilities/options.h"
+#include "graphics/font.h"
+#include "utilities/xml.h"
+#include "utilities/options.h"
 
 // defined in main.cpp. used through the codebase
 extern XMLFile *skinfile;

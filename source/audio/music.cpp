@@ -8,8 +8,8 @@
 
 #include "includes.h"
 #include "audio/music.h"
-#include "Utilities/log.h"
-#include "Utilities/resource.h"
+#include "utilities/log.h"
+#include "utilities/resource.h"
 
 /**\class Song
  * \brief This represents a song object.
