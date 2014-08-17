@@ -20,6 +20,11 @@
 #include "engine/alliances.h"
 
 // Abstraction of the map
+class Map {
+	public:
+		Map();
+};
+/*
 class Map : public Component {
 	public:
 		Map();
@@ -77,7 +82,7 @@ class Map : public Component {
 		list<Technology*> technologies;
 
 		Uint32 lastTrafficTime;
-};
+};*/
 
 // Class that holds list of all planets; manages them
 /*

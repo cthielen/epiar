@@ -46,7 +46,7 @@ class UI_Lua {
 		static int newTab(lua_State *L);
 		static int newDropdown(lua_State *L);
 		static int newParagraph(lua_State *L);
-		static int newMap(lua_State *L);
+		static int newNavMap(lua_State *L);
 
 		// Dialogs
 		static int newConfirm(lua_State *L);

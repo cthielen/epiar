@@ -9,3 +9,7 @@
 #include "includes.h"
 #include "engine/map.h"
 
+Map::Map() {
+
+}
+

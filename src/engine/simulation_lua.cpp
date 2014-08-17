@@ -87,12 +87,12 @@ void Simulation_Lua::RegisterSimulation(lua_State *L) {
 		{"outfits", &Simulation_Lua::GetOutfitNames},
 		{"engines", &Simulation_Lua::GetEngineNames},
 		{"technologies", &Simulation_Lua::GetTechnologyNames},
-		{"planetNames", &Simulation_Lua::GetPlanetNames},
+		//{"planetNames", &Simulation_Lua::GetPlanetNames},
 
 		// Sprite Searching Functions
 		{"getSprite", &Simulation_Lua::GetSpriteByID},
 		{"ships", &Simulation_Lua::GetShips},
-		{"planets", &Simulation_Lua::GetPlanets},
+		//{"planets", &Simulation_Lua::GetPlanets},
 		{"nearestShip", &Simulation_Lua::GetNearestShip},
 		{"nearestPlanet", &Simulation_Lua::GetNearestPlanet},
 
@@ -106,7 +106,7 @@ void Simulation_Lua::RegisterSimulation(lua_State *L) {
 		{"getCommodityInfo", &Simulation_Lua::GetCommodityInfo},
 		{"getAllianceInfo", &Simulation_Lua::GetAllianceInfo},
 		{"getModelInfo", &Simulation_Lua::GetModelInfo},
-		{"getPlanetInfo", &Simulation_Lua::GetPlanetInfo},
+		//{"getPlanetInfo", &Simulation_Lua::GetPlanetInfo},
 		{"getWeaponInfo", &Simulation_Lua::GetWeaponInfo},
 		{"getEngineInfo", &Simulation_Lua::GetEngineInfo},
 		{"getOutfitInfo", &Simulation_Lua::GetOutfitInfo},
@@ -475,18 +475,18 @@ int Simulation_Lua::GetEngineNames(lua_State *L){
  */
 int Simulation_Lua::GetTechnologyNames(lua_State *L){
 	list<string> *names = GetSimulation(L)->GetTechnologies()->GetNames();
-	Lua::pushStringList(L,names);
+	Lua::pushStringList(L, names);
 	return 1;
 }
 
 /** \brief Get Planet names
  *  \returns list of names as strings
  */
-int Simulation_Lua::GetPlanetNames(lua_State *L){
-	list<string> *names = GetSimulation(L)->GetPlanets()->GetNames();
-	Lua::pushStringList(L,names);
-	return 1;
-}
+//int Simulation_Lua::GetPlanetNames(lua_State *L){
+//	list<string> *names = GetSimulation(L)->GetPlanets()->GetNames();
+//	Lua::pushStringList(L, names);
+//	return 1;
+//}
 
 /** \brief Pushes a Sprite reference onto the Lua Stack.
  *  \note Sprites are referenced by their ID.
@@ -625,20 +625,20 @@ int Simulation_Lua::GetShips(lua_State *L){
 /** Get Lua references to All Planets
  * \returns list of Planet References
  */
-int Simulation_Lua::GetPlanets(lua_State *L){
-	Planets *planets = GetSimulation(L)->GetPlanets();
-	list<string>* planetNames = planets->GetNames();
+//int Simulation_Lua::GetPlanets(lua_State *L){
+//	Planets *planets = GetSimulation(L)->GetPlanets();
+//	list<string>* planetNames = planets->GetNames();
 
-	lua_createtable(L, planetNames->size(), 0);
-	int newTable = lua_gettop(L);
-	int index = 1;
-	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
-		PushSprite(L,planets->GetPlanet(*pname));
-		lua_rawseti(L, newTable, index);
-		++index;
-	}
-	return 1;
-}
+//	lua_createtable(L, planetNames->size(), 0);
+//	int newTable = lua_gettop(L);
+//	int index = 1;
+//	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
+//		PushSprite(L,planets->GetPlanet(*pname));
+//		lua_rawseti(L, newTable, index);
+//		++index;
+//	}
+//	return 1;
+//}
 
 /** Get the nearest Sprite to another sprite
  * \details
@@ -842,6 +842,7 @@ int Simulation_Lua::GetModelInfo(lua_State *L) {
 /** \brief Get Information about a Planet
  *  \returns Lua table of Planet Information
  */
+/*
 int Simulation_Lua::GetPlanetInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
@@ -885,7 +886,7 @@ int Simulation_Lua::GetPlanetInfo(lua_State *L) {
 	PushComponents(L,  (list<Component*>*)&techs );
 	lua_settable(L, -3);
 	return 1;
-}
+}*/
 
 /** \brief Get Information about a Weapon
  *  \returns Lua table of Weapon Information
@@ -1217,16 +1218,16 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 				summary,
 				techs);
 
-		Planet* oldPlanet = GetSimulation(L)->GetPlanets()->GetPlanet( oldname );
-		if(oldPlanet!=NULL) {
-			LogMsg(INFO,"Saving changes to '%s'",thisPlanet.GetName().c_str());
-			*oldPlanet = thisPlanet;
-		} else {
-			LogMsg(INFO,"Creating new Planet '%s'",thisPlanet.GetName().c_str());
-			Planet* newPlanet = new Planet(thisPlanet);
-			GetSimulation(L)->GetPlanets()->Add(newPlanet);
-			GetSimulation(L)->GetSpriteManager()->Add(newPlanet);
-		}
+		//Planet* oldPlanet = GetSimulation(L)->GetPlanets()->GetPlanet( oldname );
+		//if(oldPlanet!=NULL) {
+		//	LogMsg(INFO,"Saving changes to '%s'",thisPlanet.GetName().c_str());
+		//	*oldPlanet = thisPlanet;
+		//} else {
+			//LogMsg(INFO,"Creating new Planet '%s'",thisPlanet.GetName().c_str());
+			//Planet* newPlanet = new Planet(thisPlanet);
+			//GetSimulation(L)->GetPlanets()->Add(newPlanet);
+			//GetSimulation(L)->GetSpriteManager()->Add(newPlanet);
+		//}
 
 	} else if(kind == "Technology"){
 		list<string>::iterator iter;
