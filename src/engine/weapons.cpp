@@ -1,7 +1,7 @@
 /**\file			weapons.cpp
- * \author			Shawn Reynolds (eb0s@yahoo.com)
+ * \author			Shawn Reynolds (eb0s@yahoo.com), Christopher Thielen (chris@epiar.net)
  * \date			Created: Friday, November 21, 2009
- * \date			Modified: Friday, November 21, 2009
+ * \date			Modified: Sunday, August 17, 2014
  * \brief
  * \details
  */
@@ -326,19 +326,6 @@ AmmoType Weapon::AmmoNameToType(string typeName ) {
  *
  * \see Weapon
  */
-Weapons *Weapons::pInstance = 0; // initialize pointer
-
-/**\brief Gets or returns Weapons instance
- * \return Pointer to a Weapons object
- */
-Weapons *Weapons::Instance( void ) {
-	if( pInstance == 0 ) { // is this the first call?
-		pInstance = new Weapons; // create the solid instance
-		pInstance->rootName = "weapons";
-		pInstance->componentName = "weapon";
-	}
-	return( pInstance );
-}
 
 /**\fn Weapons::GetWeapon(string& weaponName)
  *  \brief Retrieves a Weapon by name

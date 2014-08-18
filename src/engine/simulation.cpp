@@ -47,22 +47,14 @@ Simulation::Simulation( void ) {
 	Simulation_Lua::StoreSimulation(L,this);
 
 	sprites = SpriteManager::Instance();
-	commodities = Commodities::Instance();
-	engines = Engines::Instance();
-	map = new Map();
-	models = Models::Instance();
-	weapons = Weapons::Instance();
-	alliances = Alliances::Instance();
-	technologies = Technologies::Instance();
-	outfits = Outfits::Instance();
+	scenario = new Scenario();
+
 	players = Players::Instance();
 	player = NULL;
 
 	camera = Camera::Instance();
 	calendar = new Calendar();
 	console = new Console( L );
-
-	folderpath = "";
 
 	currentFPS = 0.0f;
 	paused = false;
@@ -72,10 +64,8 @@ Simulation::Simulation( void ) {
 	mapScale = -1.0f;
 }
 
-bool Simulation::New( string newname ) {
+/*bool Simulation::New( string newname ) {
 	LogMsg(INFO, "New Simulation: '%s'.", newname.c_str() );
-
-	folderpath = "resources/scenarios/" + newname + "/";
 
 	XMLFile::New( folderpath + string("scenario.xml"), "scenario" );
 
@@ -85,7 +75,7 @@ bool Simulation::New( string newname ) {
 	// Set the File Names
 	commodities->SetFileName( folderpath + "commodities.xml" );
 	engines->SetFileName( folderpath + "engines.xml" );
-	//map->SetFileName( folderpath + "map.xml" );
+	map->SetFileName( folderpath + "map.xml" );
 	models->SetFileName( folderpath + "models.xml" );
 	weapons->SetFileName( folderpath + "weapons.xml" );
 	alliances->SetFileName( folderpath + "alliances.xml" );
@@ -110,14 +100,14 @@ bool Simulation::New( string newname ) {
 
 	loaded = true;
 	return true;
-}
+}*/
 
 /**\brief Loads the XML file.
  * \param filename Name of the file
  * \return true if success
  */
-bool Simulation::Load( string simName ) {
-	folderpath = "resources/scenarios/" + simName + "/";
+bool Simulation::LoadScenario( string scenarioName ) {
+	folderpath = "resources/scenarios/" + scenarioName + "/";
 
 	if( !Open( folderpath + string("scenario.xml") ) ) {
 		return false;
@@ -130,13 +120,13 @@ bool Simulation::Load( string simName ) {
 
 /**\brief Pauses the simulation
  */
-void Simulation::pause(){
+void Simulation::pause() {
 	LogMsg(INFO, "Pausing.");
 	paused = true;
 	interpolateOn = false;
 }
 
-void Simulation::Save(){
+void Simulation::Save() {
 	if( PHYSFS_mkdir( ("resources/scenarios/" + GetName() + "/").c_str() ) == 0) {
 		LogMsg(ERR, "Cannot create folder '%s'.", folderpath.c_str() );
 		return;
@@ -164,14 +154,14 @@ void Simulation::Save(){
 
 /**\brief Unpauses the simulation
  */
-void Simulation::unpause(){
+void Simulation::unpause() {
 	LogMsg(INFO, "Unpausing.");
 	//Timer::Update();
 	paused = false;
 	interpolateOn = true;
 }
 
-bool Simulation::SetupToRun(){
+bool Simulation::SetupToRun() {
 	bool luaLoad = true;
 
 	LogMsg(INFO, "Simulation Setup Started");

@@ -30,7 +30,7 @@ Engine::Engine() :
 
 /**\brief Assignment constructor - copies all fields.
  */
-Engine& Engine::operator= (const Engine& other) {
+/*Engine& Engine::operator= (const Engine& other) {
 	Outfit(*this) = Outfit(other);
 
 	name = other.name;
@@ -39,7 +39,7 @@ Engine& Engine::operator= (const Engine& other) {
 	foldDrive = other.foldDrive;
 	flareAnimation = other.flareAnimation;
 	return *this;
-}
+}*/
 
 /**\brief Initializes a new Engine with the given parameters.
  * \param _name Name of the Engine
@@ -49,7 +49,7 @@ Engine& Engine::operator= (const Engine& other) {
  * \param foldDrive Fold capable
  * \param _flareAnimation Thrust animation
  */
-Engine::Engine( string _name, Image* _pic, string _description, Sound* _thrustsound, float _forceOutput,
+/*Engine::Engine( string _name, Image* _pic, string _description, Sound* _thrustsound, float _forceOutput,
 		short int _msrp, bool _foldDrive, string _flareAnimation) :
 	thrustsound(_thrustsound),
 	foldDrive(_foldDrive),
@@ -60,7 +60,7 @@ Engine::Engine( string _name, Image* _pic, string _description, Sound* _thrustso
 	SetMSRP(_msrp);
 	SetPicture(_pic);
 	SetForceOutput(_forceOutput);
-}
+}*/
 
 /**\brief Parser to parse the XML file
  */
@@ -140,34 +140,11 @@ xmlNodePtr Engine::ToXMLNode(string componentName) {
 /**\class Engines
  * \brief Handles ship engines. */
 
-Engines *Engines::pInstance = 0; // initialize pointer
-
-/**\brief Initializes the instance or gets a pointer to it.
- * \return Pointer to an Engine object
- */
-Engines *Engines::Instance( void ) {
-	if( pInstance == 0 ) { // is this the first call?
-		pInstance = new Engines; // create the solid instance
-		pInstance->rootName = "engines";
-		pInstance->componentName = "engine";
-	}
-	return( pInstance );
-}
-
 /**\fn Engines::GetEngine(string name)
  * \brief Returns the named Engine
  */
 
 /**\fn Engines::newComponent()
  * \brief Creates a new Engine object.
- */
-
-// Projected members
-/**\fn Engines::Engines( const Engines & )
- * \brief Creates a new Engines object
- */
-
-/**\fn Engines::operator= (const Engines &)
- * \brief Assignment operator (empty)
  */
 
