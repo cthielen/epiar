@@ -73,7 +73,7 @@ epiar_SOURCES = src/main.cpp \
                 src/utilities/resource.cpp \
                 src/utilities/timer.cpp \
                 src/utilities/trig.cpp \
-                src/utilities/xml.cpp
+                src/utilities/xmlfile.cpp
 
 epiar_LDADD = src/lua/src/liblua.a
 

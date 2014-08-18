@@ -29,6 +29,7 @@ class Scenario {
 
 		bool New( string _folderpath );
 		bool Load( string _folderpath );
+		bool Parse(void);
 
 		Commodities *GetCommodities() { return commodities; }
 		Engines *GetEngines() { return engines; }
@@ -48,6 +49,10 @@ class Scenario {
 		Alliances *alliances;
 		Technologies *technologies;
 		Outfits *outfits;
+
+		Song* bgmusic;
+
+		XMLFile *scenarioXML;
 
 		// Description of this Simulation
 		string folderpath;
