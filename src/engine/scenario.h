@@ -9,6 +9,7 @@
 #ifndef __H_SCENARIO__
 #define __H_SCENARIO__
 
+#include "audio/music.h"
 #include "engine/commodities.h"
 #include "engine/alliances.h"
 #include "engine/engines.h"
@@ -30,6 +31,8 @@ class Scenario {
 		bool New( string _folderpath );
 		bool Load( string _folderpath );
 		bool Parse(void);
+
+		Song *GetBgMusic(void) { return bgmusic; }
 
 		Commodities *GetCommodities() { return commodities; }
 		Engines *GetEngines() { return engines; }

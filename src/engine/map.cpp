@@ -20,6 +20,15 @@
 Map::Map() {
 }
 
+bool Map::Load(string filepath) {
+
+	return false;
+}
+
+Sector *GetSector(string sectorName) {
+	return NULL;
+}
+
 /** Default Copy Constructor
  */
 Map& Map::operator= (const Map& other)

@@ -9,13 +9,18 @@
 #ifndef __h_map__
 #define __h_map__
 
+#include "engine/sector.h"
 #include "includes.h"
 #include "utilities/components.h"
 
 // Abstraction of the map
-class Map : public Components {
+class Map {
 	public:
 		Map();
+
+		bool Load(string filepath);
+
+		Sector *GetSector(string sectorName);
 
 		Map& operator= (const Map& other);
 		Map operator+ (const Map& other);

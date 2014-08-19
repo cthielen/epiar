@@ -107,9 +107,7 @@ Simulation::Simulation( void ) {
  * \return true if success
  */
 bool Simulation::LoadScenario( string scenarioName ) {
-	folderpath = "resources/scenarios/" + scenarioName + "/";
-
-	if( !Open( folderpath + string("scenario.xml") ) ) {
+	if( !Open( "resources/scenarios/" + scenarioName + "/" + string("scenario.xml") ) ) {
 		return false;
 	}
 
@@ -127,29 +125,31 @@ void Simulation::pause() {
 }
 
 void Simulation::Save() {
-	if( PHYSFS_mkdir( ("resources/scenarios/" + GetName() + "/").c_str() ) == 0) {
-		LogMsg(ERR, "Cannot create folder '%s'.", folderpath.c_str() );
-		return;
-	}
+	LogMsg(ERR, "Unimplemented.");
+
+	//if( PHYSFS_mkdir( ("resources/scenarios/" + GetName() + "/").c_str() ) == 0) {
+	//	LogMsg(ERR, "Cannot create folder '%s'.", folderpath.c_str() );
+	//	return;
+	//}
 
 	// Check Defaults
 	//if( planets->Get( Get("defaultPlayer/start")) == NULL)
 	//	LogMsg(WARN, "Bad Default Player Start Location '%s'.", Get("defaultPlayer/start").c_str() );
-	if( models->Get( Get("defaultPlayer/model")) == NULL)
-		LogMsg(WARN, "Bad Default Player Start Model '%s'.", Get("defaultPlayer/model").c_str() );
-	if( engines->Get( Get("defaultPlayer/engine")) == NULL)
-		LogMsg(WARN, "Bad Default Player Start Engine '%s'.", Get("defaultPlayer/engine").c_str() );
+	//if( models->Get( Get("defaultPlayer/model")) == NULL)
+	//	LogMsg(WARN, "Bad Default Player Start Model '%s'.", Get("defaultPlayer/model").c_str() );
+	//if( engines->Get( Get("defaultPlayer/engine")) == NULL)
+	//	LogMsg(WARN, "Bad Default Player Start Engine '%s'.", Get("defaultPlayer/engine").c_str() );
 	// TODO Somehow check that starting credits is actually an integer.
 
-	XMLFile::Save();
+	/*XMLFile::Save();
 	GetAlliances()->Save();
 	GetCommodities()->Save();
 	GetModels()->Save();
 	GetWeapons()->Save();
-	GetEngines()->Save();
+	GetEngines()->Save();*/
 	//GetPlanets()->Save();
-	GetOutfits()->Save();
-	GetTechnologies()->Save();
+	/*GetOutfits()->Save();
+	GetTechnologies()->Save();*/
 }
 
 /**\brief Unpauses the simulation
@@ -241,7 +241,6 @@ bool Simulation::Run() {
 	fpsTS = Timer::GetTicks();
 
 	quit = false;
-
 
 	LogMsg(INFO, "Simulation Started");
 	Hud::Init();
@@ -474,63 +473,11 @@ void Simulation::LuaRegisters(lua_State *L) {
  * \return true if successful
  */
 bool Simulation::Parse( void ) {
+	assert(false);
+
 	LogMsg(INFO, "Simulation version %s.%s.%s.", Get("version-major").c_str(), Get("version-minor").c_str(),  Get("version-macro").c_str());
 
-	// Now load the various subsystems
-	if( commodities->Load( (folderpath + Get("commodities")) ) != true ) {
-		LogMsg(ERR, "There was an error loading the commodities from '%s'.", (folderpath + Get("commodities")).c_str() );
-		return false;
-	}
-	if( engines->Load( (folderpath + Get("engines")) ) != true ) {
-		LogMsg(ERR, "There was an error loading the engines from '%s'.", (folderpath + Get("engines")).c_str() );
-		return false;
-	}
-	if( weapons->Load( (folderpath + Get("weapons")) ) != true ) {
-		LogMsg(ERR, "There was an error loading the weapons from '%s'.", (folderpath + Get("weapons")).c_str() );
-		return false;
-	}
-	if( models->Load( (folderpath + Get("models")) ) != true ) {
-		LogMsg(ERR, "There was an error loading the models from '%s'.", (folderpath + Get("models")).c_str() );
-		return false;
-	}
-	if( outfits->Load( (folderpath + Get("outfits")) ) != true ) {
-		LogMsg(ERR, "There was an error loading the outfits from '%s'.", (folderpath + Get("outfits")).c_str() );
-		return false;
-	}
-	if( technologies->Load( (folderpath + Get("technologies")) ) != true ) {
-		LogMsg(ERR, "There was an error loading the technologies from '%s'.", (folderpath + Get("technologies")).c_str() );
-		return false;
-	}
-	if( alliances->Load( (folderpath + Get("alliances")) ) != true ) {
-		LogMsg(ERR, "There was an error loading the alliances from '%s'.", (folderpath + Get("alliances")).c_str() );
-		return false;
-	}
-	//if( map->Load( (folderpath + Get("map")) ) != true ) {
-	 //   LogMsg(WARN, "There was an error loading the map from '%s'.", (folderpath + Get("map")).c_str() );
-	 //   return false;
-    //}
-
-	// Check the Music
-	bgmusic = Song::Get( Get("music") );
-	if( bgmusic == NULL ) {
-		LogMsg(WARN, "There was an error loading music from '%s'.", Get("music").c_str() );
-	}
-
-	// Check the Player Defaults
-	//if( planets->Get( Get("defaultPlayer/start")) == NULL) {
-	//	LogMsg(ERR, "Bad Default Player Start Location '%s'.", Get("defaultPlayer/start").c_str() );
-	//	return false;
-	//}
-	if( models->Get( Get("defaultPlayer/model")) == NULL) {
-		LogMsg(ERR, "Bad Default Player Start Model '%s'.", Get("defaultPlayer/model").c_str() );
-		return false;
-	}
-	if( engines->Get( Get("defaultPlayer/engine")) == NULL) {
-		LogMsg(WARN, "Bad Default Player Start Engine '%s'.", Get("defaultPlayer/engine").c_str() );
-		return false;
-	}
-
-	return true;
+	return false;
 }
 
 /**\brief Handle User Input
@@ -674,19 +621,21 @@ void Simulation::CreateNavMap( void )
 void Simulation::SetDefaultPlayer( string startPlanet, string modelName, string engineName, int credits ) {
 	LogMsg(INFO, "Setting the Player Defaults" );
 
+	assert(false);
+
 	// Log disrepencies, but don't fix.
 	//if( planets->Get( startPlanet ) == NULL )
 	//	LogMsg(WARN, "Setting the Player's start planet to '%s', but this planet does not exist.", startPlanet.c_str() );
-	if( models->Get( modelName ) == NULL )
-		LogMsg(WARN, "Setting the Player's start model to '%s', but this model does not exist.", modelName.c_str() );
-	if( engines->Get( engineName ) == NULL )
-		LogMsg(WARN, "Setting the Player's start engine to '%s', but this engine does not exist.", engineName.c_str() );
+	//if( models->Get( modelName ) == NULL )
+	//	LogMsg(WARN, "Setting the Player's start model to '%s', but this model does not exist.", modelName.c_str() );
+	//if( engines->Get( engineName ) == NULL )
+	//	LogMsg(WARN, "Setting the Player's start engine to '%s', but this engine does not exist.", engineName.c_str() );
 
 	// Set player defaults in the scenario xml
-	Set("defaultPlayer/start", startPlanet);
-	Set("defaultPlayer/model", modelName);
-	Set("defaultPlayer/engine", engineName);
-	Set("defaultPlayer/credits", credits);
+	//Set("defaultPlayer/start", startPlanet);
+	//Set("defaultPlayer/model", modelName);
+	//Set("defaultPlayer/engine", engineName);
+	//Set("defaultPlayer/credits", credits);
 }
 
 /**\brief Create and Remember a new Player
@@ -695,28 +644,30 @@ void Simulation::SetDefaultPlayer( string startPlanet, string modelName, string 
  * \param[in] playerName The player's name.
  */
 void Simulation::CreateDefaultPlayer(string playerName) {
-	Coordinate startPos(0,0);
+	assert(false);
 
-	string startPlanet = Get("defaultPlayer/start");
+	//Coordinate startPos(0,0);
+
+	//string startPlanet = Get("defaultPlayer/start");
 	//if( planets->GetPlanet( startPlanet ) ) {
 	//	startPos = planets->GetPlanet( startPlanet )->GetWorldPosition();
 	//}
 
-	assert( player == NULL );
-	assert( models->GetModel( Get("defaultPlayer/model") ) );
-	assert( engines->GetEngine( Get("defaultPlayer/engine") ) );
+	//assert( player == NULL );
+	//assert( models->GetModel( Get("defaultPlayer/model") ) );
+	//assert( engines->GetEngine( Get("defaultPlayer/engine") ) );
 
-	player = players->CreateNew(
-		GetName(),
-		playerName,
-		models->GetModel( Get("defaultPlayer/model") ),
-		engines->GetEngine( Get("defaultPlayer/engine") ),
-		convertTo<int>( Get("defaultPlayer/credits") ),
-		startPos
-	);
+	//player = players->CreateNew(
+	//	GetName(),
+	//	playerName,
+	//	models->GetModel( Get("defaultPlayer/model") ),
+	//	engines->GetEngine( Get("defaultPlayer/engine") ),
+	//	convertTo<int>( Get("defaultPlayer/credits") ),
+	//	startPos
+	//);
 
-	sprites->AddPlayer( player );
-	camera->Focus( player );
+	//sprites->AddPlayer( player );
+	//camera->Focus( player );
 }
 
 /**\brief Load Create and Remember a new Player
