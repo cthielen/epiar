@@ -21,6 +21,8 @@ class Scenario_Lua {
 		static Scenario* GetScenario(lua_State *L);
 		static int GetScenarioInfo(lua_State *L);
 
+		static void PushComponents(lua_State *L, list<Component*> *components);
+
 		// Options Interfaces
 		static int Getoption(lua_State *L);
 		static int Setoption(lua_State *L);
@@ -49,6 +51,8 @@ class Scenario_Lua {
 		static int GetEngineInfo(lua_State *L);
 		static int GetOutfitInfo(lua_State *L);
 		static int GetTechnologyInfo(lua_State *L);
+
+		static int GetDefaultPlayer(lua_State *L);
 };
 
 #endif // __H_SCENARIO_LUA__

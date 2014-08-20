@@ -43,6 +43,9 @@ class Scenario {
 		Outfits *GetOutfits() { return outfits; }
 		Map *GetMap() { return map; }
 
+		string GetName() { return scenarioXML->Get("scenario/name"); }
+		string GetDescription() { return scenarioXML->Get("scenario/description"); }
+
 	private:
 		Commodities *commodities;
 		Engines *engines;

@@ -21,7 +21,7 @@ class Player : public Ship {
 
 		// Saving and Loading this Player to XML
 		void Save( string simulation );
-		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
+		bool FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 
 		void SetName( string _name ) { name = _name; }
@@ -93,7 +93,7 @@ class PlayerInfo : public Component {
 		void Update( Player* player, string scenario );
 
 		// Saving and Loading this Player to XML
-		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
+		bool FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 		xmlNodePtr ConvertOldVersion( xmlDocPtr doc, xmlNodePtr node );
 

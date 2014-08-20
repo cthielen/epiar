@@ -242,7 +242,7 @@ void Player::Save( string simulation ) {
 
 /**\brief Parse one player out of an xml node
  */
-bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
+bool Player::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 	xmlNodePtr  attr;
 	string value;
 	Coordinate pos;
@@ -676,7 +676,7 @@ void PlayerInfo::Update( Player* player, string scenarioName ) {
  * \param[in] xnode The XML Node.
  * \returns true if the PlayerInfo was loaded correctly.
 */
-bool PlayerInfo::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
+bool PlayerInfo::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 	xmlNodePtr  attr;
 
 	// If the node has a Model then it is using the old format.

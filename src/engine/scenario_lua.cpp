@@ -53,10 +53,10 @@ void Scenario_Lua::RegisterScenario(lua_State *L) {
 		{"outfits", &Scenario_Lua::GetOutfitNames},
 		{"engines", &Scenario_Lua::GetEngineNames},
 		{"technologies", &Scenario_Lua::GetTechnologyNames},
-		{"planetNames", &Scenario_Lua::GetPlanetNames},
+		//{"planetNames", &Scenario_Lua::GetPlanetNames},
 
 		// Sprite Searching Functions
-		{"planets", &Scenario_Lua::GetPlanets},
+		//{"planets", &Scenario_Lua::GetPlanets},
 		{"sectors", &Scenario_Lua::GetSectors},
 
 		// Game Component Information
@@ -171,11 +171,11 @@ int Scenario_Lua::GetTechnologyNames(lua_State *L){
 /** \brief Get Planet names
  *  \returns list of names as strings
  */
-int Scenario_Lua::GetPlanetNames(lua_State *L){
-	list<string> *names = GetScenario(L)->GetPlanets()->GetNames();
-	Lua::pushStringList(L, names);
-	return 1;
-}
+//int Scenario_Lua::GetPlanetNames(lua_State *L){
+//	list<string> *names = GetScenario(L)->GetPlanets()->GetNames();
+//	Lua::pushStringList(L, names);
+//	return 1;
+//}
 
 /** \brief Get the MSRP of a Game Component
  *  \details  Searches all saleable Component collections for a Component by the given name.
@@ -211,22 +211,22 @@ int Scenario_Lua::GetMSRP(lua_State *L) {
 /** Get Lua references to All Planets
  * \returns list of Planet References
  */
-int Scenario_Lua::GetPlanets(lua_State *L){
-	Planets *planets = GetScenario(L)->GetPlanets();
-	list<string>* planetNames = planets->GetNames();
-
-	lua_createtable(L, planetNames->size(), 0);
-
-	int newTable = lua_gettop(L);
-	int index = 1;
-
-	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
-		PushSprite(L, planets->GetPlanet(*pname));
-		lua_rawseti(L, newTable, index);
-		++index;
-	}
-	return 1;
-}
+//int Scenario_Lua::GetPlanets(lua_State *L){
+//	Planets *planets = GetScenario(L)->GetPlanets();
+//	list<string>* planetNames = planets->GetNames();
+//
+//	lua_createtable(L, planetNames->size(), 0);
+//
+//	int newTable = lua_gettop(L);
+//	int index = 1;
+//
+//	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
+//		PushSprite(L, planets->GetPlanet(*pname));
+//		lua_rawseti(L, newTable, index);
+//		++index;
+//	}
+//	return 1;
+//}
 
 /** \brief Get Information about the Simulation
  *  \returns Lua table of Information
@@ -250,7 +250,7 @@ Scenario *Scenario_Lua::GetScenario(lua_State *L) {
 	lua_pushstring(L, "EPIAR_SIMULATION"); // Key
 	lua_gettable(L, LUA_REGISTRYINDEX);
 
-	scenario = (Simulation*)lua_topointer(L,-1);
+	scenario = (Scenario *)lua_topointer(L,-1);
 	lua_pop(L,1);
 
 	return scenario;
@@ -523,6 +523,24 @@ int Scenario_Lua::GetOutfitInfo(lua_State *L) {
 	return 1;
 }
 
+/** \brief Push a list of names for a component list.
+ */
+void Scenario_Lua::PushComponents(lua_State *L, list<Component*> *components) {
+	lua_createtable(L, components->size(), 0);
+
+	int newTable = lua_gettop(L);
+	int index = 1;
+
+	list<Component*>::const_iterator iter = components->begin();
+
+	while(iter != components->end()) {
+		lua_pushstring(L, (*iter)->GetName().c_str());
+		lua_rawseti(L, newTable, index);
+		++iter;
+		++index;
+	}
+}
+
 /** \brief Get Information about a Technology
  *  \returns Lua table of Technology Information
  */
@@ -583,7 +601,7 @@ int Scenario_Lua::GetTechnologyInfo(lua_State *L) {
  *  \param[in] Kind of Component
  *  \param[in] Lua table of Component Information
  */
-int Scenario_Lua::SetInfo(lua_State *L) {
+/*int Scenario_Lua::SetInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( !(n==3||n==7)  )
 		return luaL_error(L, "Got %d arguments expected 1 (oldname, infoType,infoTable)", n);
@@ -867,26 +885,26 @@ int Scenario_Lua::SetInfo(lua_State *L) {
 		return luaL_error(L, "Cannot set Info for kind '%s' must be one of {Alliance, Engine, Model, Planet, Technology, Weapon} ",kind.c_str());
 	}
 	return 0;
-}
+}*/
 
 /** \brief Get the settings for the default player
  */
-int Scenario_Lua::GetDefaultPlayer(lua_State *L) {
-	Simulation* sim = GetScenario(L);
+//int Scenario_Lua::GetDefaultPlayer(lua_State *L) {
+	//Scenario *scenario = GetScenario(L);
 
-	lua_newtable(L);
-	Lua::setField("start", sim->Get("defaultPlayer/start").c_str() );
-	Lua::setField("model", sim->Get("defaultPlayer/model").c_str() );
-	Lua::setField("engine", sim->Get("defaultPlayer/engine").c_str() );
-	int credits = convertTo<int>( sim->Get("defaultPlayer/credits") );
-	Lua::setField("credits", credits );
+	//lua_newtable(L);
+	//Lua::setField("start", scenario->Get("defaultPlayer/start").c_str() );
+	//Lua::setField("model", scenario->Get("defaultPlayer/model").c_str() );
+	//Lua::setField("engine", scenario->Get("defaultPlayer/engine").c_str() );
+	//int credits = convertTo<int>( scenario->Get("defaultPlayer/credits") );
+	//Lua::setField("credits", credits );
 
-	return 1;
-}
+	//return 1;
+//}
 
-int Scenario_Lua::SetDescription(lua_State *L) {
-	string description= (string)lua_tostring(L, 1);
-	Simulation* sim = GetScenario(L);
-	sim->SetDescription( description );
-	return 0;
-}
+//int Scenario_Lua::SetDescription(lua_State *L) {
+//	string description= (string)lua_tostring(L, 1);
+//	Simulation* sim = GetScenario(L);
+//	sim->SetDescription( description );
+//	return 0;
+//}

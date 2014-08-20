@@ -10,7 +10,7 @@
 #include "graphics/video.h"
 #include "utilities/file.h"
 #include "utilities/log.h"
-#include "utilities/xml.h"
+#include "utilities/xmlfile.h"
 #include "utilities/trig.h"
 
 /**\class Color

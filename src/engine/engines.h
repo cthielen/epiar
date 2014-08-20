@@ -22,7 +22,7 @@ class Engine : public Outfit {
 		Engine& operator= (const Engine&);
 		Engine( string _name, Image* _pic, string _description, Sound* _sound, float _forceOutput, short int _msrp, bool _foldDrive, string _flareAnimation);
 
-		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
+		bool FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 
 		string GetFlareAnimation( void ) { return flareAnimation; }

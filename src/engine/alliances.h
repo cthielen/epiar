@@ -19,7 +19,7 @@ class Alliance : public Component {
 		Alliance();
   		Alliance& operator= (const Alliance&);
 		Alliance( string _name, short int _attackSize, float _aggressiveness, string _currency, Color _color);
-		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
+		bool FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 
 		short int GetAttackSize(void){ return attackSize; }

@@ -19,7 +19,7 @@ class Commodity : public Component {
 		Commodity(string _name, int _msrp);
 		~Commodity(void);
 
-		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
+		bool FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 
 		int GetMSRP(void) {return msrp;}

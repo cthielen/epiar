@@ -118,7 +118,7 @@ Weapon::~Weapon(void)
 
 /**\brief Parses weapon information
  */
-bool Weapon::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
+bool Weapon::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 	xmlNodePtr  attr;
 	string value;
 

@@ -35,7 +35,7 @@ class Outfit : public Component {
 		Outfit operator+ (const Outfit& other);
 		Outfit& operator+= (const Outfit& other);
 
-		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
+		bool FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 
 		int GetMSRP() { return msrp; }

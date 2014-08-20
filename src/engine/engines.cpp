@@ -64,7 +64,7 @@ Engine::Engine() :
 
 /**\brief Parser to parse the XML file
  */
-bool Engine::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
+bool Engine::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 	xmlNodePtr  attr;
 	string value;
 

@@ -121,14 +121,14 @@ Planet::~Planet() {
 
 /**\brief Parse one planet out of an xml node.
  */
-bool Planet::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
+bool Planet::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 	xmlNodePtr  attr;
 	string value;
 	Coordinate pos;
 
 	if( (attr = FirstChildNamed(node,"alliance")) ){
 		value = NodeToString(doc,attr);
-		alliance = Alliances::Instance()->GetAlliance(value);
+		alliance = ((Scenario *)scenario)->GetAlliances()->GetAlliance(value);
 		if(alliance==NULL)
 		{
 			LogMsg(ERR, "Could not create Planet '%s'. Unknown Alliance '%s'.", this->GetName().c_str(), value.c_str());
@@ -184,7 +184,7 @@ bool Planet::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 
 	for( attr = FirstChildNamed(node,"technology"); attr!=NULL; attr = NextSiblingNamed(attr,"technology") ){
 		value = NodeToString(doc,attr);
-		Technology *tech = Technologies::Instance()->GetTechnology( value );
+		Technology *tech = ((Scenario *)scenario)->GetTechnologies()->GetTechnology( value );
 		technologies.push_back(tech);
 	}
 	technologies.sort();

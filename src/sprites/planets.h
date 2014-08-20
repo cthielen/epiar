@@ -43,7 +43,7 @@ class Planet : public Sprite, public Component {
 
 		virtual int GetDrawOrder( void ) { return( DRAW_ORDER_PLANET ); }
 		
-		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
+		bool FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 		
 		~Planet();
