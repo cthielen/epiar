@@ -646,17 +646,17 @@ void Ship::AddToShipWeaponList(Weapon *w){
  * \param weaponName Name of the Weapon
  * \sa Weapon
  */
-void Ship::AddToShipWeaponList(string weaponName){
-	if(weaponName == "") return; // not a weapon
-
-	Weapons *weapons = Weapons::Instance();
-
-	if(weapons->GetWeapon(weaponName)){
-		AddToShipWeaponList(weapons->GetWeapon(weaponName));
-	} else {
-		LogMsg(INFO, "Failed to add weapon '%s', it doesn't exist.", weaponName.c_str());
-	}
-}
+//void Ship::AddToShipWeaponList(Scenario *scenario, string weaponName){
+//	if(weaponName == "") return; // not a weapon
+//
+//	Weapons *weapons = Weapons::Instance();
+//
+//	if(weapons->GetWeapon(weaponName)){
+//		AddToShipWeaponList(weapons->GetWeapon(weaponName));
+//	} else {
+//		LogMsg(INFO, "Failed to add weapon '%s', it doesn't exist.", weaponName.c_str());
+//	}
+//}
 
 /**\brief Adds a new weapon to the ship AND update weaponSlots.
  * \param i Pointer to Weapon instance
@@ -678,7 +678,7 @@ int Ship::AddShipWeapon(Weapon *w){
  * \param weaponName Name of the Weapon
  * \sa Weapon
  */
-int Ship::AddShipWeapon(string weaponName){
+/*int Ship::AddShipWeapon(string weaponName){
 	Weapons *weapons = Weapons::Instance();
 	if(weapons->GetWeapon(weaponName)){
 		if(AddShipWeapon(weapons->GetWeapon(weaponName)))
@@ -688,7 +688,7 @@ int Ship::AddShipWeapon(string weaponName){
 		return 0;
 	}
 	return 0;
-}
+}*/
 
 /**\brief Removes a weapon from the ship.
  * \param pos Index of the weapon
@@ -713,14 +713,14 @@ void Ship::RemoveFromShipWeaponList(Weapon *i){
 /**\brief Removes a weapon from the ship
  * \param weaponName Name of the Weapon
  */
-void Ship::RemoveFromShipWeaponList(string weaponName){
+/*void Ship::RemoveFromShipWeaponList(string weaponName){
 	Weapons *weapons = Weapons::Instance();
 	if(weapons->GetWeapon(weaponName)){
 		RemoveFromShipWeaponList(weapons->GetWeapon(weaponName));
 	} else {
 		LogMsg(INFO, "Failed to remove weapon '%s', it doesn't exist.", weaponName.c_str());
 	}
-}
+}*/
 
 
 /**\brief Removes a weapon from the ship AND updates weaponSlots
@@ -745,14 +745,14 @@ void Ship::RemoveShipWeapon(Weapon *w){
 /**\brief Removes a weapon from the ship AND updates weaponSlots
  * \param weaponName Name of the Weapon
  */
-void Ship::RemoveShipWeapon(string weaponName){
+/*void Ship::RemoveShipWeapon(string weaponName){
 	Weapons *weapons = Weapons::Instance();
 	if(weapons->GetWeapon(weaponName)){
 		RemoveShipWeapon(weapons->GetWeapon(weaponName));
 	} else {
 		LogMsg(INFO, "Failed to remove weapon '%s', it doesn't exist.", weaponName.c_str());
 	}
-}
+}*/
 
 /**\brief Adds ammo to the ship.
  * \param AmmoType Type of ammo that should be added.
@@ -768,13 +768,13 @@ void Ship::AddOutfit(Outfit *outfit){
 	ComputeShipStats();
 }
 
-void Ship::AddOutfit(string outfitName){
-	if( Outfits::Instance()->GetOutfit(outfitName) ){
-		AddOutfit( Outfits::Instance()->GetOutfit(outfitName) );
-	} else {
-		LogMsg(INFO, "Failed to Attach outfit '%s', it doesn't exist.", outfitName.c_str());
-	}
-}
+//void Ship::AddOutfit(Scenario *scenario, string outfitName){
+//	if( Outfits::Instance()->GetOutfit(outfitName) ){
+//		AddOutfit( Outfits::Instance()->GetOutfit(outfitName) );
+//	} else {
+//		LogMsg(INFO, "Failed to Attach outfit '%s', it doesn't exist.", outfitName.c_str());
+//	}
+//}
 
 /**\brief Removes an outfit from the ship
  * \param i Pointer to Outfit instance
@@ -797,14 +797,14 @@ void Ship::RemoveOutfit(Outfit *i){
 /**\brief Removes an outfit from the ship
  * \param outfitName Name of the Outfit
  */
-void Ship::RemoveOutfit(string outfitName){
+/*void Ship::RemoveOutfit(string outfitName){
 	Outfits *o = Outfits::Instance();
 	if(o->GetOutfit(outfitName)){
 		RemoveOutfit(o->GetOutfit(outfitName));
 	} else {
 		LogMsg(INFO, "Failed to remove outfit '%s', it doesn't exist.", outfitName.c_str());
 	}
-}
+}*/
 
 /**\brief Set the number of credits
  */
@@ -821,57 +821,54 @@ map<Commodity*,unsigned int> Ship::GetCargo() {
 
 /**\brief Store a number of tons of a commodity
  */
-int Ship::StoreCommodities(string commodity, unsigned int count) {
-	Commodity* com = Commodities::Instance()->GetCommodity(commodity);
-
-	LogMsg(INFO, "Storing %d tons of %s.", count, commodity.c_str());
+int Ship::StoreCommodities(Commodity *commodity, unsigned int count) {
+	//LogMsg(INFO, "Storing %d tons of %s.", count, commodity.c_str());
 
 	// Ensure that we have enough space to store this cargo
 	unsigned int cargoSpaceRemaining = (shipStats.GetCargoSpace() - status.cargoSpaceUsed);
 	if( count > cargoSpaceRemaining ) {
-		LogMsg(INFO, "Cannot Store all %d tons of %s. Only enough room for %d", count, commodity.c_str(), cargoSpaceRemaining);
+		//LogMsg(INFO, "Cannot Store all %d tons of %s. Only enough room for %d", count, commodity.c_str(), cargoSpaceRemaining);
 		count = cargoSpaceRemaining;
 	}
 
 	// Store this cargo with similar cargo
-	map<Commodity*,unsigned int>::iterator iter = commodities.find(com);
-	if(iter!=commodities.end()){
+	map<Commodity*, unsigned int>::iterator iter = commodities.find(commodity);
+	if(iter != commodities.end()){
 		iter->second += count;
 	} else {
-		commodities[com] = count;
+		commodities[commodity] = count;
 	}
 
-	status.cargoSpaceUsed+=count;
+	status.cargoSpaceUsed += count;
+
 	return count;
 }
 
 /**\brief Discard a number of tons of a commodity
  */
-int Ship::DiscardCommodities(string commodity, unsigned int count) {
-	Commodity* com = Commodities::Instance()->GetCommodity(commodity);
-
-	LogMsg(INFO, "Discarding %d tons of %s.", count, commodity.c_str());
+int Ship::DiscardCommodities(Commodity *commodity, unsigned int count) {
+	//LogMsg(INFO, "Discarding %d tons of %s.", count, commodity.c_str());
 
 	// Ensure that we have some of this cargo
-	map<Commodity*,unsigned int>::iterator iter = commodities.find(com);
-	if(iter==commodities.end()){
-		LogMsg(INFO, "This ship does not have any %s to discard", commodity.c_str());
+	map<Commodity*,unsigned int>::iterator iter = commodities.find(commodity);
+	if(iter == commodities.end()){
+		LogMsg(INFO, "This ship does not have any %s to discard", commodity);
 		return 0;
 	}
 
 	// Never discard more cargo than exists
 	if( iter->second < count ){
-		LogMsg(INFO, "Cannot Discard all %d tons of %s. Only has %d tons.", count, commodity.c_str(), iter->second);
+		LogMsg(INFO, "Cannot Discard all %d tons of %s. Only has %d tons.", count, commodity, iter->second);
 		count = iter->second;
 	}
 
 	// Remove this many tons of cargo
 	iter->second -= count;
-	status.cargoSpaceUsed-=count;
-	LogMsg(INFO, "Discarding %d tons of %s. %d tons remaining.", count, commodity.c_str(), iter->second);
+	status.cargoSpaceUsed -= count;
+	LogMsg(INFO, "Discarding %d tons of %s. %d tons remaining.", count, commodity, iter->second);
 
 	if( iter->second == 0 ) {
-		commodities.erase(com);
+		commodities.erase(commodity);
 	}
 
 	return count;
