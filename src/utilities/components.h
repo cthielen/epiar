@@ -18,7 +18,7 @@ class Component {
 		virtual ~Component() {};
 		string GetName() const { return name; }
 		void SetName(string _name) { name = _name; }
-		virtual bool FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) = 0;
+		virtual bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) = 0;
 		virtual xmlNodePtr ToXMLNode(string componentName) = 0;
 	protected:
 		string name;

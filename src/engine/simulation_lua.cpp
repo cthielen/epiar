@@ -68,7 +68,7 @@ void Simulation_Lua::RegisterSimulation(lua_State *L) {
 
 		// Player Functions
 		{"loadPlayer", &Simulation_Lua::LoadPlayer},
-		//{"savePlayer", &Simulation_Lua::SavePlayer},
+		{"savePlayer", &Simulation_Lua::SavePlayer},
 		{"newPlayer", &Simulation_Lua::NewPlayer},
 		{"players", &Simulation_Lua::GetPlayerNames},
 		{"player", &Simulation_Lua::GetPlayer},
@@ -80,13 +80,13 @@ void Simulation_Lua::RegisterSimulation(lua_State *L) {
 		{"focusCamera", &Simulation_Lua::FocusCamera},
 
 		// Game Component lists
-		//{"commodities", &Simulation_Lua::GetCommodityNames},
-		//{"alliances", &Simulation_Lua::GetAllianceNames},
-		//{"models", &Simulation_Lua::GetModelNames},
-		//{"weapons", &Simulation_Lua::GetWeaponNames},
-		//{"outfits", &Simulation_Lua::GetOutfitNames},
-		//{"engines", &Simulation_Lua::GetEngineNames},
-		//{"technologies", &Simulation_Lua::GetTechnologyNames},
+		{"commodities", &Simulation_Lua::GetCommodityNames},
+		{"alliances", &Simulation_Lua::GetAllianceNames},
+		{"models", &Simulation_Lua::GetModelNames},
+		{"weapons", &Simulation_Lua::GetWeaponNames},
+		{"outfits", &Simulation_Lua::GetOutfitNames},
+		{"engines", &Simulation_Lua::GetEngineNames},
+		{"technologies", &Simulation_Lua::GetTechnologyNames},
 		//{"planetNames", &Simulation_Lua::GetPlanetNames},
 
 		// Sprite Searching Functions
@@ -101,16 +101,16 @@ void Simulation_Lua::RegisterSimulation(lua_State *L) {
 		{"UnRegisterKey", &Simulation_Lua::UnRegisterKey},
 
 		// Game Component Information
-		//{"getMSRP", &Simulation_Lua::GetMSRP},
-		//{"getSimulationInfo", &Simulation_Lua::GetSimulationInfo},
-		//{"getCommodityInfo", &Simulation_Lua::GetCommodityInfo},
-		//{"getAllianceInfo", &Simulation_Lua::GetAllianceInfo},
-		//{"getModelInfo", &Simulation_Lua::GetModelInfo},
+		{"getMSRP", &Simulation_Lua::GetMSRP},
+		{"getSimulationInfo", &Simulation_Lua::GetSimulationInfo},
+		{"getCommodityInfo", &Simulation_Lua::GetCommodityInfo},
+		{"getAllianceInfo", &Simulation_Lua::GetAllianceInfo},
+		{"getModelInfo", &Simulation_Lua::GetModelInfo},
 		//{"getPlanetInfo", &Simulation_Lua::GetPlanetInfo},
-		//{"getWeaponInfo", &Simulation_Lua::GetWeaponInfo},
-		//{"getEngineInfo", &Simulation_Lua::GetEngineInfo},
-		//{"getOutfitInfo", &Simulation_Lua::GetOutfitInfo},
-		//{"getTechnologyInfo", &Simulation_Lua::GetTechnologyInfo},
+		{"getWeaponInfo", &Simulation_Lua::GetWeaponInfo},
+		{"getEngineInfo", &Simulation_Lua::GetEngineInfo},
+		{"getOutfitInfo", &Simulation_Lua::GetOutfitInfo},
+		{"getTechnologyInfo", &Simulation_Lua::GetTechnologyInfo},
 
 		// File System Functions
 		{"listImages", &Simulation_Lua::ListImages},
@@ -128,9 +128,9 @@ void Simulation_Lua::RegisterEditor(lua_State *L) {
 	static const luaL_Reg EditorFunctions[] = {
 		{"setInfo", &Simulation_Lua::SetInfo},
 		{"setDefaultPlayer", &Simulation_Lua::SetDefaultPlayer},
-		//{"getDefaultPlayer", &Simulation_Lua::GetDefaultPlayer},
+		{"getDefaultPlayer", &Simulation_Lua::GetDefaultPlayer},
 		{"saveComponents", &Simulation_Lua::SaveComponents},
-		//{"setDescription", &Simulation_Lua::SetDescription},
+		{"setDescription", &Simulation_Lua::SetDescription},
 		{NULL, NULL}
 	};
 	luaL_register(L,"Epiar",EditorFunctions);
@@ -208,11 +208,11 @@ int Simulation_Lua::Ispaused(lua_State *L){
 
 /** \brief Save the Player Data
  */
-//int Simulation_Lua::SavePlayer(lua_State *L){
-  //  Simulation* sim = GetSimulation(L);
-	//sim->GetPlayer()->Save( sim->GetName() );
-	//return 0;
-//}
+int Simulation_Lua::SavePlayer(lua_State *L){
+    Simulation* sim = GetSimulation(L);
+	sim->GetPlayer()->Save( sim->GetName() );
+	return 0;
+}
 
 /** \brief Get an OPTION value
  *  \param [in] key Path to a specific OPTION.
@@ -419,65 +419,65 @@ int Simulation_Lua::FocusCamera(lua_State *L){
 /** \brief Get Commodity names
  *  \returns list of names as strings
  */
-//int Simulation_Lua::GetCommodityNames(lua_State *L){
-//	list<string> *names = GetSimulation(L)->GetCommodities()->GetNames();
-//	Lua::pushStringList(L,names);
-//	return 1;
-//}
+int Simulation_Lua::GetCommodityNames(lua_State *L){
+	list<string> *names = GetSimulation(L)->GetCommodities()->GetNames();
+	Lua::pushStringList(L,names);
+	return 1;
+}
 
 /** \brief Get Alliance names
  *  \returns list of names as strings
  */
-//int Simulation_Lua::GetAllianceNames(lua_State *L){
-//	list<string> *names = GetSimulation(L)->GetAlliances()->GetNames();
-//	Lua::pushStringList(L,names);
-//	return 1;
-//}
+int Simulation_Lua::GetAllianceNames(lua_State *L){
+	list<string> *names = GetSimulation(L)->GetAlliances()->GetNames();
+	Lua::pushStringList(L,names);
+	return 1;
+}
 
 /** \brief Get Weapon names
  *  \returns list of names as strings
  */
-//int Simulation_Lua::GetWeaponNames(lua_State *L){
-//	list<string> *names = GetSimulation(L)->GetWeapons()->GetNames();
-//	Lua::pushStringList(L,names);
-//	return 1;
-//}
+int Simulation_Lua::GetWeaponNames(lua_State *L){
+	list<string> *names = GetSimulation(L)->GetWeapons()->GetNames();
+	Lua::pushStringList(L,names);
+	return 1;
+}
 
 /** \brief Get Outfit names
  *  \returns list of names as strings
  */
-//int Simulation_Lua::GetOutfitNames(lua_State *L){
-//	list<string> *names = GetSimulation(L)->GetOutfits()->GetNames();
-//	Lua::pushStringList(L,names);
-//	return 1;
-//}
+int Simulation_Lua::GetOutfitNames(lua_State *L){
+	list<string> *names = GetSimulation(L)->GetOutfits()->GetNames();
+	Lua::pushStringList(L,names);
+	return 1;
+}
 
 /** \brief Get Model names
  *  \returns list of names as strings
  */
-//int Simulation_Lua::GetModelNames(lua_State *L){
-//	list<string> *names = GetSimulation(L)->GetModels()->GetNames();
-//	Lua::pushStringList(L,names);
-//	return 1;
-//}
+int Simulation_Lua::GetModelNames(lua_State *L){
+	list<string> *names = GetSimulation(L)->GetModels()->GetNames();
+	Lua::pushStringList(L,names);
+	return 1;
+}
 
 /** \brief Get Engine names
  *  \returns list of names as strings
  */
-//int Simulation_Lua::GetEngineNames(lua_State *L){
-//	list<string> *names = GetSimulation(L)->GetEngines()->GetNames();
-//	Lua::pushStringList(L,names);
-//	return 1;
-//}
+int Simulation_Lua::GetEngineNames(lua_State *L){
+	list<string> *names = GetSimulation(L)->GetEngines()->GetNames();
+	Lua::pushStringList(L,names);
+	return 1;
+}
 
 /** \brief Get Technology names
  *  \returns list of names as strings
  */
-//int Simulation_Lua::GetTechnologyNames(lua_State *L){
-//	list<string> *names = GetSimulation(L)->GetTechnologies()->GetNames();
-//	Lua::pushStringList(L, names);
-//	return 1;
-//}
+int Simulation_Lua::GetTechnologyNames(lua_State *L){
+	list<string> *names = GetSimulation(L)->GetTechnologies()->GetNames();
+	Lua::pushStringList(L, names);
+	return 1;
+}
 
 /** \brief Get Planet names
  *  \returns list of names as strings
@@ -510,6 +510,21 @@ void Simulation_Lua::PushSprite(lua_State *L,Sprite* s){
 		luaL_getmetatable(L, EPIAR_SHIP);
 		lua_setmetatable(L, -2);
 		assert( 0 );
+	}
+}
+
+/** \brief Push a list of names for a component list.
+ */
+void Simulation_Lua::PushComponents(lua_State *L, list<Component*> *components){
+	lua_createtable(L, components->size(), 0);
+	int newTable = lua_gettop(L);
+	int index = 1;
+	list<Component*>::const_iterator iter = components->begin();
+	while(iter != components->end()) {
+		lua_pushstring(L, (*iter)->GetName().c_str());
+		lua_rawseti(L, newTable, index);
+		++iter;
+		++index;
 	}
 }
 
@@ -573,7 +588,7 @@ int Simulation_Lua::GetSprites(lua_State *L, int kind){
  *  \param[in] Name of a Game Component
  *  \returns credit value of the Component
  */
-/*int Simulation_Lua::GetMSRP(lua_State *L) {
+int Simulation_Lua::GetMSRP(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (  )", n);
@@ -597,7 +612,7 @@ int Simulation_Lua::GetSprites(lua_State *L, int kind){
 	// One of those should have worked or we would have hit the above else
 	assert(comp!=NULL);
 	return 1;
-}*/
+}
 
 /** Get Lua references to Ships
  * \see Simulation_Lua::GetSprites
@@ -690,36 +705,36 @@ int Simulation_Lua::GetNearestPlanet(lua_State *L) {
 /** \brief Get Information about the Simulation
  *  \returns Lua table of Information
  */
-//int Simulation_Lua::GetSimulationInfo(lua_State *L) {
-//	lua_newtable(L);
-//	Lua::setField("Name", GetSimulation(L)->GetName().c_str() );
-//	Lua::setField("Description", GetSimulation(L)->GetDescription().c_str() );
-//
-//	return 1;
-//}
+int Simulation_Lua::GetSimulationInfo(lua_State *L) {
+	lua_newtable(L);
+	Lua::setField("Name", GetSimulation(L)->GetName().c_str() );
+	Lua::setField("Description", GetSimulation(L)->GetDescription().c_str() );
+
+	return 1;
+}
 
 /** \brief Get Information about a Commodity
  *  \returns Lua table of Commodity Information
  */
-//int Simulation_Lua::GetCommodityInfo(lua_State *L) {
-//	int n = lua_gettop(L);  // Number of arguments
-//	if( n!=1 )
-//		return luaL_error(L, "Got %d arguments expected 1 (AllianceName)", n);
-//	string name = (string)luaL_checkstring(L,1);
-//	Commodity *commodity = GetSimulation(L)->GetCommodities()->GetCommodity(name);
-//	if(commodity==NULL){ commodity = new Commodity(); }
-//
-//	lua_newtable(L);
-//	Lua::setField("Name", commodity->GetName().c_str());
-//	Lua::setField("MSRP", commodity->GetMSRP());
-//
-//	return 1;
-//}
+int Simulation_Lua::GetCommodityInfo(lua_State *L) {
+	int n = lua_gettop(L);  // Number of arguments
+	if( n!=1 )
+		return luaL_error(L, "Got %d arguments expected 1 (AllianceName)", n);
+	string name = (string)luaL_checkstring(L,1);
+	Commodity *commodity = GetSimulation(L)->GetCommodities()->GetCommodity(name);
+	if(commodity==NULL){ commodity = new Commodity(); }
+
+	lua_newtable(L);
+	Lua::setField("Name", commodity->GetName().c_str());
+	Lua::setField("MSRP", commodity->GetMSRP());
+
+	return 1;
+}
 
 /** \brief Get Information about a Alliance
  *  \returns Lua table of Alliance Information
  */
-/*int Simulation_Lua::GetAllianceInfo(lua_State *L) {
+int Simulation_Lua::GetAllianceInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (AllianceName)", n);
@@ -740,12 +755,12 @@ int Simulation_Lua::GetNearestPlanet(lua_State *L) {
 	Lua::setField("Color", color_buffer );
 
 	return 1;
-}*/
+}
 
 /** \brief Get Information about a Model
  *  \returns Lua table of Model Information
  */
-/*int Simulation_Lua::GetModelInfo(lua_State *L) {
+int Simulation_Lua::GetModelInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (modelName)", n);
@@ -772,7 +787,7 @@ int Simulation_Lua::GetNearestPlanet(lua_State *L) {
 	                      : "");
 	Lua::setField("SurfaceArea", model->GetSurfaceArea());
 
-	// May want to move this to a helper function (but in which file?)
+	/* May want to move this to a helper function (but in which file?) */
 	vector<WeaponSlot> slots = model->GetWeaponSlots();
 	lua_pushstring(L, "weaponSlots");
 	lua_newtable(L);
@@ -822,7 +837,7 @@ int Simulation_Lua::GetNearestPlanet(lua_State *L) {
 	lua_settable(L, -3);
 
 	return 1;
-}*/
+}
 
 /** \brief Get Information about a Planet
  *  \returns Lua table of Planet Information
@@ -876,7 +891,7 @@ int Simulation_Lua::GetPlanetInfo(lua_State *L) {
 /** \brief Get Information about a Weapon
  *  \returns Lua table of Weapon Information
  */
-/*int Simulation_Lua::GetWeaponInfo(lua_State *L) {
+int Simulation_Lua::GetWeaponInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (weaponName)", n);
@@ -907,12 +922,12 @@ int Simulation_Lua::GetPlanetInfo(lua_State *L) {
 	                ? weapon->GetSound()->GetPath().c_str()
 	                : "" );
 	return 1;
-}*/
+}
 
 /** \brief Get Information about a Engine
  *  \returns Lua table of Engine Information
  */
-/*int Simulation_Lua::GetEngineInfo(lua_State *L) {
+int Simulation_Lua::GetEngineInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (outfitName)", n);
@@ -934,12 +949,12 @@ int Simulation_Lua::GetPlanetInfo(lua_State *L) {
 	                ? (engine->GetSound()->GetPath().c_str())
 	                : "");
 	return 1;
-}*/
+}
 
 /** \brief Get Information about a Outfit
  *  \returns Lua table of Outfit Information
  */
-/*int Simulation_Lua::GetOutfitInfo(lua_State *L) {
+int Simulation_Lua::GetOutfitInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (outfitName)", n);
@@ -963,12 +978,12 @@ int Simulation_Lua::GetPlanetInfo(lua_State *L) {
 	Lua::setField("Cargo", outfit->GetCargoSpace());
 	Lua::setField("SurfaceArea", outfit->GetSurfaceArea());
 	return 1;
-}*/
+}
 
 /** \brief Get Information about a Technology
  *  \returns Lua table of Technology Information
  */
-/*int Simulation_Lua::GetTechnologyInfo(lua_State *L) {
+int Simulation_Lua::GetTechnologyInfo(lua_State *L) {
 	int newTable;
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
@@ -1019,13 +1034,13 @@ int Simulation_Lua::GetPlanetInfo(lua_State *L) {
 	lua_rawseti(L, newTable, 4);
 
 	return 1;
-}*/
+}
 
 /** \brief Change the Information about a Game Component
  *  \param[in] Kind of Component
  *  \param[in] Lua table of Component Information
  */
-/*int Simulation_Lua::SetInfo(lua_State *L) {
+int Simulation_Lua::SetInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( !(n==3||n==7)  )
 		return luaL_error(L, "Got %d arguments expected 1 (oldname, infoType,infoTable)", n);
@@ -1309,7 +1324,22 @@ int Simulation_Lua::GetPlanetInfo(lua_State *L) {
 		return luaL_error(L, "Cannot set Info for kind '%s' must be one of {Alliance, Engine, Model, Planet, Technology, Weapon} ",kind.c_str());
 	}
 	return 0;
-}*/
+}
+
+/** \brief Get the settings for the default player
+ */
+int Simulation_Lua::GetDefaultPlayer(lua_State *L) {
+	Simulation* sim = GetSimulation(L);
+
+	lua_newtable(L);
+	Lua::setField("start", sim->Get("defaultPlayer/start").c_str() );
+	Lua::setField("model", sim->Get("defaultPlayer/model").c_str() );
+	Lua::setField("engine", sim->Get("defaultPlayer/engine").c_str() );
+	int credits = convertTo<int>( sim->Get("defaultPlayer/credits") );
+	Lua::setField("credits", credits );
+
+	return 1;
+}
 
 /** \brief Set the default player settings
  */
@@ -1364,9 +1394,9 @@ int Simulation_Lua::ListSounds(lua_State *L) {
 	return 1;
 }
 
-//int Simulation_Lua::SetDescription(lua_State *L) {
-//	string description= (string)lua_tostring(L, 1);
-//	Simulation* sim = GetSimulation(L);
-//	sim->SetDescription( description );
-//	return 0;
-//}
+int Simulation_Lua::SetDescription(lua_State *L) {
+	string description= (string)lua_tostring(L, 1);
+	Simulation* sim = GetSimulation(L);
+	sim->SetDescription( description );
+	return 0;
+}

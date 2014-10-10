@@ -6,8 +6,8 @@
  * \details
  */
 
-#ifndef __H_TECHNOLOGIES__
-#define __H_TECHNOLOGIES__
+#ifndef __h_technologies
+#define __h_technologies
 
 #include "includes.h"
 #include "engine/models.h"
@@ -20,7 +20,7 @@ class Technology : public Component {
 		Technology();
   		Technology& operator= (const Technology&);
 		Technology( string _name, list<Model*> _models, list<Engine*>_engines, list<Weapon*>_weapons, list<Outfit*>_outfits);
-		bool FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node );
+		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 
 		list<Model*> GetModels() { return models; }
@@ -39,8 +39,8 @@ class Technology : public Component {
 class Technologies : public Components {
 	public:
 		Technologies() {};
-		Technology *GetTechnology( string& TechnologyName ) { return (Technology *)this->Get(TechnologyName); }
-		Component *newComponent() { return new Technology(); }
+		Technology *GetTechnology( string& TechnologyName ) { return (Technology*) this->Get(TechnologyName); }
+		Component* newComponent(){ return new Technology; }
 };
 
-#endif // __H_TECHNOLOGIES__
+#endif // __h_technologies

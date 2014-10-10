@@ -45,7 +45,7 @@ class Weapon : public Outfit {
 				int _msrp);
 		~Weapon(void);
 
-		bool FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node );
+		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 
 		static string AmmoTypeToName(AmmoType type);

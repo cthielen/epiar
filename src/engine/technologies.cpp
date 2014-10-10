@@ -1,13 +1,12 @@
 /**\file			technologies.cpp
  * \author			Matt Zweig (thezweig@gmail.com)
  * \date			Created: Saturday, February 13, 2010
- * \date			Modified: Wednesday, August 20, 2014
+ * \date			Modified: Saturday, February 13, 2010
  * \brief
  * \details
  */
 
 #include "includes.h"
-#include "engine/scenario.h"
 #include "engine/technologies.h"
 #include "engine/models.h"
 #include "engine/engines.h"
@@ -56,7 +55,7 @@ Technology::Technology( string _name,
 
 /**\brief Parses the XML file for Technology fields
  */
-bool Technology::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
+bool Technology::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	xmlNodePtr  tech;
 	string value;
 
@@ -64,7 +63,7 @@ bool Technology::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 	{
 		if( NodeNameIs( tech, "model" )) {
 			value = NodeToString(doc,tech);
-			Model* model = ((Scenario *)scenario)->GetModels()->GetModel( value );
+			Model* model = Models::Instance()->GetModel( value );
 			if(model==NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {
@@ -72,7 +71,7 @@ bool Technology::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 			}
 		} else if( NodeNameIs( tech, "engine" )) {
 			value = NodeToString(doc,tech);
-			Engine* engine = ((Scenario *)scenario)->GetEngines()->GetEngine( value );
+			Engine* engine = Engines::Instance()->GetEngine( value );
 			if(engine==NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {
@@ -80,7 +79,7 @@ bool Technology::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 			}
 		} else if( NodeNameIs( tech, "weapon" )) {
 			value = NodeToString(doc,tech);
-			Weapon* weapon = ((Scenario *)scenario)->GetWeapons()->GetWeapon( value );
+			Weapon* weapon = Weapons::Instance()->GetWeapon( value );
 			if(weapon==NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {
@@ -88,7 +87,7 @@ bool Technology::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 			}
 		} else if( NodeNameIs( tech, "outfit" )) {
 			value = NodeToString(doc,tech);
-			Outfit* outfit = ((Scenario *)scenario)->GetOutfits()->GetOutfit( value );
+			Outfit* outfit = Outfits::Instance()->GetOutfit( value );
 			if(outfit==NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {

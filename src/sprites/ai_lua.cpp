@@ -18,7 +18,6 @@
 #include "engine/camera.h"
 #include "utilities/trig.h"
 #include "engine/commodities.h"
-#include "engine/scenario_lua.h"
 #include "engine/simulation_lua.h"
 
 /**\class AI_Lua
@@ -189,9 +188,9 @@ int AI_Lua::newShip(lua_State *L){
 	AI* s;
 	s = new AI(name,statemachine);
 	s->SetWorldPosition( Coordinate(x, y) );
-	s->SetModel( Scenario_Lua::GetScenario(L)->GetModels()->GetModel(modelname) );
-	s->SetEngine( Scenario_Lua::GetScenario(L)->GetEngines()->GetEngine(enginename) );
-	s->SetAlliance( Scenario_Lua::GetScenario(L)->GetAlliances()->GetAlliance(alliancename) );
+	s->SetModel( Simulation_Lua::GetSimulation(L)->GetModels()->GetModel(modelname) );
+	s->SetEngine( Simulation_Lua::GetSimulation(L)->GetEngines()->GetEngine(enginename) );
+	s->SetAlliance( Simulation_Lua::GetSimulation(L)->GetAlliances()->GetAlliance(alliancename) );
 	Simulation_Lua::PushSprite(L,s);
 
 	// Add this ship to the SpriteManager
@@ -552,7 +551,7 @@ int AI_Lua::ShipAddAmmo(lua_State* L){
 		string weaponName = luaL_checkstring (L, 2);
 		int qty = (int) luaL_checknumber (L, 3);
 
-		Weapon *weapon = Scenario_Lua::GetScenario(L)->GetWeapons()->GetWeapon(weaponName);
+		Weapon* weapon = Simulation_Lua::GetSimulation(L)->GetWeapons()->GetWeapon(weaponName);
 		if(weapon==NULL){
 			return luaL_error(L, "There is no such weapon as a '%s'", weaponName.c_str());
 		}
@@ -572,7 +571,7 @@ int AI_Lua::ShipSetModel(lua_State* L){
 		AI* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string modelName = luaL_checkstring (L, 2);
-		Model *model = Scenario_Lua::GetScenario(L)->GetModels()->GetModel( modelName );
+		Model* model = Simulation_Lua::GetSimulation(L)->GetModels()->GetModel( modelName );
 		luaL_argcheck(L, model != NULL, 2, string("There is no Model named `" + modelName + "'").c_str());
 		(ai)->SetModel( model );
 	} else {
@@ -591,7 +590,7 @@ int AI_Lua::ShipSetEngine(lua_State* L){
 		AI* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string engineName = luaL_checkstring (L, 2);
-		Engine *engine = Scenario_Lua::GetScenario(L)->GetEngines()->GetEngine( engineName );
+		Engine* engine = Simulation_Lua::GetSimulation(L)->GetEngines()->GetEngine( engineName );
 		luaL_argcheck(L, engine != NULL, 2, string("There is no Engine named `" + engineName + "'").c_str());
 		(ai)->SetEngine( engine );
 	} else {
@@ -609,7 +608,7 @@ int AI_Lua::ShipAddOutfit(lua_State* L){
 		AI* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string outfitName = luaL_checkstring (L, 2);
-		Outfit* outfit = Scenario_Lua::GetScenario(L)->GetOutfits()->GetOutfit( outfitName );
+		Outfit* outfit = Simulation_Lua::GetSimulation(L)->GetOutfits()->GetOutfit( outfitName );
 		luaL_argcheck(L, outfit != NULL, 2, string("There is no Outfit named `" + outfitName + "'").c_str());
 		(ai)->AddOutfit( outfit );
 	} else {
@@ -627,7 +626,7 @@ int AI_Lua::ShipRemoveOutfit(lua_State* L){
 		AI* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string outfitName = luaL_checkstring (L, 2);
-		Outfit* outfit = Scenario_Lua::GetScenario(L)->GetOutfits()->GetOutfit( outfitName );
+		Outfit* outfit = Simulation_Lua::GetSimulation(L)->GetOutfits()->GetOutfit( outfitName );
 		luaL_argcheck(L, outfit != NULL, 2, string("There is no Outfit named `" + outfitName + "'").c_str());
 		// TODO: luaL_argcheck that ai has this outfit already.
 		(ai)->RemoveOutfit( outfit );
@@ -672,7 +671,7 @@ int AI_Lua::ShipStoreCommodities(lua_State* L){
 
 	// Check Inputs
 	if(ai==NULL) { return 0; }
-	Commodity *commodity = Scenario_Lua::GetScenario(L)->GetCommodities()->GetCommodity( commodityName );
+	Commodity *commodity = Simulation_Lua::GetSimulation(L)->GetCommodities()->GetCommodity( commodityName );
 	luaL_argcheck(L, commodity != NULL, 2, string("There is no Commodity named `" + commodityName + "'").c_str());
 
 	// Store the Commodity
@@ -699,7 +698,7 @@ int AI_Lua::ShipDiscardCommodities(lua_State* L){
 
 	// Check Inputs
 	if(ai==NULL) { return 0; }
-	Commodity *commodity = Scenario_Lua::GetScenario(L)->GetCommodities()->GetCommodity( commodityName );
+	Commodity *commodity = Simulation_Lua::GetSimulation(L)->GetCommodities()->GetCommodity( commodityName );
 	luaL_argcheck(L, commodity != NULL, 2, string("There is no Commodity named `" + commodityName + "'").c_str());
 
 	// Discard the Commodity
@@ -1213,7 +1212,7 @@ int AI_Lua::ShipGetCargo(lua_State* L){
 
 	// Push Cargo statistics
 	lua_pushinteger(L, (ai)->GetCargoSpaceUsed() ); // Total Tons Stored
-	lua_pushinteger(L, Scenario_Lua::GetScenario(L)->GetModels()->GetModel((ai)->GetModelName())->GetCargoSpace() ); // Maximum Tons Storable
+	lua_pushinteger(L, Simulation_Lua::GetSimulation(L)->GetModels()->GetModel((ai)->GetModelName())->GetCargoSpace() ); // Maximum Tons Storable
 		
 	return 3;
 }
@@ -1560,7 +1559,7 @@ int AI_Lua::ShipSetWeaponSlotStatus(lua_State* L){
 			lua_pushstring(L, "");
 			return 1;
 		}
-		Weapon *weapon = Scenario_Lua::GetScenario(L)->GetWeapons()->GetWeapon(weaponName);
+		Weapon* weapon = Simulation_Lua::GetSimulation(L)->GetWeapons()->GetWeapon(weaponName);
 		s->SetWeaponSlotContent(slotNum, weapon);
 	} else {
 		luaL_error(L, "Got %d arguments expected 3 (ship, slot, status)", n);
@@ -1715,7 +1714,7 @@ int AI_Lua::ShipUpdateFavor(lua_State* L){
 
 	// Check Inputs
 	if(player==NULL) { return 0; }
-	Alliance *alliance = Scenario_Lua::GetScenario(L)->GetAlliances()->GetAlliance( allianceName );
+	Alliance *alliance = Simulation_Lua::GetSimulation(L)->GetAlliances()->GetAlliance( allianceName );
 	luaL_argcheck(L, alliance != NULL, 2, string("There is no alliance named `" + allianceName + "'").c_str());
 
 	// Update the favor
@@ -1742,14 +1741,14 @@ int AI_Lua::ShipGetFavor(lua_State* L){
 	if( n == 2 ) {
 		// Return the Favor of this Alliance
 		string allianceName = luaL_checkstring (L, 2);
-		Alliance *alliance = Scenario_Lua::GetScenario(L)->GetAlliances()->GetAlliance( allianceName );
+		Alliance *alliance = Simulation_Lua::GetSimulation(L)->GetAlliances()->GetAlliance( allianceName );
 		luaL_argcheck(L, alliance != NULL, 2, string("There is no alliance named `" + allianceName + "'").c_str());
 
 		lua_pushinteger(L, player->GetFavor(alliance) ); // Value
 		return 1;
 	} else {
 		// Return table of favor values keyed by alliance name.
-		Alliances *alliances = Scenario_Lua::GetScenario(L)->GetAlliances();
+		Alliances *alliances = Simulation_Lua::GetSimulation(L)->GetAlliances();
 		list<string>* allianceNames = alliances->GetNames();
 
 		lua_newtable(L);

@@ -120,7 +120,7 @@ Outfit& Outfit::operator+= (const Outfit& other)
 
 /**\brief Parses weapon information
  */
-bool Outfit::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
+bool Outfit::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	xmlNodePtr  attr;
 	string value;
 

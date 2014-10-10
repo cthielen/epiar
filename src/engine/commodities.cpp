@@ -46,7 +46,7 @@ Commodity::~Commodity() {
 
 /**\brief Parser to parse the XML file.
  */
-bool Commodity::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
+bool Commodity::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	xmlNodePtr  attr;
 	string value;
 

@@ -34,7 +34,7 @@ void Planets_Lua::RegisterPlanets(lua_State *L){
 		// Normally we would put a "new" function here.
 		// Lua may not ever need to create planets though.
 		{"Get", &Planets_Lua::Get},
-		//{"NewPlanet", &Planets_Lua::NewPlanet},
+		{"NewPlanet", &Planets_Lua::NewPlanet},
 		{NULL, NULL}
 	};
 
@@ -106,7 +106,7 @@ int Planets_Lua::Get(lua_State* L){
 
 /**\brief Create a new Planet
  */
-/*int Planets_Lua::NewPlanet(lua_State* L){
+int Planets_Lua::NewPlanet(lua_State* L){
 	int i,n = lua_gettop(L);  // Number of arguments
 
 	// Temporary intermediatary variables
@@ -194,7 +194,7 @@ int Planets_Lua::Get(lua_State* L){
 	Planets::Instance()->Add((Component*)p);
     Simulation_Lua::PushSprite(L,p);
 	return 1;
-}*/
+}
 
 /*
 Planet **Planets_Lua::pushPlanet(lua_State *L){

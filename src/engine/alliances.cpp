@@ -55,7 +55,7 @@ Alliance::Alliance( string _name, short int _attackSize, float _aggressiveness, 
 
 /**\brief Parser to parse the XML file.
  */
-bool Alliance::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
+bool Alliance::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	xmlNodePtr  attr;
 	string value;
 

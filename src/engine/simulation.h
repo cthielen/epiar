@@ -50,6 +50,10 @@ class Simulation : public XMLFile {
 		Input *GetInput() { return &inputs; }
 		Player *GetPlayer();
 
+		string GetName() { return Get("simulation/name"); }
+		string GetDescription() { return Get("simulation/description"); }
+
+		void SetDescription( string _desc ) { Set("simulation/description", _desc ); }
 		void SetMusic( string _path ) { Set("music", _path); }
 		void SetDefaultPlayer( string planetName, string modelName, string engineName, int credits );
 
