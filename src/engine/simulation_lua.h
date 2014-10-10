@@ -14,7 +14,7 @@
 #include "sprites/sprite.h"
 #include "engine/simulation.h"
 
-class Simulation_Lua {
+class Simulation_Lua{
 	public:
 		static void RegisterSimulation(lua_State *L);
 		static void RegisterEditor(lua_State *L);
@@ -90,6 +90,7 @@ class Simulation_Lua {
 
 		static void PushSprite(lua_State *L,Sprite* sprite);
 		static void PushComponents(lua_State *L, list<Component*> *components);
+	private:
 };
 
 #endif // __H_SIMULATION_LUA__

@@ -15,7 +15,6 @@
 #include "engine/commodities.h"
 #include "engine/alliances.h"
 #include "engine/technologies.h"
-#include "engine/sector.h"
 #include "engine/starfield.h"
 #include "engine/console.h"
 #include "graphics/video.h"
@@ -109,7 +108,7 @@ bool Scenario::Parse( void ) {
 	}
 
 	// Check the Player Defaults
-	if( map->GetSector( scenarioXML->Get("defaultPlayer/sector")) == NULL) {
+	if( planets->Get( scenarioXML->Get("defaultPlayer/start")) == NULL) {
 		LogMsg(ERR, "Bad Default Player Start Location '%s'.", scenarioXML->Get("defaultPlayer/start").c_str() );
 		return false;
 	}
