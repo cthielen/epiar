@@ -13,6 +13,7 @@
 #define __H_COMMON__
 
 #include "graphics/font.h"
+#include "utilities/xml.h"
 #include "utilities/options.h"
 
 // defined in main.cpp. used through the codebase

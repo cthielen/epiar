@@ -10,7 +10,7 @@
 
 #include "includes.h"
 #include "common.h"
-#include "utilities/xmlfile.h"
+#include "utilities/xml.h"
 
 class Component {
 	public:

@@ -21,7 +21,7 @@
 #include "utilities/filesystem.h"
 #include "utilities/log.h"
 #include "utilities/lua.h"
-#include "utilities/xmlfile.h"
+#include "utilities/xml.h"
 #include "utilities/timer.h"
 
 #ifdef EPIAR_COMPILE_TESTS

@@ -9,7 +9,7 @@
 #ifndef __H_OPTIONS
 #define __H_OPTIONS
 
-#include "utilities/xmlfile.h"
+#include "utilities/xml.h"
 #include "utilities/string_convert.h"
 
 // To simply access options

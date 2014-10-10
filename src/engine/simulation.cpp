@@ -265,8 +265,8 @@ bool Simulation::Run() {
 	Starfield starfield( OPTION(int, "options/simulation/starfield-density") );
 
 	// Load sample game music
-	if(scenario->GetBgMusic() && OPTION(int, "options/sound/background"))
-		scenario->GetBgMusic()->Play();
+	if(bgmusic && OPTION(int, "options/sound/background"))
+		bgmusic->Play();
 
 	// main game loop
 	bool lowFps = false;

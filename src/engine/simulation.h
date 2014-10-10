@@ -77,6 +77,7 @@ class Simulation : public XMLFile {
 		Calendar *calendar;
 
 		// Simulation specific variables
+		Song* bgmusic;
 		Input inputs;
 		Console *console;
 
