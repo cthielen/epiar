@@ -644,17 +644,17 @@ PlayerInfo::PlayerInfo()
 /**\brief Construct the PlayerInfo from a Player
  * \param[in] player The player instance that this PlayerInfo will represent.
  */
-PlayerInfo::PlayerInfo( Player* player, string scenario )
+PlayerInfo::PlayerInfo( Player* player, string simulation )
 {
-	Update( player, scenario );
+	Update( player, simulation );
 }
 
 /**\brief Construct the PlayerInfo from attributes
  */
-PlayerInfo::PlayerInfo(  string _name, string _scenario )
+PlayerInfo::PlayerInfo(  string _name, string _simulation )
     :avatar(NULL)
     ,file("")
-    ,scenario(_scenario)
+    ,simulation(_simulation)
     ,lastLoadTime(0)
 {
     SetName(_name);
@@ -663,11 +663,11 @@ PlayerInfo::PlayerInfo(  string _name, string _scenario )
 /**\brief Update the Player Information based on a Player
  * \param[in] player The player instance that this PlayerInfo will represent.
  */
-void PlayerInfo::Update( Player* player, string scenarioName ) {
+void PlayerInfo::Update( Player* player, string simName ) {
 	name = player->GetName();
 	avatar = (player->GetModel() != NULL) ? player->GetModel()->GetImage() : NULL;
 	file = player->GetFileName();
-	scenario = scenarioName;
+	simulation = simName;
 	lastLoadTime = player->GetLoadTime();
 }
 
@@ -798,6 +798,19 @@ xmlNodePtr PlayerInfo::ConvertOldVersion( xmlDocPtr doc, xmlNodePtr node ) {
 /**\class Players
  * \brief Collection of Player objects
  */
+Players *Players::pInstance = 0; // initialize pointer
+
+/**\brief Returns or creates the Players instance.
+ * \return Pointer to the Players instance
+ */
+Players *Players::Instance( void ) {
+	if( pInstance == 0 ) { // is this the first call?
+		pInstance = new Players; // create the solid instance
+		pInstance->rootName = "players";
+		pInstance->componentName = "player";
+	}
+	return( pInstance );
+}
 
 /**\brief Create a new Player
  * This is used instead of a normal class constructor

@@ -88,9 +88,9 @@ class Player : public Ship {
 class PlayerInfo : public Component {
 	public:
 		PlayerInfo();
-		PlayerInfo( Player* player, string scenario );
-		PlayerInfo( string name, string scenario );
-		void Update( Player* player, string scenario );
+		PlayerInfo( Player* player, string simulation );
+		PlayerInfo( string name, string simulation );
+		void Update( Player* player, string simulation );
 
 		// Saving and Loading this Player to XML
 		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
@@ -100,13 +100,13 @@ class PlayerInfo : public Component {
 		// name is implicit from Component
 		Image* avatar; ///< Image for this player (Usually the ship's model)
 		string file; ///< The xml file associated with this player.
-		string scenario; ///< The Scenario that this Player is playing.
+		string simulation; ///< The Simulation that this Player is playing.
 		time_t lastLoadTime; ///< The last time that this file was loaded.
+	private:
 };
 
 class Players : public Components {
 	public:
-		Players();
 		static Players *Instance();
 		Component* newComponent() { return new PlayerInfo(); }
 
@@ -114,7 +114,7 @@ class Players : public Components {
 		PlayerInfo* LastPlayer();
 
 		Player* CreateNew(
-			string scenario,
+			string simulation,
 			string playerName,
 			Model *model,
 			Engine *engine,
@@ -123,6 +123,14 @@ class Players : public Components {
 		Player* LoadPlayer(string playerName);
 		bool    DeletePlayer(string playerName);
 		bool	PlayerExists(string playerName);
+
+	protected:
+		Players() {};
+		Players( const Players & );
+		Players& operator= (const Players&);
+
+	private:
+		static Players *pInstance;
 };
 
 #endif // __H_PLAYER__

@@ -1,7 +1,7 @@
 /**\file			models.cpp
- * \author			Christopher Thielen (chris@epiar.net)
+ * \author			Chris Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Sunday, August 17, 2014
+ * \date			Modified: Saturday, January 5, 2008
  * \brief
  * \details
  */
@@ -9,7 +9,6 @@
 #include "includes.h"
 #include "utilities/components.h"
 #include "engine/models.h"
-#include "engine/simulation.h"
 
 /** \class Model
  *  \brief Common ship attributes shared between a style of ship.
@@ -58,7 +57,7 @@ Model::Model()
 
 /**\brief Assignment operator (copy fields).
  */
-/*Model& Model::operator=(const Model& other) {
+Model& Model::operator=(const Model& other) {
 	name = other.name;
 	image = other.image;
 	description = other.description;
@@ -72,7 +71,7 @@ Model::Model()
 	hullStrength = other.hullStrength;
 	shieldStrength = other.shieldStrength;
 	return *this;
-}*/
+}
 
 /**\brief Creates a Model with the given parameters.
  * \param _name Name of the ship
@@ -88,7 +87,7 @@ Model::Model()
  */
 
 
-/*Model::Model(
+Model::Model(
 		string _name,
 		Image* _image,
 		string _description,
@@ -117,12 +116,12 @@ Model::Model()
 	SetShieldStrength(_shieldStrength);
 	ConfigureWeaponSlots(_weaponSlots);
 	//((Component*)this)->SetName(_name);
-}*/
+}
 
 /**\brief For parsing XML file into fields.
  */
-bool Model::FromXMLNode( void *simulation, xmlDocPtr doc, xmlNodePtr node ) {
-	xmlNodePtr attr;
+bool Model::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
+	xmlNodePtr  attr;
 	string value;
 
 	if( (attr = FirstChildNamed(node,"image")) ){
@@ -138,53 +137,53 @@ bool Model::FromXMLNode( void *simulation, xmlDocPtr doc, xmlNodePtr node ) {
 		LogMsg( WARN, "%s does not have a description.", GetName().c_str() );
 	}
 
-	if( (attr = FirstChildNamed(node, "engine")) ){
-		defaultEngine = ((Simulation *)simulation)->GetScenario()->GetEngines()->GetEngine( NodeToString(doc,attr) );
+	if( (attr = FirstChildNamed(node,"engine")) ){
+		defaultEngine = Engines::Instance()->GetEngine( NodeToString(doc,attr) );
 	} else return false;
 
-	if( (attr = FirstChildNamed(node, "mass")) ){
+	if( (attr = FirstChildNamed(node,"mass")) ){
 		value = NodeToString(doc,attr);
 		SetMass( static_cast<float> (atof( value.c_str() )));
 	} else return false;
 
-	if( (attr = FirstChildNamed(node, "rotationsPerSecond")) ){
+	if( (attr = FirstChildNamed(node,"rotationsPerSecond")) ){
 		value = NodeToString(doc,attr);
 		SetRotationsPerSecond( static_cast<float>(atof( value.c_str() )));
 	} else return false;
 
-	if( (attr = FirstChildNamed(node, "thrustOffset")) ){
+	if( (attr = FirstChildNamed(node,"thrustOffset")) ){
 		value = NodeToString(doc,attr);
 		thrustOffset = static_cast<short>(atoi( value.c_str() ));
 	} else return false;
 
-	if( (attr = FirstChildNamed(node, "maxSpeed")) ){
+	if( (attr = FirstChildNamed(node,"maxSpeed")) ){
 		value = NodeToString(doc,attr);
 		SetMaxSpeed( static_cast<float>(atof( value.c_str() )));
 	} else return false;
 
-	if( (attr = FirstChildNamed(node, "msrp")) ){
+	if( (attr = FirstChildNamed(node,"msrp")) ){
 		value = NodeToString(doc,attr);
 		SetMSRP( (short int)atoi( value.c_str() ));
 	} else return false;
 
-	if( (attr = FirstChildNamed(node, "cargoSpace")) ){
+	if( (attr = FirstChildNamed(node,"cargoSpace")) ){
 		value = NodeToString(doc,attr);
 		SetCargoSpace( atoi( value.c_str() ));
 	} else return false;
 
-	if( (attr = FirstChildNamed(node, "hullStrength")) ){
+	if( (attr = FirstChildNamed(node,"hullStrength")) ){
 		value = NodeToString(doc,attr);
 		SetHullStrength( (short)atoi( value.c_str() ));
 	} else return false;
 
-	if( (attr = FirstChildNamed(node, "shieldStrength")) ){
+	if( (attr = FirstChildNamed(node,"shieldStrength")) ){
 		value = NodeToString(doc,attr);
 		SetShieldStrength( (short)atoi( value.c_str() ));
 	} else return false;
 
-	if( (attr = FirstChildNamed(node, "weaponSlots")) ){
+	if( (attr = FirstChildNamed(node,"weaponSlots")) ){
 		// pass the weaponSlots XML node into a handler function
-		ConfigureWeaponSlots( simulation, doc, attr );
+		ConfigureWeaponSlots( doc, attr );
 	} else {
 		//LogMsg( WARN, "Did not find weapon slot configuration - ship cannot have weapons.");
 	}
@@ -251,7 +250,7 @@ xmlNodePtr Model::ToXMLNode(string componentName) {
 
 /**\brief Configure the ship's weapon slots based on the XML node weaponSlots.
  */
-bool Model::ConfigureWeaponSlots( void *simulation, xmlDocPtr doc, xmlNodePtr node ) {
+bool Model::ConfigureWeaponSlots( xmlDocPtr doc, xmlNodePtr node ) {
 
 	xmlNodePtr slotPtr;
 	string value;
@@ -296,7 +295,7 @@ bool Model::ConfigureWeaponSlots( void *simulation, xmlDocPtr doc, xmlNodePtr no
 			else
 				value = ""; // slot is empty
 
-			newSlot.content = ((Simulation *)simulation)->GetScenario()->GetWeapons()->GetWeapon( value );
+			newSlot.content = Weapons::Instance()->GetWeapon( value );
 		} else return false;
 
 		if( (attr = FirstChildNamed(slotPtr,"firingGroup")) ){
@@ -353,6 +352,19 @@ void Model::WSDebug(vector<WeaponSlot>& slots){
 /**\class Models
  * \brief Collection of Model objects
  */
+Models *Models::pInstance = 0; // initialize pointer
+
+/**\brief Returns or creates the Model instance.
+ * \return Pointer to the Model instance
+ */
+Models *Models::Instance( void ) {
+	if( pInstance == 0 ) { // is this the first call?
+		pInstance = new Models; // create the solid instance
+		pInstance->rootName = "models";
+		pInstance->componentName = "model";
+	}
+	return( pInstance );
+}
 
 /**\fn Models::GetModel(string name)
  *  \brief Retrieves the Model by name

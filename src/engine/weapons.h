@@ -79,10 +79,16 @@ class Weapon : public Outfit {
 
 class Weapons : public Components {
 	public:
-		Weapons() {};
+		static Weapons *Instance();
 
 		Weapon *GetWeapon( string& weaponName ) { return (Weapon*) this->Get(weaponName); }
 		Component* newComponent() { return new Weapon(); }
+	protected:
+		Weapons(){};
+		Weapons( const Weapons & );
+		Weapons& operator= (const Weapons&);
+	private:
+		static Weapons *pInstance;
 };
 
 #endif

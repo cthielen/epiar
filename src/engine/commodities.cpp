@@ -74,4 +74,16 @@ xmlNodePtr Commodity::ToXMLNode(string componentName){
 /**\class Commodities
  * \brief Collection of Commodity objects.
  */
+Commodities *Commodities::pInstance = 0; // initialize pointer
 
+/**\brief Initializes a new instance or gets the current instance.
+ * \return Pointer to an Commodities object
+ */
+Commodities *Commodities::Instance( void ) {
+	if( pInstance == 0 ) { // is this the first call?
+		pInstance = new Commodities; // create the solid instance
+		pInstance->rootName = "commodities";
+		pInstance->componentName = "commodity";
+	}
+	return( pInstance );
+}

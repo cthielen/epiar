@@ -143,6 +143,18 @@ xmlNodePtr Technology::ToXMLNode(string componentName) {
 /**\class Technologies
  * \brief Collection of Technology objects
  */
+Technologies *Technologies::pInstance = 0;
+
+/**\brief Creates or retrieves the current instance.
+ */
+Technologies *Technologies::Instance( void ) {
+	if( pInstance == 0 ) { // is this the first call?
+		pInstance = new Technologies; // create the solid instance
+		pInstance->rootName = "technologies";
+		pInstance->componentName = "technology";
+	}
+	return( pInstance );
+}
 
 /**\fn Technologies::GetTechnology( string& TechnologyName )
  *  \brief Retrieves a Technology by name.

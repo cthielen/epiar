@@ -62,14 +62,14 @@ void Menu::Main_Menu( void )
 	Players *players = Players::Instance();
 	players->Load( "resources/definitions/saved-games.xml", true, true);
 
-	//if( OPTION(int,"options/simulation/automatic-load") )
-	//{
-	//	if( AutoLoad() )
-	//	{
-	//		LogMsg(INFO,"AutoLoaded Game Complete. Quitting Epiar.");
-	//		return;
-	//	}
-	//}
+	if( OPTION(int,"options/simulation/automatic-load") )
+	{
+		if( AutoLoad() )
+		{
+			LogMsg(INFO,"AutoLoaded Game Complete. Quitting Epiar.");
+			return;
+		}
+	}
 
 	// Set up music
 	bgMusic = Song::Get( "resources/audio/Music/holst_mars.ogg" );
@@ -109,33 +109,30 @@ void Menu::Main_Menu( void )
  * \note When the user leaves the Simulation, the game will quit.
  * \returns true if the player was loaded successfully.
  */
-/*bool Menu::AutoLoad()
+bool Menu::AutoLoad()
 {
 	LogMsg(INFO,"Attempting to automatically load a player.");
-
 	PlayerInfo* info = Players::Instance()->LastPlayer();
-
-	if( info != NULL ) {
+	if( info != NULL )
+	{
 		LogMsg(INFO, "Automatically loading player.", info->GetName().c_str() );
-
-		if( !simulation.Load( info->simulation ) ) {
+		if( !simulation.Load( info->simulation ) )
+		{
 			LogMsg(ERR,"Failed to load the Simulation '%s' successfully", info->simulation.c_str() );
 			return false;
 		}
-
-		if( !simulation.SetupToRun() ) {
+		if( !simulation.SetupToRun() )
+		{
 			LogMsg(ERR,"Failed to setup the Simulation '%s' successfully.", info->simulation.c_str() );
 			return false;
 		}
-
 		simulation.LoadPlayer( info->GetName() );
 		simulation.Run();
-
 		return true;
 	}
 	LogMsg(WARN,"No available players to load.");
 	return false;
-}*/
+}
 
 /** Create the Basic Main Menu
  *  \details The Splash Screen is random.
@@ -247,7 +244,7 @@ void Menu::CreateLoadWindow()
 		win->AddChild( (new Frame( 25, 155*p + 30, 400, 130 ))
 			->AddChild( (new Picture(60, 50, 80, 80, info->avatar, false, true) ) )
 			->AddChild( (new Label(120, 20, "Player Name:" )) ) ->AddChild( (new Label(210, 20, info->GetName() )) )
-			->AddChild( (new Label(120, 45, "Scenario:" )) ) ->AddChild( (new Label(210, 45, info->scenario )) )
+			->AddChild( (new Label(120, 45, "Simulation:" )) ) ->AddChild( (new Label(210, 45, info->simulation )) )
 			->AddChild( (new Button(280, 85, 100, 25, "Play", StartGame, info )) )
 			->AddChild( (new Button(175, 85, 100, 25, "Erase", ErasePlayer, info ) ) )
 		);
@@ -272,7 +269,7 @@ void Menu::CreateLoadWindow()
 void Menu::StartGame( void *info ) {
 	Players *players = Players::Instance();
 
-	playerToLoad = (PlayerInfo *)info;
+	playerToLoad = (PlayerInfo*)info;
 
 	// Hide the play, load, edit buttons
 	if(play) play->Hide();
@@ -280,19 +277,19 @@ void Menu::StartGame( void *info ) {
 	if(edit) edit->Hide();
 
 	// Gather Player Information
-	string scenarioName = playerToLoad->scenario;
+	string simName = playerToLoad->simulation;
 	string playerName = playerToLoad->GetName();
 
 	// Load the Simulation
-	if( !simulation.LoadScenario( scenarioName ) )
+	if( !simulation.Load( simName ) )
 	{
-		LogMsg(ERR,"Failed to load the scenario '%s' successfully", scenarioName.c_str());
+		LogMsg(ERR,"Failed to load the scenario '%s' successfully",simName.c_str());
 		return;
 	}
 
 	if( !simulation.SetupToRun() )
 	{
-		LogMsg(ERR,"Failed to setup the scenario '%s' successfully.", scenarioName.c_str());
+		LogMsg(ERR,"Failed to setup the scenario '%s' successfully.",simName.c_str());
 		return;
 	}
 
@@ -385,7 +382,7 @@ void Menu::CreateEditWindow()
  */
 void Menu::StartEditor()
 {
-	string scenarioName = "main";
+	string simName = "default";
 	assert( UI::Search("/Window'Editor'/Tabs/Tab/") != NULL );
 	assert( false == simulation.isLoaded() );
 
@@ -396,23 +393,21 @@ void Menu::StartEditor()
 
 	Tab* activeTab = ((Tabs*)UI::Search("/Window'Editor'/Tabs/"))->GetActiveTab();
 	if( activeTab->GetName() == "Edit" ) {
-		scenarioName = ((Dropdown*)activeTab->Search("/Dropdown/"))->GetText();
-		if( !simulation.LoadScenario( scenarioName ) )
+		simName = ((Dropdown*)activeTab->Search("/Dropdown/"))->GetText();
+		if( !simulation.Load( simName ) )
 		{
-			LogMsg(ERR,"Failed to load '%s' successfully", scenarioName.c_str());
+			LogMsg(ERR,"Failed to load '%s' successfully",simName.c_str());
 			return;
 		}
 	} else { // Create
-		scenarioName = ((Textbox*)activeTab->Search("/Textbox'Simulation Name'/"))->GetText();
+		simName = ((Textbox*)activeTab->Search("/Textbox'Simulation Name'/"))->GetText();
 
-		cout << "unimplemented in menu.cpp:408" << endl;
-		assert(false);
-		//simulation.New( scenarioName );
+		simulation.New( simName );
 	}
 
 	if( !simulation.SetupToEdit() )
 	{
-		LogMsg(ERR,"Failed to setup the Scenario '%s' successfully.", scenarioName.c_str());
+		LogMsg(ERR,"Failed to setup the Simulation '%s' successfully.",simName.c_str());
 		return;
 	}
 

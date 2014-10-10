@@ -19,7 +19,6 @@ epiar_SOURCES = src/main.cpp \
                 src/engine/models.cpp \
                 src/engine/mission.cpp \
                 src/engine/outfit.cpp \
-                src/engine/scenario.cpp \
                 src/engine/simulation.cpp \
                 src/engine/simulation_lua.cpp \
                 src/engine/starfield.cpp \

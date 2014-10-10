@@ -38,9 +38,17 @@ class Technology : public Component {
 // Class that holds list of all technologies; manages them
 class Technologies : public Components {
 	public:
-		Technologies() {};
+		static Technologies *Instance();
 		Technology *GetTechnology( string& TechnologyName ) { return (Technology*) this->Get(TechnologyName); }
 		Component* newComponent(){ return new Technology; }
+
+	protected:
+		Technologies() {};
+		Technologies( const Technologies & );
+		Technologies& operator= (const Technologies&);
+
+	private:
+		static Technologies *pInstance;
 };
 
 #endif // __h_technologies

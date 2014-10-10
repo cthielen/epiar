@@ -1,7 +1,7 @@
 /**\file			models.h
- * \author			Christopher Thielen (chris@epiar.net)
+ * \author			Chris Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Sunday, August 17, 2014
+ * \date			Modified: Saturday, January 5, 2008
  * \brief
  * \details
  */
@@ -15,6 +15,7 @@
 #include "includes.h"
 #include "utilities/log.h"
 #include "utilities/components.h"
+
 
 typedef struct WeaponSlot {
 	string name;            ///< name of the slot
@@ -45,7 +46,7 @@ class Model : public Outfit {
 				int _cargoSpace,
 				vector<WeaponSlot>& _weaponSlots);
 
-		bool FromXMLNode( void *simulation, xmlDocPtr doc, xmlNodePtr node );
+		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 		
 		Image *GetImage( void ) { return image; }
@@ -55,7 +56,7 @@ class Model : public Outfit {
 
 		vector<WeaponSlot> GetWeaponSlots(){ return this->weaponSlots; }
 		int GetWeaponSlotCount();
-		bool ConfigureWeaponSlots( void *simulation, xmlDocPtr, xmlNodePtr );
+		bool ConfigureWeaponSlots( xmlDocPtr, xmlNodePtr );
 		bool ConfigureWeaponSlots( vector<WeaponSlot>& slots );
 
 	private:
@@ -71,12 +72,17 @@ class Model : public Outfit {
 // Class that holds list of all models; manages them
 class Models : public Components {
 	public:
-		Models(void *simulation) { this->simulation = simulation; }
+		static Models *Instance();
 		Model* GetModel(string name) { return (Model*) this->Get(name); }
 		Component* newComponent() { return new Model(); }
 
+	protected:
+		Models() {};
+		Models( const Models & );
+		Models& operator= (const Models&);
+
 	private:
-		void *simulation;
+		static Models *pInstance;
 };
 
 #endif // __h_models__

@@ -120,6 +120,21 @@ xmlNodePtr Alliance::ToXMLNode(string componentName){
 /**\class Alliances
  * \brief Collection of Alliance objects.
  */
+Alliances *Alliances::pInstance = 0; // initialize pointer
+
+/**\brief Initializes a new instance or gets the current instance.
+ * \return Pointer to an Alliances object
+ */
+Alliances *Alliances::Instance( void ) {
+	if( pInstance == 0 ) { // is this the first call?
+		pInstance = new Alliances; // create the solid instance
+		pInstance->rootName = "alliances";
+		pInstance->componentName = "alliance";
+		// The Independent Alliance is a reasonable used by players.
+		pInstance->Add( new Alliance( "Independent", 0, 0, "Credits", GREY ) );
+	}
+	return( pInstance );
+}
 
 /**\fn Alliances::GetAlliance( string name )
  * \brief Returns a pointer to the named Alliance.

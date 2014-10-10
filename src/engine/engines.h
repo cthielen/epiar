@@ -1,7 +1,7 @@
 /**\file			engines.h
- * \author			Christopher Thielen (chris@epiar.net)
+ * \author			Chris Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Sunday, August 17, 2014
+ * \date			Modified: Saturday, January 5, 2008
  * \brief
  * \details
  */
@@ -38,9 +38,17 @@ class Engine : public Outfit {
 // Class that holds list of all planets; manages them
 class Engines : public Components {
 	public:
-		Engines();
+		static Engines *Instance();
 		Engine* GetEngine(string name) { return (Engine*) this->Get(name); }
 		Component* newComponent() { return new Engine(); }
+
+	protected:
+		Engines() {};
+		Engines( const Engines & );
+		Engines& operator= (const Engines&);
+		
+	private:
+		static Engines *pInstance;
 };
 
-#endif // __h_engines__
+#endif // __h_planets__

@@ -9,8 +9,14 @@
 #ifndef __H_SIMULATION__
 #define __H_SIMULATION__
 
+#include "engine/commodities.h"
+#include "engine/alliances.h"
+#include "engine/engines.h"
+#include "engine/models.h"
 #include "engine/calendar.h"
-#include "engine/scenario.h"
+#include "engine/map.h"
+#include "engine/weapons.h"
+#include "engine/technologies.h"
 #include "sprites/player.h"
 #include "audio/music.h"
 #include "engine/camera.h"
@@ -21,8 +27,8 @@ class Simulation : public XMLFile {
 	public:
 		Simulation();
 
-		//bool New( string _folderpath );
-		bool LoadScenario( string _folderpath );
+		bool New( string _folderpath );
+		bool Load( string _folderpath );
 
 		bool SetupToRun();
 		bool SetupToEdit();
@@ -44,7 +50,13 @@ class Simulation : public XMLFile {
 		bool isLoaded() {return loaded;}
 
 		SpriteManager *GetSpriteManager() { return sprites; }
-		Scenario *GetScenario() { return scenario; }
+		Commodities *GetCommodities() { return commodities; }
+		Engines *GetEngines() { return engines; }
+		Models *GetModels() { return models; }
+		Weapons *GetWeapons() { return weapons; }
+		Alliances *GetAlliances() { return alliances; }
+		Technologies *GetTechnologies() { return technologies; }
+		Outfits *GetOutfits() { return outfits; }
 		Players *GetPlayers() { return players; }
 		Camera *GetCamera() { return camera; }
 		Input *GetInput() { return &inputs; }
@@ -70,7 +82,14 @@ class Simulation : public XMLFile {
 		lua_State *L;
 		SpriteManager *sprites;
 
-		Scenario *scenario;
+		Commodities *commodities;
+		Map *map;
+		Engines *engines;
+		Models *models;
+		Weapons *weapons;
+		Alliances *alliances;
+		Technologies *technologies;
+		Outfits *outfits;
 		Players *players;
 		Player *player;
 		Camera *camera;
@@ -80,6 +99,9 @@ class Simulation : public XMLFile {
 		Song* bgmusic;
 		Input inputs;
 		Console *console;
+
+		// Description of this Simulation
+		string folderpath;
 
 		// State Variables
 		float currentFPS;

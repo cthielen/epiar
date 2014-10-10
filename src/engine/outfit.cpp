@@ -306,6 +306,19 @@ xmlNodePtr Outfit::ToXMLNode(string componentName) {
 /**\class Outfits
  * \brief Collection of Outfit objects
  */
+Outfits *Outfits::pInstance = 0; // initialize pointer
+
+/**\brief Returns or creates the Outfit instance.
+ * \return Pointer to the Outfit instance
+ */
+Outfits *Outfits::Instance( void ) {
+	if( pInstance == 0 ) { // is this the first call?
+		pInstance = new Outfits; // create the solid instance
+		pInstance->rootName = "outfits";
+		pInstance->componentName = "outfit";
+	}
+	return( pInstance );
+}
 
 /**\fn Outfits::GetOutfit(string name)()
  *  \brief Retrieves the Outfit by name
