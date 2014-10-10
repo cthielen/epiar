@@ -114,8 +114,8 @@ function Fleet.gateTravel(self, dest, route)
 				AIData[id].nextState = "ComputingRoute"
 			elseif route ~= nil then
 				AIData[id].Autopilot = APInit("AI", id)
-				-- AIData[id].Autopilot.GateRoute = copy_table(route)
-				-- AIData[id].nextState = "GateTravelling"
+				AIData[id].Autopilot.GateRoute = copy_table(route)
+				AIData[id].nextState = "GateTravelling"
 			else
 				AIData[id].accompany = self:getLeader()
 				-- "Waiting" is a lot like "Accompanying" except that it will automatically transition into "GateTravelling"

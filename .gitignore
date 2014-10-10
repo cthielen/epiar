@@ -27,8 +27,8 @@ Doxyfile
 *.kdevelop
 
 ### Lua binaries
-src/lua/src/lua
-src/lua/src/luac
+source/lua/src/lua
+source/lua/src/luac
 
 ### vim development files
 tags
