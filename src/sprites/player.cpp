@@ -291,29 +291,22 @@ bool Player::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 		SetCredits( atoi(value.c_str()) );
 	} else return false;
 
-	for( attr = FirstChildNamed(node,"weapon"); attr!=NULL; attr = NextSiblingNamed(attr,"weapon") ) {
-		string value = NodeToString(doc, attr);
-		Weapon *weapon = ((Scenario *)scenario)->GetWeapons()->GetWeapon( value );
-		AddShipWeapon( weapon );
+	for( attr = FirstChildNamed(node,"weapon"); attr!=NULL; attr = NextSiblingNamed(attr,"weapon") ){
+		AddShipWeapon( NodeToString(doc,attr) );
 	}
 
-	for( attr = FirstChildNamed(node,"outfit"); attr!=NULL; attr = NextSiblingNamed(attr,"outfit") ) {
-		string value = NodeToString(doc, attr);
-		Outfit *outfit = ((Scenario *)scenario)->GetOutfits()->GetOutfit( value );
-		AddOutfit( outfit );
+	for( attr = FirstChildNamed(node,"outfit"); attr!=NULL; attr = NextSiblingNamed(attr,"outfit") ){
+		AddOutfit( NodeToString(doc,attr) );
 	}
 
 	for( attr = FirstChildNamed(node,"cargo"); attr!=NULL; attr = NextSiblingNamed(attr,"cargo") ){
 		xmlNodePtr type = FirstChildNamed(attr,"type");
 		xmlNodePtr ammt = FirstChildNamed(attr,"amount");
-
 		if(!type || !ammt)
 			return false;
-
-		if( NodeToInt(doc, ammt) > 0 ) {
-			string value = NodeToString(doc, type);
-			Commodity *commodity = ((Scenario *)scenario)->GetCommodities()->GetCommodity( value );
-			StoreCommodities( commodity, NodeToInt(doc, ammt) );
+		if( NodeToInt(doc,ammt) > 0 )
+		{
+			StoreCommodities( NodeToString(doc,type), NodeToInt(doc,ammt) );
 		}
 	}
 

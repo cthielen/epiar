@@ -10,7 +10,7 @@
 #include "includes.h"
 #include "utilities/file.h"
 #include "utilities/log.h"
-#include "utilities/xmlfile.h"
+#include "utilities/xml.h"
 #include "utilities/components.h"
 
 /**\class XMLFile

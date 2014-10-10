@@ -375,13 +375,10 @@ int AI_Lua::ShipRemove(lua_State* L){
 int AI_Lua::ShipAddToWeaponList(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI *ai = checkShip(L,1);
-		if(ai == NULL) return 0;
-		string weaponName = luaL_checkstring(L, 2);
-
-		Weapon *weapon = Scenario_Lua::GetScenario(L)->GetWeapons()->GetWeapon(weaponName);
-
-		(ai)->AddToShipWeaponList(weapon);
+		AI* ai = checkShip(L,1);
+		if(ai==NULL) return 0;
+		string weaponName = luaL_checkstring (L, 2);
+		(ai)->AddToShipWeaponList(weaponName);
 	} else {
 		luaL_error(L, "Got %d arguments expected 2 (ship, weaponName)", n);
 	}
@@ -392,22 +389,16 @@ int AI_Lua::ShipAddToWeaponList(lua_State* L){
 int AI_Lua::ShipAddWeapon(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI *ai = checkShip(L, 1);
-
-		if(ai == NULL) return 0;
-
-		string weaponName = luaL_checkstring(L, 2);
-
-		Weapon *weapon = Scenario_Lua::GetScenario(L)->GetWeapons()->GetWeapon(weaponName);
-
-		int status = (ai)->AddShipWeapon(weapon);
+		AI* ai = checkShip(L,1);
+		if(ai==NULL) return 0;
+		string weaponName = luaL_checkstring (L, 2);
+		int status = (ai)->AddShipWeapon(weaponName);
 		lua_pushinteger(L, status);
 		if(!status)
 			return luaL_error(L, "Not able to add ship weapon! All slots are full.", n);
 	} else {
 		luaL_error(L, "Got %d arguments expected 2 (ship, weaponName)", n);
 	}
-
 	return 0;
 }	
 
@@ -423,8 +414,7 @@ int AI_Lua::ShipRemoveFromWeaponList(lua_State* L){
 			(ai)->RemoveFromShipWeaponList(weaponNum);
 		} else {
 			string weaponName = luaL_checkstring (L, 2);
-			Weapon *weapon = Scenario_Lua::GetScenario(L)->GetWeapons()->GetWeapon(weaponName);
-			(ai)->RemoveFromShipWeaponList(weapon);
+			(ai)->RemoveFromShipWeaponList(weaponName);
 		}
 	} else {
 		luaL_error(L, "Got %d arguments expected 2 (ship, weaponName)", n);
@@ -440,8 +430,7 @@ int AI_Lua::ShipRemoveWeapon(lua_State* L){
 		AI* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string weaponName = luaL_checkstring (L, 2);
-		Weapon *weapon = Scenario_Lua::GetScenario(L)->GetWeapons()->GetWeapon(weaponName);
-		(ai)->RemoveShipWeapon(weapon);
+		(ai)->RemoveShipWeapon(weaponName);
 	} else {
 		luaL_error(L, "Got %d arguments expected 2 (ship, weaponName)", n);
 	}
@@ -682,13 +671,12 @@ int AI_Lua::ShipStoreCommodities(lua_State* L){
 	LogMsg(INFO, "Storing %d tons of %s.", count, commodityName.c_str());
 
 	// Check Inputs
-	if(ai == NULL) return 0;
-
+	if(ai==NULL) { return 0; }
 	Commodity *commodity = Scenario_Lua::GetScenario(L)->GetCommodities()->GetCommodity( commodityName );
 	luaL_argcheck(L, commodity != NULL, 2, string("There is no Commodity named `" + commodityName + "'").c_str());
 
 	// Store the Commodity
-	int actuallyStored = (ai)->StoreCommodities( commodity, count );
+	int actuallyStored = (ai)->StoreCommodities( commodityName, count );
 	lua_pushinteger(L, actuallyStored );
 	return 1;
 }
@@ -715,7 +703,7 @@ int AI_Lua::ShipDiscardCommodities(lua_State* L){
 	luaL_argcheck(L, commodity != NULL, 2, string("There is no Commodity named `" + commodityName + "'").c_str());
 
 	// Discard the Commodity
-	int actuallyDiscarded = (ai)->DiscardCommodities( commodity, count );
+	int actuallyDiscarded = (ai)->DiscardCommodities( commodityName, count );
 	lua_pushinteger(L, actuallyDiscarded );
 	return 1;
 }

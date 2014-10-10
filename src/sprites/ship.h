@@ -1,7 +1,7 @@
 /**\file			ship.h
- * \author			Christopher Thielen (chris@epiar.net)
+ * \author			Chris Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Saturday, August 23, 2014
+ * \date			Modified: Friday, November 14, 2009
  * \brief
  * \details
  */
@@ -50,21 +50,21 @@ class Ship : public Sprite {
 
 		// Weapon Mechanics
 		void AddToShipWeaponList(Weapon *i);
-		//void AddToShipWeaponList(string weaponName);
+		void AddToShipWeaponList(string weaponName);
 		int AddShipWeapon(Weapon *i);
-		//int AddShipWeapon(Scenario *scenario, string weaponName);
+		int AddShipWeapon(string weaponName);
 		void RemoveFromShipWeaponList(int pos);
 		void RemoveFromShipWeaponList(Weapon *i);
-		//void RemoveFromShipWeaponList(string weaponName);
+		void RemoveFromShipWeaponList(string weaponName);
 		void RemoveShipWeapon(Weapon *i);
-		//void RemoveShipWeapon(string weaponName);
+		void RemoveShipWeapon(string weaponName);
 		void AddAmmo(AmmoType ammoType, int qty);
 
 		// Outfitting Mechanics
 		void AddOutfit(Outfit *outfit);
-		//void AddOutfit(Scenario *scenario, string outfitName);
+		void AddOutfit(string outfitName);
 		void RemoveOutfit(Outfit *outfit);
-		//void RemoveOutfit(string outfitName);
+		void RemoveOutfit(string outfitName);
 
 		// Weapon Slot Mechanics
 		int GetWeaponSlotCount();
@@ -78,8 +78,8 @@ class Ship : public Sprite {
 		// Economic Functions
 		void SetCredits(unsigned int _credits);
 		map<Commodity*,unsigned int> GetCargo();
-		int StoreCommodities(Commodity *commodity, unsigned int count);
-		int DiscardCommodities(Commodity *commodity, unsigned int count);
+		int StoreCommodities(string commodity, unsigned int count);
+		int DiscardCommodities(string commodity, unsigned int count);
 
 		// Status functions
 		float GetDirectionTowards(Coordinate c);

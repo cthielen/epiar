@@ -431,7 +431,7 @@ void Menu::StartEditor()
 /** Erase a Player
  * \note The user must confirm their choice first.
  */
-void Menu::ErasePlayer( void *playerInfo )
+void Menu::ErasePlayer( void* playerInfo )
 {
 	bool choice = Dialogs::Confirm("Are you sure you want erase this player?");
 

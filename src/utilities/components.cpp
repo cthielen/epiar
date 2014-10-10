@@ -171,7 +171,7 @@ bool Components::ParseXMLNode( xmlDocPtr doc, xmlNodePtr node )
 		return false;
 	}
 
-	if( component->FromXMLNode(NULL, doc, node) ){
+	if( component->FromXMLNode(doc, node) ){
 		Add( component );
 		return true;
 	}
