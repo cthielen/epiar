@@ -24,7 +24,7 @@
 
 #define MAP_ZOOM_RATIO 1.1f ///< The rate at which the Map Zooms in and out.
 
-Font *NavMap::MapFont = NULL;
+Font *Map::MapFont = NULL;
 
 /** \brief Map Constructor
  *

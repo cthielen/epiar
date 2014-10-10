@@ -85,12 +85,11 @@ int Planets_Lua::Get(lua_State* L){
 	}
     Planet* p = NULL;
     if(lua_isstring(L,1)) {
-        //string name = (string)luaL_checkstring(L,1);
-        //p = (Planet*)Simulation_Lua::GetSimulation(L)->GetPlanets()->GetPlanet(name);
-        //if (p==NULL){
-            //return luaL_error(L, "There is no planet by the name of '%s'", name.c_str());
-        //}
-        return luaL_error(L, "This function is currently broken.");
+        string name = (string)luaL_checkstring(L,1);
+        p = (Planet*)Simulation_Lua::GetSimulation(L)->GetPlanets()->GetPlanet(name);
+        if (p==NULL){
+            return luaL_error(L, "There is no planet by the name of '%s'", name.c_str());
+        }
     } else if(lua_isnumber(L,1)) {
         int id = (int)luaL_checkinteger(L,1);
         p = (Planet*)Simulation_Lua::GetSimulation(L)->GetSpriteManager()->GetSpriteByID(id);
