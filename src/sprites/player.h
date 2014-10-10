@@ -48,7 +48,7 @@ class Player : public Ship {
 
 		// Favor Related Functions
 		int GetFavor( Alliance* alliance );
-		void UpdateFavor( void *scenario, string allianceName, int deltaFavor );
+		void UpdateFavor( string allianceName, int deltaFavor );
 
 		// Escort-related functions (needed for XML saving/loading)
 		void AddHiredEscort(string type, int pay, int spriteID);
@@ -61,7 +61,7 @@ class Player : public Ship {
 		Player& operator= (const Player&);
 		~Player();
 
-		bool ConfigureWeaponSlots(void *scenario, xmlDocPtr, xmlNodePtr);
+		bool ConfigureWeaponSlots(xmlDocPtr, xmlNodePtr);
 	private:
 		string name;
 		time_t lastLoadTime; // TODO This may need to be renamed

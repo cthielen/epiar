@@ -1,21 +1,19 @@
 /**\file			player.cpp
- * \author			Christopher Thielen (chris@epiar.net)
+ * \author			Chris Thielen (chris@epiar.net)
  * \date			Created: Wednesday, July 5, 2006
- * \date			Modified: Thursday, August 21, 2014
+ * \date			Modified: Saturday, January 5, 2008
  * \brief			Main player-specific functions and handle
  * \details
  */
 
 #include "includes.h"
 #include "common.h"
-#include "engine/scenario.h"
 #include "sprites/player.h"
 #include "sprites/planets.h"
 #include "sprites/spritemanager.h"
 #include "utilities/components.h"
 #include "utilities/file.h"
 #include "utilities/filesystem.h"
-#include "engine/scenario_lua.h"
 #include "engine/simulation_lua.h"
 
 /** \addtogroup Sprites
@@ -41,7 +39,7 @@ Player* Player::Load( string filename ) {
 	doc = xmlParseMemory( buffer, static_cast<int>(filelen) );
 	cur = xmlDocGetRootElement( doc );
 
-	newPlayer->FromXMLNode( NULL, doc, cur );
+	newPlayer->FromXMLNode( doc, cur );
 
 	// We check the planet location at loadtime in case the planet has moved or the lastPlanet has changed.
 	// This happens with the --random-universe option.
@@ -134,8 +132,8 @@ int Player::GetFavor(Alliance* alliance ) {
  * \param[in] allianceName The name of the Alliance
  * \param[in] deltaFavor The change in favor.  This can be positive or negative.
  */
-void Player::UpdateFavor( void *scenario, string allianceName, int deltaFavor ) {
-	Alliance *alliance = ((Scenario *)scenario)->GetAlliances()->GetAlliance( allianceName );
+void Player::UpdateFavor( string allianceName, int deltaFavor ) {
+	Alliance *alliance = Alliances::Instance()->GetAlliance( allianceName );
 
 	if( NULL == alliance ) {
 		LogMsg(ERR, "Failed to find the Alliance named %s.", allianceName.c_str() );
@@ -182,7 +180,7 @@ void Player::Land( lua_State *L, Planet* planet ){
 	}
 
 	lastPlanet = planet->GetName();
-	Save( Scenario_Lua::GetScenario(L)->GetName() );
+	Save( Simulation_Lua::GetSimulation(L)->GetName() );
 
   //AdvanceFromLand
 }
@@ -265,7 +263,7 @@ bool Player::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 
 	if( (attr = FirstChildNamed(node,"model")) ){
 		value = NodeToString(doc,attr);
-		Model* model = ((Scenario *)scenario)->GetModels()->GetModel( value );
+		Model* model = Models::Instance()->GetModel( value );
 		if( NULL!=model) {
 			SetModel( model );
 		} else {
@@ -276,7 +274,7 @@ bool Player::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 
 	if( (attr = FirstChildNamed(node,"engine")) ){
 		value = NodeToString(doc,attr);
-		Engine* engine = ((Scenario *)scenario)->GetEngines()->GetEngine( value );
+		Engine* engine = Engines::Instance()->GetEngine( value );
 		if( NULL!=engine) {
 			SetEngine( engine );
 		} else {
@@ -339,7 +337,7 @@ bool Player::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 			return false;
 		if( NodeToInt(doc,value) > 0 )
 		{
-			UpdateFavor( NULL, NodeToString(doc,alliance), NodeToInt(doc,value) );
+			UpdateFavor( NodeToString(doc,alliance), NodeToInt(doc,value) );
 		}
 	}
 
@@ -354,7 +352,7 @@ bool Player::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 		this->AddHiredEscort(type, pay, -1);
 	}
 
-	if(this->ConfigureWeaponSlots(NULL, doc, node)){
+	if(this->ConfigureWeaponSlots(doc, node)){
 		// great - it worked
 		LogMsg( INFO, "Successfully loaded weapon slots");
 	}
@@ -376,7 +374,7 @@ bool Player::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 /**\brief Configure the ship's weapon slots, first copying the default slots
   * from the model, then updating it according to the saved player XML.
  */
-bool Player::ConfigureWeaponSlots( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
+bool Player::ConfigureWeaponSlots( xmlDocPtr doc, xmlNodePtr node ) {
 
 	xmlNodePtr slotPtr;
 	string value;
@@ -413,7 +411,7 @@ bool Player::ConfigureWeaponSlots( void *scenario, xmlDocPtr doc, xmlNodePtr nod
 			else
 				value = ""; // slot is empty
 
-			Weapon* weapon = ((Scenario *)scenario)->GetWeapons()->GetWeapon( value );
+			Weapon* weapon = Weapons::Instance()->GetWeapon( value );
 			existingSlot->content = weapon;
 		} else return false;
 
@@ -707,10 +705,10 @@ bool PlayerInfo::FromXMLNode( void *scenario, xmlDocPtr doc, xmlNodePtr node ) {
 		}
 	}
 
-	if( (attr = FirstChildNamed(node, "scenario")) ){
-		this->scenario = NodeToString(doc, attr);
+	if( (attr = FirstChildNamed(node,"simulation")) ){
+		simulation = NodeToString(doc,attr);
 	} else {
-		this->scenario = "main";
+		simulation = "default";
 	}
 
 	// A corrupt lastLoadTime isn't fatal, just use January 1, 1970.
@@ -738,7 +736,7 @@ xmlNodePtr PlayerInfo::ToXMLNode(string componentName) {
 		xmlNewChild(section, NULL, BAD_CAST "avatar", BAD_CAST avatar->GetPath().c_str() );
 	}
 
-	xmlNewChild(section, NULL, BAD_CAST "scenario", BAD_CAST scenario.c_str() );
+	xmlNewChild(section, NULL, BAD_CAST "simulation", BAD_CAST simulation.c_str() );
 
 	// Last Load Time
 	snprintf(buff, sizeof(buff), "%d", (int)lastLoadTime );

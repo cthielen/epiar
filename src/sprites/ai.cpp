@@ -145,7 +145,7 @@ void AI::Killed( lua_State *L ) {
 	Sprite* killer = sprites->GetSpriteByID( target );
 	if(killer != NULL) {
 		if( killer->GetDrawOrder() == DRAW_ORDER_PLAYER ) {
-			((Player*)killer)->UpdateFavor( NULL, this->GetAlliance()->GetName(), -1 );
+			((Player*)killer)->UpdateFavor( this->GetAlliance()->GetName(), -1 );
 		}
 	}
 }

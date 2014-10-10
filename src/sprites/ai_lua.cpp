@@ -1719,7 +1719,7 @@ int AI_Lua::ShipUpdateFavor(lua_State* L){
 	luaL_argcheck(L, alliance != NULL, 2, string("There is no alliance named `" + allianceName + "'").c_str());
 
 	// Update the favor
-	player->UpdateFavor( NULL, allianceName, value );
+	player->UpdateFavor( allianceName, value );
 	return 0;
 }
 
