@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-EPIAR_VERSION_FULL=`awk '$2 == "EPIAR_VERSION_FULL" {print $3}' source/version.h | tr -d '"'`
+EPIAR_VERSION_FULL=`awk '$2 == "EPIAR_VERSION_FULL" {print $3}' src/version.h | tr -d '"'`
 echo "Update the version Number in the Info.plist to $EPIAR_VERSION_FULL."
 defaults write `pwd`/Info CFBundleShortVersionString "$EPIAR_VERSION_FULL"
 defaults read `pwd`/Info

@@ -14,7 +14,7 @@ rm -f core.*
 rm configure # let them run autogen.sh
 
 # Extract version number from source/version.h
-VERSION=$(cat source/version.h | grep EPIAR_VERSION_FULL | cut -d'"' -f2)
+VERSION=$(cat src/version.h | grep EPIAR_VERSION_FULL | cut -d'"' -f2)
 
 # Make the directory that we will later tarball
 mkdir "epiar-$VERSION"
