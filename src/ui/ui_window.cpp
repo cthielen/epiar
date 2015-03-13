@@ -102,7 +102,7 @@ void Window::Center() {
  */
 void Window::Draw( int relx, int rely ) {
 	int x, y;
-	static float alpha = 0.85f;
+	static float alpha = 0.96f;
 	
 	x = GetX() + relx;
 	y = GetY() + rely;
