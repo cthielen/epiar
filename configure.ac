@@ -1,9 +1,9 @@
 PACKAGE='epiar'
-VERSION='0.5.1'
+VERSION='0.6.0'
 
 dnl Init
 dnl AC_INIT(README)
-AC_INIT(epiar, 0.5.1)
+AC_INIT(epiar, 0.6.0)
 AC_CONFIG_SRCDIR(README)
 AC_PREREQ(2.50)
 

@@ -15,6 +15,7 @@
 	<technologies>technologies.xml</technologies>
 	<outfits>outfits.xml</outfits>
 	<players>resources/definitions/saved-games.xml</players>
+	<systems>systems.xml</systems>
 	<music></music>
 	<defaultPlayer>
 		<start>Antikythera</start>

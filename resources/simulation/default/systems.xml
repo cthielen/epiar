@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<systems>
+  <version-major>0</version-major>
+  <version-minor>6</version-minor>
+  <version-macro>0</version-macro>
+  <system>
+    <name>Aboda</name>
+    <alliance>Inter-Terran Conjunctive</alliance>
+    <x>100</x>
+    <y>-50</y>
+    <neighbors>
+      <neighbor>Cypin</neighbor>
+    </neighbors>
+  </system>
+  <system>
+    <name>Cypin</name>
+    <alliance>Inter-Terran Conjunctive</alliance>
+    <x>500</x>
+    <y>150</y>
+  </system>
+</systems>

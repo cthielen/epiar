@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <engines>
   <version-major>0</version-major>
-  <version-minor>5</version-minor>
+  <version-minor>6</version-minor>
   <version-macro>0</version-macro>
   <engine>
     <name>Altaire Corp. NM66 Sublight Thrusters</name>

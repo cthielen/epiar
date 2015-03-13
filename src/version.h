@@ -1,8 +1,8 @@
 /**\file		version.h
- * \author		Chris Thielen
+ * \author		Christopher Thielen
  * \author		and others
- * \date		Saturday, November 21, 2009
- * \date		Saturday, November 21, 2009
+ * \date		Thursday, March 12, 2015
+ * \date		Thursday, March 12, 2015
  * \brief		Epiar version
  * \details
  */
@@ -11,8 +11,8 @@
 #define __H_VERSION__
 
 #define EPIAR_VERSION_MAJOR 0
-#define EPIAR_VERSION_MINOR 5
-#define EPIAR_VERSION_MICRO 1
-#define EPIAR_VERSION_FULL "0.5.1"
+#define EPIAR_VERSION_MINOR 6
+#define EPIAR_VERSION_MICRO 0
+#define EPIAR_VERSION_FULL "0.6.0"
 
 #endif // __H_VERSION__
