@@ -342,6 +342,7 @@ void Menu::ContinueGame()
     UI::SwapScreens( "In Game", menuSplash, gameSplash );
     bool alive = simulation.Run();
     UI::SwapScreens( "Main Screen", gameSplash, menuSplash );
+
     if( !alive )
     {
         UI::Close( continueButton );

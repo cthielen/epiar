@@ -1,5 +1,5 @@
 /**\file			calendar.cpp
- * \author		Christopher Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 24, 2012
  * \date			Modified: Sunday, June 24, 2012
  * \brief
