@@ -1,3 +1,4 @@
 Clean up trade tab - perhaps by creating a proper UI::Table
 In-game dialog to save/load/change options instead of kicking player out to main menu
+Menu<->Game transitions should fade to black and/or menu/game rendering
 
