@@ -166,10 +166,6 @@ void Container::ResetInput( void ){
 	this->lmouseDown = NULL;
 	this->mmouseDown = NULL;
 	this->rmouseDown = NULL;
-
-	// Don't forget about these:
-	//this->vscrollbar = NULL;
-	//this->formbutton = NULL;
 }
 
 void Container::RegisterKeyboardFocus( Widget *widget ) {
@@ -216,6 +212,7 @@ Widget *Container::DetermineMouseFocus( int relx, int rely ) {
 			return (*i);
 		}
 	}
+
 	return( NULL );
 }
 
@@ -705,18 +702,18 @@ bool Container::MouseLUp( int xi, int yi ){
 
 	if( this->lmouseDown ){
 		if (this->lmouseDown == event_on) {
-			// Mouse up is on the same widget as the mouse down, send up event
-			event_on->MouseLUp( xr,yr + yoffset );
 			this->lmouseDown = NULL;
+			// Mouse up is on the same widget as the mouse down, send up event
+			event_on->MouseLUp( xr, yr + yoffset );
 			return true;
-		}else{
+		} else {
 			// Mouse up is on a different widget, send release event to old
 			this->lmouseDown->MouseLRelease();
 			this->lmouseDown = NULL;
 		}
 	}
 	//LogMsg(UIINPUT,"Mouse Left up detect in %s.",this->name.c_str());
-
+	
 	return this->mouseHandled;
 }
 
@@ -1066,7 +1063,9 @@ Container* Container::SetFormButton( Button* button ) {
 		formbutton = button;
 		((Widget*)formbutton)->MouseEnter(0,0);
 	}
+
 	ResetInput();
+
 	return this;
 }
 

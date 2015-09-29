@@ -110,7 +110,9 @@ Widget *UI::Add( Widget *widget ) {
  */
 void UI::CloseAll( void ) {
 	LogMsg(INFO, "Closing all Widgets." );
+
 	UI::currentScreen->Empty();
+
 	UI::deferred.clear();
 	UI::hovering.clear();
 }
@@ -136,25 +138,28 @@ void UI::Close( void *unsafe) {
  * but should instead be drawn above them.
  */
 void UI::Defer( Widget* widget, int x, int y ) {
-	draw_location location = {widget,x,y};
+	draw_location location = {widget, x, y};
 	deferred.push_back( location );
 }
 
-/**\brief Called to flush the Deferred drawwing list
+/**\brief Called to flush the Deferred drawing list
  * \details Some Widgets should not be drawn "within" their container Widgets,
  * but should instead be drawn above them.
- * \warn This is code is not reentrant.
+ * \warn This is code is not re-entrant.
  */
 void UI::DrawDeferred( void ) {
 	// Ensure that the zlayer has been correctly reset
 	assert(zlayer == 0);
 	zlayer = 0;
+
 	hovering.clear();
 
 	// Draw the Deferred Widgets
 	while( deferred.empty() == false ) {
 		++zlayer;
+
 		draw_location now_draw = deferred.front();
+
 		hovering.push_back( now_draw );
 		deferred.pop_front();
 
@@ -176,13 +181,17 @@ void UI::DrawDeferred( void ) {
  */
 void UI::Draw( void ) {
 	assert( deferred.empty() );
+
 	if( UI::modalEnabled ) {
 		UI::backgroundScreen->Draw();
 		UI::DrawDeferred();
+
 		// Draw a transparent grey rectangle over the background screen
-		Video::DrawRect( 0,0, Video::GetWidth(), Video::GetHeight(), BLACK, 0.1 );
+		Video::DrawRect( 0, 0, Video::GetWidth(), Video::GetHeight(), BLACK, 0.1 );
 	}
+
 	UI::currentScreen->Draw();
+
 	UI::DrawDeferred();
 }
 
@@ -336,7 +345,7 @@ void UI::HandleInput( list<InputEvent> & events ) {
 	Widget* topContainer = UI::currentScreen->ChildFromTop(0, WIDGET_CONTAINER);
 	if( topContainer != NULL ) {
 		if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_ESCAPE ) ) ) {
-			LogMsg(WARN,"User closed the %s '%s' by pressing escape.", topContainer->GetType().c_str(), topContainer->GetName().c_str() );
+			LogMsg(WARN, "User closed the %s '%s' by pressing escape.", topContainer->GetType().c_str(), topContainer->GetName().c_str() );
 			UI::Close( topContainer );
 		}
 	}
@@ -344,12 +353,14 @@ void UI::HandleInput( list<InputEvent> & events ) {
 
 Container* UI::NewScreen( string name ) {
 	Container* screen = new Container(name, false);
+
 	// The currentScreen Container contains all other Widgets
 	screen->SetX( 0 );
 	screen->SetY( 0 );
 	screen->SetW( Video::GetWidth() );
 	screen->SetH( Video::GetHeight() );
 	screen->ResetInput();
+
 	return screen;
 }
 
@@ -358,6 +369,7 @@ bool UI::HandleKeyboard( InputEvent i ) {
 	if(i.kstate == KEYTYPED) {
 		// Attempt to send Messages to Floating Widgets
 		list<draw_location>::iterator iter;
+
 		for( iter = hovering.begin(); iter != hovering.end(); ++iter)
 		{
 			if( IsAttached( iter->widget ) )
@@ -366,8 +378,10 @@ bool UI::HandleKeyboard( InputEvent i ) {
 					return true;
 			}
 		}
+
 		return UI::currentScreen->KeyPress( i.key );
 	}
+
 	return false;
 }
 
@@ -376,18 +390,21 @@ bool UI::HandleKeyboard( InputEvent i ) {
 bool UI::HandleMouse( InputEvent i ) {
 	// Attempt to send Messages to Floating Widgets
 	list<draw_location>::iterator iter;
-	for( iter = hovering.begin(); iter != hovering.end(); ++iter)
-	{
+
+	for( iter = hovering.begin(); iter != hovering.end(); ++iter) {
 		// r is the position of the mouse event relative to the widget
 		InputEvent r = i;
+
 		r.mx -= ((iter->widget)->GetAbsX() - (iter->widget)->GetX());
 		r.my -= ((iter->widget)->GetAbsY() - (iter->widget)->GetY());
+
 		if( IsAttached( iter->widget ) && (iter->widget)->Contains(r.mx, r.my) )
 		{
 			if( DispatchMouse( iter->widget, r ) )
 				return true;
 		}
 	}
+
 	return DispatchMouse( UI::currentScreen, i );
 }
 
@@ -395,7 +412,7 @@ bool UI::DispatchMouse( Widget* widget, InputEvent i ) {
 	// mouse coordinates associated with the mouse event
 	int x = i.mx;
 	int y = i.my;
-	
+
 	switch(i.mstate) {
 		case MOUSEMOTION:		// Movement of the mouse
 			return widget->MouseMotion( x, y );

@@ -134,6 +134,7 @@ Widget* Widget::RegisterAction( action_type type, Action* action )
  */
 bool Widget::Activate( action_type type, int xi, int yi ) {
 	assert( type < Action_Last );
+
 	if( actions[type] != NULL ) {
 		// There is a registered Action of this type, so call it
 		(actions[type])->Activate( xi-x, yi-y );

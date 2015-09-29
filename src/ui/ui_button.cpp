@@ -38,11 +38,13 @@ void Button::Initialize( int x, int y, int w, int h, string label ) {
 	bitmap_normal = Image::Get( "resources/skin/ui_button.png" );
 	bitmap_mouseover = Image::Get( "resources/skin/ui_button_mouseover.png" );
 	bitmap_pressed = Image::Get( "resources/skin/ui_button_pressed.png" );
+
 	bitmap_current = bitmap_normal;
 
 	assert(bitmap_normal);
 	assert(bitmap_mouseover);
 	assert(bitmap_pressed);
+	assert(bitmap_current);
 }
 
 /**\brief Constructs a button with a C++ callback.*/
@@ -103,8 +105,8 @@ bool Button::MouseLDown( int xi, int yi ) {
 
 /**\brief When left mouse is back up on the button.*/
 bool Button::MouseLUp( int xi, int yi ) {
-	Widget::MouseLUp( xi, yi );
 	bitmap_current = bitmap_mouseover;
+	Widget::MouseLUp( xi, yi );
 	return true;
 }
 

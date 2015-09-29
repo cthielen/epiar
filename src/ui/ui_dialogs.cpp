@@ -60,7 +60,7 @@ bool Dialogs::Confirm( const string message )
 
 	UI::ModalDialog( win );
 
-	LogMsg(DEBUG2,"Player has chosen: %s", (value?"OK":"Cancel"));
+	LogMsg(DEBUG2,"Player has chosen: %s", (value ? "OK" : "Cancel"));
 
 	return value;
 }
@@ -161,63 +161,57 @@ void Dialogs::OptionsWindow()
 
 	// Game Options
 	{
-	yoff = 10;
-	Tab* tab =  new Tab("Game");
-	tab->AddChild( new Label( 20, 5, "Game Options:", 0 ) );
-	tab->AddChild( OptionBox( "options/video/fullscreen", "Run as Full Screen", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/simulation/random-universe", "Create a Random Universe", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/simulation/automatic-load", "Automatically Load the last Player", 20, (yoff+=20) ) );
-	optionTabs->AddChild( tab );
+		yoff = 10;
+
+		Tab* tab =  new Tab("Game");
+
+		tab->AddChild( new Label( 20, 5, "Game Options:", 0 ) );
+		tab->AddChild( OptionBox( "options/video/fullscreen", "Run as Full Screen", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/simulation/random-universe", "Create a Random Universe", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/simulation/automatic-load", "Automatically Load the last Player", 20, (yoff+=20) ) );
+		optionTabs->AddChild( tab );
 	}
 
 	// Sound Options
 	{
-	yoff = 10;
-	Tab* tab =  new Tab("Sound");
-	optionTabs->AddChild( tab );
-	tab->AddChild( new Label( 20, 5, "Sound Options:", 0 ) );
-	tab->AddChild( OptionBox( "options/sound/background", "Background sounds", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/sound/weapons", "Weapons sounds", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/sound/engines", "Engines sounds", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/sound/explosions", "Explosions sounds", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/sound/buttons", "Buttons sounds", 20, (yoff+=20) ) );
+		yoff = 10;
 
-	Slider *sound = OptionSlider( "options/sound/soundvolume", "Sound Volume", 20, (yoff+=30));
-	sound->RegisterAction( Action_MouseLUp, new ObjectAction(SetSoundVolume, sound) );
-	tab->AddChild( sound );
+		Tab* tab =  new Tab("Sound");
 
-	Slider *music = OptionSlider( "options/sound/musicvolume", "Music Volume", 20, (yoff+=30));
-	music->RegisterAction( Action_MouseLUp, new ObjectAction(SetMusicVolume, music) );
-	tab->AddChild( music );
+		optionTabs->AddChild( tab );
+		tab->AddChild( new Label( 20, 5, "Sound Options:", 0 ) );
+		tab->AddChild( OptionBox( "options/sound/background", "Background sounds", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/sound/weapons", "Weapons sounds", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/sound/engines", "Engines sounds", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/sound/explosions", "Explosions sounds", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/sound/buttons", "Buttons sounds", 20, (yoff+=20) ) );
+
+		Slider *sound = OptionSlider( "options/sound/soundvolume", "Sound Volume", 20, (yoff+=30));
+		sound->RegisterAction( Action_MouseLUp, new ObjectAction(SetSoundVolume, sound) );
+		tab->AddChild( sound );
+
+		Slider *music = OptionSlider( "options/sound/musicvolume", "Music Volume", 20, (yoff+=30));
+		music->RegisterAction( Action_MouseLUp, new ObjectAction(SetMusicVolume, music) );
+		tab->AddChild( music );
 	}
 
 	// Developer Options
 	{
-	yoff = 10;
-	Tab* tab =  new Tab("Developer");
-	optionTabs->AddChild( tab );
-	tab->AddChild( new Label( 20, 5, "Developer Options:", 0 ) );
-	tab->AddChild( OptionBox( "options/log/xml", "Save Log Messages", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/log/out", "Print Log Messages", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/log/alert", "Alert Log Messages", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/log/ui", "Save UI as XML", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/log/sprites", "Save Sprites as XML", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/development/debug-ai", "Display AI State Machine", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/development/debug-ui", "Display UI Debug Information", 20, (yoff+=20) ) );
-	tab->AddChild( OptionBox( "options/development/ships-worldmap", "Display Ships on the Universe Map", 20, (yoff+=20) ) );
-	}
+		yoff = 10;
 
-	// Keyboard Options
-	/*
-	{
-	yoff = 0;
-	Tab* tab =  new Tab("Sound");
-	optionTabs->AddChild( tab );
-	tab->AddChild( new Label( 20, 5, "Keyboard Options:", 0 ) );
-	// TODO: Figure out how to populate this table.
-	//       By design we may not have loaded Lua at this point.
+		Tab* tab =  new Tab("Developer");
+
+		optionTabs->AddChild( tab );
+		tab->AddChild( new Label( 20, 5, "Developer Options:", 0 ) );
+		tab->AddChild( OptionBox( "options/log/xml", "Save Log Messages", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/log/out", "Print Log Messages", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/log/alert", "Alert Log Messages", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/log/ui", "Save UI as XML", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/log/sprites", "Save Sprites as XML", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/development/debug-ai", "Display AI State Machine", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/development/debug-ui", "Display UI Debug Information", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/development/ships-worldmap", "Display Ships on the Universe Map", 20, (yoff+=20) ) );
 	}
-	*/
 
 	UI::Add(window);
 }
