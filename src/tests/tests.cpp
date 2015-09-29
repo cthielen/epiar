@@ -85,7 +85,7 @@ void Test::LoadRequirements( void ){
 	long testreqs = tests[this->testname].second;
 	if( testreqs & REQUIRE_OPTIONS ){
 		cout<<"  Initializing options subsystem..."<<endl;
-		optionsfile = new XMLFile( "data/definitions/options.xml" );
+		optionsfile = new XMLFile( "data/options.xml" );
 	}
 	if( testreqs & REQUIRE_VIDEO ){
 		cout<<"  Initializing video subsystem..."<<endl;

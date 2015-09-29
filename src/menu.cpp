@@ -60,7 +60,7 @@ void Menu::Main_Menu( void )
 	quitSignal = false;
 
 	Players *players = Players::Instance();
-	players->Load( "data/definitions/saved-games.xml", true, true);
+	players->Load( "data/saves/saved-games.xml", true, true);
 
 	if( OPTION(int,"options/simulation/automatic-load") )
 	{

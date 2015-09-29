@@ -150,8 +150,8 @@ setOutPath $INSTDIR\data\audio\Weapons
 file data\audio\Weapons\*
 setOutPath $INSTDIR\data\blueprints
 file data\blueprints\*
-setOutPath $INSTDIR\data\definitions
-file data\definitions\*
+setOutPath $INSTDIR\data\saves
+file data\saves\*
 setOutPath $INSTDIR\data\fonts
 file data\fonts\*
 setOutPath $INSTDIR\data\graphics

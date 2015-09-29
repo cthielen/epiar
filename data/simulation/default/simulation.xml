@@ -14,7 +14,7 @@
 	<weapons>weapons.xml</weapons>
 	<technologies>technologies.xml</technologies>
 	<outfits>outfits.xml</outfits>
-	<players>data/definitions/saved-games.xml</players>
+	<players>data/saves/saved-games.xml</players>
 	<systems>systems.xml</systems>
 	<music></music>
 	<defaultPlayer>

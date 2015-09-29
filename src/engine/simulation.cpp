@@ -110,7 +110,7 @@ bool Simulation::New( string newname ) {
 	Set("defaultPlayer/engine", "");
 	Set("defaultPlayer/credits", 0);
 
-	Set("simulation/players", "data/definitions/saved-games.xml" );
+	Set("simulation/players", "data/saves/saved-games.xml" );
 
 	loaded = true;
 	return true;

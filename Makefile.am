@@ -80,7 +80,7 @@ SUBDIRS=src/lua
 
 include data/animations/Makefile.am
 include data/audio/Makefile.am
-include data/definitions/Makefile.am
+include data/saves/Makefile.am
 include data/graphics/Makefile.am
 include data/scripts/Makefile.am
 include data/skin/Makefile.am
