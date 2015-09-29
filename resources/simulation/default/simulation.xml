@@ -2,7 +2,7 @@
 <simulation>
 	<version-major>0</version-major>
 	<version-minor>5</version-minor>
-	<version-macro>0</version-macro>
+	<version-macro>2</version-macro>
 	<name>default</name>
 	<description>The default simulation is improving, but still needs a lot of work.</description>
 	<commodities>commodities.xml</commodities>

@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <planets>
   <version-major>0</version-major>
-  <version-minor>6</version-minor>
-  <version-macro>0</version-macro>
+  <version-minor>5</version-minor>
+  <version-macro>2</version-macro>
   <planet>
     <name>Alexandria</name>
     <alliance>Inter-Terran Conjunctive</alliance>
     <x>-2541</x>
     <y>-2816</y>
     <landable>1</landable>
-    <traffic>6</traffic>
+    <traffic>8</traffic>
     <image>resources/graphics/planet2.png</image>
     <surface-image>resources/graphics/planet1s.png</surface-image>
     <militia>5</militia>
@@ -23,7 +23,7 @@
     <x>345</x>
     <y>215</y>
     <landable>1</landable>
-    <traffic>3</traffic>
+    <traffic>5</traffic>
     <image>resources/graphics/planet1.png</image>
     <surface-image>resources/graphics/planet1s.png</surface-image>
     <militia>20</militia>

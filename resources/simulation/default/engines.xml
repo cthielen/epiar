@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <engines>
   <version-major>0</version-major>
-  <version-minor>6</version-minor>
-  <version-macro>0</version-macro>
+  <version-minor>5</version-minor>
+  <version-macro>2</version-macro>
   <engine>
     <name>Altaire Corp. NM66 Sublight Thrusters</name>
     <description>The NM66 has been established as the standard engine for all small and medium ships.

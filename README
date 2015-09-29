@@ -1,5 +1,5 @@
 Epiar
-Version 0.6.0
+Version 0.5.2
 Written by Christopher Thielen, Matthew Zweig, others (see AUTHORS)
 
 http://epiar.net/
@@ -32,10 +32,11 @@ Epiar is a space exploration/combat/trading game.  The Escape Velocity (EV)
 series for the Mac was the major point of inspiration for this game.  Other
 notable games of this genre include:
 
-- Elite (the original game EV was based on)
+- Elite (possibly the game EV was based on)
 - Star Control 1/2 (and it's now open source successor Ur-Quan masters)
 - Star Flight
 - Solar Winds
+- Wing Commaner: Privateer
 
 This micro-genre can also be found in more modern games (as of this writing):
 

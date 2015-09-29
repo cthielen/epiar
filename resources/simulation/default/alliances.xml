@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <alliances>
   <version-major>0</version-major>
-  <version-minor>6</version-minor>
-  <version-macro>0</version-macro>
+  <version-minor>5</version-minor>
+  <version-macro>2</version-macro>
   <alliance>
     <name>Autonomous Territory</name>
     <aggressiveness>0.0</aggressiveness>
