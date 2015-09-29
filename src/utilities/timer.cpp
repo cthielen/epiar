@@ -46,6 +46,8 @@ int Timer::Update( void ) {
 
 	lastLogicalLoops = logical_loops;
 
+	logicalFrameCount += logical_loops;
+
 	return logical_loops;
 }
 
