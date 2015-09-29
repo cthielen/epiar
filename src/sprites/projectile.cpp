@@ -96,7 +96,7 @@ void Projectile::Update( lua_State *L ) {
 		
 		// Create a fire burst where this projectile hit the ship's shields.
 		// TODO: This shows how much we need to improve our collision detection.
-		Effect* hit = new Effect(this->GetWorldPosition(), "resources/animations/shield.ani", 0);
+		Effect* hit = new Effect(this->GetWorldPosition(), "data/animations/shield.ani", 0);
 		hit->SetAngle( -this->GetAngle() );
 		hit->SetMomentum( impact->GetMomentum() );
 		sprites->Add( hit );

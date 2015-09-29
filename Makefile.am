@@ -78,16 +78,16 @@ epiar_LDADD = src/lua/src/liblua.a
 
 SUBDIRS=src/lua
 
-include resources/animations/Makefile.am
-include resources/audio/Makefile.am
-include resources/definitions/Makefile.am
-include resources/graphics/Makefile.am
-include resources/scripts/Makefile.am
-include resources/skin/Makefile.am
-include resources/art/Makefile.am
-include resources/fonts/Makefile.am
-include resources/icons/Makefile.am
-include resources/simulation/Makefile.am
+include data/animations/Makefile.am
+include data/audio/Makefile.am
+include data/definitions/Makefile.am
+include data/graphics/Makefile.am
+include data/scripts/Makefile.am
+include data/skin/Makefile.am
+include data/art/Makefile.am
+include data/fonts/Makefile.am
+include data/icons/Makefile.am
+include data/simulation/Makefile.am
 
 AM_CPPFLAGS = -DDATADIR="\"$(datadir)/epiar\""
 

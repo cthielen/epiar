@@ -5,7 +5,7 @@
 # 1. Open epiar`s main directory(e.g. C:\epiar).
 # 2. Make sure the following files are in the directory:
 # Epiar.exe, AUTHORS, ChangeLog, COPYING, CREDITS.GNU-FreeType, INSTALL, LICENSE, LICENSE.bitstream_fonts,
-# LICENSE.visitor_fonts, NEWS, README, the Resources directory.
+# LICENSE.visitor_fonts, NEWS, README, the data directory.
 # 3. Copy there this script(epiar-installer.nsi) and the NSIS_Resources directory. 
 # 4. Copy there the following libraries: 
 # libfreetype-6.dll, libftgl-2.dll, libgcc_s_sjlj-1.dll, libiconv-2.dll, libjpeg-7.dll, libogg-0.dll, 
@@ -134,36 +134,36 @@ file SDL_image.dll
 file SDL_mixer.dll
 file zlib1.dll
 
-setOutPath $INSTDIR\resources\animations
-file resources\animations\*
-setOutPath $INSTDIR\resources\art
-file resources\art\*
-setOutPath $INSTDIR\resources\audio\Effects
-file resources\audio\Effects\*
-setOutPath $INSTDIR\resources\audio\Engines
-file resources\audio\Engines\*
-setOutPath $INSTDIR\resources\audio\Interface
-file resources\audio\Interface\*
-setOutPath $INSTDIR\resources\audio\Music
-file resources\audio\Music\*
-setOutPath $INSTDIR\resources\audio\Weapons
-file resources\audio\Weapons\*
-setOutPath $INSTDIR\resources\blueprints
-file resources\blueprints\*
-setOutPath $INSTDIR\resources\definitions
-file resources\definitions\*
-setOutPath $INSTDIR\resources\fonts
-file resources\fonts\*
-setOutPath $INSTDIR\resources\graphics
-file resources\graphics\*
-setOutPath $INSTDIR\resources\icons
-file resources\icons\*
-setOutPath $INSTDIR\resources\scripts
-file resources\scripts\*
-setOutPath $INSTDIR\resources\simulation\default
-file resources\simulation\default\*
-setOutPath $INSTDIR\resources\skin
-file resources\skin\*
+setOutPath $INSTDIR\data\animations
+file data\animations\*
+setOutPath $INSTDIR\data\art
+file data\art\*
+setOutPath $INSTDIR\data\audio\Effects
+file data\audio\Effects\*
+setOutPath $INSTDIR\data\audio\Engines
+file data\audio\Engines\*
+setOutPath $INSTDIR\data\audio\Interface
+file data\audio\Interface\*
+setOutPath $INSTDIR\data\audio\Music
+file data\audio\Music\*
+setOutPath $INSTDIR\data\audio\Weapons
+file data\audio\Weapons\*
+setOutPath $INSTDIR\data\blueprints
+file data\blueprints\*
+setOutPath $INSTDIR\data\definitions
+file data\definitions\*
+setOutPath $INSTDIR\data\fonts
+file data\fonts\*
+setOutPath $INSTDIR\data\graphics
+file data\graphics\*
+setOutPath $INSTDIR\data\icons
+file data\icons\*
+setOutPath $INSTDIR\data\scripts
+file data\scripts\*
+setOutPath $INSTDIR\data\simulation\default
+file data\simulation\default\*
+setOutPath $INSTDIR\data\skin
+file data\skin\*
 
 setOutPath $INSTDIR
 

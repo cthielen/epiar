@@ -9,13 +9,13 @@ APP_LOC=$DMG_LOC/Epiar.app/
 echo "Creating Epiar.app Package at $APP_LOC"
 mkdir -p $APP_LOC/Contents/MacOS
 cp Epiar $APP_LOC/Contents/MacOS
-cp -r resources $APP_LOC/Contents/
+cp -r data $APP_LOC/Contents/
 cp Info.plist $APP_LOC/Contents/
-cp resources/icons/Epiar_Icon.icns $APP_LOC/Contents/resources/
+cp data/icons/Epiar_Icon.icns $APP_LOC/Contents/data/
 
 # The Blueprint files are used for creating the Art.
 echo "Removing blueprint files."
-rm -rf $APP_LOC/Contents/resources/Blueprints
+rm -rf $APP_LOC/Contents/data/Blueprints
 
 echo "Adding README and LICENSE files."
 cp AUTHORS $DMG_LOC

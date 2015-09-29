@@ -35,9 +35,9 @@ void Button::Initialize( int x, int y, int w, int h, string label ) {
 	this->name = label;
 	
 	// Load the bitmaps needed for drawing
-	bitmap_normal = Image::Get( "resources/skin/ui_button.png" );
-	bitmap_mouseover = Image::Get( "resources/skin/ui_button_mouseover.png" );
-	bitmap_pressed = Image::Get( "resources/skin/ui_button_pressed.png" );
+	bitmap_normal = Image::Get( "data/skin/ui_button.png" );
+	bitmap_mouseover = Image::Get( "data/skin/ui_button_mouseover.png" );
+	bitmap_pressed = Image::Get( "data/skin/ui_button_pressed.png" );
 
 	bitmap_current = bitmap_normal;
 

@@ -32,7 +32,7 @@ Picture *Menu::continueButton = NULL;
 
 Song *Menu::bgMusic = NULL;
 
-//if(OPTION(int, "options/sound/buttons")) Sound::Get( "resources/audio/Interface/28853__junggle__btn043.ogg" )->Play();
+//if(OPTION(int, "options/sound/buttons")) Sound::Get( "data/audio/Interface/28853__junggle__btn043.ogg" )->Play();
 
 /**\class Menu
  *  \brief Epiar's Main Menu
@@ -60,7 +60,7 @@ void Menu::Main_Menu( void )
 	quitSignal = false;
 
 	Players *players = Players::Instance();
-	players->Load( "resources/definitions/saved-games.xml", true, true);
+	players->Load( "data/definitions/saved-games.xml", true, true);
 
 	if( OPTION(int,"options/simulation/automatic-load") )
 	{
@@ -72,9 +72,9 @@ void Menu::Main_Menu( void )
 	}
 
 	// Set up music
-	bgMusic = Song::Get( "resources/audio/Music/holst_mars.ogg" );
+	bgMusic = Song::Get( "data/audio/Music/holst_mars.ogg" );
 	if( bgMusic == NULL ) {
-		LogMsg(WARN, "There was an error loading music from 'resources/audio/Music/holst_mars.ogg'." );
+		LogMsg(WARN, "There was an error loading music from 'data/audio/Music/holst_mars.ogg'." );
 	}
 
 	SetupUI();
@@ -143,12 +143,12 @@ void Menu::SetupUI()
 	int button_y = Video::GetHalfHeight() - 175; // the menu buttons are about 500px tall
 
 	string splashScreens[] = {
-		"resources/art/menu1.png",
-		"resources/art/menu2.png",
-		"resources/art/menu3.png",
-		"resources/art/menu4.png",
-		"resources/art/menu5.png",
-		"resources/art/menu6.png",
+		"data/art/menu1.png",
+		"data/art/menu2.png",
+		"data/art/menu3.png",
+		"data/art/menu4.png",
+		"data/art/menu5.png",
+		"data/art/menu6.png",
 	};
 
 	int numScreens = (sizeof(splashScreens) / sizeof(splashScreens[0]));
@@ -161,35 +161,35 @@ void Menu::SetupUI()
 	UI::Add( new Picture( 0, 0, Video::GetWidth(), Video::GetHeight(), menuSplash, true ) );
 
 	// Add the logo
-	UI::Add( new Picture(20, Video::GetHeight() - 120, Image::Get("resources/art/logo.png") ) );
+	UI::Add( new Picture(20, Video::GetHeight() - 120, Image::Get("data/art/logo.png") ) );
 
 	// New Button
 	play = PictureButton( button_x, button_y + 50, Menu::CreateNewWindow,
-	                      Image::Get( "resources/graphics/txt_new_game_active.png"),
-	                      Image::Get( "resources/graphics/txt_new_game_inactive.png") );
+	                      Image::Get( "data/graphics/txt_new_game_active.png"),
+	                      Image::Get( "data/graphics/txt_new_game_inactive.png") );
 
 	// Load Button
 	if( (Players::Instance()->Size() > 0) )
 	{
 		load = PictureButton( button_x, button_y + 100, Menu::CreateLoadWindow,
-		                       Image::Get( "resources/graphics/txt_load_game_active.png"),
-		                       Image::Get( "resources/graphics/txt_load_game_inactive.png") );
+		                       Image::Get( "data/graphics/txt_load_game_active.png"),
+		                       Image::Get( "data/graphics/txt_load_game_inactive.png") );
 	}
 
 	// Editor Button
 	edit = PictureButton( button_x, button_y + 150, Menu::CreateEditWindow,
-	                       Image::Get( "resources/graphics/txt_editor_active.png"),
-	                       Image::Get( "resources/graphics/txt_editor_inactive.png") );
+	                       Image::Get( "data/graphics/txt_editor_active.png"),
+	                       Image::Get( "data/graphics/txt_editor_inactive.png") );
 
 	// Options Button
 	options = PictureButton( button_x, button_y + 200, Dialogs::OptionsWindow,
-	                          Image::Get( "resources/graphics/txt_options_active.png"),
-	                          Image::Get( "resources/graphics/txt_options_inactive.png") );
+	                          Image::Get( "data/graphics/txt_options_active.png"),
+	                          Image::Get( "data/graphics/txt_options_inactive.png") );
 
 	// Exit Button
 	exit = PictureButton( button_x, button_y + 250, QuitMenu,
-	                      Image::Get( "resources/graphics/txt_exit_active.png"),
-	                      Image::Get( "resources/graphics/txt_exit_inactive.png") );
+	                      Image::Get( "data/graphics/txt_exit_active.png"),
+	                      Image::Get( "data/graphics/txt_exit_inactive.png") );
 
 #ifdef EPIAR_UI_TESTS
 	// Test that the GUI features work
@@ -215,7 +215,7 @@ void Menu::CreateNewWindow()
 	win->AddChild( (new Frame( 25, 90, 200, 150 ))
 		->AddChild( (new Label(15, 15, "Simulation:")) )
 		->AddChild( (new Dropdown( 80, 15, 100, 30 ))
-			->AddOptions( Filesystem::Enumerate("resources/simulation/") ) )
+			->AddOptions( Filesystem::Enumerate("data/simulation/") ) )
 		->AddChild( (new Checkbox(15, 60, 0, "Random Universe")) )
 		->AddChild( (new Label(15, 80, "Seed:")) )
 		->AddChild( (new Textbox(50, 80, 80, 1, "0", "Random Universe Seed")) )
@@ -323,8 +323,8 @@ void Menu::StartGame( void *info )
 	{
 		// Continue Button
 		continueButton = PictureButton( Video::GetWidth() - 300, 200, Menu::ContinueGame,
-		                                Image::Get( "resources/graphics/txt_continue_active.png"),
-		                                Image::Get( "resources/graphics/txt_continue_inactive.png") );
+		                                Image::Get( "data/graphics/txt_continue_active.png"),
+		                                Image::Get( "data/graphics/txt_continue_inactive.png") );
 	} else {
 		// Restore play/load/edit buttons
 		play->Show();
@@ -377,7 +377,7 @@ void Menu::CreateEditWindow()
 			->AddChild( (new Tab( "Edit" ))
 				->AddChild( (new Label(15, 15, "Pick the Simulation to Edit:")) )
 				->AddChild( (new Dropdown( 45, 45, 100, 30 ))
-					->AddOptions( Filesystem::Enumerate("resources/simulation/") ) )
+					->AddOptions( Filesystem::Enumerate("data/simulation/") ) )
 			)
 			->AddChild( (new Tab( "Create" ))
 				->AddChild( (new Label(15, 10, "Simulation Name:")) )
@@ -484,7 +484,7 @@ void Menu::CreateNewPlayer( )
 	int israndom = ((Checkbox*)UI::Search("/Window'New Game'/Frame/Checkbox'Random Universe'/"))->IsChecked();
 	int seed = atoi( ((Textbox*)UI::Search("/Window'New Game'/Frame/Textbox'Random Universe Seed'/"))->GetText().c_str() );
 
-	if(OPTION(int, "options/sound/buttons")) Sound::Get( "resources/audio/Interface/28853__junggle__btn043.ogg" )->Play();
+	if(OPTION(int, "options/sound/buttons")) Sound::Get( "data/audio/Interface/28853__junggle__btn043.ogg" )->Play();
 
 	if(players->PlayerExists(playerName)) {
 		Dialogs::Alert("A player with that name exists.");
@@ -603,7 +603,7 @@ void UI_Test() {
 				->AddChild( (new Label(10, 600, "Scroll Up")) )
 			)
 			->AddChild( (new Tab("A Picture"))
-				->AddChild( (new Picture(10, 0, 400, 400, "resources/art/menu2.png")) )
+				->AddChild( (new Picture(10, 0, 400, 400, "data/art/menu2.png")) )
 			)
 			->AddChild( (new Tab("Inputs"))
 				->AddChild( (new Textbox(30, 30, 100, 1, "Some Text Goes Here", "A Textbox")) )
@@ -634,7 +634,7 @@ void UI_Test() {
 	);
 
 	Tab* clickTestTab = new Tab("Click Test");
-	clickTestTab->RegisterAction( Action_MouseLUp, new PositionalAction( AddImage, clickTestTab, Image::Get("resources/graphics/shuttle.png") ) );
+	clickTestTab->RegisterAction( Action_MouseLUp, new PositionalAction( AddImage, clickTestTab, Image::Get("data/graphics/shuttle.png") ) );
 	((Container*)UI::Search("/'A Window'/'TEST TABS'/"))->AddChild( clickTestTab );
 
 	// Check that the UI Searching is working

@@ -70,8 +70,8 @@ bool UI::Initialize( string screenName ) {
 	boldFont->SetSize( convertTo<int>( SKIN("Skin/UI/Default/Size") ) );
 
  
-	beep = Sound::Get( "resources/audio/Interface/28853__junggle__btn043.ogg" );
-	hover = Sound::Get( "resources/audio/Interface/28820__junggle__btn010.ogg" );
+	beep = Sound::Get( "data/audio/Interface/28853__junggle__btn043.ogg" );
+	hover = Sound::Get( "data/audio/Interface/28820__junggle__btn010.ogg" );
 
 	return true;
 }
@@ -290,13 +290,13 @@ void UI::SwapScreens(string newname, Image* oldBackground, Image* newBackground 
 			//printf("Ticks: %d old %d new %d total %d\n", SDL_GetTicks(), oldX, newX, newX+oldX);
 
 			oldBackground->DrawStretch( oldX, 0, Video::GetWidth(), Video::GetHeight() );
-			Image::Get("resources/art/logo.png")->Draw(newX + Video::GetWidth() - 240, Video::GetHeight() - 120 );
+			Image::Get("data/art/logo.png")->Draw(newX + Video::GetWidth() - 240, Video::GetHeight() - 120 );
 			oldScreen->SetX( oldX );
 			oldScreen->Draw( );
 			DrawDeferred();
 
 			newBackground->DrawStretch( newX, 0, OPTION( int, "options/video/w" ), OPTION( int, "options/video/h"));
-			Image::Get("resources/art/logo.png")->Draw(newX + Video::GetWidth() - 240, Video::GetHeight() - 120 );
+			Image::Get("data/art/logo.png")->Draw(newX + Video::GetWidth() - 240, Video::GetHeight() - 120 );
 			newScreen->SetX( newX );
 			newScreen->Draw( );
 			DrawDeferred();

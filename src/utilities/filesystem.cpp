@@ -33,7 +33,7 @@ int Filesystem::Init( const char* argv0 ) {
 		LogMsg(ERR, "Could not set sane paths for PhysFS: %s", PHYSFS_getLastError());
 
 	// Set up userDir
-	if ( (retval = PHYSFS_mkdir("resources/definitions/") ) == 0 )
+	if ( (retval = PHYSFS_mkdir("data/definitions/") ) == 0 )
 		LogMsg(ERR, "Could not set up the user dir: %s", PHYSFS_getLastError());
 
 	// Don't add Root directory.  While this can solve some problems, it will create more.

@@ -65,7 +65,7 @@ MissionType = {
  * - http://epiar.net/trac/wiki/MissionCreation
  * - http://epiar.net/trac/wiki/MissionLifetime
  *
- * \see resources/scripts/missions.lua
+ * \see data/scripts/missions.lua
  */
 
 /**\brief Mission Constructor

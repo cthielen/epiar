@@ -24,8 +24,8 @@
 /**\brief Constructs a new Checkbox.
  */
 Checkbox::Checkbox( int x, int y, bool checked, string label ) {
-	blank_box = Image::Get( "resources/skin/ui_checkbox_blank.png" );
-	check_box = Image::Get( "resources/skin/ui_checkbox_check.png" );
+	blank_box = Image::Get( "data/skin/ui_checkbox_blank.png" );
+	check_box = Image::Get( "data/skin/ui_checkbox_check.png" );
 
 	this->x = x;
 	this->y = y;

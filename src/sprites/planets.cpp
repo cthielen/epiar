@@ -208,6 +208,7 @@ void Planet::GenerateTraffic( lua_State *L ) {
 		Lua::Call( "createRandomShipForPlanet", "i", GetID() );
 	}
 	delete nearbySprites;
+
 	lastTrafficTime = Timer::GetLogicalFrameCount();
 }
 
@@ -217,14 +218,17 @@ list<Model*> Planet::GetModels() {
 	list<Model*> models;
 	list<Technology*>::iterator techiter;
 	list<Model*>::iterator listiter;
+
 	for(techiter=technologies.begin(); techiter!=technologies.end(); ++techiter) {
 		list<Model*> model_list = (*techiter)->GetModels();
 		for(listiter=model_list.begin(); listiter!=model_list.end(); ++listiter) {
 			models.push_back( *listiter );
 		}
 	}
+
 	models.sort();
 	models.unique();
+
 	return models;
 }
 
@@ -234,14 +238,17 @@ list<Engine*> Planet::GetEngines() {
 	list<Engine*> engines;
 	list<Technology*>::iterator techiter;
 	list<Engine*>::iterator listiter;
+
 	for(techiter=technologies.begin(); techiter!=technologies.end(); ++techiter) {
 		list<Engine*> engine_list = (*techiter)->GetEngines();
 		for(listiter=engine_list.begin(); listiter!=engine_list.end(); ++listiter) {
 			engines.push_back( *listiter );
 		}
 	}
+
 	engines.sort();
 	engines.unique();
+
 	return engines;
 }
 
@@ -251,14 +258,17 @@ list<Weapon*> Planet::GetWeapons() {
 	list<Weapon*> weapons;
 	list<Technology*>::iterator techiter;
 	list<Weapon*>::iterator listiter;
+
 	for(techiter=technologies.begin(); techiter!=technologies.end(); ++techiter) {
 		list<Weapon*> weapon_list = (*techiter)->GetWeapons();
 		for(listiter=weapon_list.begin(); listiter!=weapon_list.end(); ++listiter) {
 			weapons.push_back( *listiter );
 		}
 	}
+
 	weapons.sort();
 	weapons.unique();
+
 	return weapons;
 }
 
@@ -268,14 +278,17 @@ list<Outfit*> Planet::GetOutfits() {
 	list<Outfit*> outfits;
 	list<Technology*>::iterator techiter;
 	list<Outfit*>::iterator listiter;
+
 	for(techiter=technologies.begin(); techiter!=technologies.end(); ++techiter) {
 		list<Outfit*> outfit_list = (*techiter)->GetOutfits();
 		for(listiter=outfit_list.begin(); listiter!=outfit_list.end(); ++listiter) {
 			outfits.push_back( *listiter );
 		}
 	}
+
 	outfits.sort();
 	outfits.unique();
+
 	return outfits;
 }
 

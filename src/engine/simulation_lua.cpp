@@ -1483,7 +1483,7 @@ int Simulation_Lua::SaveComponents(lua_State *L) {
 /** \brief List all .png files in the Graphics directory
  */
 int Simulation_Lua::ListImages(lua_State *L) {
-	list<string> pics = Filesystem::Enumerate("resources/graphics/",".png");
+	list<string> pics = Filesystem::Enumerate("data/graphics/",".png");
 	Lua::pushStringList(L, &pics);
 	return 1;
 }
@@ -1491,7 +1491,7 @@ int Simulation_Lua::ListImages(lua_State *L) {
 /** \brief List all .ani files in the Animations directory
  */
 int Simulation_Lua::ListAnimations(lua_State *L) {
-	list<string> anis = Filesystem::Enumerate("resources/animations/",".ani");
+	list<string> anis = Filesystem::Enumerate("data/animations/",".ani");
 	Lua::pushStringList(L, &anis);
 	return 1;
 }
@@ -1501,7 +1501,7 @@ int Simulation_Lua::ListAnimations(lua_State *L) {
  */
 int Simulation_Lua::ListSounds(lua_State *L) {
 	string subfolder = luaL_checkstring(L,1);
-	list<string> oggs = Filesystem::Enumerate("resources/audio/"+subfolder ,".ogg");
+	list<string> oggs = Filesystem::Enumerate("data/audio/"+subfolder ,".ogg");
 	Lua::pushStringList(L, &oggs);
 	return 1;
 }

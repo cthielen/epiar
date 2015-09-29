@@ -363,8 +363,8 @@ bool Ship::Jump( Coordinate position, bool jumpDrive ) {
 	// TODO Start playing a sound
 	if (isPlayer()) {
 		Sound *aSound;
-		if (jumpDrive) aSound = Sound::Get("resources/audio/Effects/128590__corsica-s__transport-edit.wav");
-		else aSound = Sound::Get("resources/audio/Effects/55853__sergenious__teleport.wav");
+		if (jumpDrive) aSound = Sound::Get("data/audio/Effects/128590__corsica-s__transport-edit.wav");
+		else aSound = Sound::Get("data/audio/Effects/55853__sergenious__teleport.wav");
         aSound -> SetVolume(10);
         aSound -> Play();
 	}
@@ -619,12 +619,12 @@ void Ship::Explode( lua_State *L )
 
 	// Play explode sound
 	if(OPTION(int, "options/sound/explosions")) {
-		Sound *explodesnd = Sound::Get("resources/audio/Effects/18384__inferno__largex.wav.ogg");
+		Sound *explodesnd = Sound::Get("data/audio/Effects/18384__inferno__largex.wav.ogg");
 		explodesnd->Play( GetWorldPosition() - camera->GetFocusCoordinate());
 	}
 
 	// Create Explosion
-	sprites->Add( new Effect( GetWorldPosition(), "resources/animations/explosion1.ani", 0) );
+	sprites->Add( new Effect( GetWorldPosition(), "data/animations/explosion1.ani", 0) );
 
 	// Remove this Sprite from the SpriteManager
 	sprites->Delete( (Sprite*)this );
