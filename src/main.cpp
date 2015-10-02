@@ -118,7 +118,7 @@ void Main_OS( int argc, char **argv ) {
  *  \todo If these files do not exist, reasonable defaults should be loaded instead.
  */
 void Main_Load_Settings() {
-	Options::Initialize( "data/options.xml" );
+	Options::Initialize( "options.xml" );
 
 	// Logging
 	Options::AddDefault( "options/log/xml", 0 );

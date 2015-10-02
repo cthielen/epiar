@@ -284,14 +284,20 @@ bool Components::Save() {
 	}
 
 	LogMsg(INFO, "Saving component (%s) to file '%s'", rootName.c_str(), filename.c_str());
-	xmlChar *xmlbuff;
+
+	xmlChar *xmlbuff = NULL;
 	int buffersize;
+
 	xmlDocDumpFormatMemory( doc, &xmlbuff, &buffersize, 1 );
+
 	File saved = File( filename.c_str(), true );
+
 	if(saved.Write( (char *)xmlbuff, buffersize ) != true) {
 		LogMsg(ERR, "Could not save component\n");
 	}
+
 	//xmlSaveFormatFileEnc( filename.c_str(), doc, "ISO-8859-1", 1);
+
 	xmlFree(xmlbuff);
 	xmlFreeDoc( doc );
 

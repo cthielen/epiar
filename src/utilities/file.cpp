@@ -290,6 +290,7 @@ bool File::Close() {
 bool File::Exists( const string& filename ) {
 	const char *cName;
 	cName = filename.c_str();
+
 #ifdef USE_PHYSICSFS
 	if ( !PHYSFS_exists( cName ) ){
 		LogMsg(ERR,"%s: %s.", LastErrorMessage().c_str(), cName);
@@ -303,6 +304,7 @@ bool File::Exists( const string& filename ) {
 		return false;
 	}
 #endif
+
 	return true;
 }
 

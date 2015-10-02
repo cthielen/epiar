@@ -221,6 +221,10 @@ void Player::Update( lua_State *L ) {
 	Ship::Update( L );
 }
 
+string Player::GetFileName() {
+	return "saves/" + GetName() + ".xml";
+}
+
 /**\brief Save an XML file for this player
  * \details The filename is by default the player's name.
  */
@@ -233,7 +237,7 @@ void Player::Save( string simulation ) {
 	xmlNodePtr root_node = ToXMLNode("player");
 	xmlDocSetRootElement(xmlPtr, root_node);
 
-	xmlSaveFormatFileEnc( GetFileName().c_str(), xmlPtr, "ISO-8859-1", 1);
+	xmlSaveFormatFileEnc( (std::string(PHYSFS_getWriteDir()) + std::string(PHYSFS_getDirSeparator()) + GetFileName()).c_str(), xmlPtr, "ISO-8859-1", 1);
 
 	// Update and Save this player's info in the master players list.
 	Players::Instance()->GetPlayerInfo( GetName() )->Update( this, simulation );
@@ -691,11 +695,11 @@ bool PlayerInfo::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	if( (attr = FirstChildNamed(node,"file")) ) {
 		file = NodeToString(doc,attr);
 		if( File::Exists( file ) == false ) {
-			LogMsg(ERR, "Player %s is Corrupt. There is no file '%s'.", name.c_str(), file.c_str() );
+			LogMsg(ERR, "Player %s is corrupt. There is no file '%s'.", name.c_str(), file.c_str() );
 			return false;
 		}
 	} else {
-		LogMsg(ERR, "Player %s is Corrupt. There is no file attribute.", name.c_str() );
+		LogMsg(ERR, "Player %s is corrupt. There is no file attribute.", name.c_str() );
 		return false;
 	}
 
@@ -777,7 +781,7 @@ xmlNodePtr PlayerInfo::ConvertOldVersion( xmlDocPtr doc, xmlNodePtr node ) {
 	xmlDocPtr xmlPtr;
 	xmlNodePtr  attr;
 	xmlNodePtr  copy = xmlCopyNode( node, 1);
-	string filename = "data/saves/" + name + ".xml";
+	string filename = "saves/" + name + ".xml";
 
 	LogMsg(INFO, "Converting %s to an xml file: %s ", name.c_str(), filename.c_str() );
 
@@ -877,7 +881,7 @@ bool Players::DeletePlayer(string playerName) {
 	}
 
 	// delete the separate player xml
-	string filename = "data/saves/" + playerName + ".xml";
+	string filename = "saves/" + playerName + ".xml";
 	if( Filesystem::DeleteFile( filename ) != true ) {
 		LogMsg(ERR, "Could not remove player XML file.\n");
 		return false;
