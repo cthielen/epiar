@@ -204,26 +204,21 @@ void Menu::CreateNewWindow()
 {
 	if( UI::Search("/Window'New Game'/") != NULL ) return;
 
-	Window* win = new Window(250, 370, "New Game");
+	Window* win = new Window(250, 180, "New Game");
 	UI::Add( win );
 
 	// Player Name
-	win->AddChild( (new Label(30, 40, "Player Name:")) )
-		->AddChild( (new Textbox(130, 43, 100, 1, "", "Player Name:")) );
+	win->AddChild( (new Label(50, 40, "Name:")) )
+		->AddChild( (new Textbox(90, 43, 130, 1, "", "Player Name:")) );
 
 	// Simulation Picker
-	win->AddChild( (new Frame( 25, 90, 200, 150 ))
-		->AddChild( (new Label(15, 15, "Simulation:")) )
-		->AddChild( (new Dropdown( 80, 15, 100, 30 ))
-			->AddOptions( Filesystem::Enumerate("data/simulation/") ) )
-		->AddChild( (new Checkbox(15, 60, 0, "Random Universe")) )
-		->AddChild( (new Label(15, 80, "Seed:")) )
-		->AddChild( (new Textbox(50, 80, 80, 1, "0", "Random Universe Seed")) )
-		->AddChild( (new Button(50, 100, 80, 30, "Randomize", RandomizeSeed )) )
+	win->AddChild( (new Label(25, 75, "Simulation:")) )
+		->AddChild( (new Dropdown( 90, 75, 130, 25 ))
+			->AddOptions( Filesystem::Enumerate("data/simulation/") )
 	);
-	win->AddChild( (new Button( 20, 320, 100, 30, "Cancel", &UI::Close, win)) );
-	win->AddChild( (new Button(130, 320, 100, 30, "Create", &CreateNewPlayer )) );
-    win->AddCloseButton();
+
+	win->AddChild( (new Button( 20, 130, 100, 30, "Cancel", &UI::Close, win)) );
+	win->AddChild( (new Button(130, 130, 100, 30, "Start", &CreateNewPlayer )) );
 }
 
 /** This Window shows a list of potential Players.
@@ -234,7 +229,7 @@ void Menu::CreateLoadWindow()
 
 	list<string> *names = Players::Instance()->GetNames();
 
-	Window* win = new Window(450, 70 + (names->size() * 150), "Load Game");
+	Window* win = new Window(450, 95 + (names->size() * 130), "Load Game");
 	UI::Add( win );
 
 	PlayerInfo* last = Players::Instance()->LastPlayer();
@@ -242,15 +237,16 @@ void Menu::CreateLoadWindow()
 	// Create a new Frame for each Player
 	int p = 0;
 	list<string>::iterator iter;
+
 	for( iter = names->begin(); iter != names->end(); ++iter, ++p ) {
 		PlayerInfo *info = Players::Instance()->GetPlayerInfo( *iter );
 
-		win->AddChild( (new Frame( 25, 155*p + 30, 400, 130 ))
-			->AddChild( (new Picture(60, 50, 80, 80, info->avatar, false, true) ) )
-			->AddChild( (new Label(120, 20, "Player Name:" )) ) ->AddChild( (new Label(210, 20, info->GetName() )) )
-			->AddChild( (new Label(120, 45, "Simulation:" )) ) ->AddChild( (new Label(210, 45, info->simulation )) )
-			->AddChild( (new Button(280, 85, 100, 25, "Play", StartGame, info )) )
-			->AddChild( (new Button(175, 85, 100, 25, "Erase", ErasePlayer, info ) ) )
+		win->AddChild( (new Frame( 25, 130 * p + 40, 400, 120 ))
+			->AddChild( (new Picture(35, 35, 80, 80, info->avatar, false, true) ) )
+			->AddChild( (new Label(115, 10, "Player Name:" )) ) ->AddChild( (new Label(210, 10, info->GetName() )) )
+			->AddChild( (new Label(115, 35, "Simulation:" )) ) ->AddChild( (new Label(210, 35, info->simulation )) )
+			->AddChild( (new Button(270, 70, 100, 25, "Play", StartGame, info )) )
+			->AddChild( (new Button(15, 70, 100, 25, "Erase", ErasePlayer, info ) ) )
 		);
 		if( info == last ) {
 			win->SetFormButton( (Button*) win->Search("/Frame/Button'Play'/") );
@@ -258,9 +254,7 @@ void Menu::CreateLoadWindow()
 	}
 
 	// Add the 'Cancel' button
-	win->AddChild( (new Button( 175, 155*names->size() + 20, 100, 30, "Cancel", &UI::Close, win)) );
-
-	win->AddCloseButton();
+	win->AddChild( (new Button( 175, 130 * names->size() + 45, 100, 30, "Cancel", &UI::Close, win)) );
 
 	UI::RegisterKeyboardFocus(win);
 }
@@ -283,9 +277,7 @@ void Menu::StartGame( void *info )
 	// Gather Player Information
 	string simName = playerToLoad->simulation;
 	string playerName = playerToLoad->GetName();
-	int israndom = (playerToLoad->seed != 0); // This is probably wrong...
 
-	SETOPTION( "options/simulation/random-universe", israndom );
 	SETOPTION( "options/simulation/random-seed", playerToLoad->seed );
 	
 	// Load the Simulation
@@ -481,8 +473,6 @@ void Menu::CreateNewPlayer( )
 
 	string playerName = ((Textbox*)UI::Search("/Window'New Game'/Textbox'Player Name:'/"))->GetText();
 	string simName = ((Dropdown*)UI::Search("/Window'New Game'/Frame/Dropdown/"))->GetText();
-	int israndom = ((Checkbox*)UI::Search("/Window'New Game'/Frame/Checkbox'Random Universe'/"))->IsChecked();
-	int seed = atoi( ((Textbox*)UI::Search("/Window'New Game'/Frame/Textbox'Random Universe Seed'/"))->GetText().c_str() );
 
 	if(OPTION(int, "options/sound/buttons")) Sound::Get( "data/audio/Interface/28853__junggle__btn043.ogg" )->Play();
 
@@ -496,26 +486,9 @@ void Menu::CreateNewPlayer( )
 		return;
 	}
 
-	SETOPTION( "options/simulation/random-universe", israndom);
-	SETOPTION( "options/simulation/random-seed", seed );
-
-	playerToLoad = new PlayerInfo( playerName, simName, seed );
+	playerToLoad = new PlayerInfo( playerName, simName, 0 );
 
 	StartGame( playerToLoad );
-}
-
-/** Inserts a random integer into the Universe Seed Textbox
- */
-void Menu::RandomizeSeed( )
-{
-	char seed[20];
-	snprintf(seed, sizeof(seed), "%d", rand() );
-	Widget *widget = UI::Search("/Window'New Game'/Frame/Textbox'Random Universe Seed'/");
-	if( widget && widget->GetMask() == WIDGET_TEXTBOX )
-	{
-		Textbox* seedBox = (Textbox*)widget;
-		seedBox->SetText( seed );
-	}
 }
 
 /** Change a Picture to a different Image

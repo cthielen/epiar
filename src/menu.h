@@ -62,7 +62,6 @@ class Menu {
     // GUI Helpers
 	static Picture* PictureButton( int x, int y, void (*callback)(), Image* activeImage, Image* inactiveImage);
 	static void ChangePicture( void* picture, void* image);
-	static void RandomizeSeed();
 
 };
 
