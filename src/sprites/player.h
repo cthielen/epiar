@@ -20,7 +20,7 @@ class Player : public Ship {
 		static Player *Load( string filename );
 
 		// Saving and Loading this Player to XML
-		void Save( string simulation );
+		void Save( string scenario );
 		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
 		xmlNodePtr ToXMLNode(string componentName);
 
@@ -88,9 +88,9 @@ class Player : public Ship {
 class PlayerInfo : public Component {
 	public:
 		PlayerInfo();
-		PlayerInfo( Player* player, string simulation );
-		PlayerInfo( string name, string simulation, int seed );
-		void Update( Player* player, string simulation );
+		PlayerInfo( Player* player, string scenario );
+		PlayerInfo( string name, string scenario, int seed );
+		void Update( Player* player, string scenario );
 
 		// Saving and Loading this Player to XML
 		bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node );
@@ -100,8 +100,8 @@ class PlayerInfo : public Component {
 		// name is implicit from Component
 		Image* avatar; ///< Image for this player (Usually the ship's model)
 		string file; ///< The xml file associated with this player.
-		string simulation; ///< The Simulation that this Player is playing.
-		int seed; ///< The Seed for this Simulation.
+		string scenario; ///< The Scenario that this Player is playing.
+		int seed; ///< The Seed for this Scenario.
 		time_t lastLoadTime; ///< The last time that this file was loaded.
 	private:
 };
@@ -115,7 +115,7 @@ class Players : public Components {
 		PlayerInfo* LastPlayer();
 
 		Player* CreateNew(
-			string simulation,
+			string scenario,
 			string playerName,
 			Model *model,
 			Engine *engine,

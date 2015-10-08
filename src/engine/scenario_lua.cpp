@@ -1,8 +1,8 @@
-/**\file			simulation_lua.cpp
+/**\file			scenario_lua.cpp
  * \author			Matt Zweig
  * \date			Created: Friday, September 3, 2010
- * \date			Modified: Friday, September 3, 2010
- * \brief			Simulation Managment from Lua
+ * \date			Modified: Thursday, October 8, 2015
+ * \brief			Scenario Managment from Lua
  * \details
  */
 
@@ -12,8 +12,8 @@
 #include "audio/audio.h"
 #include "audio/audio_lua.h"
 #include "engine/console.h"
-#include "engine/simulation.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario.h"
+#include "engine/scenario_lua.h"
 #include "engine/models.h"
 #include "engine/alliances.h"
 #include "utilities/log.h"
@@ -36,11 +36,11 @@
 #include "utilities/filesystem.h"
 #include "engine/hud.h"
 
-/** \class Simulation_Lua
+/** \class Scenario_Lua
  *  \brief Lua bridge for interacting with the Epiar engine.
  */
 
-void Simulation_Lua::RegisterSimulation(lua_State *L) {
+void Scenario_Lua::RegisterScenario(lua_State *L) {
 	Lua::RegisterGlobal("WIDTH", Video::GetWidth() );
 	Lua::RegisterGlobal("HEIGHT", Video::GetHeight() );
 
@@ -60,71 +60,71 @@ void Simulation_Lua::RegisterSimulation(lua_State *L) {
 	Lua::RegisterGlobal("KEYTYPED",           KEYTYPED   );
 
 	static const luaL_Reg EngineFunctions[] = {
-		//{"echo", &Simulation_Lua::Console_echo},
-		{"pause", &Simulation_Lua::Pause},
-		{"unpause", &Simulation_Lua::Unpause},
-		{"ispaused", &Simulation_Lua::Ispaused},
+		//{"echo", &Scenario_Lua::Console_echo},
+		{"pause", &Scenario_Lua::Pause},
+		{"unpause", &Scenario_Lua::Unpause},
+		{"ispaused", &Scenario_Lua::Ispaused},
 
 		// OPTION Functions
-		{"getoption", &Simulation_Lua::Getoption},
-		{"setoption", &Simulation_Lua::Setoption},
+		{"getoption", &Scenario_Lua::Getoption},
+		{"setoption", &Scenario_Lua::Setoption},
 
 		// Player Functions
-		{"loadPlayer", &Simulation_Lua::LoadPlayer},
-		{"savePlayer", &Simulation_Lua::SavePlayer},
-		{"newPlayer", &Simulation_Lua::NewPlayer},
-		{"players", &Simulation_Lua::GetPlayerNames},
-		{"player", &Simulation_Lua::GetPlayer},
+		{"loadPlayer", &Scenario_Lua::LoadPlayer},
+		{"savePlayer", &Scenario_Lua::SavePlayer},
+		{"newPlayer", &Scenario_Lua::NewPlayer},
+		{"players", &Scenario_Lua::GetPlayerNames},
+		{"player", &Scenario_Lua::GetPlayer},
 
 		// Sprite Creation Functions
-		{"NewGatePair", &Simulation_Lua::NewGatePair},
+		{"NewGatePair", &Scenario_Lua::NewGatePair},
 
 		// Camera Functions
-		{"getCamera", &Simulation_Lua::GetCamera},
-		{"moveCamera", &Simulation_Lua::MoveCamera},
-		{"shakeCamera", &Simulation_Lua::ShakeCamera},
-		{"focusCamera", &Simulation_Lua::FocusCamera},
+		{"getCamera", &Scenario_Lua::GetCamera},
+		{"moveCamera", &Scenario_Lua::MoveCamera},
+		{"shakeCamera", &Scenario_Lua::ShakeCamera},
+		{"focusCamera", &Scenario_Lua::FocusCamera},
 
 		// Game Component lists
-		{"commodities", &Simulation_Lua::GetCommodityNames},
-		{"alliances", &Simulation_Lua::GetAllianceNames},
-		{"models", &Simulation_Lua::GetModelNames},
-		{"weapons", &Simulation_Lua::GetWeaponNames},
-		{"outfits", &Simulation_Lua::GetOutfitNames},
-		{"engines", &Simulation_Lua::GetEngineNames},
-		{"technologies", &Simulation_Lua::GetTechnologyNames},
-		{"planetNames", &Simulation_Lua::GetPlanetNames},
-		{"gateNames", &Simulation_Lua::GetGateNames},
+		{"commodities", &Scenario_Lua::GetCommodityNames},
+		{"alliances", &Scenario_Lua::GetAllianceNames},
+		{"models", &Scenario_Lua::GetModelNames},
+		{"weapons", &Scenario_Lua::GetWeaponNames},
+		{"outfits", &Scenario_Lua::GetOutfitNames},
+		{"engines", &Scenario_Lua::GetEngineNames},
+		{"technologies", &Scenario_Lua::GetTechnologyNames},
+		{"planetNames", &Scenario_Lua::GetPlanetNames},
+		{"gateNames", &Scenario_Lua::GetGateNames},
 
 		// Sprite Searching Functions
-		{"getSprite", &Simulation_Lua::GetSpriteByID},
-		{"ships", &Simulation_Lua::GetShips},
-		{"planets", &Simulation_Lua::GetPlanets},
-		{"gates", &Simulation_Lua::GetGates},
-		{"nearestShip", &Simulation_Lua::GetNearestShip},
-		{"nearestPlanet", &Simulation_Lua::GetNearestPlanet},
+		{"getSprite", &Scenario_Lua::GetSpriteByID},
+		{"ships", &Scenario_Lua::GetShips},
+		{"planets", &Scenario_Lua::GetPlanets},
+		{"gates", &Scenario_Lua::GetGates},
+		{"nearestShip", &Scenario_Lua::GetNearestShip},
+		{"nearestPlanet", &Scenario_Lua::GetNearestPlanet},
 
 		// Keyboard Command Functions
-		{"RegisterKey", &Simulation_Lua::RegisterKey},
-		{"UnRegisterKey", &Simulation_Lua::UnRegisterKey},
+		{"RegisterKey", &Scenario_Lua::RegisterKey},
+		{"UnRegisterKey", &Scenario_Lua::UnRegisterKey},
 
 		// Game Component Information
-		{"getMSRP", &Simulation_Lua::GetMSRP},
-		{"getSimulationInfo", &Simulation_Lua::GetSimulationInfo},
-		{"getCommodityInfo", &Simulation_Lua::GetCommodityInfo},
-		{"getAllianceInfo", &Simulation_Lua::GetAllianceInfo},
-		{"getModelInfo", &Simulation_Lua::GetModelInfo},
-		{"getPlanetInfo", &Simulation_Lua::GetPlanetInfo},
-		{"getGateInfo", &Simulation_Lua::GetGateInfo},
-		{"getWeaponInfo", &Simulation_Lua::GetWeaponInfo},
-		{"getEngineInfo", &Simulation_Lua::GetEngineInfo},
-		{"getOutfitInfo", &Simulation_Lua::GetOutfitInfo},
-		{"getTechnologyInfo", &Simulation_Lua::GetTechnologyInfo},
+		{"getMSRP", &Scenario_Lua::GetMSRP},
+		{"getScenarioInfo", &Scenario_Lua::GetScenarioInfo},
+		{"getCommodityInfo", &Scenario_Lua::GetCommodityInfo},
+		{"getAllianceInfo", &Scenario_Lua::GetAllianceInfo},
+		{"getModelInfo", &Scenario_Lua::GetModelInfo},
+		{"getPlanetInfo", &Scenario_Lua::GetPlanetInfo},
+		{"getGateInfo", &Scenario_Lua::GetGateInfo},
+		{"getWeaponInfo", &Scenario_Lua::GetWeaponInfo},
+		{"getEngineInfo", &Scenario_Lua::GetEngineInfo},
+		{"getOutfitInfo", &Scenario_Lua::GetOutfitInfo},
+		{"getTechnologyInfo", &Scenario_Lua::GetTechnologyInfo},
 
 		// File System Functions
-		{"listImages", &Simulation_Lua::ListImages},
-		{"listAnimations", &Simulation_Lua::ListAnimations},
-		{"listSounds", &Simulation_Lua::ListSounds},
+		{"listImages", &Scenario_Lua::ListImages},
+		{"listAnimations", &Scenario_Lua::ListAnimations},
+		{"listSounds", &Scenario_Lua::ListSounds},
 		{NULL, NULL}
 	};
 	luaL_register(L,"Epiar",EngineFunctions);
@@ -133,52 +133,52 @@ void Simulation_Lua::RegisterSimulation(lua_State *L) {
 
 /** \brief Register functions specific to the editor
  */
-void Simulation_Lua::RegisterEditor(lua_State *L) {
+void Scenario_Lua::RegisterEditor(lua_State *L) {
 	static const luaL_Reg EditorFunctions[] = {
-		{"setInfo", &Simulation_Lua::SetInfo},
-		{"setDefaultPlayer", &Simulation_Lua::SetDefaultPlayer},
-		{"getDefaultPlayer", &Simulation_Lua::GetDefaultPlayer},
-		{"saveComponents", &Simulation_Lua::SaveComponents},
-		{"setDescription", &Simulation_Lua::SetDescription},
+		{"setInfo", &Scenario_Lua::SetInfo},
+		{"setDefaultPlayer", &Scenario_Lua::SetDefaultPlayer},
+		{"getDefaultPlayer", &Scenario_Lua::GetDefaultPlayer},
+		{"saveComponents", &Scenario_Lua::SaveComponents},
+		{"setDescription", &Scenario_Lua::SetDescription},
 		{NULL, NULL}
 	};
 	luaL_register(L,"Epiar",EditorFunctions);
 }
 
 
-/** \brief Store a pointer to the Simulation into a Lua State
- * \details In order to make it possible to have multiple Simulations running,
- *  each lua_State needs to have a way to know which Simulation it is attached
+/** \brief Store a pointer to the Scenario into a Lua State
+ * \details In order to make it possible to have multiple Scenarios running,
+ *  each lua_State needs to have a way to know which Scenario it is attached
  *  to.  This is because the calling model Lua requires that all registered
  *  functions be static functions.
  *
- *  In order to access Simulation variables (ex: Sprites) from a Lua registered
- *  c++ function, use GetSimulation.
- *  \see Simulation_Lua::GetSimulation
+ *  In order to access Scenario variables (ex: Sprites) from a Lua registered
+ *  c++ function, use GetScenario.
+ *  \see Scenario_Lua::GetScenario
  */
-void Simulation_Lua::StoreSimulation(lua_State *L, Simulation *sim) {
-	// Store A pointer to the simulation is stored in the LUA_REGISTRYINDEX table.
-	lua_pushstring(L,"EPIAR_SIMULATION"); // Key
+void Scenario_Lua::StoreScenario(lua_State *L, Scenario *sim) {
+	// Store A pointer to the scenario is stored in the LUA_REGISTRYINDEX table.
+	lua_pushstring(L,"EPIAR_SCENARIO"); // Key
 	lua_pushlightuserdata(L, sim); // Value
 	lua_settable(L,LUA_REGISTRYINDEX);
 	lua_pop(L,1);
 }
 
 /** \brief Retrieve the Simuation pointer associated with a specific lua_State.
- *  \see Simulation_Lua::GetSimulation
+ *  \see Scenario_Lua::GetScenario
  */
-Simulation *Simulation_Lua::GetSimulation(lua_State *L) {
-	Simulation* sim;
-	// A pointer to the simulation is stored in the LUA_REGISTRYINDEX table.
-	lua_pushstring(L,"EPIAR_SIMULATION"); // Key
+Scenario *Scenario_Lua::GetScenario(lua_State *L) {
+	Scenario* sim;
+	// A pointer to the scenario is stored in the LUA_REGISTRYINDEX table.
+	lua_pushstring(L,"EPIAR_SCENARIO"); // Key
 	lua_gettable(L,LUA_REGISTRYINDEX);
-	sim = (Simulation*)lua_topointer(L,-1);
+	sim = (Scenario*)lua_topointer(L,-1);
 	lua_pop(L,1);
 	return sim;
 }
 
 /*
-int Simulation_Lua::Console_echo(lua_State *L) {
+int Scenario_Lua::Console_echo(lua_State *L) {
 	const char *str = lua_tostring(L, 1); // get argument
 
 	if(str == NULL)
@@ -190,35 +190,35 @@ int Simulation_Lua::Console_echo(lua_State *L) {
 }
 */
 
-/** \brief Pause the Simulation
+/** \brief Pause the Scenario
  */
-int Simulation_Lua::Pause(lua_State *L){
-	Simulation *sim = GetSimulation(L);
+int Scenario_Lua::Pause(lua_State *L){
+	Scenario *sim = GetScenario(L);
 	sim->pause();
 	return 0;
 }
 
-/** \brief Unpause the Simulation
+/** \brief Unpause the Scenario
  */
-int Simulation_Lua::Unpause(lua_State *L){
-	Simulation *sim = GetSimulation(L);
-	sim->unpause();
+int Scenario_Lua::Unpause(lua_State *L){
+	Scenario *scen = GetScenario(L);
+	scen->unpause();
 	return 0;
 }
 
-/** \brief Check if the Simulation is paused
- *  \returns true if the Simulation is paused
+/** \brief Check if the Scenario is paused
+ *  \returns true if the Scenario is paused
  */
-int Simulation_Lua::Ispaused(lua_State *L){
-	Simulation *sim = GetSimulation(L);
+int Scenario_Lua::Ispaused(lua_State *L){
+	Scenario *sim = GetScenario(L);
 	lua_pushnumber(L, (int) sim->isPaused() );
 	return 1;
 }
 
 /** \brief Save the Player Data
  */
-int Simulation_Lua::SavePlayer(lua_State *L){
-    Simulation* sim = GetSimulation(L);
+int Scenario_Lua::SavePlayer(lua_State *L){
+	Scenario* sim = GetScenario(L);
 	sim->GetPlayer()->Save( sim->GetName() );
 	return 0;
 }
@@ -227,7 +227,7 @@ int Simulation_Lua::SavePlayer(lua_State *L){
  *  \param [in] key Path to a specific OPTION.
  *  \returns string representation of the OPTION's value.
  */
-int Simulation_Lua::Getoption(lua_State *L) {
+int Scenario_Lua::Getoption(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if (n != 1)
 		return luaL_error(L, "Got %d arguments expected 1 (option)", n);
@@ -242,7 +242,7 @@ int Simulation_Lua::Getoption(lua_State *L) {
  *  \param [in] value the OPTION's new value.
  *  \note All Lua primitives should support lua_tostring, so ints and floats can be used.
  */
-int Simulation_Lua::Setoption(lua_State *L) {
+int Scenario_Lua::Setoption(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if (n != 2)
 		return luaL_error(L, "Got %d arguments expected 1 (option,value)", n);
@@ -254,11 +254,11 @@ int Simulation_Lua::Setoption(lua_State *L) {
 
 /**\brief Lua callable function to register a key.
  */
-int Simulation_Lua::RegisterKey(lua_State *L) {
+int Scenario_Lua::RegisterKey(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
   
 	if(n == 3) {
-		Simulation *sim = GetSimulation(L);
+		Scenario *sim = GetScenario(L);
 		int triggerKey;
 		if( lua_isnumber(L,1) ) {
 			triggerKey = (int)(luaL_checkint(L,1));
@@ -276,10 +276,10 @@ int Simulation_Lua::RegisterKey(lua_State *L) {
 
 /**\brief Lua callable function to unregister a key.
  */
-int Simulation_Lua::UnRegisterKey(lua_State *L) {
+int Scenario_Lua::UnRegisterKey(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if(n == 2) {
-		Simulation *sim = GetSimulation(L);
+		Scenario *sim = GetScenario(L);
 		int triggerKey;
 		if( lua_isnumber(L,1) ) {
 			triggerKey = (int)(luaL_checkint(L,1));
@@ -296,11 +296,11 @@ int Simulation_Lua::UnRegisterKey(lua_State *L) {
 
 /** \brief Get a list of players names.
  *  \details Each name can be used to load a player.
- *  \see Simulation_Lua::LoadPlayer
+ *  \see Scenario_Lua::LoadPlayer
  *  \returns list of strings
  */
-int Simulation_Lua::GetPlayerNames(lua_State *L) {
-	list<string> *names = GetSimulation(L)->GetPlayers()->GetNames();
+int Scenario_Lua::GetPlayerNames(lua_State *L) {
+	list<string> *names = GetScenario(L)->GetPlayers()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -308,28 +308,28 @@ int Simulation_Lua::GetPlayerNames(lua_State *L) {
 /** \brief Load a player.
  *  \param [in] playerName
  */
-int Simulation_Lua::LoadPlayer(lua_State *L) {
+int Scenario_Lua::LoadPlayer(lua_State *L) {
 	int n = lua_gettop(L);
 	if (n != 1) {
 		return luaL_error(L, "Loading a Player expects a name");
 	}
 	string playerName = (string) luaL_checkstring(L,1);
 	LogMsg(INFO,"Loading Player: %s",playerName.c_str());
-	PlayerInfo* info = GetSimulation(L)->GetPlayers()->GetPlayerInfo( playerName );
+	PlayerInfo* info = GetScenario(L)->GetPlayers()->GetPlayerInfo( playerName );
 	if( info==NULL ) {
 		return luaL_error(L, "There is no Player by the name '%s'",playerName.c_str());
 	}
-	GetSimulation(L)->GetPlayers()->LoadPlayer(playerName);
+	GetScenario(L)->GetPlayers()->LoadPlayer(playerName);
 	return 0;
 }
 
 /** \brief Create a new player.
  *  \param [in] playerName
- *  \note All new players will use the same defaultPlayer as defined in by the Simulation.
+ *  \note All new players will use the same defaultPlayer as defined in by the Scenario.
  *  \note The player will not be automatically saved.
- *  \see Simulation_Lua::SavePlayer
+ *  \see Scenario_Lua::SavePlayer
  */
-int Simulation_Lua::NewPlayer(lua_State *L) {
+int Scenario_Lua::NewPlayer(lua_State *L) {
 	int n = lua_gettop(L);
 	if (n != 1) {
 		return luaL_error(L, "Loading a Player expects a name");
@@ -338,7 +338,7 @@ int Simulation_Lua::NewPlayer(lua_State *L) {
 	string playerName = (string) luaL_checkstring(L,1);
 	LogMsg(INFO, "Creating Player: %s", playerName.c_str());
 
-	GetSimulation(L)->CreateDefaultPlayer(playerName);
+	GetScenario(L)->CreateDefaultPlayer(playerName);
 
 	return 0;
 }
@@ -346,8 +346,8 @@ int Simulation_Lua::NewPlayer(lua_State *L) {
 /** \brief Get reference to the Player
  *  \returns Lua Ship object that references the Player.
  */
-int Simulation_Lua::GetPlayer(lua_State *L){
-	Simulation_Lua::PushSprite(L,GetSimulation(L)->GetPlayer() );
+int Scenario_Lua::GetPlayer(lua_State *L){
+	Scenario_Lua::PushSprite(L,GetScenario(L)->GetPlayer() );
 	return 1;
 }
 
@@ -357,7 +357,7 @@ int Simulation_Lua::GetPlayer(lua_State *L){
  *  \param [in] X value for Gate 2
  *  \param [in] Y value for Gate 2
  */
-int Simulation_Lua::NewGatePair(lua_State *L){
+int Scenario_Lua::NewGatePair(lua_State *L){
 	int n = lua_gettop(L);
 	if (n != 4) {
 		return luaL_error(L, "Only %d arguments. Gates require two x,y pairs (x1,y1,x2,y2)", n);
@@ -365,14 +365,14 @@ int Simulation_Lua::NewGatePair(lua_State *L){
 
 	Gate* gate_1 = new Gate( Coordinate( luaL_checkinteger(L,1), luaL_checkinteger(L,2)));
 	Gate* gate_2 = new Gate( Coordinate( luaL_checkinteger(L,3), luaL_checkinteger(L,4)));
-	GetSimulation(L)->GetSpriteManager()->Add((Sprite*)gate_1);
-	GetSimulation(L)->GetSpriteManager()->Add((Sprite*)gate_2);
+	GetScenario(L)->GetSpriteManager()->Add((Sprite*)gate_1);
+	GetScenario(L)->GetSpriteManager()->Add((Sprite*)gate_2);
 
 	// Note that we need to set the exit _after_ adding to the SpriteManager since SetExit checks that the Sprite exists.
 	Gate::SetPair( gate_1, gate_2 );
 
-	GetSimulation(L)->GetGates()->Add( gate_1 );
-	GetSimulation(L)->GetGates()->Add( gate_2 );
+	GetScenario(L)->GetGates()->Add( gate_1 );
+	GetScenario(L)->GetGates()->Add( gate_2 );
 
 	return 0;
 }
@@ -380,12 +380,12 @@ int Simulation_Lua::NewGatePair(lua_State *L){
 /** \brief Get Camera Position
  *  \returns X,Y position of the camera.
  */
-int Simulation_Lua::GetCamera(lua_State *L){
+int Scenario_Lua::GetCamera(lua_State *L){
 	int n = lua_gettop(L);
 	if (n != 0) {
 		return luaL_error(L, "Getting the Camera Coordinates didn't expect %d arguments. But thanks anyway", n);
 	}
-	Coordinate c = GetSimulation(L)->GetCamera()->GetFocusCoordinate();
+	Coordinate c = GetScenario(L)->GetCamera()->GetFocusCoordinate();
 	lua_pushinteger(L,static_cast<lua_Integer>(c.GetX()));
 	lua_pushinteger(L,static_cast<lua_Integer>(c.GetY()));
 	return 2;
@@ -396,15 +396,16 @@ int Simulation_Lua::GetCamera(lua_State *L){
  *  \param [in] Y component of the Camera's movement
  *  \note This jumps the camera, so it can be a bit jarring.
  */
-int Simulation_Lua::MoveCamera(lua_State *L){
+int Scenario_Lua::MoveCamera(lua_State *L){
 	int n = lua_gettop(L);
 	if (n != 2) {
 		return luaL_error(L, "Moving the Camera needs 2 arguments (X,Y) not %d arguments", n);
 	}
 	int x = luaL_checkinteger(L,1);
 	int y = luaL_checkinteger(L,2);
-	GetSimulation(L)->GetCamera()->Focus((Sprite*)NULL); // This unattaches the Camera from the focusSprite
-	GetSimulation(L)->GetCamera()->Move(-x,y);
+	GetScenario(L)->GetCamera()->Focus((Sprite*)NULL); // This unattaches the Camera from the focusSprite
+	GetScenario(L)->GetCamera()->Move(-x,y);
+
 	return 0;
 }
 
@@ -414,9 +415,9 @@ int Simulation_Lua::MoveCamera(lua_State *L){
  *  \param [in] X component of the Shake vector
  *  \param [in] Y component of the Shake vector
  */
-int Simulation_Lua::ShakeCamera(lua_State *L){
+int Scenario_Lua::ShakeCamera(lua_State *L){
 	if (lua_gettop(L) == 4) {
-		Camera *camera = GetSimulation(L)->GetCamera();
+		Camera *camera = GetScenario(L)->GetCamera();
 		camera->Shake(int(luaL_checknumber(L, 1)), int(luaL_checknumber(L,
 						2)),  new Coordinate(luaL_checknumber(L, 3),luaL_checknumber(L, 2)));
 	}
@@ -431,20 +432,20 @@ int Simulation_Lua::ShakeCamera(lua_State *L){
  *  \param[in] Y position to focus the camera.
  *  \note When X,Y positions are given, the Camera will not follow any sprite.
  */
-int Simulation_Lua::FocusCamera(lua_State *L){
+int Scenario_Lua::FocusCamera(lua_State *L){
 	int n = lua_gettop(L);
 	if (n == 1) {
 		int id = (int)(luaL_checkint(L,1));
-		SpriteManager *sprites= GetSimulation(L)->GetSpriteManager();
+		SpriteManager *sprites= GetScenario(L)->GetSpriteManager();
 		Sprite* target = sprites->GetSpriteByID(id);
 		if(target!=NULL)
-			GetSimulation(L)->GetCamera()->Focus( target );
+			GetScenario(L)->GetCamera()->Focus( target );
 	} else if (n == 2) {
 		double x,y;
 		x = (luaL_checknumber(L,1));
 		y = (luaL_checknumber(L,2));
-		GetSimulation(L)->GetCamera()->Focus((Sprite*)NULL);
-		GetSimulation(L)->GetCamera()->Focus(x,y);
+		GetScenario(L)->GetCamera()->Focus((Sprite*)NULL);
+		GetScenario(L)->GetCamera()->Focus(x,y);
 	} else {
 		return luaL_error(L, "Got %d arguments expected 1 (SpriteID) or 2 (X,Y)", n);
 	}
@@ -454,8 +455,8 @@ int Simulation_Lua::FocusCamera(lua_State *L){
 /** \brief Get Commodity names
  *  \returns list of names as strings
  */
-int Simulation_Lua::GetCommodityNames(lua_State *L){
-	list<string> *names = GetSimulation(L)->GetCommodities()->GetNames();
+int Scenario_Lua::GetCommodityNames(lua_State *L){
+	list<string> *names = GetScenario(L)->GetCommodities()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -463,8 +464,8 @@ int Simulation_Lua::GetCommodityNames(lua_State *L){
 /** \brief Get Alliance names
  *  \returns list of names as strings
  */
-int Simulation_Lua::GetAllianceNames(lua_State *L){
-	list<string> *names = GetSimulation(L)->GetAlliances()->GetNames();
+int Scenario_Lua::GetAllianceNames(lua_State *L){
+	list<string> *names = GetScenario(L)->GetAlliances()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -472,8 +473,8 @@ int Simulation_Lua::GetAllianceNames(lua_State *L){
 /** \brief Get Weapon names
  *  \returns list of names as strings
  */
-int Simulation_Lua::GetWeaponNames(lua_State *L){
-	list<string> *names = GetSimulation(L)->GetWeapons()->GetNames();
+int Scenario_Lua::GetWeaponNames(lua_State *L){
+	list<string> *names = GetScenario(L)->GetWeapons()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -481,8 +482,8 @@ int Simulation_Lua::GetWeaponNames(lua_State *L){
 /** \brief Get Outfit names
  *  \returns list of names as strings
  */
-int Simulation_Lua::GetOutfitNames(lua_State *L){
-	list<string> *names = GetSimulation(L)->GetOutfits()->GetNames();
+int Scenario_Lua::GetOutfitNames(lua_State *L){
+	list<string> *names = GetScenario(L)->GetOutfits()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -490,8 +491,8 @@ int Simulation_Lua::GetOutfitNames(lua_State *L){
 /** \brief Get Model names
  *  \returns list of names as strings
  */
-int Simulation_Lua::GetModelNames(lua_State *L){
-	list<string> *names = GetSimulation(L)->GetModels()->GetNames();
+int Scenario_Lua::GetModelNames(lua_State *L){
+	list<string> *names = GetScenario(L)->GetModels()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -499,8 +500,8 @@ int Simulation_Lua::GetModelNames(lua_State *L){
 /** \brief Get Engine names
  *  \returns list of names as strings
  */
-int Simulation_Lua::GetEngineNames(lua_State *L){
-	list<string> *names = GetSimulation(L)->GetEngines()->GetNames();
+int Scenario_Lua::GetEngineNames(lua_State *L){
+	list<string> *names = GetScenario(L)->GetEngines()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -508,8 +509,8 @@ int Simulation_Lua::GetEngineNames(lua_State *L){
 /** \brief Get Technology names
  *  \returns list of names as strings
  */
-int Simulation_Lua::GetTechnologyNames(lua_State *L){
-	list<string> *names = GetSimulation(L)->GetTechnologies()->GetNames();
+int Scenario_Lua::GetTechnologyNames(lua_State *L){
+	list<string> *names = GetScenario(L)->GetTechnologies()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -517,8 +518,8 @@ int Simulation_Lua::GetTechnologyNames(lua_State *L){
 /** \brief Get Planet names
  *  \returns list of names as strings
  */
-int Simulation_Lua::GetPlanetNames(lua_State *L){
-	list<string> *names = GetSimulation(L)->GetPlanets()->GetNames();
+int Scenario_Lua::GetPlanetNames(lua_State *L){
+	list<string> *names = GetScenario(L)->GetPlanets()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -526,8 +527,8 @@ int Simulation_Lua::GetPlanetNames(lua_State *L){
 /** \brief Get Gate names
  *  \returns list of names as strings
  */
-int Simulation_Lua::GetGateNames(lua_State *L){
-	list<string> *names = GetSimulation(L)->GetGates()->GetNames();
+int Scenario_Lua::GetGateNames(lua_State *L){
+	list<string> *names = GetScenario(L)->GetGates()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -535,7 +536,7 @@ int Simulation_Lua::GetGateNames(lua_State *L){
 /** \brief Pushes a Sprite reference onto the Lua Stack.
  *  \note Sprites are referenced by their ID.
  */
-void Simulation_Lua::PushSprite(lua_State *L,Sprite* s){
+void Scenario_Lua::PushSprite(lua_State *L,Sprite* s){
 	int* id = (int*)lua_newuserdata(L, sizeof(int*));
 	*id = s->GetID();
 	switch(s->GetDrawOrder()){
@@ -559,7 +560,7 @@ void Simulation_Lua::PushSprite(lua_State *L,Sprite* s){
 
 /** \brief Push a list of names for a component list.
  */
-void Simulation_Lua::PushComponents(lua_State *L, list<Component*> *components){
+void Scenario_Lua::PushComponents(lua_State *L, list<Component*> *components){
 	lua_createtable(L, components->size(), 0);
 	int newTable = lua_gettop(L);
 	int index = 1;
@@ -576,21 +577,21 @@ void Simulation_Lua::PushComponents(lua_State *L, list<Component*> *components){
  *  \param [in] Sprite ID
  *  \returns reference to a Sprite
  */
-int Simulation_Lua::GetSpriteByID(lua_State *L){
+int Scenario_Lua::GetSpriteByID(lua_State *L){
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (SpriteID)", n);
 
 	// Get the Sprite using the ID
 	int id = (int)(luaL_checkint(L,1));
-	Sprite* sprite = GetSimulation(L)->GetSpriteManager()->GetSpriteByID(id);
+	Sprite* sprite = GetScenario(L)->GetSpriteManager()->GetSpriteByID(id);
 
 	// Return nil if the sprite no longer exists
 	if(sprite==NULL){
 		return 0;
 	}
 
-	Simulation_Lua::PushSprite(L,sprite);
+	Scenario_Lua::PushSprite(L,sprite);
 	return 1;
 }
 
@@ -598,7 +599,7 @@ int Simulation_Lua::GetSpriteByID(lua_State *L){
  *  \details Optionally accepts an X,Y Coordinate and radius to limit which sprites are returned
  *  \returns list of sprites
  */
-int Simulation_Lua::GetSprites(lua_State *L, int kind){
+int Scenario_Lua::GetSprites(lua_State *L, int kind){
 	int n = lua_gettop(L);  // Number of arguments
 
 	list<Sprite *> *sprites = NULL;
@@ -606,9 +607,9 @@ int Simulation_Lua::GetSprites(lua_State *L, int kind){
 		double x = luaL_checknumber (L, 1);
 		double y = luaL_checknumber (L, 2);
 		double r = luaL_checknumber (L, 3);
-		sprites = GetSimulation(L)->GetSpriteManager()->GetSpritesNear(Coordinate(x,y),static_cast<float>(r),kind);
+		sprites = GetScenario(L)->GetSpriteManager()->GetSpritesNear(Coordinate(x,y),static_cast<float>(r),kind);
 	} else {
-		sprites = GetSimulation(L)->GetSpriteManager()->GetSprites(kind);
+		sprites = GetScenario(L)->GetSpriteManager()->GetSprites(kind);
 	}
 
 	// Populate a Lua table with Sprites
@@ -632,7 +633,7 @@ int Simulation_Lua::GetSprites(lua_State *L, int kind){
  *  \param[in] Name of a Game Component
  *  \returns credit value of the Component
  */
-int Simulation_Lua::GetMSRP(lua_State *L) {
+int Scenario_Lua::GetMSRP(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (  )", n);
@@ -640,15 +641,15 @@ int Simulation_Lua::GetMSRP(lua_State *L) {
 
 	// Is there a priced Component named 'name'?
 	Component* comp = NULL;
-	if( (comp = GetSimulation(L)->GetModels()->Get(name)) != NULL )
+	if( (comp = GetScenario(L)->GetModels()->Get(name)) != NULL )
 		lua_pushinteger(L,((Model*)comp)->GetMSRP() );
-	else if( (comp = GetSimulation(L)->GetEngines()->Get(name)) != NULL )
+	else if( (comp = GetScenario(L)->GetEngines()->Get(name)) != NULL )
 		lua_pushinteger(L,((Engine*)comp)->GetMSRP() );
-	else if( (comp = GetSimulation(L)->GetWeapons()->Get(name)) != NULL )
+	else if( (comp = GetScenario(L)->GetWeapons()->Get(name)) != NULL )
 		lua_pushinteger(L,((Weapon*)comp)->GetMSRP() );
-	else if( (comp = GetSimulation(L)->GetCommodities()->Get(name)) != NULL )
+	else if( (comp = GetScenario(L)->GetCommodities()->Get(name)) != NULL )
 		lua_pushinteger(L,((Commodity*)comp)->GetMSRP() );
-	else if( (comp = GetSimulation(L)->GetOutfits()->Get(name)) != NULL )
+	else if( (comp = GetScenario(L)->GetOutfits()->Get(name)) != NULL )
 		lua_pushinteger(L,((Outfit*)comp)->GetMSRP() );
 	else {
 		return luaL_error(L, "Couldn't find anything by the name: '%s'", name.c_str());
@@ -659,18 +660,18 @@ int Simulation_Lua::GetMSRP(lua_State *L) {
 }
 
 /** Get Lua references to Ships
- * \see Simulation_Lua::GetSprites
+ * \see Scenario_Lua::GetSprites
  * \returns list of Ship References
  */
-int Simulation_Lua::GetShips(lua_State *L){
-	return Simulation_Lua::GetSprites(L,DRAW_ORDER_SHIP);
+int Scenario_Lua::GetShips(lua_State *L){
+	return Scenario_Lua::GetSprites(L,DRAW_ORDER_SHIP);
 }
 
 /** Get Lua references to All Planets
  * \returns list of Planet References
  */
-int Simulation_Lua::GetPlanets(lua_State *L){
-	Planets *planets = GetSimulation(L)->GetPlanets();
+int Scenario_Lua::GetPlanets(lua_State *L){
+	Planets *planets = GetScenario(L)->GetPlanets();
 	list<string>* planetNames = planets->GetNames();
 
 	lua_createtable(L, planetNames->size(), 0);
@@ -687,8 +688,8 @@ int Simulation_Lua::GetPlanets(lua_State *L){
 /** Get Lua references to All Gates
  * \returns list of Gate References
  */
-int Simulation_Lua::GetGates(lua_State *L){
-	Gates *gates = GetSimulation(L)->GetGates();
+int Scenario_Lua::GetGates(lua_State *L){
+	Gates *gates = GetScenario(L)->GetGates();
 	list<string>* gateNames = gates->GetNames();
 
 	lua_createtable(L, gateNames->size(), 0);
@@ -710,7 +711,7 @@ int Simulation_Lua::GetGates(lua_State *L){
 *  - A Range: the max distance from the sprite.
  * \returns The nearest Sprite
  */
-int Simulation_Lua::GetNearestSprite(lua_State *L,int kind) {
+int Scenario_Lua::GetNearestSprite(lua_State *L,int kind) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n<1 || n>3 ){
 		return luaL_error(L, "Got %d arguments expected 1,2 ( ship, [range] ) or 2,3 (x,y,[range])", n);
@@ -718,7 +719,7 @@ int Simulation_Lua::GetNearestSprite(lua_State *L,int kind) {
 
 	Sprite *closest;
 	float r = QUADRANTSIZE;
-	SpriteManager* sprites = GetSimulation(L)->GetSpriteManager();
+	SpriteManager* sprites = GetScenario(L)->GetSpriteManager();
 
 	// Get the target position
 	if( lua_isnumber(L,1) && lua_isnumber(L,2) ){
@@ -749,28 +750,28 @@ int Simulation_Lua::GetNearestSprite(lua_State *L,int kind) {
 /** Get the nearest Ship to another sprite
  * \param[in] A Sprite to use as the base location for the search.  This sprite will be ignored while searching.
  * \returns The nearest Ship
- * \see Simulation_Lua::GetNearestSprite
+ * \see Scenario_Lua::GetNearestSprite
  */
-int Simulation_Lua::GetNearestShip(lua_State *L) {
-	return Simulation_Lua::GetNearestSprite(L,DRAW_ORDER_SHIP|DRAW_ORDER_PLAYER);
+int Scenario_Lua::GetNearestShip(lua_State *L) {
+	return Scenario_Lua::GetNearestSprite(L,DRAW_ORDER_SHIP|DRAW_ORDER_PLAYER);
 }
 
 /** \brief Get the nearest Planet to another sprite
  *  \param[in] A Sprite to use as the base location for the search.  This sprite will be ignored while searching.
  *  \returns The nearest Planet
- *  \see Simulation_Lua::GetNearestSprite
+ *  \see Scenario_Lua::GetNearestSprite
  */
-int Simulation_Lua::GetNearestPlanet(lua_State *L) {
-	return Simulation_Lua::GetNearestSprite(L,DRAW_ORDER_PLANET);
+int Scenario_Lua::GetNearestPlanet(lua_State *L) {
+	return Scenario_Lua::GetNearestSprite(L,DRAW_ORDER_PLANET);
 }
 
-/** \brief Get Information about the Simulation
+/** \brief Get Information about the Scenario
  *  \returns Lua table of Information
  */
-int Simulation_Lua::GetSimulationInfo(lua_State *L) {
+int Scenario_Lua::GetScenarioInfo(lua_State *L) {
 	lua_newtable(L);
-	Lua::setField("Name", GetSimulation(L)->GetName().c_str() );
-	Lua::setField("Description", GetSimulation(L)->GetDescription().c_str() );
+	Lua::setField("Name", GetScenario(L)->GetName().c_str() );
+	Lua::setField("Description", GetScenario(L)->GetDescription().c_str() );
 
 	return 1;
 }
@@ -778,12 +779,12 @@ int Simulation_Lua::GetSimulationInfo(lua_State *L) {
 /** \brief Get Information about a Commodity
  *  \returns Lua table of Commodity Information
  */
-int Simulation_Lua::GetCommodityInfo(lua_State *L) {
+int Scenario_Lua::GetCommodityInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (AllianceName)", n);
 	string name = (string)luaL_checkstring(L,1);
-	Commodity *commodity = GetSimulation(L)->GetCommodities()->GetCommodity(name);
+	Commodity *commodity = GetScenario(L)->GetCommodities()->GetCommodity(name);
 	if(commodity==NULL){ commodity = new Commodity(); }
 
 	lua_newtable(L);
@@ -796,14 +797,14 @@ int Simulation_Lua::GetCommodityInfo(lua_State *L) {
 /** \brief Get Information about a Alliance
  *  \returns Lua table of Alliance Information
  */
-int Simulation_Lua::GetAllianceInfo(lua_State *L) {
+int Scenario_Lua::GetAllianceInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (AllianceName)", n);
 	Color color;
 	char color_buffer[9];
 	string name = (string)luaL_checkstring(L,1);
-	Alliance *alliance = GetSimulation(L)->GetAlliances()->GetAlliance(name);
+	Alliance *alliance = GetScenario(L)->GetAlliances()->GetAlliance(name);
 	if(alliance==NULL){ alliance = new Alliance(); }
 
 	color = alliance->GetColor();
@@ -822,12 +823,12 @@ int Simulation_Lua::GetAllianceInfo(lua_State *L) {
 /** \brief Get Information about a Model
  *  \returns Lua table of Model Information
  */
-int Simulation_Lua::GetModelInfo(lua_State *L) {
+int Scenario_Lua::GetModelInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (modelName)", n);
 	string modelName = (string)luaL_checkstring(L,1);
-	Model *model = GetSimulation(L)->GetModels()->GetModel(modelName);
+	Model *model = GetScenario(L)->GetModels()->GetModel(modelName);
 	if(model==NULL){ model = new Model(); }
 
 	lua_newtable(L);
@@ -904,7 +905,7 @@ int Simulation_Lua::GetModelInfo(lua_State *L) {
 /** \brief Get Information about a Planet
  *  \returns Lua table of Planet Information
  */
-int Simulation_Lua::GetPlanetInfo(lua_State *L) {
+int Scenario_Lua::GetPlanetInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (planetID)", n);
@@ -913,13 +914,13 @@ int Simulation_Lua::GetPlanetInfo(lua_State *L) {
 	Planet* p = NULL;
 	if( lua_isnumber(L,1)){
 		int id = luaL_checkinteger(L,1);
-		Sprite* sprite = GetSimulation(L)->GetSpriteManager()->GetSpriteByID(id);
+		Sprite* sprite = GetScenario(L)->GetSpriteManager()->GetSpriteByID(id);
 		if( sprite->GetDrawOrder() != DRAW_ORDER_PLANET)
 			return luaL_error(L, "ID #%d does not point to a Planet", id);
 		p = (Planet*)(sprite);
 	} else if( lua_isstring(L,1)){
 		string name = luaL_checkstring(L,1);
-		p = GetSimulation(L)->GetPlanets()->GetPlanet(name);
+		p = GetScenario(L)->GetPlanets()->GetPlanet(name);
 	}
 	if(p==NULL){ p = new Planet(); }
 
@@ -952,7 +953,7 @@ int Simulation_Lua::GetPlanetInfo(lua_State *L) {
 /** \brief Get Information about a Gate
  *  \returns Lua table of Gate Information
  */
-int Simulation_Lua::GetGateInfo(lua_State *L) {
+int Scenario_Lua::GetGateInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (planetID)", n);
@@ -961,13 +962,13 @@ int Simulation_Lua::GetGateInfo(lua_State *L) {
 	Gate* g = NULL;
 	if( lua_isnumber(L,1)){
 		int id = luaL_checkinteger(L,1);
-		Sprite* sprite = GetSimulation(L)->GetSpriteManager()->GetSpriteByID(id);
+		Sprite* sprite = GetScenario(L)->GetSpriteManager()->GetSpriteByID(id);
 		if( ! (sprite->GetDrawOrder() & (DRAW_ORDER_GATE_TOP|DRAW_ORDER_GATE_BOTTOM)) )
 			return luaL_error(L, "ID #%d does not point to a Gate", id);
 		g = (Gate*)(sprite);
 	} else if( lua_isstring(L,1)){
 		string name = luaL_checkstring(L,1);
-		g = GetSimulation(L)->GetGates()->GetGate(name);
+		g = GetScenario(L)->GetGates()->GetGate(name);
 	}
 	if(g==NULL){ g = new Gate(); }
 
@@ -986,12 +987,12 @@ int Simulation_Lua::GetGateInfo(lua_State *L) {
 /** \brief Get Information about a Weapon
  *  \returns Lua table of Weapon Information
  */
-int Simulation_Lua::GetWeaponInfo(lua_State *L) {
+int Scenario_Lua::GetWeaponInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (weaponName)", n);
 	string weaponName = (string)luaL_checkstring(L,1);
-	Weapon* weapon = GetSimulation(L)->GetWeapons()->GetWeapon(weaponName);
+	Weapon* weapon = GetScenario(L)->GetWeapons()->GetWeapon(weaponName);
 	if(weapon==NULL){ weapon = new Weapon(); }
 
 	lua_newtable(L);
@@ -1022,12 +1023,12 @@ int Simulation_Lua::GetWeaponInfo(lua_State *L) {
 /** \brief Get Information about a Engine
  *  \returns Lua table of Engine Information
  */
-int Simulation_Lua::GetEngineInfo(lua_State *L) {
+int Scenario_Lua::GetEngineInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (outfitName)", n);
 	string engineName = (string)luaL_checkstring(L,1);
-	Engine* engine = GetSimulation(L)->GetEngines()->GetEngine(engineName);
+	Engine* engine = GetScenario(L)->GetEngines()->GetEngine(engineName);
 	if(engine==NULL){ engine = new Engine(); }
 
 	lua_newtable(L);
@@ -1049,12 +1050,12 @@ int Simulation_Lua::GetEngineInfo(lua_State *L) {
 /** \brief Get Information about a Outfit
  *  \returns Lua table of Outfit Information
  */
-int Simulation_Lua::GetOutfitInfo(lua_State *L) {
+int Scenario_Lua::GetOutfitInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (outfitName)", n);
 	string outfitName = (string)luaL_checkstring(L,1);
-	Outfit* outfit = GetSimulation(L)->GetOutfits()->GetOutfit(outfitName);
+	Outfit* outfit = GetScenario(L)->GetOutfits()->GetOutfit(outfitName);
 	if(outfit==NULL){ outfit = new Outfit(); }
 
 	lua_newtable(L);
@@ -1078,13 +1079,13 @@ int Simulation_Lua::GetOutfitInfo(lua_State *L) {
 /** \brief Get Information about a Technology
  *  \returns Lua table of Technology Information
  */
-int Simulation_Lua::GetTechnologyInfo(lua_State *L) {
+int Scenario_Lua::GetTechnologyInfo(lua_State *L) {
 	int newTable;
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 (techName)", n);
 	string techName = (string)luaL_checkstring(L,1);
-	Technology* tech = GetSimulation(L)->GetTechnologies()->GetTechnology(techName);
+	Technology* tech = GetScenario(L)->GetTechnologies()->GetTechnology(techName);
 	if( tech == NULL)
 	{
 		lua_createtable(L, 4, 0);
@@ -1135,7 +1136,7 @@ int Simulation_Lua::GetTechnologyInfo(lua_State *L) {
  *  \param[in] Kind of Component
  *  \param[in] Lua table of Component Information
  */
-int Simulation_Lua::SetInfo(lua_State *L) {
+int Scenario_Lua::SetInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( !(n==3||n==7)  )
 		return luaL_error(L, "Got %d arguments expected 1 (oldname, infoType,infoTable)", n);
@@ -1150,14 +1151,14 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 		Color color = Color( Lua::getStringField(3,"Color") );
 
 		Alliance* thisAlliance = new Alliance(name,attack,aggressiveness,currency,color);
-		GetSimulation(L)->GetAlliances()->AddOrReplace( oldname, thisAlliance );
+		GetScenario(L)->GetAlliances()->AddOrReplace( oldname, thisAlliance );
 
 	} else if(kind == "Commodity"){
 		string name = Lua::getStringField(3,"Name");
 		int msrp = Lua::getIntField(3,"MSRP");
 
 		Commodity* thisCommodity= new Commodity(name,msrp);
-		GetSimulation(L)->GetCommodities()->AddOrReplace( oldname, thisCommodity );
+		GetScenario(L)->GetCommodities()->AddOrReplace( oldname, thisCommodity );
 
 	} else if(kind == "Engine"){
 		string name = Lua::getStringField(3,"Name");
@@ -1179,7 +1180,7 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 			return 0;
 
 		Engine* thisEngine = new Engine(name, picture, description, sound, static_cast<float>(force), msrp, TO_BOOL(foldDrive), flare);
-		GetSimulation(L)->GetEngines()->AddOrReplace( oldname, thisEngine );
+		GetScenario(L)->GetEngines()->AddOrReplace( oldname, thisEngine );
 
 	} else if(kind == "Model"){
 		string name = Lua::getStringField(3,"Name");
@@ -1202,14 +1203,14 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 			return 0;
 		}
 
-		Engine *engine = GetSimulation(L)->GetEngines()->GetEngine( engineName );
+		Engine *engine = GetScenario(L)->GetEngines()->GetEngine( engineName );
 		if(engine == NULL)
 		{
 			LogMsg(NOTICE, "Could not create model: there is no engine named '%s'.",imageName.c_str());
 			return 0;
 		}
 
-		LogMsg(INFO, "Simulation_Lua: About to try fetching the slot table...");
+		LogMsg(INFO, "Scenario_Lua: About to try fetching the slot table...");
 
 		int wsTable;
 		lua_pushstring(L, "weaponSlots");
@@ -1241,7 +1242,7 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 				s.angle = Lua::getNumField(row, "angle");
 				s.motionAngle = Lua::getNumField(row, "motionAngle");
 				string contentName = Lua::getStringField(row, "content");
-				s.content = GetSimulation(L)->GetWeapons()->GetWeapon( contentName );
+				s.content = GetScenario(L)->GetWeapons()->GetWeapon( contentName );
 				s.firingGroup = Lua::getIntField(row, "firingGroup");
 
 				if(Lua::getStringField(row, "enabled") == "yes")
@@ -1256,7 +1257,7 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 
 		Model* thisModel = new Model(name, image, description, engine, mass, thrust, rot, speed, hull, shield, msrp, cargo, weaponSlots);
 
-		GetSimulation(L)->GetModels()->AddOrReplace( oldname, thisModel );
+		GetScenario(L)->GetModels()->AddOrReplace( oldname, thisModel );
 
 	} else if(kind == "Planet"){
 		string name = Lua::getStringField(3,"Name");
@@ -1276,8 +1277,8 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 		list<Technology*> techs;
 		list<string>::iterator i;
 		for(i = techNames.begin(); i != techNames.end(); ++i) {
-			if( NULL != GetSimulation(L)->GetTechnologies()->GetTechnology(*i) ) {
-				 techs.push_back( GetSimulation(L)->GetTechnologies()->GetTechnology(*i) );
+			if( NULL != GetScenario(L)->GetTechnologies()->GetTechnology(*i) ) {
+				 techs.push_back( GetScenario(L)->GetTechnologies()->GetTechnology(*i) );
 			} else {
 				LogMsg(NOTICE, "Could not create planet: there is no Technology Group '%s'.",(*i).c_str());
 				return 0;
@@ -1290,7 +1291,7 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 			 return 0;
 		}
 
-		if(GetSimulation(L)->GetAlliances()->GetAlliance(allianceName)==NULL){
+		if(GetScenario(L)->GetAlliances()->GetAlliance(allianceName)==NULL){
 			 LogMsg(NOTICE, "Could not create planet: there is no Alliance named '%s'.",allianceName.c_str());
 			 return 0;
 		}
@@ -1304,7 +1305,7 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 				TO_FLOAT(x),
 				TO_FLOAT(y),
 				Image::Get(imageName),
-				GetSimulation(L)->GetAlliances()->GetAlliance(allianceName),
+				GetScenario(L)->GetAlliances()->GetAlliance(allianceName),
 				TO_BOOL(landable),
 				traffic,
 				militia,
@@ -1313,15 +1314,15 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 				summary,
 				techs);
 
-		Planet* oldPlanet = GetSimulation(L)->GetPlanets()->GetPlanet( oldname );
+		Planet* oldPlanet = GetScenario(L)->GetPlanets()->GetPlanet( oldname );
 		if(oldPlanet!=NULL) {
 			LogMsg(INFO,"Saving changes to '%s'",thisPlanet.GetName().c_str());
 			*oldPlanet = thisPlanet;
 		} else {
 			LogMsg(INFO,"Creating new Planet '%s'",thisPlanet.GetName().c_str());
 			Planet* newPlanet = new Planet(thisPlanet);
-			GetSimulation(L)->GetPlanets()->Add(newPlanet);
-			GetSimulation(L)->GetSpriteManager()->Add(newPlanet);
+			GetScenario(L)->GetPlanets()->Add(newPlanet);
+			GetScenario(L)->GetSpriteManager()->Add(newPlanet);
 		}
 
 	} else if(kind == "Gate"){
@@ -1330,7 +1331,7 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 		int y = Lua::getIntField(3,"Y");
 		string exitName = Lua::getStringField(3,"Exit");
 
-		Gates* gates = GetSimulation(L)->GetGates();
+		Gates* gates = GetScenario(L)->GetGates();
 
 		Gate *gate = gates->GetGate( gateName );
 		Gate *exit = gates->GetGate( exitName );
@@ -1352,30 +1353,30 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 
 		list<string> modelNames = Lua::getStringListField(4);
 		for(iter=modelNames.begin();iter!=modelNames.end();++iter){
-			if(GetSimulation(L)->GetModels()->GetModel(*iter))
-				models.push_back( GetSimulation(L)->GetModels()->GetModel(*iter) );
+			if(GetScenario(L)->GetModels()->GetModel(*iter))
+				models.push_back( GetScenario(L)->GetModels()->GetModel(*iter) );
 		}
 
 		list<string> weaponNames = Lua::getStringListField(5);
 		for(iter=weaponNames.begin();iter!=weaponNames.end();++iter){
-			if(GetSimulation(L)->GetWeapons()->GetWeapon(*iter))
-				weapons.push_back( GetSimulation(L)->GetWeapons()->GetWeapon(*iter) );
+			if(GetScenario(L)->GetWeapons()->GetWeapon(*iter))
+				weapons.push_back( GetScenario(L)->GetWeapons()->GetWeapon(*iter) );
 		}
 
 		list<string> engineNames = Lua::getStringListField(6);
 		for(iter=engineNames.begin();iter!=engineNames.end();++iter){
-			if(GetSimulation(L)->GetEngines()->GetEngine(*iter))
-				engines.push_back( GetSimulation(L)->GetEngines()->GetEngine(*iter) );
+			if(GetScenario(L)->GetEngines()->GetEngine(*iter))
+				engines.push_back( GetScenario(L)->GetEngines()->GetEngine(*iter) );
 		}
 
 		list<string> outfitNames = Lua::getStringListField(7);
 		for(iter=outfitNames.begin();iter!=outfitNames.end();++iter){
-			if(GetSimulation(L)->GetOutfits()->GetOutfit(*iter))
-				outfits.push_back( GetSimulation(L)->GetOutfits()->GetOutfit(*iter) );
+			if(GetScenario(L)->GetOutfits()->GetOutfit(*iter))
+				outfits.push_back( GetScenario(L)->GetOutfits()->GetOutfit(*iter) );
 		}
 
 		Technology* thisTechnology = new Technology(name,models,engines,weapons,outfits);
-		GetSimulation(L)->GetTechnologies()->AddOrReplace( oldname, thisTechnology );
+		GetScenario(L)->GetTechnologies()->AddOrReplace( oldname, thisTechnology );
 
 	} else if(kind == "Weapon"){
 		string name = Lua::getStringField(3,"Name");
@@ -1407,7 +1408,7 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 			return luaL_error(L, "Could not create weapon: there is no sound file '%s'.",soundName.c_str());
 
 		Weapon* thisWeapon = new Weapon(name, image, picture, description, type, payload, velocity, acceleration, Weapon::AmmoNameToType(ammoTypeName), ammoConsumption, fireDelay, lifetime, sound, tracking, msrp);
-		GetSimulation(L)->GetWeapons()->AddOrReplace( oldname, thisWeapon );
+		GetScenario(L)->GetWeapons()->AddOrReplace( oldname, thisWeapon );
 
 	} else if(kind == "Outfit"){
 		string name = Lua::getStringField(3,"Name");
@@ -1430,7 +1431,7 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 		Outfit* thisOutfit = new Outfit( msrp, picture, description, rot, speed, force, mass, cargo, area, hull, shield );
 		thisOutfit->SetName( name );
 
-		GetSimulation(L)->GetOutfits()->AddOrReplace( oldname, thisOutfit );
+		GetScenario(L)->GetOutfits()->AddOrReplace( oldname, thisOutfit );
 
 	} else {
 		return luaL_error(L, "Cannot set Info for kind '%s' must be one of {Alliance, Engine, Model, Planet, Technology, Weapon} ",kind.c_str());
@@ -1440,8 +1441,8 @@ int Simulation_Lua::SetInfo(lua_State *L) {
 
 /** \brief Get the settings for the default player
  */
-int Simulation_Lua::GetDefaultPlayer(lua_State *L) {
-	Simulation* sim = GetSimulation(L);
+int Scenario_Lua::GetDefaultPlayer(lua_State *L) {
+	Scenario* sim = GetScenario(L);
 
 	lua_newtable(L);
 	Lua::setField("start", sim->Get("defaultPlayer/start").c_str() );
@@ -1455,7 +1456,7 @@ int Simulation_Lua::GetDefaultPlayer(lua_State *L) {
 
 /** \brief Set the default player settings
  */
-int Simulation_Lua::SetDefaultPlayer(lua_State *L) {
+int Scenario_Lua::SetDefaultPlayer(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if( n!=1 )
 		return luaL_error(L, "Got %d arguments expected 1 table ({start=,model=,engine=,credits=})", n);
@@ -1467,7 +1468,7 @@ int Simulation_Lua::SetDefaultPlayer(lua_State *L) {
 	string engineName= Lua::getStringField(1,"engine");
 	int credits = Lua::getIntField(1,"credits");
 
-	Simulation* sim = GetSimulation(L);
+	Scenario* sim = GetScenario(L);
 	sim->SetDefaultPlayer( startPlanet, modelName, engineName, credits);
 	return 0;
 }
@@ -1475,14 +1476,14 @@ int Simulation_Lua::SetDefaultPlayer(lua_State *L) {
 
 /** \brief Save All Game Component files
  */
-int Simulation_Lua::SaveComponents(lua_State *L) {
-	GetSimulation(L)->Save();
+int Scenario_Lua::SaveComponents(lua_State *L) {
+	GetScenario(L)->Save();
 	return 0;
 }
 
 /** \brief List all .png files in the Graphics directory
  */
-int Simulation_Lua::ListImages(lua_State *L) {
+int Scenario_Lua::ListImages(lua_State *L) {
 	list<string> pics = Filesystem::Enumerate("data/graphics/",".png");
 	Lua::pushStringList(L, &pics);
 	return 1;
@@ -1490,7 +1491,7 @@ int Simulation_Lua::ListImages(lua_State *L) {
 
 /** \brief List all .ani files in the Animations directory
  */
-int Simulation_Lua::ListAnimations(lua_State *L) {
+int Scenario_Lua::ListAnimations(lua_State *L) {
 	list<string> anis = Filesystem::Enumerate("data/animations/",".ani");
 	Lua::pushStringList(L, &anis);
 	return 1;
@@ -1499,16 +1500,16 @@ int Simulation_Lua::ListAnimations(lua_State *L) {
 /** \brief List all .ogg files in an Audio directory
  *  \param[in] subfolder within the Audio directory
  */
-int Simulation_Lua::ListSounds(lua_State *L) {
+int Scenario_Lua::ListSounds(lua_State *L) {
 	string subfolder = luaL_checkstring(L,1);
 	list<string> oggs = Filesystem::Enumerate("data/audio/"+subfolder ,".ogg");
 	Lua::pushStringList(L, &oggs);
 	return 1;
 }
 
-int Simulation_Lua::SetDescription(lua_State *L) {
+int Scenario_Lua::SetDescription(lua_State *L) {
 	string description= (string)lua_tostring(L, 1);
-	Simulation* sim = GetSimulation(L);
+	Scenario* sim = GetScenario(L);
 	sim->SetDescription( description );
 	return 0;
 }

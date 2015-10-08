@@ -167,8 +167,8 @@ void Dialogs::OptionsWindow()
 
 		tab->AddChild( new Label( 20, 5, "Game Options:", 0 ) );
 		tab->AddChild( OptionBox( "options/video/fullscreen", "Run as Full Screen", 20, (yoff+=20) ) );
-		tab->AddChild( OptionBox( "options/simulation/random-universe", "Create a Random Universe", 20, (yoff+=20) ) );
-		tab->AddChild( OptionBox( "options/simulation/automatic-load", "Automatically Load the last Player", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/scenario/random-universe", "Create a Random Universe", 20, (yoff+=20) ) );
+		tab->AddChild( OptionBox( "options/scenario/automatic-load", "Automatically Load the last Player", 20, (yoff+=20) ) );
 		optionTabs->AddChild( tab );
 	}
 

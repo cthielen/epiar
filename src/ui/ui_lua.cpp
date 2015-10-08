@@ -10,7 +10,7 @@
 #include "ui/ui.h"
 #include "ui/ui_lua.h"
 #include "ui/widgets.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario_lua.h"
 
 /** \class UI_Lua
  *  \brief Lua bridge for working with the UI.
@@ -655,7 +655,7 @@ int UI_Lua::newMap(lua_State *L) {
 	luaL_getmetatable(L, EPIAR_UI);
 	lua_setmetatable(L, -2);
 
-	Simulation *sim = Simulation_Lua::GetSimulation(L);
+	Scenario *sim = Scenario_Lua::GetScenario(L);
 	
 	*p = new Map(x, y, w, h, Coordinate(0,0), sim->GetSpriteManager() );
 

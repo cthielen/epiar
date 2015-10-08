@@ -9,7 +9,7 @@
 #include "includes.h"
 #include "common.h"
 #include "engine/hud.h"
-#include "engine/simulation.h"
+#include "engine/scenario.h"
 #include "graphics/video.h"
 #include "graphics/font.h"
 #include "sprites/player.h"
@@ -342,7 +342,7 @@ void Hud::DrawMessages() {
 	}
 }
 
-/**\brief Draw the current framerate (calculated in simulation.cpp).
+/**\brief Draw the current framerate (calculated in scenario.cpp).
  */
 void Hud::DrawFPS( float fps, SpriteManager* sprites ) {
 	char frameRate[18] = {0};

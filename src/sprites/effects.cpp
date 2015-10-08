@@ -12,7 +12,7 @@
 #include "sprites/spritemanager.h"
 #include "sprites/sprite.h"
 #include "sprites/effects.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario_lua.h"
 
 /** \addtogroup Sprites
  * @{
@@ -41,7 +41,7 @@ Effect::~Effect() {
 void Effect::Update( lua_State *L ) {
 	Sprite::Update( L );
 	if( visual->Update() == true ) {
-		SpriteManager *sprites = Simulation_Lua::GetSimulation(L)->GetSpriteManager();
+		SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 		sprites->Delete( (Sprite*)this );
 	}
 }

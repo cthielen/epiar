@@ -16,7 +16,7 @@
 #include "sprites/gate.h"
 #include "utilities/trig.h"
 #include "utilities/log.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario_lua.h"
 
 /** \addtogroup Sprites
  * @{
@@ -188,7 +188,7 @@ void Gate::Update( lua_State *L ) {
 	// The Bottom Gate doesn't do anything
 	if(!top) return;
 
-	SpriteManager *sprites = Simulation_Lua::GetSimulation(L)->GetSpriteManager();
+	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 	Ship* ship = (Ship*)sprites->GetNearestSprite( (Sprite*)this, 50,DRAW_ORDER_SHIP|DRAW_ORDER_PLAYER );
 
 	if(ship!=NULL) {

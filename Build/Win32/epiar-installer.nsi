@@ -160,8 +160,8 @@ setOutPath $INSTDIR\data\icons
 file data\icons\*
 setOutPath $INSTDIR\data\scripts
 file data\scripts\*
-setOutPath $INSTDIR\data\simulation\default
-file data\simulation\default\*
+setOutPath $INSTDIR\data\scenario\default
+file data\scenario\default\*
 setOutPath $INSTDIR\data\skin
 file data\skin\*
 

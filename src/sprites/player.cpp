@@ -14,7 +14,7 @@
 #include "utilities/components.h"
 #include "utilities/file.h"
 #include "utilities/filesystem.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario_lua.h"
 
 /** \addtogroup Sprites
  * @{
@@ -180,7 +180,7 @@ void Player::Land( lua_State *L, Planet* planet ){
 	}
 
 	lastPlanet = planet->GetName();
-	Save( Simulation_Lua::GetSimulation(L)->GetName() );
+	Save( Scenario_Lua::GetScenario(L)->GetName() );
 
   //AdvanceFromLand
 }
@@ -228,7 +228,7 @@ string Player::GetFileName() {
 /**\brief Save an XML file for this player
  * \details The filename is by default the player's name.
  */
-void Player::Save( string simulation ) {
+void Player::Save( string scenario ) {
 	xmlDocPtr xmlPtr;
 	LogMsg( INFO, "Creation of %s", GetFileName().c_str() );
 
@@ -240,7 +240,7 @@ void Player::Save( string simulation ) {
 	xmlSaveFormatFileEnc( (std::string(PHYSFS_getWriteDir()) + std::string(PHYSFS_getDirSeparator()) + GetFileName()).c_str(), xmlPtr, "ISO-8859-1", 1);
 
 	// Update and Save this player's info in the master players list.
-	Players::Instance()->GetPlayerInfo( GetName() )->Update( this, simulation );
+	Players::Instance()->GetPlayerInfo( GetName() )->Update( this, scenario );
 	Players::Instance()->Save();
 }
 
@@ -648,17 +648,17 @@ PlayerInfo::PlayerInfo()
 /**\brief Construct the PlayerInfo from a Player
  * \param[in] player The player instance that this PlayerInfo will represent.
  */
-PlayerInfo::PlayerInfo( Player* player, string simulation )
+PlayerInfo::PlayerInfo( Player* player, string scenario )
 {
-	Update( player, simulation );
+	Update( player, scenario );
 }
 
 /**\brief Construct the PlayerInfo from attributes
  */
-PlayerInfo::PlayerInfo(  string _name, string _simulation, int _seed )
+PlayerInfo::PlayerInfo(  string _name, string _scenario, int _seed )
     :avatar(NULL)
     ,file("")
-    ,simulation(_simulation)
+    ,scenario(_scenario)
     ,seed(_seed)
     ,lastLoadTime(0)
 {
@@ -672,8 +672,8 @@ void PlayerInfo::Update( Player* player, string simName ) {
 	name = player->GetName();
 	avatar = (player->GetModel() != NULL) ? player->GetModel()->GetImage() : NULL;
 	file = player->GetFileName();
-	simulation = simName;
-	seed = OPTION(int, "options/simulation/random-seed");
+	scenario = simName;
+	seed = OPTION(int, "options/scenario/random-seed");
 	lastLoadTime = player->GetLoadTime();
 }
 
@@ -711,10 +711,10 @@ bool PlayerInfo::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		}
 	}
 
-	if( (attr = FirstChildNamed(node,"simulation")) ){
-		simulation = NodeToString(doc,attr);
+	if( (attr = FirstChildNamed(node, "scenario")) ){
+		scenario = NodeToString(doc,attr);
 	} else {
-		simulation = "default";
+		scenario = "default";
 	}
 
 	if( (attr = FirstChildNamed(node,"seed")) ){
@@ -748,7 +748,7 @@ xmlNodePtr PlayerInfo::ToXMLNode(string componentName) {
 		xmlNewChild(section, NULL, BAD_CAST "avatar", BAD_CAST avatar->GetPath().c_str() );
 	}
 
-	xmlNewChild(section, NULL, BAD_CAST "simulation", BAD_CAST simulation.c_str() );
+	xmlNewChild(section, NULL, BAD_CAST "scenario", BAD_CAST scenario.c_str() );
 	snprintf(buff, sizeof(buff), "%d", seed );
 	xmlNewChild(section, NULL, BAD_CAST "seed", BAD_CAST buff );
 
@@ -769,7 +769,7 @@ xmlNodePtr PlayerInfo::ToXMLNode(string componentName) {
  * \details
  *   The old saved-games.xml format put all of the Player information in one file.
  *   The new saved-games.xml format only stores some Player information, but
- *   nothing that relies on loading the Simulation.  Everything in the old
+ *   nothing that relies on loading the Scenario.  Everything in the old
  *   style format is by itself in a standalone xml file named after the player.
  * \todo This could save a copy of the old saved-games.xml to a backup location.
  * \param[in] doc The XML document.
@@ -830,7 +830,7 @@ Players *Players::Instance( void ) {
  * This is used instead of a normal class constructor
  */
 Player* Players::CreateNew(
-            string simulation,
+            string scenario,
             string playerName,
 			Model *model,
 			Engine *engine,
@@ -857,7 +857,7 @@ Player* Players::CreateNew(
 
 	newPlayer->lastLoadTime = time(NULL);
 
-	Add( (Component*)(new PlayerInfo( newPlayer, simulation )) );
+	Add( (Component*)(new PlayerInfo( newPlayer, scenario )) );
 
 	return newPlayer;
 }

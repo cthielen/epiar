@@ -13,7 +13,7 @@
 #include "utilities/log.h"
 #include "utilities/quadtree.h"
 #include "engine/camera.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario_lua.h"
 
 /** \defgroup Sprites Sprite Objects and their Management
  * @{
@@ -190,7 +190,7 @@ void SpriteManager::Update( lua_State *L, bool lowFps) {
 	else
 	{
 		//wave update mode with tickCount != 0 -- update some quadrants
-		Camera* camera = Simulation_Lua::GetSimulation(L)->GetCamera();
+		Camera* camera = Scenario_Lua::GetScenario(L)->GetCamera();
 		Coordinate currentPoint (camera->GetFocusCoordinate());	//always update centered on where we're at
 
 		quadList.push_back (GetQuadrant (currentPoint)); //we ALWAYS update the current quadrant

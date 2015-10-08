@@ -726,13 +726,13 @@ function finishEditingWeaponSlots(name, title, desiredLength, fields)
 end
 
 function simDefaults()
-	if UI.search( "/Window'Simulation Defaults'/" ) ~= nil then return end
+	if UI.search( "/Window'Scenario Defaults'/" ) ~= nil then return end
 
-	local simInfo = Epiar.getSimulationInfo()
+	local simInfo = Epiar.getScenarioInfo()
 	local playerInfo = Epiar.getDefaultPlayer()
 	local width = 400
 	local height = 400
-	local theWin = UI.newWindow( WIDTH/2-width/2, HEIGHT/2-height/2, width, height, "Simulation Defaults")
+	local theWin = UI.newWindow( WIDTH/2-width/2, HEIGHT/2-height/2, width, height, "Scenario Defaults")
 	local yoff = 40
 
 	theWin:addCloseButton()
@@ -775,15 +775,15 @@ function simDefaults()
 	yoff = yoff + 130
 
 	function SaveDefaults()
-		local win = UI.search( "/Window'Simulation Defaults'/" )
+		local win = UI.search( "/Window'Scenario Defaults'/" )
 		if win == nil then return end
-		local start = UI.search("/Window'Simulation Defaults'/Dropdown[0]/" ):GetText()
-		local model = UI.search("/Window'Simulation Defaults'/Dropdown[1]/" ):GetText()
-		local engine = UI.search("/Window'Simulation Defaults'/Dropdown[2]/" ):GetText()
-		local credits = UI.search("/Window'Simulation Defaults'/Textbox[0]/" ):GetText()
+		local start = UI.search("/Window'Scenario Defaults'/Dropdown[0]/" ):GetText()
+		local model = UI.search("/Window'Scenario Defaults'/Dropdown[1]/" ):GetText()
+		local engine = UI.search("/Window'Scenario Defaults'/Dropdown[2]/" ):GetText()
+		local credits = UI.search("/Window'Scenario Defaults'/Textbox[0]/" ):GetText()
 		Epiar.setDefaultPlayer( {start=start,model=model,engine=engine,credits=credits} )
 
-		local description = UI.search("/Window'Simulation Defaults'/Textarea[0]/" ):GetText()
+		local description = UI.search("/Window'Scenario Defaults'/Textarea[0]/" ):GetText()
 		Epiar.setDescription( description  )
 
 		win:close()

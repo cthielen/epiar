@@ -1,5 +1,5 @@
 /**\file			input.cpp
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 4, 2006
  * \date			Modified: Saturday, January 5, 2008
  * \brief
@@ -9,8 +9,8 @@
 #include "includes.h"
 #include "common.h"
 #include "input/input.h"
-#include "engine/simulation.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario.h"
+#include "engine/scenario_lua.h"
 #include "utilities/log.h"
 #include "graphics/video.h"
 #include "utilities/timer.h"

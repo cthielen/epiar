@@ -1,13 +1,13 @@
-/**\filename		simulation.h
- * \author			Chris Thielen (chris@epiar.net)
+/**\filename			scenario.h
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Tuesday, June 23, 2009
+ * \date			Modified: Thursday, October 8, 2015
  * \brief			Contains the main game loop
  * \details
  */
 
-#ifndef __H_SIMULATION__
-#define __H_SIMULATION__
+#ifndef __H_SCENARIO__
+#define __H_SCENARIO__
 
 #include "engine/commodities.h"
 #include "engine/alliances.h"
@@ -24,9 +24,9 @@
 #include "input/input.h"
 #include "engine/console.h"
 
-class Simulation : public XMLFile {
+class Scenario : public XMLFile {
 	public:
-		Simulation();
+		Scenario();
 
 		bool New( string _folderpath );
 		bool Load( string _folderpath );
@@ -65,10 +65,10 @@ class Simulation : public XMLFile {
 		Input *GetInput() { return &inputs; }
 		Player *GetPlayer();
 
-		string GetName() { return Get("simulation/name"); }
-		string GetDescription() { return Get("simulation/description"); }
+		string GetName() { return Get("scenario/name"); }
+		string GetDescription() { return Get("scenario/description"); }
 
-		void SetDescription( string _desc ) { Set("simulation/description", _desc ); }
+		void SetDescription( string _desc ) { Set("scenario/description", _desc ); }
 		void SetMusic( string _path ) { Set("music", _path); }
 		void SetDefaultPlayer( string planetName, string modelName, string engineName, int credits );
 
@@ -99,12 +99,12 @@ class Simulation : public XMLFile {
 		Camera *camera;
     Calendar *calendar;
 
-		// Simulation specific variables
+		// Scenario specific variables
 		Song* bgmusic;
 		Input inputs;
 		Console *console;
 
-		// Description of this Simulation
+		// Description of this scenario
 		string folderpath;
 
 		// State Variables
@@ -115,4 +115,4 @@ class Simulation : public XMLFile {
 		float mapScale;
 };
 
-#endif // __H_SIMULATION__
+#endif // __H_SCENARIO__

@@ -12,7 +12,7 @@
 #include "sprites/player.h"
 #include "sprites/spritemanager.h"
 #include "utilities/lua.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario_lua.h"
 
 /** \addtogroup Sprites
  * @{
@@ -140,7 +140,7 @@ void AI::Update( lua_State *L ) {
  */
 void AI::Killed( lua_State *L ) {
 	LogMsg( WARN, "AI %s has been killed\n", GetName().c_str() );
-	SpriteManager *sprites = Simulation_Lua::GetSimulation(L)->GetSpriteManager();
+	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 
 	Sprite* killer = sprites->GetSpriteByID( target );
 	if(killer != NULL) {
@@ -174,7 +174,7 @@ void AI::Draw(){
  */
 int AI::ChooseTarget( lua_State *L ){
 	//printf("choosing target\n");
-	SpriteManager *sprites = Simulation_Lua::GetSimulation(L)->GetSpriteManager();
+	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 	list<Sprite*> *nearbySprites = sprites->GetSpritesNear(this->GetWorldPosition(), COMBAT_RANGE, DRAW_ORDER_SHIP);
 	
 	nearbySprites->sort(CompareAI);

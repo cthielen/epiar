@@ -357,8 +357,8 @@ Widget *Container::Search( string full_query ) {
 		// LogMsg(INFO, "token: '%s'", subquery.c_str() );
 		if( subquery == "" ) { continue; }
 
-        // The tokens are always going to be single characters
-        assert( subquery.size() >= 1 );
+        	// The tokens are always going to be single characters
+        	assert( subquery.size() >= 1 );
 		token = subquery[0];
 
 		// If we're checking a Token, we need to be in a Container

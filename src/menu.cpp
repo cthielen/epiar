@@ -7,7 +7,7 @@
  */
 
 #include "includes.h"
-#include "engine/simulation.h"
+#include "engine/scenario.h"
 #include "menu.h"
 #include "ui/ui.h"
 #include "ui/widgets.h"
@@ -16,7 +16,7 @@
 
 bool Menu::quitSignal = false;
 
-Simulation Menu::simulation;
+Scenario Menu::scenario;
 PlayerInfo* Menu::playerToLoad = NULL;
 
 Image* Menu::menuSplash = NULL;
@@ -39,11 +39,11 @@ Song *Menu::bgMusic = NULL;
  *
  * 	\details
  *  This runs a while(1) loop collecting user input and drawing the screen.
- *  While similar to the Run Loop in the Simulation, this should be simpler
+ *  While similar to the Run Loop in the Scenario, this should be simpler
  *  since there is no HUD, Console or Sprites.
  *
- *  The Main Menu will launch the Simulation with a new or loaded Player.
- *  It can also edit simulations and option.
+ *  The Main Menu will launch the Scenario with a new or loaded Player.
+ *  It can also edit scenarios and option.
  *
  *  The Main Menu can be skipped by enabling the "automatic-load" option.
  *
@@ -62,7 +62,7 @@ void Menu::Main_Menu( void )
 	Players *players = Players::Instance();
 	players->Load( "saves/saved-games.xml", true, true);
 
-	if( OPTION(int,"options/simulation/automatic-load") )
+	if( OPTION(int,"options/scenario/automatic-load") )
 	{
 		if( AutoLoad() )
 		{
@@ -106,7 +106,7 @@ void Menu::Main_Menu( void )
 }
 
 /** Load the most recent Player
- * \note When the user leaves the Simulation, the game will quit.
+ * \note When the user leaves the Scenario, the game will quit.
  * \returns true if the player was loaded successfully.
  */
 bool Menu::AutoLoad()
@@ -116,18 +116,18 @@ bool Menu::AutoLoad()
 	if( info != NULL )
 	{
 		LogMsg(INFO, "Automatically loading player.", info->GetName().c_str() );
-		if( !simulation.Load( info->simulation ) )
+		if( !scenario.Load( info->scenario ) )
 		{
-			LogMsg(ERR,"Failed to load the Simulation '%s' successfully", info->simulation.c_str() );
+			LogMsg(ERR,"Failed to load the scenario '%s'.", info->scenario.c_str() );
 			return false;
 		}
-		if( !simulation.SetupToRun() )
+		if( !scenario.SetupToRun() )
 		{
-			LogMsg(ERR,"Failed to setup the Simulation '%s' successfully.", info->simulation.c_str() );
+			LogMsg(ERR,"Failed to setup the scenario '%s'.", info->scenario.c_str() );
 			return false;
 		}
-		simulation.LoadPlayer( info->GetName() );
-		simulation.Run();
+		scenario.LoadPlayer( info->GetName() );
+		scenario.Run();
 		return true;
 	}
 	LogMsg(WARN,"No available players to load.");
@@ -211,10 +211,10 @@ void Menu::CreateNewWindow()
 	win->AddChild( (new Label(50, 40, "Name:")) )
 		->AddChild( (new Textbox(90, 43, 130, 1, "", "Player Name:")) );
 
-	// Simulation Picker
-	win->AddChild( (new Label(25, 75, "Simulation:")) )
+	// Scenario Picker
+	win->AddChild( (new Label(25, 75, "Scenario:")) )
 		->AddChild( (new Dropdown( 90, 75, 130, 25 ))
-			->AddOptions( Filesystem::Enumerate("data/simulation/") )
+			->AddOptions( Filesystem::Enumerate("data/scenario/") )
 	);
 
 	win->AddChild( (new Button( 20, 130, 100, 30, "Cancel", &UI::Close, win)) );
@@ -244,7 +244,7 @@ void Menu::CreateLoadWindow()
 		win->AddChild( (new Frame( 25, 130 * p + 40, 400, 120 ))
 			->AddChild( (new Picture(35, 35, 80, 80, info->avatar, false, true) ) )
 			->AddChild( (new Label(115, 10, "Player Name:" )) ) ->AddChild( (new Label(210, 10, info->GetName() )) )
-			->AddChild( (new Label(115, 35, "Simulation:" )) ) ->AddChild( (new Label(210, 35, info->simulation )) )
+			->AddChild( (new Label(115, 35, "Scenario:" )) ) ->AddChild( (new Label(210, 35, info->scenario )) )
 			->AddChild( (new Button(270, 70, 100, 25, "Play", StartGame, info )) )
 			->AddChild( (new Button(15, 70, 100, 25, "Erase", ErasePlayer, info ) ) )
 		);
@@ -259,10 +259,10 @@ void Menu::CreateLoadWindow()
 	UI::RegisterKeyboardFocus(win);
 }
 
-/** Start a Game Simulation
+/** Start a Game Scenario
  *  \details
- *  The PlayerInfo describes which Simulation to load and which Player to load.
- *  If the Player doesn't already exist, a default player is created by Simulation.
+ *  The PlayerInfo describes which Scenario to load and which Player to load.
+ *  If the Player doesn't already exist, a default player is created by Scenario.
  */
 void Menu::StartGame( void *info )
 {
@@ -275,21 +275,21 @@ void Menu::StartGame( void *info )
 	if(edit) edit->Hide();
 
 	// Gather Player Information
-	string simName = playerToLoad->simulation;
+	string simName = playerToLoad->scenario;
 	string playerName = playerToLoad->GetName();
 
-	SETOPTION( "options/simulation/random-seed", playerToLoad->seed );
+	SETOPTION( "options/scenario/random-seed", playerToLoad->seed );
 	
-	// Load the Simulation
-	if( !simulation.Load( simName ) )
+	// Load the Scenario
+	if( !scenario.Load( simName ) )
 	{
-		LogMsg(ERR,"Failed to load the Simulation '%s' successfully",simName.c_str());
+		LogMsg(ERR,"Failed to load the scenario '%s'.", simName.c_str());
 		return;
 	}
 
-	if( !simulation.SetupToRun() )
+	if( !scenario.SetupToRun() )
 	{
-		LogMsg(ERR,"Failed to setup the Simulation '%s' successfully.",simName.c_str());
+		LogMsg(ERR,"Failed to setup the scenario '%s'.", simName.c_str());
 		return;
 	}
 
@@ -301,14 +301,14 @@ void Menu::StartGame( void *info )
 	
 	// Create or Load the Player
 	if( players->PlayerExists(playerName) ) {
-		simulation.LoadPlayer( playerName );
+		scenario.LoadPlayer( playerName );
 	} else{
-		simulation.CreateDefaultPlayer( playerName );
+		scenario.CreateDefaultPlayer( playerName );
 		Lua::Call("intro");
 	}
 	
-	// Run the Simulation
-	bool alive = simulation.Run();
+	// Run the scenario
+	bool alive = scenario.Run();
 	UI::SwapScreens( "Main Screen", gameSplash, menuSplash );
 
 	if( alive )
@@ -325,14 +325,14 @@ void Menu::StartGame( void *info )
 	}
 }
 
-/** Continue a background Simulation
+/** Continue a background scenario
  */
 void Menu::ContinueGame()
 {
-    // Only attempt to Run if the Simulation has loaded
-    assert( simulation.isLoaded() );
+    // Only attempt to Run if the scenario has loaded
+    assert( scenario.isLoaded() );
     UI::SwapScreens( "In Game", menuSplash, gameSplash );
-    bool alive = simulation.Run();
+    bool alive = scenario.Run();
     UI::SwapScreens( "Main Screen", gameSplash, menuSplash );
 
     if( !alive )
@@ -343,14 +343,14 @@ void Menu::ContinueGame()
 }
 
 /** This Window will launch the editor.
- *  \details The User can either create a new Simulation from scratch, or edit an existing simulation.
+ *  \details The User can either create a new scenario from scratch, or edit an existing scenario.
  */
 void Menu::CreateEditWindow()
 {
 	// Return to Editor if it has alread been loaded
-	if( simulation.isLoaded() ) {
+	if( scenario.isLoaded() ) {
 		UI::SwapScreens( "Editor", menuSplash, editSplash );
-		simulation.Edit();
+		scenario.Edit();
 		UI::SwapScreens( "Main Screen", editSplash, menuSplash );
 		return;
 	}
@@ -367,13 +367,13 @@ void Menu::CreateEditWindow()
 	UI::Add( editorWnd = (new Window(250, 300, "Editor"))
 		->AddChild( (new Tabs( 10, 40, 230, 210, "EDIT TABS"))
 			->AddChild( (new Tab( "Edit" ))
-				->AddChild( (new Label(15, 15, "Pick the Simulation to Edit:")) )
+				->AddChild( (new Label(15, 15, "Pick the Scenario to Edit:")) )
 				->AddChild( (new Dropdown( 45, 45, 100, 30 ))
-					->AddOptions( Filesystem::Enumerate("data/simulation/") ) )
+					->AddOptions( Filesystem::Enumerate("data/scenario/") ) )
 			)
 			->AddChild( (new Tab( "Create" ))
-				->AddChild( (new Label(15, 10, "Simulation Name:")) )
-				->AddChild( (new Textbox(40, 40, 80, 1, "", "Simulation Name")) )
+				->AddChild( (new Label(15, 10, "Scenario Name:")) )
+				->AddChild( (new Textbox(40, 40, 80, 1, "", "Scenario Name")) )
 				->AddChild( (new Checkbox(15, 90, 0, "Start With Random Universe")) )
 				->AddChild( (new Label(15, 120, "Seed:")) )
 				->AddChild( (new Textbox(50, 120, 80, 1, seed, "Random Universe Seed")) )
@@ -385,13 +385,13 @@ void Menu::CreateEditWindow()
 	editorWnd->AddCloseButton();
 }
 
-/** Start an Editor Simulation
+/** Start an Editor Scenario
  */
 void Menu::StartEditor()
 {
 	string simName = "default";
 	assert( UI::Search("/Window'Editor'/Tabs/Tab/") != NULL );
-	assert( false == simulation.isLoaded() );
+	assert( false == scenario.isLoaded() );
 
 	UI::Close( play ); // Play
 	UI::Close( load ); // Load
@@ -399,43 +399,43 @@ void Menu::StartEditor()
 	load = NULL;
 
 	// Since the Random Universe Editor is currently broken, disable this feature here.
-	SETOPTION( "options/simulation/random-universe", 0 );
+	SETOPTION( "options/scenario/random-universe", 0 );
 
 	Tab* activeTab = ((Tabs*)UI::Search("/Window'Editor'/Tabs/"))->GetActiveTab();
 	if( activeTab->GetName() == "Edit" ) {
 		simName = ((Dropdown*)activeTab->Search("/Dropdown/"))->GetText();
-		if( !simulation.Load( simName ) )
+		if( !scenario.Load( simName ) )
 		{
 			LogMsg(ERR,"Failed to load '%s' successfully",simName.c_str());
 			return;
 		}
 	} else { // Create
-		simName = ((Textbox*)activeTab->Search("/Textbox'Simulation Name'/"))->GetText();
+		simName = ((Textbox*)activeTab->Search("/Textbox'Scenario Name'/"))->GetText();
 
 		// Random Universe options
 		int israndom = ((Checkbox*)activeTab->Search("/Checkbox'Start With Random Universe'/"))->IsChecked();
 		int seed = atoi( ((Textbox*)activeTab->Search("/Textbox'Random Universe Seed'/"))->GetText().c_str() );
-		SETOPTION( "options/simulation/random-universe", israndom );
-		SETOPTION( "options/simulation/random-seed", seed );
+		SETOPTION( "options/scenario/random-universe", israndom );
+		SETOPTION( "options/scenario/random-seed", seed );
 
-		simulation.New( simName );
+		scenario.New( simName );
 	}
 
-	if( !simulation.SetupToEdit() )
+	if( !scenario.SetupToEdit() )
 	{
-		LogMsg(ERR,"Failed to setup the Simulation '%s' successfully.",simName.c_str());
+		LogMsg(ERR,"Failed to setup the scenario '%s'.", simName.c_str());
 		return;
 	}
 
-	// Only attempt to Edit if the Simulation has loaded
-	assert( simulation.isLoaded() );
+	// Only attempt to Edit if the Scenario has loaded
+	assert( scenario.isLoaded() );
 
 	// Close all Windows
 	while( UI::Search("/Window/") )
 		UI::Close( UI::Search("/Window/") );
 	
 	UI::SwapScreens( "Editor", menuSplash, editSplash );
-	simulation.Edit();
+	scenario.Edit();
 	UI::SwapScreens( "Main Screen", editSplash, menuSplash );
 }
 
@@ -465,14 +465,14 @@ void Menu::ErasePlayer( void* playerInfo )
  *  - Player names cannot be duplicates of another Player.
  *  - Player names cannot include characters reserved by filesystems.
  *  \note This doesn't actually create the Payer, this creates a PlayerInfo and
- *  selects the Simulation.  StartGame is where the Player object is first created.
+ *  selects the Scenario.  StartGame is where the Player object is first created.
  */
 void Menu::CreateNewPlayer( )
 {
 	Players *players = Players::Instance();
 
 	string playerName = ((Textbox*)UI::Search("/Window'New Game'/Textbox'Player Name:'/"))->GetText();
-	string simName = ((Dropdown*)UI::Search("/Window'New Game'/Frame/Dropdown/"))->GetText();
+	string simName = ((Dropdown*)UI::Search("/Window'New Game'/Dropdown/"))->GetText();
 
 	if(OPTION(int, "options/sound/buttons")) Sound::Get( "data/audio/Interface/28853__junggle__btn043.ogg" )->Play();
 

@@ -10,7 +10,7 @@
 #include "common.h"
 #include "sprites/ship.h"
 #include "engine/camera.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario_lua.h"
 #include "utilities/timer.h"
 #include "utilities/trig.h"
 #include "sprites/spritemanager.h"
@@ -614,8 +614,8 @@ FireStatus Ship::FireSlot( int slot, int target )
 
 void Ship::Explode( lua_State *L )
 {
-	SpriteManager *sprites = Simulation_Lua::GetSimulation(L)->GetSpriteManager();
-	Camera* camera = Simulation_Lua::GetSimulation(L)->GetCamera();
+	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
+	Camera* camera = Scenario_Lua::GetScenario(L)->GetCamera();
 
 	// Play explode sound
 	if(OPTION(int, "options/sound/explosions")) {

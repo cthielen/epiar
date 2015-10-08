@@ -10,7 +10,7 @@
 #define __H_MENU
 
 #include "audio/music.h"
-#include "engine/simulation.h"
+#include "engine/scenario.h"
 #include "graphics/image.h"
 #include "ui/ui.h"
 #include "ui/ui_picture.h"
@@ -21,8 +21,8 @@ class Menu {
 
 	private:
 	static bool quitSignal;
-	// The Simulation
-	static Simulation simulation;
+	// The Scenario
+	static Scenario scenario;
 	static PlayerInfo* playerToLoad;
 
 	// Images

@@ -30,8 +30,8 @@ set (Epiar_src ${Epiar_src}
 	${Epiar_SRC_DIR}/Engine/mission.h
 	${Epiar_SRC_DIR}/Engine/models.h
 	${Epiar_SRC_DIR}/Engine/outfit.h
-	${Epiar_SRC_DIR}/Engine/simulation.h
-	${Epiar_SRC_DIR}/Engine/simulation_lua.h
+	${Epiar_SRC_DIR}/Engine/scenario.h
+	${Epiar_SRC_DIR}/Engine/scenario_lua.h
 	${Epiar_SRC_DIR}/Engine/starfield.h
 	${Epiar_SRC_DIR}/Engine/technologies.h
 	${Epiar_SRC_DIR}/Engine/weapons.h
@@ -44,8 +44,8 @@ set (Epiar_src ${Epiar_src}
 	${Epiar_SRC_DIR}/Engine/mission.cpp
 	${Epiar_SRC_DIR}/Engine/models.cpp
 	${Epiar_SRC_DIR}/Engine/outfit.cpp
-	${Epiar_SRC_DIR}/Engine/simulation.cpp
-	${Epiar_SRC_DIR}/Engine/simulation_lua.cpp
+	${Epiar_SRC_DIR}/Engine/scenario.cpp
+	${Epiar_SRC_DIR}/Engine/scenario_lua.cpp
 	${Epiar_SRC_DIR}/Engine/starfield.cpp
 	${Epiar_SRC_DIR}/Engine/technologies.cpp
 	${Epiar_SRC_DIR}/Engine/weapons.cpp

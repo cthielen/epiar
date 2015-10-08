@@ -1,26 +1,26 @@
-/**\file			simulation_lua.h
+/**\file			scenario_lua.h
  * \author			Matt Zweig
  * \date			Created: Friday, September 3, 2010
- * \date			Modified: Friday, September 3, 2010
- * \brief			Simulation Managment from Lua
+ * \date			Modified: Thursday, October 8, 2015
+ * \brief			Scenario Managment from Lua
  * \details
  */
 
 
-#ifndef __H_SIMULATION_LUA__
-#define __H_SIMULATION_LUA__
+#ifndef __H_SCENARIO_LUA__
+#define __H_SCENARIO_LUA__
 
 #include "utilities/lua.h"
 #include "sprites/sprite.h"
-#include "engine/simulation.h"
+#include "engine/scenario.h"
 
-class Simulation_Lua{
+class Scenario_Lua {
 	public:
-		static void RegisterSimulation(lua_State *L);
+		static void RegisterScenario(lua_State *L);
 		static void RegisterEditor(lua_State *L);
 
-		static void StoreSimulation(lua_State *L, Simulation *sim);
-		static Simulation* GetSimulation(lua_State *L);
+		static void StoreScenario(lua_State *L, Scenario *sim);
+		static Scenario* GetScenario(lua_State *L);
 
 		static int Console_echo(lua_State *L);
 		static int Pause(lua_State *L);
@@ -33,7 +33,7 @@ class Simulation_Lua{
 		static int RegisterKey(lua_State *L);
 		static int UnRegisterKey(lua_State *L);
 
-		// Simulation Interfaces
+		// Scenario Interfaces
 		static int Unpause(lua_State *L);
 		static int Ispaused(lua_State *L);
 		static int GetCamera(lua_State *L);
@@ -72,7 +72,7 @@ class Simulation_Lua{
 
 		// Information about Components
 		static int GetMSRP(lua_State *L);
-		static int GetSimulationInfo(lua_State *L);
+		static int GetScenarioInfo(lua_State *L);
 		static int GetCommodityInfo(lua_State *L);
 		static int GetAllianceInfo(lua_State *L);
 		static int GetModelInfo(lua_State *L);
@@ -98,4 +98,4 @@ class Simulation_Lua{
 	private:
 };
 
-#endif // __H_SIMULATION_LUA__
+#endif // __H_SCENARIO_LUA__

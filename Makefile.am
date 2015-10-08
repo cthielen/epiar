@@ -18,8 +18,8 @@ epiar_SOURCES = src/main.cpp \
                 src/engine/models.cpp \
                 src/engine/mission.cpp \
                 src/engine/outfit.cpp \
-                src/engine/simulation.cpp \
-                src/engine/simulation_lua.cpp \
+                src/engine/scenario.cpp \
+                src/engine/scenario_lua.cpp \
                 src/engine/starfield.cpp \
                 src/engine/technologies.cpp \
                 src/engine/weapons.cpp \
@@ -87,7 +87,7 @@ include data/skin/Makefile.am
 include data/art/Makefile.am
 include data/fonts/Makefile.am
 include data/icons/Makefile.am
-include data/simulation/Makefile.am
+include data/scenario/Makefile.am
 
 AM_CPPFLAGS = -DDATADIR="\"$(datadir)/epiar\""
 

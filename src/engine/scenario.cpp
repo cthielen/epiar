@@ -1,7 +1,7 @@
-/**\file			simulation.cpp
- * \author			Chris Thielen (chris@epiar.net)
+/**\file			scenario.cpp
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Tuesday, June 23, 2009
+ * \date			Modified: Thursday, October 8, 2015
  * \brief			Contains the main game loop
  * \details
  */
@@ -12,8 +12,8 @@
 #include "audio/audio_lua.h"
 #include "engine/calendar.h"
 #include "engine/hud.h"
-#include "engine/simulation.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario.h"
+#include "engine/scenario_lua.h"
 #include "engine/commodities.h"
 #include "engine/alliances.h"
 #include "engine/technologies.h"
@@ -35,17 +35,17 @@
 #include "utilities/timer.h"
 #include "utilities/lua.h"
 
-/**\class Simulation
+/**\class Scenario
  * \brief Handles main game loop. */
 
-/**\brief Loads an empty Simulation.
+/**\brief Loads an empty Scenario.
  */
-Simulation::Simulation( void ) {
+Scenario::Scenario( void ) {
 	// Start the Lua Universe
 	// Register these functions to their own lua namespaces
 	Lua::Init();
 	L = Lua::CurrentState();
-	Simulation_Lua::StoreSimulation(L,this);
+	Scenario_Lua::StoreScenario(L,this);
 
 	sprites = SpriteManager::Instance();
 	commodities = Commodities::Instance();
@@ -74,15 +74,15 @@ Simulation::Simulation( void ) {
 	mapScale = -1.0f;
 }
 
-bool Simulation::New( string newname ) {
-	LogMsg(INFO, "New Simulation: '%s'.", newname.c_str() );
+bool Scenario::New( string newname ) {
+	LogMsg(INFO, "New Scenario: '%s'.", newname.c_str() );
 
-	folderpath = "data/simulation/" + newname + "/";
+	folderpath = "data/scenario/" + newname + "/";
 
-	XMLFile::New( folderpath + string("simulation.xml"), "simulation" );
+	XMLFile::New( folderpath + string("scenario.xml"), "scenario" );
 
-	Set("simulation/name", newname );
-	Set("simulation/description", "" );
+	Set("scenario/name", newname );
+	Set("scenario/description", "" );
 
 	// Set the File Names
 	commodities->SetFileName( folderpath + "commodities.xml" );
@@ -95,22 +95,22 @@ bool Simulation::New( string newname ) {
 	technologies->SetFileName( folderpath + "technologies.xml" );
 	outfits->SetFileName( folderpath + "outfits.xml" );
 
-	Set("simulation/commodities", "commodities.xml" );
-	Set("simulation/engines", "engines.xml" );
-	Set("simulation/planets", "planets.xml" );
-	Set("simulation/gates", "gates.xml" );
-	Set("simulation/models", "models.xml" );
-	Set("simulation/weapons", "weapons.xml" );
-	Set("simulation/alliances", "alliances.xml" );
-	Set("simulation/technologies", "technologies.xml" );
-	Set("simulation/outfits", "outfits.xml" );
+	Set("scenario/commodities", "commodities.xml" );
+	Set("scenario/engines", "engines.xml" );
+	Set("scenario/planets", "planets.xml" );
+	Set("scenario/gates", "gates.xml" );
+	Set("scenario/models", "models.xml" );
+	Set("scenario/weapons", "weapons.xml" );
+	Set("scenario/alliances", "alliances.xml" );
+	Set("scenario/technologies", "technologies.xml" );
+	Set("scenario/outfits", "outfits.xml" );
 
 	Set("defaultPlayer/start", "");
 	Set("defaultPlayer/model", "");
 	Set("defaultPlayer/engine", "");
 	Set("defaultPlayer/credits", 0);
 
-	Set("simulation/players", "saves/saved-games.xml" );
+	Set("scenario/players", "saves/saved-games.xml" );
 
 	loaded = true;
 	return true;
@@ -120,25 +120,25 @@ bool Simulation::New( string newname ) {
  * \param filename Name of the file
  * \return true if success
  */
-bool Simulation::Load( string simName ) {
-	folderpath = "data/simulation/" + simName + "/";
-	if( !Open( folderpath + string("simulation.xml") ) ) {
+bool Scenario::Load( string simName ) {
+	folderpath = "data/scenario/" + simName + "/";
+	if( !Open( folderpath + string("scenario.xml") ) ) {
 		return false;
 	}
 	loaded = Parse();
 	return loaded;
 }
 
-/**\brief Pauses the simulation
+/**\brief Pauses the scenario
  */
-void Simulation::pause(){
+void Scenario::pause() {
 	LogMsg(INFO, "Pausing.");
 	paused = true;
-  interpolateOn = false;
+	interpolateOn = false;
 }
 
-void Simulation::Save(){
-	if( PHYSFS_mkdir( ("data/simulation/" + GetName() + "/").c_str() ) == 0) {
+void Scenario::Save() {
+	if( PHYSFS_mkdir( ("data/scenario/" + GetName() + "/").c_str() ) == 0) {
 		LogMsg(ERR, "Cannot create folder '%s'.", folderpath.c_str() );
 		return;
 	}
@@ -164,19 +164,19 @@ void Simulation::Save(){
 	GetTechnologies()->Save();
 }
 
-/**\brief Unpauses the simulation
+/**\brief Unpauses the scenario
  */
-void Simulation::unpause(){
+void Scenario::unpause() {
 	LogMsg(INFO, "Unpausing.");
 	//Timer::Update();
 	paused = false;
-  interpolateOn = true;
+	interpolateOn = true;
 }
 
-bool Simulation::SetupToRun(){
+bool Scenario::SetupToRun(){
 	bool luaLoad = true;
 
-	LogMsg(INFO, "Simulation Setup Started");
+	LogMsg(INFO, "Scenario Setup Started");
 
 	Timer::Update(); // Start the Timer
 
@@ -200,9 +200,9 @@ bool Simulation::SetupToRun(){
 		return false;
 	}
 
-	if( OPTION(int, "options/simulation/random-universe") ) {
-		if( OPTION(int, "options/simulation/random-seed") ) {
-			Lua::Call("createSystems", "i", OPTION(int, "options/simulation/random-seed") );
+	if( OPTION(int, "options/scenario/random-universe") ) {
+		if( OPTION(int, "options/scenario/random-seed") ) {
+			Lua::Call("createSystems", "i", OPTION(int, "options/scenario/random-seed") );
 		} else {
 			Lua::Call("createSystems");
 		}
@@ -243,7 +243,7 @@ bool Simulation::SetupToRun(){
 	// Randomize the Lua Seed
 	Lua::Call("randomizeseed");
 
-	LogMsg(INFO, "Simulation Setup Complete");
+	LogMsg(INFO, "Scenario Setup Complete");
 
 	return true;
 }
@@ -251,22 +251,22 @@ bool Simulation::SetupToRun(){
 /**\brief Callback for Death dialog UI
  * \return void
  */
-void ConfirmDeath(void *simulationInstance) {
-	((Simulation *)simulationInstance)->SetQuit(true);
+void ConfirmDeath(void *scenarioInstance) {
+	((Scenario *)scenarioInstance)->SetQuit(true);
 }
 
-void Pause(void *simulationInstance) {
-	((Simulation *)simulationInstance)->pause();
+void Pause(void *scenarioInstance) {
+	((Scenario *)scenarioInstance)->pause();
 }
 
-void Unpause(void *simulationInstance) {
-	((Simulation *)simulationInstance)->unpause();
+void Unpause(void *scenarioInstance) {
+	((Scenario *)scenarioInstance)->unpause();
 }
 
-void SaveMapScale( void *simulationInstance ) {
+void SaveMapScale( void *scenarioInstance ) {
 	Map* map = (Map*)UI::Search("/Window'Navigation'/Map/");
 	if( map != NULL) {
-		((Simulation *)simulationInstance)->SetMapScale( map->GetScale() );
+		((Scenario *)scenarioInstance)->SetMapScale( map->GetScale() );
 	} else {
 		LogMsg(WARN, "Could not saving scale because the Map could not be found.\n" );
 	}
@@ -275,7 +275,7 @@ void SaveMapScale( void *simulationInstance ) {
 /**\brief Main game loop
  * \return true if the player is still alive
  */
-bool Simulation::Run() {
+bool Scenario::Run() {
 	int fpsCount = 0; // for FPS calculations
 	int fpsTotal= 0; // for FPS calculations
 	Uint32 fpsTS = 0; // timestamp of last FPS printing
@@ -284,7 +284,7 @@ bool Simulation::Run() {
 	quit = false;
 
 
-	LogMsg(INFO, "Simulation Started");
+	LogMsg(INFO, "Scenario Started");
 	Hud::Init();
 
 	if( player != NULL )
@@ -303,7 +303,7 @@ bool Simulation::Run() {
 	Hud::Alert("Epiar is currently under development. Please report all bugs to epiar.net");
 
 	// Generate a starfield
-	Starfield starfield( OPTION(int, "options/simulation/starfield-density") );
+	Starfield starfield( OPTION(int, "options/scenario/starfield-density") );
 
 	// Load sample game music
 	if(bgmusic && OPTION(int, "options/sound/background"))
@@ -424,20 +424,20 @@ bool Simulation::Run() {
 
 	Hud::Close();
 
-	LogMsg(INFO,"Simulation Stopped: Average Framerate: %f Frames/Second", 1000.0 *((float)fpsTotal / Timer::GetTicks() ) );
+	LogMsg(INFO,"Scenario stopped. Average framerate: %f frames / second", 1000.0 *((float)fpsTotal / Timer::GetTicks() ) );
 
 	return (player->GetHullIntegrityPct() > 0);
 }
 
-bool Simulation::SetupToEdit() {
+bool Scenario::SetupToEdit() {
 	bool luaLoad = true;
 
-	LogMsg(INFO, "Simulation Edit Setup Starting");
+	LogMsg(INFO, "Scenario Edit Setup Starting");
 
 	// Load main Lua registers
 	LuaRegisters(L);
 	// Load ::Edit()-specific Lua registers
-	Simulation_Lua::RegisterEditor(L);
+	Scenario_Lua::RegisterEditor(L);
 
 	luaLoad = Lua::Load("data/scripts/utilities.lua")
 	       && Lua::Load("data/scripts/universe.lua")
@@ -450,9 +450,9 @@ bool Simulation::SetupToEdit() {
 	}
 
 	// Since the Random Universe Editor is currently broken, disable this feature here.
-	SETOPTION( "options/simulation/random-universe", 0 );
+	SETOPTION( "options/scenario/random-universe", 0 );
 
-	if( OPTION(int, "options/simulation/random-universe") ) {
+	if( OPTION(int, "options/scenario/random-universe") ) {
 		Lua::Call("createSystems");
 	} else {
 		list<string>* planetNames = planets->GetNames();
@@ -466,18 +466,18 @@ bool Simulation::SetupToEdit() {
 		}
 	}
 
-	LogMsg(INFO, "Simulation Edit Setup Complete");
+	LogMsg(INFO, "Scenario Edit Setup Complete");
 
 	return true;
 }
 
-bool Simulation::Edit() {
+bool Scenario::Edit() {
 	quit = false;
 
 	// Generate a starfield
-	Starfield starfield( OPTION(int, "options/simulation/starfield-density") );
+	Starfield starfield( OPTION(int, "options/scenario/starfield-density") );
 
-	LogMsg(INFO, "Simulation Edit Starting");
+	LogMsg(INFO, "Scenario Edit Starting");
 
 	Lua::Call("componentDebugger");
 
@@ -506,7 +506,7 @@ bool Simulation::Edit() {
 		Timer::Delay();
 	}
 
-	LogMsg(INFO, "Simulation Edit Stopping");
+	LogMsg(INFO, "Scenario Edit Stopping");
 
 	return true;
 }
@@ -514,8 +514,8 @@ bool Simulation::Edit() {
 /**\brief Subroutine. Calls various Lua register functions needed by both Run and Edit
  * \return true if successful
  */
-void Simulation::LuaRegisters(lua_State *L) {
-	Simulation_Lua::RegisterSimulation(L);
+void Scenario::LuaRegisters(lua_State *L) {
+	Scenario_Lua::RegisterScenario(L);
 	UI_Lua::RegisterUI(L);
 	Audio_Lua::RegisterAudio(L);
 	Planets_Lua::RegisterPlanets(L);
@@ -523,11 +523,11 @@ void Simulation::LuaRegisters(lua_State *L) {
 	Video::RegisterVideo(L);
 }
 
-/**\brief Parses an XML simulation file
+/**\brief Parses an XML scenario file
  * \return true if successful
  */
-bool Simulation::Parse( void ) {
-	LogMsg(INFO, "Simulation version %s.%s.%s.", Get("version-major").c_str(), Get("version-minor").c_str(),  Get("version-macro").c_str());
+bool Scenario::Parse( void ) {
+	LogMsg(INFO, "Scenario version %s.%s.%s.", Get("version-major").c_str(), Get("version-minor").c_str(),  Get("version-macro").c_str());
 
 	// Now load the various subsystems
 	if( commodities->Load( (folderpath + Get("commodities")) ) != true ) {
@@ -558,7 +558,7 @@ bool Simulation::Parse( void ) {
 		LogMsg(ERR, "There was an error loading the alliances from '%s'.", (folderpath + Get("alliances")).c_str() );
 		return false;
 	}
-	if( 0 == OPTION(int, "options/simulation/random-universe")) {
+	if( 0 == OPTION(int, "options/scenario/random-universe")) {
 		if( planets->Load( (folderpath + Get("planets")) ) != true ) {
 		    LogMsg(WARN, "There was an error loading the planets from '%s'.", (folderpath + Get("planets")).c_str() );
 		    return false;
@@ -594,7 +594,7 @@ bool Simulation::Parse( void ) {
 
 /**\brief Handle User Input
  */
-void Simulation::HandleInput() {
+void Scenario::HandleInput() {
 	list<InputEvent> events;
 
 	// Collect user input events
@@ -677,7 +677,7 @@ void Simulation::HandleInput() {
 	}
 }
 
-void Simulation::CreateNavMap( void )
+void Scenario::CreateNavMap( void )
 {
 	// Toggle NavMap off if it already exists
 	if( UI::Search("/Window'Navigation'/") )
@@ -720,17 +720,17 @@ void Simulation::CreateNavMap( void )
 	//UI::ModalDialog( win );
 }
 
-/**\fn Simulation::isPaused()
- * \brief Checks to see if Simulation is paused
- * \fn Simulation::isLoaded()
- * \brief Checks to see if Simulation is Loaded Successfully
+/**\fn Scenario::isPaused()
+ * \brief Checks to see if Scenario is paused
+ * \fn Scenario::isLoaded()
+ * \brief Checks to see if Scenario is Loaded Successfully
  */
 
 /**\brief Define the new Player Attributes
  * \warn This will log any issues, but it will let
  * \param[in] playerName The player's name.
  */
-void Simulation::SetDefaultPlayer( string startPlanet, string modelName, string engineName, int credits ) {
+void Scenario::SetDefaultPlayer( string startPlanet, string modelName, string engineName, int credits ) {
 	LogMsg(INFO, "Setting the Player Defaults" );
 
 	// Log disrepencies, but don't fix.
@@ -741,7 +741,7 @@ void Simulation::SetDefaultPlayer( string startPlanet, string modelName, string 
 	if( engines->Get( engineName ) == NULL )
 		LogMsg(WARN, "Setting the Player's start engine to '%s', but this engine does not exist.", engineName.c_str() );
 
-	// Set player defaults in the simulation xml
+	// Set player defaults in the scenario xml
 	Set("defaultPlayer/start", startPlanet);
 	Set("defaultPlayer/model", modelName);
 	Set("defaultPlayer/engine", engineName);
@@ -753,7 +753,7 @@ void Simulation::SetDefaultPlayer( string startPlanet, string modelName, string 
  * \warn Don't calling this more than once.
  * \param[in] playerName The player's name.
  */
-void Simulation::CreateDefaultPlayer(string playerName) {
+void Scenario::CreateDefaultPlayer(string playerName) {
 	Coordinate startPos(0,0);
 
 	string startPlanet = Get("defaultPlayer/start");
@@ -783,7 +783,7 @@ void Simulation::CreateDefaultPlayer(string playerName) {
  * \warn Don't calling this more than once.
  * \param[in] playerName The player's name.
  */
-void Simulation::LoadPlayer(string playerName) {
+void Scenario::LoadPlayer(string playerName) {
 	assert( player == NULL );
 	player = players->LoadPlayer( playerName );
 	sprites->Add( player );
@@ -793,7 +793,7 @@ void Simulation::LoadPlayer(string playerName) {
 /**\brief
  * \return true if the player wants to quit
  */
-Player *Simulation::GetPlayer() {
+Player *Scenario::GetPlayer() {
 	if ( player == NULL ) {
 	    LogMsg(WARN, "No Player has been loaded!");
 	}

@@ -1,11 +1,11 @@
 /**\file		main.cpp
- * \author		Chris Thielen (chris@epiar.net)
+ * \author		Christopher Thielen (chris@epiar.net)
  * \author		and others.
  * \date		Created:	Sunday, June 4, 2006
  * \brief		Main entry point of Epiar codebase
  * \details
  *	This file performs two functions:
- *		- Runs the Epiar simulation.
+ *		- Runs the Epiar scenario.
  *		- Parse command line arguments.
  */
 
@@ -48,7 +48,7 @@ void Main_Close_Singletons  ( void ); ///< Close global Singletons
  * This function does the following:
  *  - Load options
  *  - Load fonts
- *  - Runs the Simulation routine
+ *  - Runs the Scenario routine
  *  - Calls any cleanup code
  */
 int main( int argc, char **argv ) {
@@ -144,10 +144,10 @@ void Main_Load_Settings() {
 	Options::AddDefault( "options/sound/buttons", 1 );
 
 	// Simultaion
-	Options::AddDefault( "options/simulation/starfield-density", 750 );
-	Options::AddDefault( "options/simulation/automatic-load", 0 );
-	Options::AddDefault( "options/simulation/random-universe", 0 );
-	Options::AddDefault( "options/simulation/random-seed", 0 );
+	Options::AddDefault( "options/scenario/starfield-density", 750 );
+	Options::AddDefault( "options/scenario/automatic-load", 0 );
+	Options::AddDefault( "options/scenario/random-universe", 0 );
+	Options::AddDefault( "options/scenario/random-seed", 0 );
 
 	// Timing
 	Options::AddDefault( "options/timing/screen-swap", 0 ); // FIXME, 0=disabled until the transition is better

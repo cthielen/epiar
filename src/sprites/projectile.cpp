@@ -15,7 +15,7 @@
 #include "sprites/effects.h"
 #include "utilities/timer.h"
 #include "engine/weapons.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario_lua.h"
 
 /** \addtogroup Sprites
  * @{
@@ -83,7 +83,7 @@ Projectile::~Projectile(void)
  */
 void Projectile::Update( lua_State *L ) {
 	Sprite::Update( L ); // update momentum and other generic sprite attributes
-	SpriteManager *sprites = Simulation_Lua::GetSimulation(L)->GetSpriteManager();
+	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 
 	// Check for projectile collisions
 	Sprite* impact = sprites->GetNearestSprite( (Sprite*)this, 100,DRAW_ORDER_SHIP|DRAW_ORDER_PLAYER );

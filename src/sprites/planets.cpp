@@ -16,7 +16,7 @@
 #include "engine/engines.h"
 #include "engine/weapons.h"
 #include "engine/alliances.h"
-#include "engine/simulation_lua.h"
+#include "engine/scenario_lua.h"
 #include "sprites/spritemanager.h"
 
 /** \addtogroup Sprites
@@ -201,7 +201,7 @@ void Planet::Update( lua_State *L ) {
 }
 
 void Planet::GenerateTraffic( lua_State *L ) {
-	SpriteManager *sprites = Simulation_Lua::GetSimulation(L)->GetSpriteManager();
+	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 	list<Sprite*> *nearbySprites = sprites->GetSpritesNear( GetWorldPosition(), TO_FLOAT(sphereOfInfluence), DRAW_ORDER_SHIP | DRAW_ORDER_PLAYER);
 
 	if( nearbySprites->size() < traffic ) {
