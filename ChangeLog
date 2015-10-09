@@ -1,6 +1,7 @@
 Thursday, October 8, 2015
 	Christopher Thielen:
 		* Renamed 'simulation' to 'scenario'
+		* Added sectors.xml and basic parsing. Not yet used.
 
 Monday, September 28, 2015
 	Christopher Thielen:

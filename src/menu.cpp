@@ -259,7 +259,7 @@ void Menu::CreateLoadWindow()
 	UI::RegisterKeyboardFocus(win);
 }
 
-/** Start a Game Scenario
+/** Starts a Game Scenario
  *  \details
  *  The PlayerInfo describes which Scenario to load and which Player to load.
  *  If the Player doesn't already exist, a default player is created by Scenario.
@@ -283,13 +283,15 @@ void Menu::StartGame( void *info )
 	// Load the Scenario
 	if( !scenario.Load( simName ) )
 	{
-		LogMsg(ERR,"Failed to load the scenario '%s'.", simName.c_str());
+		LogMsg(ERR, "Failed to load the scenario '%s'.", simName.c_str());
+		Dialogs::Alert("Failed to load scenario!");
 		return;
 	}
 
 	if( !scenario.SetupToRun() )
 	{
-		LogMsg(ERR,"Failed to setup the scenario '%s'.", simName.c_str());
+		LogMsg(ERR, "Failed to setup the scenario '%s'.", simName.c_str());
+		Dialogs::Alert("Scenario loaded but failed to setup!");
 		return;
 	}
 

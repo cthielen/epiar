@@ -18,6 +18,7 @@
 #include "sprites/gate.h"
 #include "engine/weapons.h"
 #include "engine/technologies.h"
+#include "engine/sectors.h"
 #include "sprites/player.h"
 #include "audio/music.h"
 #include "engine/camera.h"
@@ -60,6 +61,7 @@ class Scenario : public XMLFile {
 		Alliances *GetAlliances() { return alliances; }
 		Technologies *GetTechnologies() { return technologies; }
 		Outfits *GetOutfits() { return outfits; }
+		Sectors *GetSectors() { return sectors; }
 		Players *GetPlayers() { return players; }
 		Camera *GetCamera() { return camera; }
 		Input *GetInput() { return &inputs; }
@@ -94,10 +96,11 @@ class Scenario : public XMLFile {
 		Alliances *alliances;
 		Technologies *technologies;
 		Outfits *outfits;
+		Sectors *sectors;
 		Players *players;
 		Player *player;
 		Camera *camera;
-    Calendar *calendar;
+		Calendar *calendar;
 
 		// Scenario specific variables
 		Song* bgmusic;

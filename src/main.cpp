@@ -144,7 +144,6 @@ void Main_Load_Settings() {
 	Options::AddDefault( "options/sound/buttons", 1 );
 
 	// Simultaion
-	Options::AddDefault( "options/scenario/starfield-density", 750 );
 	Options::AddDefault( "options/scenario/automatic-load", 0 );
 	Options::AddDefault( "options/scenario/random-universe", 0 );
 	Options::AddDefault( "options/scenario/random-seed", 0 );

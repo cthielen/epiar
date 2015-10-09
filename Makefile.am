@@ -20,6 +20,7 @@ epiar_SOURCES = src/main.cpp \
                 src/engine/outfit.cpp \
                 src/engine/scenario.cpp \
                 src/engine/scenario_lua.cpp \
+                src/engine/sectors.cpp \
                 src/engine/starfield.cpp \
                 src/engine/technologies.cpp \
                 src/engine/weapons.cpp \

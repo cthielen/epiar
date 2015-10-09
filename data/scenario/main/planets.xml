@@ -7,7 +7,6 @@
 	<planet>
 		<name>Alexandria</name>
 		<alliance>United Earth Alliance</alliance>
-		<sector>Sol</sector>
 		<x>-2541</x>
 		<y>-2816</y>
 		<landable>1</landable>
@@ -20,7 +19,6 @@
 	<planet>
 		<name>Antikythera</name>
 		<alliance>United Earth Alliance</alliance>
-		<sector>Sol</sector>
 		<x>345</x>
 		<y>215</y>
 		<landable>1</landable>
@@ -32,7 +30,6 @@
 
 	<planet>
 		<name>Bersia</name>
-		<sector>Alpha Centauri</sector>
 		<alliance>United Earth Alliance</alliance>
 		<x>8669</x>
 		<y>-1531</y>

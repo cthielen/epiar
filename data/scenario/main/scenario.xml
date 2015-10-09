@@ -4,7 +4,7 @@
 	<version-minor>6</version-minor>
 	<version-macro>0</version-macro>
 
-	<name>Main Game</name>
+	<name>main</name>
 	<description>The main game of Epiar.</description>
 	<commodities>commodities.xml</commodities>
 	<planets>planets.xml</planets>
@@ -23,6 +23,7 @@
 		<start>Antikythera</start>
 		<model>Shuttle</model>
 		<engine>Altaire Corp. NM66 Sublight Thrusters</engine>
+		<sector>Sol</sector>
 		<credits>3000</credits>
 	</defaultPlayer>
 </scenario>

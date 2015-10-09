@@ -57,6 +57,7 @@ Scenario::Scenario( void ) {
 	alliances = Alliances::Instance();
 	technologies = Technologies::Instance();
 	outfits = Outfits::Instance();
+	sectors = Sectors::Instance();
 	players = Players::Instance();
 	player = NULL;
 
@@ -94,6 +95,7 @@ bool Scenario::New( string newname ) {
 	alliances->SetFileName( folderpath + "alliances.xml" );
 	technologies->SetFileName( folderpath + "technologies.xml" );
 	outfits->SetFileName( folderpath + "outfits.xml" );
+	sectors->SetFileName( folderpath + "sectors.xml" );
 
 	Set("scenario/commodities", "commodities.xml" );
 	Set("scenario/engines", "engines.xml" );
@@ -104,15 +106,18 @@ bool Scenario::New( string newname ) {
 	Set("scenario/alliances", "alliances.xml" );
 	Set("scenario/technologies", "technologies.xml" );
 	Set("scenario/outfits", "outfits.xml" );
+	Set("scenario/sectors", "sectors.xml" );
 
 	Set("defaultPlayer/start", "");
 	Set("defaultPlayer/model", "");
 	Set("defaultPlayer/engine", "");
 	Set("defaultPlayer/credits", 0);
+	Set("defaultPlayer/sector", "");
 
 	Set("scenario/players", "saves/saved-games.xml" );
 
 	loaded = true;
+
 	return true;
 }
 
@@ -122,10 +127,13 @@ bool Scenario::New( string newname ) {
  */
 bool Scenario::Load( string simName ) {
 	folderpath = "data/scenario/" + simName + "/";
+
 	if( !Open( folderpath + string("scenario.xml") ) ) {
 		return false;
 	}
+
 	loaded = Parse();
+
 	return loaded;
 }
 
@@ -161,6 +169,7 @@ void Scenario::Save() {
 	GetEngines()->Save();
 	GetPlanets()->Save();
 	GetOutfits()->Save();
+	GetSectors()->Save();
 	GetTechnologies()->Save();
 }
 
@@ -176,7 +185,7 @@ void Scenario::unpause() {
 bool Scenario::SetupToRun(){
 	bool luaLoad = true;
 
-	LogMsg(INFO, "Scenario Setup Started");
+	LogMsg(INFO, "Scenario setup started ...");
 
 	Timer::Update(); // Start the Timer
 
@@ -196,7 +205,7 @@ bool Scenario::SetupToRun(){
 	       && Lua::Load("data/scripts/fleet.lua");
 
 	if (!luaLoad) {
-		LogMsg(ERR,"Fatal error starting Lua.");
+		LogMsg(ERR, "Fatal error starting Lua.");
 		return false;
 	}
 
@@ -208,32 +217,30 @@ bool Scenario::SetupToRun(){
 		}
 	} else {
 		// Add Planets
-	    list<string>* planetNames = planets->GetNames();
-	    for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
+		list<string>* planetNames = planets->GetNames();
+		for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
 			Planet* p = planets->GetPlanet(*pname);
-		    sprites->Add( p );
+			sprites->Add( p );
 
 #ifdef ADD_ASTEROIDS
 			// Ticket #44
 			// TODO: These asteroids just wander to the edges of the universe, and only slow down the game when not visible.  Fix that.
 			// Add Asteroids near planets
-			unsigned int a;
-			for( a = 0; a < 100; a++ ){
-				Effect* asteroid = new Effect( p->GetWorldPosition() + GaussianCoordinate() * p->GetInfluence(), "data/animations/asteroid.ani", 1.0 );
-				asteroid->SetMomentum( GaussianCoordinate() *2 );
-				asteroid->SetAngle( float( rand() %360 ) );
-				sprites->Add( asteroid );
-			}
+			//unsigned int a;
+			//for( a = 0; a < 100; a++ ){
+			//	Effect* asteroid = new Effect( p->GetWorldPosition() + GaussianCoordinate() * p->GetInfluence(), "data/animations/asteroid.ani", 1.0 );
+			//	asteroid->SetMomentum( GaussianCoordinate() *2 );
+			//	asteroid->SetAngle( float( rand() %360 ) );
+			//	sprites->Add( asteroid );
+			//}
 #endif
 	    }
 
 		// Add Gates
-	    list<string>* gateNames = gates->GetNames();
-	    for( list<string>::iterator gname = gateNames->begin(); gname != gateNames->end(); ++gname){
-		    sprites->Add(  gates->GetGate(*gname) );
-	    }
-
-
+		//list<string>* gateNames = gates->GetNames();
+		//for( list<string>::iterator gname = gateNames->begin(); gname != gateNames->end(); ++gname) {
+		//	sprites->Add(  gates->GetGate(*gname) );
+		//}
 	}
 
 	// Preloading this animation prevents an FPS
@@ -243,7 +250,7 @@ bool Scenario::SetupToRun(){
 	// Randomize the Lua Seed
 	Lua::Call("randomizeseed");
 
-	LogMsg(INFO, "Scenario Setup Complete");
+	LogMsg(INFO, "Scenario setup complete!");
 
 	return true;
 }
@@ -276,34 +283,30 @@ void SaveMapScale( void *scenarioInstance ) {
  * \return true if the player is still alive
  */
 bool Scenario::Run() {
-	int fpsCount = 0; // for FPS calculations
-	int fpsTotal= 0; // for FPS calculations
-	Uint32 fpsTS = 0; // timestamp of last FPS printing
+	int fpsCount = 0;          // for FPS calculations
+	int fpsTotal= 0;           // for FPS calculations
+	Uint32 fpsTS = 0;          // timestamp of last FPS printing
 	fpsTS = Timer::GetTicks();
 
 	quit = false;
 
-
-	LogMsg(INFO, "Scenario Started");
+	LogMsg(INFO, "Scenario started.");
 	Hud::Init();
 
-	if( player != NULL )
-	{
+	if( player != NULL ) {
 		Hud::Alert("Loading %s.", player->GetName().c_str() );
 		Lua::Call("playerStart");
-	}
-	else
-	{
+	} else {
 		LogMsg(WARN, "No Player has been loaded!");
 		assert( player != NULL );
 		quit = true;
 	}
 
 	// Message appear in reverse order, so this is upside down
-	Hud::Alert("Epiar is currently under development. Please report all bugs to epiar.net");
+	Hud::Alert("Epiar is an unfinished product. Please report all bugs at epiar.net.");
 
 	// Generate a starfield
-	Starfield starfield( OPTION(int, "options/scenario/starfield-density") );
+	Starfield starfield( 1000 );
 
 	// Load sample game music
 	if(bgmusic && OPTION(int, "options/sound/background"))
@@ -559,14 +562,18 @@ bool Scenario::Parse( void ) {
 		return false;
 	}
 	if( 0 == OPTION(int, "options/scenario/random-universe")) {
+		if( sectors->Load( (folderpath + Get("sectors")) ) != true ) {
+		    LogMsg(WARN, "There was an error loading the sectors from '%s'.", (folderpath + Get("sectors")).c_str() );
+		    return false;
+		}
 		if( planets->Load( (folderpath + Get("planets")) ) != true ) {
 		    LogMsg(WARN, "There was an error loading the planets from '%s'.", (folderpath + Get("planets")).c_str() );
 		    return false;
-	    }
+		}
 		if( gates->Load( (folderpath + Get("gates")) ) != true ) {
 		    LogMsg(WARN, "There was an error loading the gates from '%s'.", (folderpath + Get("gates")).c_str() );
 		    return false;
-	    }
+		}
 	}
 
 	// Check the Music
@@ -586,6 +593,10 @@ bool Scenario::Parse( void ) {
 	}
 	if( engines->Get( Get("defaultPlayer/engine")) == NULL) {
 		LogMsg(WARN, "Bad Default Player Start Engine '%s'.", Get("defaultPlayer/engine").c_str() );
+		return false;
+	}
+	if( sectors->Get( Get("defaultPlayer/sector")) == NULL) {
+		LogMsg(WARN, "Bad Default Player Start Sector '%s'.", Get("defaultPlayer/sector").c_str() );
 		return false;
 	}
 
@@ -795,7 +806,7 @@ void Scenario::LoadPlayer(string playerName) {
  */
 Player *Scenario::GetPlayer() {
 	if ( player == NULL ) {
-	    LogMsg(WARN, "No Player has been loaded!");
+	    LogMsg(ERR, "No Player has been loaded!");
 	}
 	assert( player != NULL );
 	return player;

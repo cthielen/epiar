@@ -173,7 +173,7 @@ void Planet::Update( lua_State *L ) {
 }
 
 void Planet::GenerateTraffic( lua_State *L ) {
-	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
+	//SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 	//list<Sprite*> *nearbySprites = sprites->GetSpritesNear( GetWorldPosition(), 0.0f, DRAW_ORDER_SHIP | DRAW_ORDER_PLAYER);
 
 	//if( nearbySprites->size() < traffic ) {

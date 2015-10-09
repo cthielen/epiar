@@ -215,7 +215,7 @@ int Audio::PlayChannel( int chan, Mix_Chunk *chunk, int loop ){
  */
 Audio::Audio():
 	initstatus( false ),
-	audio_rate( 22050 ),
+	audio_rate( 44100 ),
 	audio_format( MIX_DEFAULT_FORMAT ),
 	audio_channels( 2 ),
 	audio_buffers( 1024 ),
