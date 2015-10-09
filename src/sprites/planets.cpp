@@ -1,7 +1,7 @@
 /**\file			planets.cpp
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Monday, November 16 2009
+ * \date			Modified: Thursday, October 8, 2015
  * \brief
  * \details
  */
@@ -41,9 +41,6 @@ Planet::Planet(){
 	surface = NULL;
 	landable = true;
 	forbidden = false;
-	traffic = 0;
-	militiaSize = 0;
-	sphereOfInfluence = 0;
 	lastTrafficTime = 0;
 }
 
@@ -57,9 +54,6 @@ Planet& Planet::operator=(const Planet& other) {
 	name = other.name;
 	alliance = other.alliance;
 	landable = other.landable;
-	traffic = other.traffic;
-	militiaSize = other.militiaSize;
-	sphereOfInfluence = other.sphereOfInfluence;
 	technologies = other.technologies;
 	surface = other.surface;
 	summary = other.summary;
@@ -84,18 +78,12 @@ Planet::Planet(
 		Image* _image,
 		Alliance* _alliance,
 		bool _landable,
-		int _traffic,
-		int _militiaSize,
-		int _sphereOfInfluence,
 		Image* _surface,
 		string _summary,
 		list<Technology*> _technologies
 	):
 	alliance(_alliance),
 	landable(_landable),
-	traffic(_traffic),
-	militiaSize(_militiaSize),
-	sphereOfInfluence(_sphereOfInfluence),
 	surface(_surface),
 	summary(_summary),
 	technologies(_technologies)
@@ -126,22 +114,21 @@ bool Planet::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	string value;
 	Coordinate pos;
 
-	if( (attr = FirstChildNamed(node,"alliance")) ){
+	if( (attr = FirstChildNamed(node, "alliance")) ){
 		value = NodeToString(doc,attr);
 		alliance = Alliances::Instance()->GetAlliance(value);
-		if(alliance==NULL)
-		{
+		if(alliance == NULL) {
 			LogMsg(ERR, "Could not create Planet '%s'. Unknown Alliance '%s'.", this->GetName().c_str(), value.c_str());
 			return false;
 		}
 	} else return false;
 
-	if( (attr = FirstChildNamed(node,"x")) ){
+	if( (attr = FirstChildNamed(node, "x")) ){
 		value = NodeToString(doc,attr);
 		pos.SetX( atof( value.c_str() ));
 	} else return false;
 
-	if( (attr = FirstChildNamed(node,"y")) ){
+	if( (attr = FirstChildNamed(node, "y")) ){
 		value = NodeToString(doc,attr);
 		pos.SetY( atof( value.c_str() ));
 	} else return false;
@@ -151,11 +138,6 @@ bool Planet::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	if( (attr = FirstChildNamed(node,"landable")) ){
 		value = NodeToString(doc,attr);
 		landable = ( atoi( value.c_str() ) != 0);
-	} else return false;
-
-	if( (attr = FirstChildNamed(node,"traffic")) ){
-		value = NodeToString(doc,attr);
-		traffic = (short int) atoi( value.c_str() );
 	} else return false;
 
 	if( (attr = FirstChildNamed(node,"image")) ){
@@ -170,16 +152,6 @@ bool Planet::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 
 	if( (attr = FirstChildNamed(node,"summary")) ){
 		summary = NodeToString(doc,attr);
-	} else return false;
-
-	if( (attr = FirstChildNamed(node,"militia")) ){
-		value = NodeToString(doc,attr);
-		militiaSize = (short int) atoi( value.c_str() );
-	} else return false;
-
-	if( (attr = FirstChildNamed(node,"sphereOfInfluence")) ){
-		value = NodeToString(doc,attr);
-		sphereOfInfluence = atoi( value.c_str() );
 	} else return false;
 
 	for( attr = FirstChildNamed(node,"technology"); attr!=NULL; attr = NextSiblingNamed(attr,"technology") ){
@@ -202,12 +174,12 @@ void Planet::Update( lua_State *L ) {
 
 void Planet::GenerateTraffic( lua_State *L ) {
 	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
-	list<Sprite*> *nearbySprites = sprites->GetSpritesNear( GetWorldPosition(), TO_FLOAT(sphereOfInfluence), DRAW_ORDER_SHIP | DRAW_ORDER_PLAYER);
+	//list<Sprite*> *nearbySprites = sprites->GetSpritesNear( GetWorldPosition(), 0.0f, DRAW_ORDER_SHIP | DRAW_ORDER_PLAYER);
 
-	if( nearbySprites->size() < traffic ) {
-		Lua::Call( "createRandomShipForPlanet", "i", GetID() );
-	}
-	delete nearbySprites;
+	//if( nearbySprites->size() < traffic ) {
+	//	Lua::Call( "createRandomShipForPlanet", "i", GetID() );
+	//}
+	//delete nearbySprites;
 
 	lastTrafficTime = Timer::GetLogicalFrameCount();
 }
@@ -219,9 +191,9 @@ list<Model*> Planet::GetModels() {
 	list<Technology*>::iterator techiter;
 	list<Model*>::iterator listiter;
 
-	for(techiter=technologies.begin(); techiter!=technologies.end(); ++techiter) {
+	for(techiter = technologies.begin(); techiter != technologies.end(); ++techiter) {
 		list<Model*> model_list = (*techiter)->GetModels();
-		for(listiter=model_list.begin(); listiter!=model_list.end(); ++listiter) {
+		for(listiter = model_list.begin(); listiter != model_list.end(); ++listiter) {
 			models.push_back( *listiter );
 		}
 	}
@@ -239,9 +211,9 @@ list<Engine*> Planet::GetEngines() {
 	list<Technology*>::iterator techiter;
 	list<Engine*>::iterator listiter;
 
-	for(techiter=technologies.begin(); techiter!=technologies.end(); ++techiter) {
+	for(techiter = technologies.begin(); techiter != technologies.end(); ++techiter) {
 		list<Engine*> engine_list = (*techiter)->GetEngines();
-		for(listiter=engine_list.begin(); listiter!=engine_list.end(); ++listiter) {
+		for(listiter = engine_list.begin(); listiter != engine_list.end(); ++listiter) {
 			engines.push_back( *listiter );
 		}
 	}
@@ -259,9 +231,9 @@ list<Weapon*> Planet::GetWeapons() {
 	list<Technology*>::iterator techiter;
 	list<Weapon*>::iterator listiter;
 
-	for(techiter=technologies.begin(); techiter!=technologies.end(); ++techiter) {
+	for(techiter = technologies.begin(); techiter != technologies.end(); ++techiter) {
 		list<Weapon*> weapon_list = (*techiter)->GetWeapons();
-		for(listiter=weapon_list.begin(); listiter!=weapon_list.end(); ++listiter) {
+		for(listiter = weapon_list.begin(); listiter != weapon_list.end(); ++listiter) {
 			weapons.push_back( *listiter );
 		}
 	}
@@ -305,14 +277,8 @@ xmlNodePtr Planet::ToXMLNode(string componentName) {
 	snprintf(buff, sizeof(buff), "%d", (int)GetWorldPosition().GetY() );
 	xmlNewChild(section, NULL, BAD_CAST "y", BAD_CAST buff );
 	xmlNewChild(section, NULL, BAD_CAST "landable", BAD_CAST (GetLandable()?"1":"0") );
-	snprintf(buff, sizeof(buff), "%d", GetTraffic() );
-	xmlNewChild(section, NULL, BAD_CAST "traffic", BAD_CAST buff );
 	xmlNewChild(section, NULL, BAD_CAST "image", BAD_CAST GetImage()->GetPath().c_str() );
 	xmlNewChild(section, NULL, BAD_CAST "surface-image", BAD_CAST surface->GetPath().c_str() );
-	snprintf(buff, sizeof(buff), "%d", GetMilitiaSize() );
-	xmlNewChild(section, NULL, BAD_CAST "militia", BAD_CAST buff );
-	snprintf(buff, sizeof(buff), "%d", GetInfluence() );
-	xmlNewChild(section, NULL, BAD_CAST "sphereOfInfluence", BAD_CAST buff );
 	list<Technology*> techs = GetTechnologies();
 	for( list<Technology*>::iterator it = techs.begin(); it!=techs.end(); ++it ){
 		xmlNewChild(section, NULL, BAD_CAST "technology", BAD_CAST (*it)->GetName().c_str() );

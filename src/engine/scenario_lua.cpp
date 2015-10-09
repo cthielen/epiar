@@ -935,10 +935,7 @@ int Scenario_Lua::GetPlanetInfo(lua_State *L) {
 	Lua::setField("Alliance", (p->GetAlliance()!=NULL)
 	                ? (p->GetAlliance()->GetName().c_str())
 	                : "" );
-	Lua::setField("Traffic", p->GetTraffic());
-	Lua::setField("Militia", p->GetMilitiaSize());
 	Lua::setField("Landable", p->GetLandable());
-	Lua::setField("Influence", p->GetInfluence());
 	Lua::setField("Surface", (p->GetSurfaceImage()!=NULL)
 	                ? (p->GetSurfaceImage()->GetPath().c_str())
 	                : "" );
@@ -1265,10 +1262,7 @@ int Scenario_Lua::SetInfo(lua_State *L) {
 		int y = Lua::getIntField(3,"Y");
 		string imageName = Lua::getStringField(3,"Image");
 		string allianceName = Lua::getStringField(3,"Alliance");
-		int traffic = Lua::getIntField(3,"Traffic");
-		int militia = Lua::getIntField(3,"Militia");
 		int landable = Lua::getIntField(3,"Landable");
-		int influence = Lua::getIntField(3,"Influence");
 		string surfaceName = Lua::getStringField(3,"Surface");
 		string summary = Lua::getStringField(3,"Summary");
 		list<string> techNames = Lua::getStringListField(3,"Technologies");
@@ -1307,9 +1301,6 @@ int Scenario_Lua::SetInfo(lua_State *L) {
 				Image::Get(imageName),
 				GetScenario(L)->GetAlliances()->GetAlliance(allianceName),
 				TO_BOOL(landable),
-				traffic,
-				militia,
-				influence,
 				Image::Get(surfaceName),
 				summary,
 				techs);

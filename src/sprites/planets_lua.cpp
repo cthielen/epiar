@@ -45,9 +45,6 @@ void Planets_Lua::RegisterPlanets(lua_State *L){
 		{"GetPosition", &Planets_Lua::GetPosition},
 		{"GetSize", &Planets_Lua::GetSize},
 		{"GetAlliance", &Planets_Lua::GetAlliance},
-		{"Traffic", &Planets_Lua::GetTraffic},
-		{"MilitiaSize", &Planets_Lua::GetMilitiaSize},
-		{"Influence", &Planets_Lua::GetInfluence},
 		{"Landable", &Planets_Lua::GetLandable},
 		{"GetSummary", &Planets_Lua::GetSummary},
 		{"GetSurfaceImage", &Planets_Lua::GetSurfaceImage},
@@ -60,7 +57,6 @@ void Planets_Lua::RegisterPlanets(lua_State *L){
 
 		// Editor Only
 		{"SetPosition", &Planets_Lua::SetPosition},
-		{"SetInfluence", &Planets_Lua::SetInfluence},
 		{"SetRadarColor", &Planets_Lua::SetRadarColor},
 		{NULL, NULL}
 	};
@@ -121,16 +117,13 @@ int Planets_Lua::NewPlanet(lua_State* L){
 	string _allianceName;
 	Alliance* _alliance;
 	bool _landable;
-	int _traffic;
-	int _militiaSize;
-	int _sphereOfInfluence;
 	list<Technology*> _technologies;
 	string surfaceName;
 	Image* _surface;
 	string _summary;
 
 	if(n<9) {
-		return luaL_error(L, "Got %d arguments expected at least 9 (name, x, y, image_name, alliance, landable, traffic, militia, influence, [techs...])", n);
+		return luaL_error(L, "Got %d arguments expected at least 9 (name, x, y, image_name, alliance, landable, [techs...])", n);
 	}
 
 	// Capture the required arguments
@@ -142,15 +135,12 @@ int Planets_Lua::NewPlanet(lua_State* L){
 	_allianceName = (string)luaL_checkstring(L,5);
 	_alliance = Alliances::Instance()->GetAlliance(_allianceName);
 	_landable = (bool)luaL_checkint(L, 6 );
-	_traffic = luaL_checkint(L, 7 );
-	_militiaSize = luaL_checkint(L, 8 );
-	_sphereOfInfluence = luaL_checkint(L, 9 );
 	surfaceName = (string)luaL_checkstring(L, 10);
 	_surface = Image::Get( surfaceName );
 	_summary = (string)luaL_checkstring(L, 11);
 
 	// Capture all other arguments as technologies
-	for(i=10;i<=n;i++) {
+	for(i = 10; i <= n; i++) {
 		techName = (string)luaL_checkstring(L, 12 );
 		tech = Technologies::Instance()->GetTechnology( techName );
 		if(tech==NULL) {
@@ -179,9 +169,6 @@ int Planets_Lua::NewPlanet(lua_State* L){
 		_image,
 		_alliance,
 		_landable,
-		_traffic,
-		_militiaSize,
-		_sphereOfInfluence,
 		_surface,
 		_summary,
 		_technologies
@@ -331,45 +318,6 @@ int Planets_Lua::GetAlliance(lua_State* L){
 	return 1;
 }
 
-/**\brief Get the Traffic of this planet
- */
-int Planets_Lua::GetTraffic(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
-	if (n == 1) {
-		Planet* planet= checkPlanet(L,1);
-		lua_pushnumber(L, planet->GetTraffic() );
-	} else {
-		luaL_error(L, "Got %d arguments expected 1 (self)", n);
-	}
-	return 1;
-}
-
-/**\brief Get the Militia Size of this planet
- */
-int Planets_Lua::GetMilitiaSize(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
-	if (n == 1) {
-		Planet* planet= checkPlanet(L,1);
-		lua_pushnumber(L, planet->GetMilitiaSize() );
-	} else {
-		luaL_error(L, "Got %d arguments expected 1 (self)", n);
-	}
-	return 1;
-}
-
-/**\brief Get the Sphere of Influence of this planet
- */
-int Planets_Lua::GetInfluence(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
-	if (n == 1) {
-		Planet* planet= checkPlanet(L,1);
-		lua_pushnumber(L, planet->GetInfluence() );
-	} else {
-		luaL_error(L, "Got %d arguments expected 1 (self)", n);
-	}
-	return 1;
-}
-
 /**\brief Get Landable boolean of this planet
  */
 int Planets_Lua::GetLandable(lua_State* L){
@@ -513,21 +461,6 @@ int Planets_Lua::SetPosition(lua_State* L){
 		p->SetWorldPosition( Coordinate(x, y) );
 	} else {
 		luaL_error(L, "Got %d arguments expected 2 (planet, forbidden)", n);
-	}
-	return 0;
-}
-
-/**\brief Lua callable function to set the Influence of a planet
-*/
-int Planets_Lua::SetInfluence(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
-	if (n == 2) {
-		Planet* p = checkPlanet(L,1);
-		if(p==NULL) return 0;
-		int influence = luaL_checkint (L, 2);
-		p->SetInfluence( influence );
-	} else {
-		luaL_error(L, "Got %d arguments expected 2 (planet, influence)", n);
 	}
 	return 0;
 }

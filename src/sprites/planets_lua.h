@@ -40,9 +40,6 @@ class Planets_Lua {
 		static int GetSummary(lua_State* L);
 		static int GetSurfaceImage(lua_State* L);
 		static int GetAlliance(lua_State* L);
-		static int GetTraffic(lua_State* L);
-		static int GetMilitiaSize(lua_State* L);
-		static int GetInfluence(lua_State* L);
 		static int GetLandable(lua_State* L);
 		static int GetModels(lua_State* L);
 		static int GetEngines(lua_State* L);
@@ -53,7 +50,6 @@ class Planets_Lua {
 
 		// Editor Features
 		static int SetPosition(lua_State* L);
-		static int SetInfluence(lua_State* L);
 		static int SetRadarColor(lua_State* L);
 	private:
 };

@@ -1,7 +1,7 @@
 /**\file			planets.h
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Monday, November 16 2009
+ * \date			Modified: Thursday, October 8, 2015
  * \brief
  * \details
  */
@@ -30,9 +30,6 @@ class Planet : public Sprite, public Component {
 				Image* _image,
 				Alliance* _alliance,
 				bool _landable,
-				int _traffic,
-				int _militiaSize,
-				int _sphereOfInfluence,
 				Image* _surface,
 				string _summary,
 				list<Technology*> _technologies
@@ -52,26 +49,20 @@ class Planet : public Sprite, public Component {
 		list<Engine*> GetEngines();
 		list<Weapon*> GetWeapons();
 		list<Outfit*> GetOutfits();
+
 		Alliance* GetAlliance() const {return alliance;}
-		short unsigned int GetTraffic() const {return traffic;}
-		short unsigned int GetMilitiaSize() const {return militiaSize;}
 		bool GetLandable() const {return landable;}
 		string GetSummary() const {return summary;}
-		int GetInfluence() const {return sphereOfInfluence;}
 		Image* GetSurfaceImage() const {return surface;}
 		list<Technology*> GetTechnologies() const { return technologies;}
 
 		bool GetForbidden() {return forbidden;}
 		void SetForbidden(bool f) {forbidden = f;}
-		void SetInfluence(int influence) {sphereOfInfluence = influence;}
 
 	private:
 		Alliance* alliance;
 		bool landable;
 		bool forbidden;
-		short unsigned int traffic;
-		short unsigned int militiaSize;
-		int sphereOfInfluence;
 		Image* surface;
 		string summary;
 		list<Technology*> technologies;

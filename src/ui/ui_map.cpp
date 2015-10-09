@@ -152,7 +152,7 @@ void Map::Draw( int relx, int rely )
 				field = ((Planet*)(*iter))->GetAlliance()->GetColor();
 				// Draw a gradient for influence
 				for(float i = 1; i < 10; i += 0.25f) {
-					Video::DrawFilledCircle( pos, (((Planet*)(*iter))->GetInfluence() * scale) / i, field, alpha * 0.05f );
+					Video::DrawFilledCircle( pos, (10 * scale) / i, field, alpha * 0.05f );
 				}
 				Video::DrawCircle( pos, 3, 1, col, alpha );
 				break;

@@ -668,7 +668,7 @@ void Scenario::HandleInput() {
 		list<string>::iterator pName = names->begin();
 		while( i++ < x ){ pName++; }
 		Planet* p = planets->GetPlanet(*pName);
-		player->Jump( p->GetWorldPosition() + GaussianCoordinate()*p->GetInfluence(), true );
+		player->Jump( p->GetWorldPosition() + GaussianCoordinate(), true );
 	}
 
 	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_ESCAPE ) ) )
