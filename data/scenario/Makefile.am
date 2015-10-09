@@ -1,3 +1,2 @@
-epiar_data_scenariodir = $(datadir)/epiar/data/scenario/default/
-epiar_data_scenario_DATA = data/scenario/default/alliances.xml    data/scenario/default/gates.xml    data/scenario/default/planets.xml       data/scenario/default/weapons.xml data/scenario/default/commodities.xml  data/scenario/default/models.xml   data/scenario/default/scenario.xml data/scenario/default/engines.xml      data/scenario/default/outfits.xml  data/scenario/default/technologies.xml  data/scenario/default/systems.xml
-
+epiar_data_scenariodir = $(datadir)/epiar/data/scenario/main/
+epiar_data_scenario_DATA = data/scenario/main/alliances.xml    data/scenario/main/gates.xml    data/scenario/main/planets.xml       data/scenario/main/weapons.xml data/scenario/main/commodities.xml  data/scenario/main/models.xml   data/scenario/main/scenario.xml data/scenario/main/engines.xml      data/scenario/main/outfits.xml  data/scenario/main/technologies.xml  data/scenario/main/sectors.xml

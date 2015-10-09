@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<sectors>
+	<version-major>0</version-major>
+	<version-minor>6</version-minor>
+	<version-macro>0</version-macro>
+
+	<sector>
+		<name>Sol</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>0</x>
+		<y>0</y>
+		<traffic>7</traffic>
+		<neighbors>
+			<neighbor>Alpha Centauri</neighbor>
+		</neighbors>
+	</sector>
+	<sector>
+		<name>Alpha Centauri</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>500</x>
+		<y>150</y>
+		<traffic>4</traffic>
+	</sector>
+
+</sectors>

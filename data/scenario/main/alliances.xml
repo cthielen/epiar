@@ -1,9 +1,19 @@
 <?xml version="1.0"?>
 <alliances>
-  <version-major>0</version-major>
-  <version-minor>5</version-minor>
-  <version-macro>2</version-macro>
-  <alliance>
+	<version-major>0</version-major>
+	<version-minor>6</version-minor>
+	<version-macro>0</version-macro>
+
+	<alliance>
+ 		<name>United Earth Alliance</name>
+		<abbreviation>UEA</abbreviation>
+		<aggressiveness>1.0</aggressiveness>
+		<attackSize>0</attackSize>
+		<currency>Credits</currency>
+		<color>0x004080</color>
+	</alliance>
+
+  <!--<alliance>
     <name>Autonomous Territory</name>
     <aggressiveness>0.0</aggressiveness>
     <attackSize>0</attackSize>
@@ -44,5 +54,5 @@
     <attackSize>0</attackSize>
     <currency>Credits</currency>
     <color>0x0000FF</color>
-  </alliance>
+  </alliance>-->
 </alliances>

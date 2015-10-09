@@ -1,52 +1,50 @@
 <?xml version="1.0"?>
 <planets>
-  <version-major>0</version-major>
-  <version-minor>5</version-minor>
-  <version-macro>2</version-macro>
-  <planet>
-    <name>Alexandria</name>
-    <alliance>Inter-Terran Conjunctive</alliance>
-    <x>-2541</x>
-    <y>-2816</y>
-    <landable>1</landable>
-    <traffic>8</traffic>
-    <image>data/graphics/planet2.png</image>
-    <surface-image>data/graphics/planet1s.png</surface-image>
-    <militia>5</militia>
-    <sphereOfInfluence>3299</sphereOfInfluence>
-    <technology>Terran Small-Scale Commerce</technology>
-    <summary></summary>
-  </planet>
-  <planet>
-    <name>Antikythera</name>
-    <alliance>Inter-Terran Conjunctive</alliance>
-    <x>345</x>
-    <y>215</y>
-    <landable>1</landable>
-    <traffic>5</traffic>
-    <image>data/graphics/planet1.png</image>
-    <surface-image>data/graphics/planet1s.png</surface-image>
-    <militia>20</militia>
-    <sphereOfInfluence>3000</sphereOfInfluence>
-    <technology>Terran Small-Scale Commerce</technology>
-    <summary></summary>
-  </planet>
-  <planet>
-    <name>Bersia</name>
-    <alliance>Inter-Terran Conjunctive</alliance>
-    <x>8669</x>
-    <y>-1531</y>
-    <landable>1</landable>
-    <traffic>6</traffic>
-    <image>data/graphics/planet6.png</image>
-    <surface-image>data/graphics/planet1s.png</surface-image>
-    <militia>7</militia>
-    <sphereOfInfluence>5843</sphereOfInfluence>
-    <technology>Terran Medium-Scale Commerce</technology>
-    <technology>Terran Small-Scale Commerce</technology>
-    <summary></summary>
-  </planet>
-  <planet>
+	<version-major>0</version-major>
+	<version-minor>6</version-minor>
+	<version-macro>0</version-macro>
+
+	<planet>
+		<name>Alexandria</name>
+		<alliance>United Earth Alliance</alliance>
+		<sector>Sol</sector>
+		<x>-2541</x>
+		<y>-2816</y>
+		<landable>1</landable>
+		<image>data/graphics/planet2.png</image>
+		<surface-image>data/graphics/planet1s.png</surface-image>
+		<technology>Terran Small-Scale Commerce</technology>
+		<summary>Alexandria is named for the center of civlization from ancient Earth. It is a beacon of mankind's political and social progress with a high standard of living, clean air, clean water, and non-existent crime. It has also served as the United Earth Alliance governmental center for the last two centuries.</summary>
+	</planet>
+
+	<planet>
+		<name>Antikythera</name>
+		<alliance>United Earth Alliance</alliance>
+		<sector>Sol</sector>
+		<x>345</x>
+		<y>215</y>
+		<landable>1</landable>
+		<image>data/graphics/planet1.png</image>
+		<surface-image>data/graphics/planet1s.png</surface-image>
+		<technology>Terran Small-Scale Commerce</technology>
+		<summary>Though not as glamorous as its nearby sibling planet Alexandria, Antikythera is the industrial center of the United Earth Alliance's operations and features the largest shipyard in the galaxy. The population is one of incredible immigration with beings coming from all corners of the galaxy to gain honest employment in Antikythera's factories, yards, and plants.</summary>
+	</planet>
+
+	<planet>
+		<name>Bersia</name>
+		<sector>Alpha Centauri</sector>
+		<alliance>United Earth Alliance</alliance>
+		<x>8669</x>
+		<y>-1531</y>
+		<landable>1</landable>
+		<image>data/graphics/planet6.png</image>
+		<surface-image>data/graphics/planet1s.png</surface-image>
+		<technology>Terran Medium-Scale Commerce</technology>
+		<technology>Terran Small-Scale Commerce</technology>
+		<summary>Bersia is a partially terra-formed world under the guidance of the UEA Planetary Engineering Team for the last fourteen decades. Through positive resettlement efforts by the central government combined with a lack of natural resources, Bersia has a growing population greatly in need of off-world supplies and is often a good place to sell food stuffs, medicine, and other basic supplies.</summary>
+	</planet>
+
+  <!--<planet>
     <name>Burrow</name>
     <alliance>Inter-Terran Conjunctive</alliance>
     <x>-23899</x>
@@ -438,5 +436,5 @@
     <technology>Vespian Exploration</technology>
     <technology>Vespian Guard</technology>
     <summary></summary>
-  </planet>
+  </planet>-->
 </planets>

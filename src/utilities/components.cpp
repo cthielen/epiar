@@ -167,14 +167,17 @@ bool Components::ParseXMLNode( xmlDocPtr doc, xmlNodePtr node )
 	if( (attr = FirstChildNamed(node,"name")) ){
 		component->SetName(NodeToString(doc,attr));
 	} else {
-		LogMsg(ERR,"Failed to find a name attribute for the %s node at line %ld.\n", NodeToString(doc,attr).c_str(), xmlGetLineNo(node) );
+		LogMsg(ERR, "Failed to find a name attribute for the %s node at line %ld.\n", NodeToString(doc,attr).c_str(), xmlGetLineNo(node) );
 		return false;
 	}
 
 	if( component->FromXMLNode(doc, node) ){
 		Add( component );
 		return true;
+	} else {
+		LogMsg(ERR, "Failed to parse component from XML node.");
 	}
+
 	return false;
 }
 

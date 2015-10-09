@@ -150,7 +150,7 @@ bool ArgParser::HaveArg( const string& arg ){
 /**\brief Prints a usage message dynamically generated.*/
 void ArgParser::PrintUsage( void ){
 	map<string,string>::iterator it;
-	cout << "Available options:" << endl;
+	cout << "Options:" << endl;
 	for ( it=validopt.begin(); it != validopt.end(); it++ ){
 		switch (validopttype[(*it).first]){
 			case SHORTOPT:

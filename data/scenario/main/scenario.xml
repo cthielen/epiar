@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <scenario>
 	<version-major>0</version-major>
-	<version-minor>5</version-minor>
-	<version-macro>2</version-macro>
-	<name>default</name>
-	<description>The default scenario is improving, but still needs a lot of work.</description>
+	<version-minor>6</version-minor>
+	<version-macro>0</version-macro>
+
+	<name>Main Game</name>
+	<description>The main game of Epiar.</description>
 	<commodities>commodities.xml</commodities>
 	<planets>planets.xml</planets>
 	<gates>gates.xml</gates>
@@ -15,7 +16,8 @@
 	<technologies>technologies.xml</technologies>
 	<outfits>outfits.xml</outfits>
 	<players>data/saves/saved-games.xml</players>
-	<systems>systems.xml</systems>
+	<sectors>sectors.xml</sectors>
+
 	<music></music>
 	<defaultPlayer>
 		<start>Antikythera</start>
