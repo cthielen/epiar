@@ -476,8 +476,6 @@ void Menu::CreateNewPlayer( )
 	string playerName = ((Textbox*)UI::Search("/Window'New Game'/Textbox'Player Name:'/"))->GetText();
 	string simName = ((Dropdown*)UI::Search("/Window'New Game'/Dropdown/"))->GetText();
 
-	if(OPTION(int, "options/sound/buttons")) Sound::Get( "data/audio/Interface/28853__junggle__btn043.ogg" )->Play();
-
 	if(players->PlayerExists(playerName)) {
 		Dialogs::Alert("A player with that name exists.");
 		return;
