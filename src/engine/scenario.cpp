@@ -26,7 +26,6 @@
 #include "sprites/player.h"
 #include "sprites/planets.h"
 #include "sprites/planets_lua.h"
-#include "sprites/gate.h"
 #include "sprites/spritemanager.h"
 #include "ui/ui.h"
 #include "ui/widgets.h"
@@ -51,7 +50,6 @@ Scenario::Scenario( void ) {
 	commodities = Commodities::Instance();
 	engines = Engines::Instance();
 	planets = Planets::Instance();
-	gates = Gates::Instance();
 	models = Models::Instance();
 	weapons = Weapons::Instance();
 	alliances = Alliances::Instance();
@@ -89,7 +87,6 @@ bool Scenario::New( string newname ) {
 	commodities->SetFileName( folderpath + "commodities.xml" );
 	engines->SetFileName( folderpath + "engines.xml" );
 	planets->SetFileName( folderpath + "planets.xml" );
-	gates->SetFileName( folderpath + "gates.xml" );
 	models->SetFileName( folderpath + "models.xml" );
 	weapons->SetFileName( folderpath + "weapons.xml" );
 	alliances->SetFileName( folderpath + "alliances.xml" );
@@ -100,7 +97,6 @@ bool Scenario::New( string newname ) {
 	Set("scenario/commodities", "commodities.xml" );
 	Set("scenario/engines", "engines.xml" );
 	Set("scenario/planets", "planets.xml" );
-	Set("scenario/gates", "gates.xml" );
 	Set("scenario/models", "models.xml" );
 	Set("scenario/weapons", "weapons.xml" );
 	Set("scenario/alliances", "alliances.xml" );
@@ -163,7 +159,6 @@ void Scenario::Save() {
 	XMLFile::Save();
 	GetAlliances()->Save();
 	GetCommodities()->Save();
-	GetGates()->Save();
 	GetModels()->Save();
 	GetWeapons()->Save();
 	GetEngines()->Save();
@@ -182,7 +177,7 @@ void Scenario::unpause() {
 	interpolateOn = true;
 }
 
-bool Scenario::SetupToRun(){
+bool Scenario::SetupToRun() {
 	bool luaLoad = true;
 
 	LogMsg(INFO, "Scenario setup started ...");
@@ -201,7 +196,7 @@ bool Scenario::SetupToRun(){
 	       && Lua::Load("data/scripts/ai.lua")
 	       && Lua::Load("data/scripts/missions.lua")
 	       && Lua::Load("data/scripts/player.lua")
-	       && Lua::Load("data/scripts/autopilot.lua")
+	       //&& Lua::Load("data/scripts/autopilot.lua")
 	       && Lua::Load("data/scripts/fleet.lua");
 
 	if (!luaLoad) {
@@ -218,39 +213,19 @@ bool Scenario::SetupToRun(){
 	} else {
 		// Add Planets
 		list<string>* planetNames = planets->GetNames();
-		for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
+		for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname) {
 			Planet* p = planets->GetPlanet(*pname);
 			sprites->Add( p );
-
-#ifdef ADD_ASTEROIDS
-			// Ticket #44
-			// TODO: These asteroids just wander to the edges of the universe, and only slow down the game when not visible.  Fix that.
-			// Add Asteroids near planets
-			//unsigned int a;
-			//for( a = 0; a < 100; a++ ){
-			//	Effect* asteroid = new Effect( p->GetWorldPosition() + GaussianCoordinate() * p->GetInfluence(), "data/animations/asteroid.ani", 1.0 );
-			//	asteroid->SetMomentum( GaussianCoordinate() *2 );
-			//	asteroid->SetAngle( float( rand() %360 ) );
-			//	sprites->Add( asteroid );
-			//}
-#endif
-	    }
-
-		// Add Gates
-		//list<string>* gateNames = gates->GetNames();
-		//for( list<string>::iterator gname = gateNames->begin(); gname != gateNames->end(); ++gname) {
-		//	sprites->Add(  gates->GetGate(*gname) );
-		//}
+		}
 	}
 
-	// Preloading this animation prevents an FPS
-	// drop the first time that a ship explodes.
+	// Preload animation to prevent FPS drop on first ship explosion
 	Ani::Get("data/animations/explosion1.ani");
 
 	// Randomize the Lua Seed
 	Lua::Call("randomizeseed");
 
-	LogMsg(INFO, "Scenario setup complete!");
+	LogMsg(INFO, "Scenario setup completed.");
 
 	return true;
 }
@@ -280,9 +255,8 @@ void SaveMapScale( void *scenarioInstance ) {
 }
 
 /**\brief Main game loop
- * \return true if the player is still alive
  */
-bool Scenario::Run() {
+void Scenario::Run() {
 	int fpsCount = 0;          // for FPS calculations
 	int fpsTotal= 0;           // for FPS calculations
 	Uint32 fpsTS = 0;          // timestamp of last FPS printing
@@ -428,14 +402,12 @@ bool Scenario::Run() {
 	Hud::Close();
 
 	LogMsg(INFO,"Scenario stopped. Average framerate: %f frames / second", 1000.0 *((float)fpsTotal / Timer::GetTicks() ) );
-
-	return (player->GetHullIntegrityPct() > 0);
 }
 
 bool Scenario::SetupToEdit() {
 	bool luaLoad = true;
 
-	LogMsg(INFO, "Scenario Edit Setup Starting");
+	LogMsg(INFO, "Scenario edit setup starting ...");
 
 	// Load main Lua registers
 	LuaRegisters(L);
@@ -462,14 +434,9 @@ bool Scenario::SetupToEdit() {
 		for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
 			sprites->Add(  planets->GetPlanet(*pname) );
 		}
-
-		list<string>* gateNames = gates->GetNames();
-		for( list<string>::iterator gname = gateNames->begin(); gname != gateNames->end(); ++gname){
-			sprites->Add(  gates->GetGate(*gname) );
-		}
 	}
 
-	LogMsg(INFO, "Scenario Edit Setup Complete");
+	LogMsg(INFO, "Scenario edit setup completed.");
 
 	return true;
 }
@@ -568,10 +535,6 @@ bool Scenario::Parse( void ) {
 		}
 		if( planets->Load( (folderpath + Get("planets")) ) != true ) {
 		    LogMsg(WARN, "There was an error loading the planets from '%s'.", (folderpath + Get("planets")).c_str() );
-		    return false;
-		}
-		if( gates->Load( (folderpath + Get("gates")) ) != true ) {
-		    LogMsg(WARN, "There was an error loading the gates from '%s'.", (folderpath + Get("gates")).c_str() );
 		    return false;
 		}
 	}
@@ -776,8 +739,8 @@ void Scenario::CreateDefaultPlayer(string playerName) {
 	assert( models->GetModel( Get("defaultPlayer/model") ) );
 	assert( engines->GetEngine( Get("defaultPlayer/engine") ) );
 
-  player = players->CreateNew(
-    GetName(),
+	player = players->CreateNew(
+		GetName(),
 		playerName,
 		models->GetModel( Get("defaultPlayer/model") ),
 		engines->GetEngine( Get("defaultPlayer/engine") ),

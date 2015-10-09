@@ -15,7 +15,6 @@
 #include "engine/models.h"
 #include "engine/calendar.h"
 #include "sprites/planets.h"
-#include "sprites/gate.h"
 #include "engine/weapons.h"
 #include "engine/technologies.h"
 #include "engine/sectors.h"
@@ -35,7 +34,7 @@ class Scenario : public XMLFile {
 		bool SetupToRun();
 		bool SetupToEdit();
 
-		bool Run();
+		void Run();
 		bool Edit();
 
 		void CreateDefaultPlayer(string name);
@@ -48,13 +47,13 @@ class Scenario : public XMLFile {
 		void Save();
 		void pause();
 		void unpause();
-		bool isPaused() {return paused;}
-		bool isLoaded() {return loaded;}
+
+		bool isPaused() { return paused; }
+		bool isLoaded() { return loaded; }
 
 		SpriteManager *GetSpriteManager() { return sprites; }
 		Commodities *GetCommodities() { return commodities; }
 		Planets *GetPlanets() { return planets; }
-		Gates *GetGates() { return gates; }
 		Engines *GetEngines() { return engines; }
 		Models *GetModels() { return models; }
 		Weapons *GetWeapons() { return weapons; }
@@ -83,13 +82,11 @@ class Scenario : public XMLFile {
 		void CreateNavMap( void );
 
 		// Pointers to Singletons
-		///< TODO: These should all be rewritten to not be singletons
 		lua_State *L;
 		SpriteManager *sprites;
 
 		Commodities *commodities;
 		Planets *planets;
-		Gates *gates;
 		Engines *engines;
 		Models *models;
 		Weapons *weapons;

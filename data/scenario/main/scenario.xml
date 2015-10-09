@@ -8,7 +8,6 @@
 	<description>The main game of Epiar.</description>
 	<commodities>commodities.xml</commodities>
 	<planets>planets.xml</planets>
-	<gates>gates.xml</gates>
 	<models>models.xml</models>
 	<engines>engines.xml</engines>
 	<alliances>alliances.xml</alliances>

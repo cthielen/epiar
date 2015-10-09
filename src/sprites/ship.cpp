@@ -51,10 +51,9 @@
  *
  * \b Jumping:
  *
- *   Some Engines are equipped with "Jump Drives".  These Faster-Than-Light
+ *   Engines are equipped with "Jump Drives".  These Faster-Than-Light
  *   (FTL) Drives will move the ship nearly instantly to any point in the
- *   Universe.  Ships without Jump Drives can still 'Jump' by using the Gate
- *   network.
+ *   Universe.
  *   \see Ship::JumpDrive
  *   \see Ship::Jump
  *
@@ -373,8 +372,6 @@ bool Ship::Jump( Coordinate position, bool jumpDrive ) {
 }
 
 /**\brief Begin a Jump using the Ships Engines
- * \note This is how most Ships should Jump under their own power.
- *       Calling Jump Directly should only be done by Gates.
  */
 bool Ship::JumpDrive( Coordinate position ) {
 	// Can the ship's Engine Jump?

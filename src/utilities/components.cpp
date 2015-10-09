@@ -154,7 +154,7 @@ Component* Components::Get(string name) {
  * \todo Some Components instances should override this function to allow
  *       multiple Component types to be parsed depending on some
  *       characteristic.  For example, the planets xml might want to contain
- *       planets, stations, and gates.
+ *       planets and stations.
  *
  */
 

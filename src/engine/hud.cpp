@@ -13,7 +13,6 @@
 #include "graphics/video.h"
 #include "graphics/font.h"
 #include "sprites/player.h"
-#include "sprites/gate.h"
 #include "sprites/spritemanager.h"
 #include "ui/ui_map.h"
 #include "utilities/log.h"
@@ -692,7 +691,6 @@ void Radar::StartLargeMode( Camera* camera, SpriteManager* sprites ) {
 	map->SetFilter(
 		DRAW_ORDER_PLAYER   |
 		DRAW_ORDER_PLANET   |
-		DRAW_ORDER_GATE_TOP |
 		DRAW_ORDER_SHIP );
 	map->SetScale( 300.0 / (2*visibility) );
 	UI::Add(map);

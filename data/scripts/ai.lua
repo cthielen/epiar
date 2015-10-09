@@ -20,9 +20,9 @@ function FindADestination(id,x,y,angle,speed,vector)
 	-- Choose a planet
 	local cur_ship = Epiar.getSprite(id)
 
-	if AIData[id].destinationName ~= nil and AIData[id].alwaysGateTravel == true then
-		return GateTraveler.ComputingRoute(id,x,y,angle,speed,vector)
-	end
+	--if AIData[id].destinationName ~= nil and AIData[id].alwaysGateTravel == true then
+	--	return GateTraveler.ComputingRoute(id,x,y,angle,speed,vector)
+	--end
 
 	local planetNames = Epiar.planetNames()
 	local destination = Planet.Get(planetNames[ math.random(#planetNames) ])
@@ -83,47 +83,6 @@ function setHuntHostile(id, tid)
 		AIData[id].foundTarget = 0
 	end
 end
-
--- Gate Traveler AI to be used by others
-GateTraveler = {
-	default = function(id,x,y,angle,speed,vector)
-		print "WARNING: GateTraveler default state was invoked. This should not happen."
-		local cur_ship = Epiar.getSprite(id)
-		cur_ship:Explode()
-		return "default"
-	end,
-	ComputingRoute = function(id,x,y,angle,speed,vector)
-		if AIData[id].Autopilot == nil then
-			AIData[id].Autopilot = APInit( "AI", id )
-		end
-		if AIData[id].Autopilot.spcr == nil then
-			AIData[id].Autopilot:compute( AIData[id].destinationName )
-		else
-			local finished = AIData[id].Autopilot.spcrTick()
-			if finished then 
-				return "GateTravelling"
-			else
-				return "ComputingRoute"
-			end
-		end
-	end,
-	GateTravelling = function(id,x,y,angle,speed,vector)
-		local cur_ship = Epiar.getSprite(id)
-		if AIData[id].Autopilot == nil then
-			return "default"
-		end
-		if AIData[id].Autopilot.AllowAccel ~= false then
-			cur_ship:Accelerate()
-		end
-
-		local enroute = AIData[id].Autopilot:autoAngle()
-		if enroute then return "GateTravelling" end
-
-		AIData[id].destination = -1
-		AIData[id].destinationName = nil
-		return "Travelling" -- Once the autopilot finishes up, revert back to standard Travelling state
-	end
-}
 
 --- Hunter AI
 Hunter = {
@@ -205,8 +164,8 @@ Hunter = {
 		end
 	end,
 
-	ComputingRoute = GateTraveler.ComputingRoute,
-	GateTravelling = GateTraveler.GateTravelling,
+	--ComputingRoute = GateTraveler.ComputingRoute,
+	--GateTravelling = GateTraveler.GateTravelling,
 	Travelling = function(id,x,y,angle,speed,vector)
 		-- Find a new target
 		local cur_ship = Epiar.getSprite(id)
@@ -260,8 +219,8 @@ Trader = {
 			return "New_Planet"
 		end
 	end,
-	ComputingRoute = GateTraveler.ComputingRoute,
-	GateTravelling = GateTraveler.GateTravelling,
+	--ComputingRoute = GateTraveler.ComputingRoute,
+	--GateTravelling = GateTraveler.GateTravelling,
 	Travelling = function(id,x,y,angle,speed,vector)
 		if AIData[id].hostile == 1 then return "Hunting" end
 		-- Get to the planet
@@ -308,8 +267,8 @@ Patrol = {
 	New_Planet = FindADestination,
 	Hunting = Hunter.Hunting,
 	Killing = Hunter.Killing,
-	ComputingRoute = GateTraveler.ComputingRoute,
-	GateTravelling = GateTraveler.GateTravelling,
+	--ComputingRoute = GateTraveler.ComputingRoute,
+	--GateTravelling = GateTraveler.GateTravelling,
 	Travelling = function(id,x,y,angle,speed,vector)
 		if AIData[id].hostile == 1 then return "Hunting" end
 		local cur_ship = Epiar.getSprite(id)
@@ -382,8 +341,8 @@ Patrol = {
 Bully = {
 	default = Patrol.default,
 	New_Planet = FindADestination,
-	ComputingRoute = GateTraveler.ComputingRoute,
-	GateTravelling = GateTraveler.GateTravelling,
+	--ComputingRoute = GateTraveler.ComputingRoute,
+	--GateTravelling = GateTraveler.GateTravelling,
 	Travelling = Patrol.Travelling,
 	TooClose = Patrol.TooClose,
 	TooFar = Patrol.TooFar,
@@ -441,8 +400,8 @@ Escort = {
 		if AIData[id].accompany >= 0 then return "Accompanying" end
 		return "New_Planet"
 	end,
-	ComputingRoute = GateTraveler.ComputingRoute,
-	GateTravelling = GateTraveler.GateTravelling,
+	--ComputingRoute = GateTraveler.ComputingRoute,
+	--GateTravelling = GateTraveler.GateTravelling,
 	Travelling = function(id,x,y,angle,speed,vector)
 		if AIData[id].accompany > -1 then return "Accompanying" end
 		return Patrol.Travelling(id,x,y,angle,speed,vector)

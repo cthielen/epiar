@@ -41,7 +41,7 @@ playerCommands = {
 	{'=', "Equalize Power Management", "equlizePowerManagement()", KEYTYPED},
 
 	-- Auto Pilot
-	{'lalt', "Toggle autopilot", "playerAutopilotToggle()", KEYTYPED},
+	--{'lalt', "Toggle autopilot", "playerAutopilotToggle()", KEYTYPED},
 	{'T', "Configure autopilot", "showAPConfigDialog()", KEYTYPED},
 
 	-- Fleet Commands

@@ -46,8 +46,6 @@ class Scenario_Lua {
 		static int SavePlayer(lua_State *L);
 		static int NewPlayer(lua_State *L);
 
-		static int NewGatePair(lua_State *L);
-
 		// Sprite Fetchers
 		static int GetPlayer(lua_State *L);
 		static int GetSpriteByID(lua_State *L);
@@ -57,7 +55,6 @@ class Scenario_Lua {
 		static int GetNearestPlanet(lua_State *L);
 		static int GetShips(lua_State *L);
 		static int GetPlanets(lua_State *L);
-		static int GetGates(lua_State *L);
 
 		// Game Components
 		static int GetCommodityNames(lua_State *L);
@@ -68,7 +65,6 @@ class Scenario_Lua {
 		static int GetOutfitNames(lua_State *L);
 		static int GetTechnologyNames(lua_State *L);
 		static int GetPlanetNames(lua_State *L);
-		static int GetGateNames(lua_State *L);
 
 		// Information about Components
 		static int GetMSRP(lua_State *L);
@@ -77,7 +73,6 @@ class Scenario_Lua {
 		static int GetAllianceInfo(lua_State *L);
 		static int GetModelInfo(lua_State *L);
 		static int GetPlanetInfo(lua_State *L);
-		static int GetGateInfo(lua_State *L);
 		static int GetWeaponInfo(lua_State *L);
 		static int GetEngineInfo(lua_State *L);
 		static int GetOutfitInfo(lua_State *L);

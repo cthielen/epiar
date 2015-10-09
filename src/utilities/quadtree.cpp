@@ -545,14 +545,9 @@ xmlNodePtr QuadTree::ToNode() {
 				case DRAW_ORDER_PLAYER:
 					snprintf(buff, sizeof(buff), "%s", "Player" );
 					break;
-				case DRAW_ORDER_GATE_TOP:
-					snprintf(buff, sizeof(buff), "%s", "Gate" );
-					break;
 				case DRAW_ORDER_EFFECT:
 					snprintf(buff, sizeof(buff), "%s", "Effect" );
 					break;
-				case DRAW_ORDER_GATE_BOTTOM: // Ignore
-					continue;
 				default:
 					LogMsg(ERR,"Unknown Sprite Type: %d",(*i)->GetDrawOrder());
 					assert(0);

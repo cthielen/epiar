@@ -147,7 +147,7 @@ bool SpriteManager::DeleteSprite( Sprite *sprite ) {
 	GetQuadrant( sprite->GetWorldPosition() )->Delete( sprite );
 	// Delete the sprite itself unless it is a Planet or Player.
 	// Planets and Players are special sprites since they are Components and get saved.
-	if( !(sprite->GetDrawOrder() & (DRAW_ORDER_PLAYER | DRAW_ORDER_PLANET | DRAW_ORDER_GATE_TOP | DRAW_ORDER_GATE_BOTTOM)) ) {
+	if( !(sprite->GetDrawOrder() & (DRAW_ORDER_PLAYER | DRAW_ORDER_PLANET )) ) {
 		delete sprite;
 	}
 	return true;

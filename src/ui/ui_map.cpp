@@ -1,7 +1,7 @@
 /**\file			ui_map.cpp
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
- * \date			Modified: Saturday, May 28, 2011
+ * \date			Modified: Thursday, October 8, 2015
  * \brief			Map Widget
  * \details
  */
@@ -9,7 +9,6 @@
 #include "includes.h"
 #include "ui/ui_map.h"
 #include "sprites/planets.h"
-#include "sprites/gate.h"
 #include "sprites/effects.h"
 #include "utilities/timer.h"
 
@@ -41,8 +40,7 @@ Map::Map( int x, int y, int w, int h, Coordinate center, SpriteManager* sprites 
 	this->sprites = sprites;
 
 	spriteTypes = ( DRAW_ORDER_PLAYER   |
-	                DRAW_ORDER_PLANET   |
-	                DRAW_ORDER_GATE_TOP );
+	                DRAW_ORDER_PLANET );
 
 	// Show sprites only if this option is set.
 	if( OPTION(int,"options/development/ships-worldmap") ) {
@@ -91,10 +89,7 @@ void Map::Draw( int relx, int rely )
 
 	// These variables are used for almost every sprite symbol
 	Coordinate pos, pos2;
-	Color col, field, gatePath;
-
-	// Configurable Settings
-	gatePath = Color( SKIN("Skin/HUD/Map/GatePath") );
+	Color col, field;
 
 	// The Backdrop
 	Video::DrawRect( relx + GetX(), rely + GetY(), w, h, BLACK, alpha);
@@ -155,18 +150,6 @@ void Map::Draw( int relx, int rely )
 					Video::DrawFilledCircle( pos, (10 * scale) / i, field, alpha * 0.05f );
 				}
 				Video::DrawCircle( pos, 3, 1, col, alpha );
-				break;
-
-			case DRAW_ORDER_GATE_TOP:
-				Video::DrawCircle( pos, 3, 1, col, alpha );
-				if( ((Gate*)(*iter))->GetExit() != NULL ) {
-					pos2 = WorldToScreen( ((Gate*)(*iter))->GetExit()->GetWorldPosition() );
-					Video::DrawLine( pos, pos2, gatePath, alpha*.5f );
-				}
-				break;
-
-			case DRAW_ORDER_GATE_BOTTOM:
-				// Don't draw these ever, they are invisible.
 				break;
 
 			default:

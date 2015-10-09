@@ -28,7 +28,6 @@ Picture *Menu::load = NULL;
 Picture *Menu::edit = NULL;
 Picture *Menu::options = NULL;
 Picture *Menu::exit = NULL;
-Picture *Menu::continueButton = NULL;
 
 Song *Menu::bgMusic = NULL;
 
@@ -310,38 +309,14 @@ void Menu::StartGame( void *info )
 	}
 	
 	// Run the scenario
-	bool alive = scenario.Run();
+	scenario.Run();
+
 	UI::SwapScreens( "Main Screen", gameSplash, menuSplash );
 
-	if( alive )
-	{
-		// Continue Button
-		continueButton = PictureButton( Video::GetWidth() - 300, 200, Menu::ContinueGame,
-		                                Image::Get( "data/graphics/txt_continue_active.png"),
-		                                Image::Get( "data/graphics/txt_continue_inactive.png") );
-	} else {
-		// Restore play/load/edit buttons
-		play->Show();
-		load->Show();
-		edit->Show();
-	}
-}
-
-/** Continue a background scenario
- */
-void Menu::ContinueGame()
-{
-    // Only attempt to Run if the scenario has loaded
-    assert( scenario.isLoaded() );
-    UI::SwapScreens( "In Game", menuSplash, gameSplash );
-    bool alive = scenario.Run();
-    UI::SwapScreens( "Main Screen", gameSplash, menuSplash );
-
-    if( !alive )
-    {
-        UI::Close( continueButton );
-        continueButton = NULL;
-    }
+	// Restore play/load/edit buttons
+	play->Show();
+	load->Show();
+	edit->Show();
 }
 
 /** This Window will launch the editor.

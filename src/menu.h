@@ -37,7 +37,6 @@ class Menu {
 	static Picture *edit;
 	static Picture *options;
 	static Picture *exit;
-	static Picture *continueButton;
 
 	// Music
 	static Song* bgMusic;
@@ -50,7 +49,6 @@ class Menu {
 	static void CreateNewWindow();
 	static void CreateLoadWindow();
 	static void StartGame( void* playerInfo );
-	static void ContinueGame();
 	static void CreateEditWindow();
 	static void StartEditor();
 	static void QuitMenu();

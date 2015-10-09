@@ -29,7 +29,6 @@
 #include "sprites/sprite.h"
 #include "sprites/planets.h"
 #include "sprites/planets_lua.h"
-#include "sprites/gate.h"
 #include "engine/camera.h"
 #include "input/input.h"
 #include "utilities/file.h"
@@ -46,11 +45,9 @@ void Scenario_Lua::RegisterScenario(lua_State *L) {
 
 	// Sprite Types
 	Lua::RegisterGlobal("SPRITE_PLANET",      DRAW_ORDER_PLANET     );
-	Lua::RegisterGlobal("SPRITE_GATE_BOTTOM", DRAW_ORDER_GATE_BOTTOM);
 	Lua::RegisterGlobal("SPRITE_PROJECTILE",  DRAW_ORDER_PROJECTILE );
 	Lua::RegisterGlobal("SPRITE_SHIP",        DRAW_ORDER_SHIP       );
 	Lua::RegisterGlobal("SPRITE_PLAYER",      DRAW_ORDER_PLAYER     );
-	Lua::RegisterGlobal("SPRITE_GATE_TOP",    DRAW_ORDER_GATE_TOP   );
 	Lua::RegisterGlobal("SPRITE_EFFECT",      DRAW_ORDER_EFFECT     );
 
 	// Input Key States
@@ -76,9 +73,6 @@ void Scenario_Lua::RegisterScenario(lua_State *L) {
 		{"players", &Scenario_Lua::GetPlayerNames},
 		{"player", &Scenario_Lua::GetPlayer},
 
-		// Sprite Creation Functions
-		{"NewGatePair", &Scenario_Lua::NewGatePair},
-
 		// Camera Functions
 		{"getCamera", &Scenario_Lua::GetCamera},
 		{"moveCamera", &Scenario_Lua::MoveCamera},
@@ -94,13 +88,11 @@ void Scenario_Lua::RegisterScenario(lua_State *L) {
 		{"engines", &Scenario_Lua::GetEngineNames},
 		{"technologies", &Scenario_Lua::GetTechnologyNames},
 		{"planetNames", &Scenario_Lua::GetPlanetNames},
-		{"gateNames", &Scenario_Lua::GetGateNames},
 
 		// Sprite Searching Functions
 		{"getSprite", &Scenario_Lua::GetSpriteByID},
 		{"ships", &Scenario_Lua::GetShips},
 		{"planets", &Scenario_Lua::GetPlanets},
-		{"gates", &Scenario_Lua::GetGates},
 		{"nearestShip", &Scenario_Lua::GetNearestShip},
 		{"nearestPlanet", &Scenario_Lua::GetNearestPlanet},
 
@@ -115,7 +107,6 @@ void Scenario_Lua::RegisterScenario(lua_State *L) {
 		{"getAllianceInfo", &Scenario_Lua::GetAllianceInfo},
 		{"getModelInfo", &Scenario_Lua::GetModelInfo},
 		{"getPlanetInfo", &Scenario_Lua::GetPlanetInfo},
-		{"getGateInfo", &Scenario_Lua::GetGateInfo},
 		{"getWeaponInfo", &Scenario_Lua::GetWeaponInfo},
 		{"getEngineInfo", &Scenario_Lua::GetEngineInfo},
 		{"getOutfitInfo", &Scenario_Lua::GetOutfitInfo},
@@ -351,32 +342,6 @@ int Scenario_Lua::GetPlayer(lua_State *L){
 	return 1;
 }
 
-/** \brief Create Two Gates that are linked to each other
- *  \param [in] X value for Gate 1
- *  \param [in] Y value for Gate 1
- *  \param [in] X value for Gate 2
- *  \param [in] Y value for Gate 2
- */
-int Scenario_Lua::NewGatePair(lua_State *L){
-	int n = lua_gettop(L);
-	if (n != 4) {
-		return luaL_error(L, "Only %d arguments. Gates require two x,y pairs (x1,y1,x2,y2)", n);
-	}
-
-	Gate* gate_1 = new Gate( Coordinate( luaL_checkinteger(L,1), luaL_checkinteger(L,2)));
-	Gate* gate_2 = new Gate( Coordinate( luaL_checkinteger(L,3), luaL_checkinteger(L,4)));
-	GetScenario(L)->GetSpriteManager()->Add((Sprite*)gate_1);
-	GetScenario(L)->GetSpriteManager()->Add((Sprite*)gate_2);
-
-	// Note that we need to set the exit _after_ adding to the SpriteManager since SetExit checks that the Sprite exists.
-	Gate::SetPair( gate_1, gate_2 );
-
-	GetScenario(L)->GetGates()->Add( gate_1 );
-	GetScenario(L)->GetGates()->Add( gate_2 );
-
-	return 0;
-}
-
 /** \brief Get Camera Position
  *  \returns X,Y position of the camera.
  */
@@ -520,15 +485,6 @@ int Scenario_Lua::GetTechnologyNames(lua_State *L){
  */
 int Scenario_Lua::GetPlanetNames(lua_State *L){
 	list<string> *names = GetScenario(L)->GetPlanets()->GetNames();
-	Lua::pushStringList(L,names);
-	return 1;
-}
-
-/** \brief Get Gate names
- *  \returns list of names as strings
- */
-int Scenario_Lua::GetGateNames(lua_State *L){
-	list<string> *names = GetScenario(L)->GetGates()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -679,24 +635,6 @@ int Scenario_Lua::GetPlanets(lua_State *L){
 	int index = 1;
 	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
 		PushSprite(L,planets->GetPlanet(*pname));
-		lua_rawseti(L, newTable, index);
-		++index;
-	}
-	return 1;
-}
-
-/** Get Lua references to All Gates
- * \returns list of Gate References
- */
-int Scenario_Lua::GetGates(lua_State *L){
-	Gates *gates = GetScenario(L)->GetGates();
-	list<string>* gateNames = gates->GetNames();
-
-	lua_createtable(L, gateNames->size(), 0);
-	int newTable = lua_gettop(L);
-	int index = 1;
-	for( list<string>::iterator gname = gateNames->begin(); gname != gateNames->end(); ++gname){
-		PushSprite(L,gates->GetGate(*gname));
 		lua_rawseti(L, newTable, index);
 		++index;
 	}
@@ -944,40 +882,6 @@ int Scenario_Lua::GetPlanetInfo(lua_State *L) {
 	list<Technology*> techs =  p->GetTechnologies();
 	PushComponents(L,  (list<Component*>*)&techs );
 	lua_settable(L, -3);
-	return 1;
-}
-
-/** \brief Get Information about a Gate
- *  \returns Lua table of Gate Information
- */
-int Scenario_Lua::GetGateInfo(lua_State *L) {
-	int n = lua_gettop(L);  // Number of arguments
-	if( n!=1 )
-		return luaL_error(L, "Got %d arguments expected 1 (planetID)", n);
-
-	// Figure out which gate we're fetching
-	Gate* g = NULL;
-	if( lua_isnumber(L,1)){
-		int id = luaL_checkinteger(L,1);
-		Sprite* sprite = GetScenario(L)->GetSpriteManager()->GetSpriteByID(id);
-		if( ! (sprite->GetDrawOrder() & (DRAW_ORDER_GATE_TOP|DRAW_ORDER_GATE_BOTTOM)) )
-			return luaL_error(L, "ID #%d does not point to a Gate", id);
-		g = (Gate*)(sprite);
-	} else if( lua_isstring(L,1)){
-		string name = luaL_checkstring(L,1);
-		g = GetScenario(L)->GetGates()->GetGate(name);
-	}
-	if(g==NULL){ g = new Gate(); }
-
-	// Populate the Info Table.
-	lua_newtable(L);
-	Lua::setField("Name", g->GetName().c_str());
-	Lua::setField("X", static_cast<float>(g->GetWorldPosition().GetX()));
-	Lua::setField("Y", static_cast<float>(g->GetWorldPosition().GetY()));
-	Lua::setField("Exit", (g->GetExit() != NULL) && (g->GetExit()->GetDrawOrder() & (DRAW_ORDER_GATE_TOP|DRAW_ORDER_GATE_BOTTOM))
-	                    ? ( (Gate*)g->GetExit() )->GetName().c_str()
-						: "" );
-
 	return 1;
 }
 
@@ -1314,23 +1218,6 @@ int Scenario_Lua::SetInfo(lua_State *L) {
 			Planet* newPlanet = new Planet(thisPlanet);
 			GetScenario(L)->GetPlanets()->Add(newPlanet);
 			GetScenario(L)->GetSpriteManager()->Add(newPlanet);
-		}
-
-	} else if(kind == "Gate"){
-		string gateName = Lua::getStringField(3,"Name");
-		int x = Lua::getIntField(3,"X");
-		int y = Lua::getIntField(3,"Y");
-		string exitName = Lua::getStringField(3,"Exit");
-
-		Gates* gates = GetScenario(L)->GetGates();
-
-		Gate *gate = gates->GetGate( gateName );
-		Gate *exit = gates->GetGate( exitName );
-		if( gate != NULL ) {
-			gate->SetWorldPosition( Coordinate(x,y) );
-			if( exit != NULL ) {
-				Gate::SetPair( gate,exit );
-			}
 		}
 
 	} else if(kind == "Technology"){

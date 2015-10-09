@@ -32,7 +32,6 @@ epiar_SOURCES = src/main.cpp \
                 src/sprites/ai.cpp \
                 src/sprites/ai_lua.cpp \
                 src/sprites/effects.cpp \
-                src/sprites/gate.cpp \
                 src/sprites/planets.cpp \
                 src/sprites/planets_lua.cpp \
                 src/sprites/player.cpp \

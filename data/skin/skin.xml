@@ -41,7 +41,6 @@
       <Size>8</Size>
     </StatusBar>
     <Map>
-      <GatePath>0x004080</GatePath>
       <Font>data/fonts/usuziv2.ttf</Font>
       <Color>0xCCCCCC</Color>
       <Size>11</Size>
