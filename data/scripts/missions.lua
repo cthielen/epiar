@@ -224,7 +224,7 @@ CollectArtifacts = {
 		missionTable.Actors = choose( enemies )
 		missionTable.FriendAlliance = choose( allianceNames )
 		missionTable.EnemyAlliance = choose( allianceNames )
-		missionTable.NumArtifacts = math.random( 2, 6 )
+		missionTable.NumArtifacts = 1 -- TODO: This cannot exceed the size of 'planetNames' math.random( 2, 6 )
 		missionTable.FinalPlanet = choose( planetNames )
 		missionTable.Adjective = choose( array_concat(colors, materials, eventAdjectives, timeAdjectives) )
 		missionTable.Event = choose( events )
@@ -251,6 +251,7 @@ CollectArtifacts = {
 		missionTable.Description = choose( descriptions )
 
 		-- Get a random subset of the Objects and Planets
+		-- TODO: This assumes a certain number of planets (2-6) which is no longer the case in sectors
 		table.shuffle( planetNames )
 		table.shuffle( objects )
 		missionTable.Description = missionTable.Description .. "\n"

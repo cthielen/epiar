@@ -145,8 +145,6 @@ void Main_Load_Settings() {
 
 	// Simultaion
 	Options::AddDefault( "options/scenario/automatic-load", 0 );
-	Options::AddDefault( "options/scenario/random-universe", 0 );
-	Options::AddDefault( "options/scenario/random-seed", 0 );
 
 	// Timing
 	Options::AddDefault( "options/timing/screen-swap", 0 ); // FIXME, 0=disabled until the transition is better

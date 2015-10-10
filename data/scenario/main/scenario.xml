@@ -19,7 +19,6 @@
 
 	<music></music>
 	<defaultPlayer>
-		<start>Antikythera</start>
 		<model>Shuttle</model>
 		<engine>Altaire Corp. NM66 Sublight Thrusters</engine>
 		<sector>Sol</sector>

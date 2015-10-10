@@ -277,8 +277,6 @@ void Menu::StartGame( void *info )
 	string simName = playerToLoad->scenario;
 	string playerName = playerToLoad->GetName();
 
-	SETOPTION( "options/scenario/random-seed", playerToLoad->seed );
-	
 	// Load the Scenario
 	if( !scenario.Load( simName ) )
 	{
@@ -337,9 +335,6 @@ void Menu::CreateEditWindow()
 		return;
 	}
 
-	char seed[20];
-	snprintf(seed, sizeof(seed), "%d", rand() );
-
 	Window *editorWnd = NULL;
 	UI::Add( editorWnd = (new Window(250, 300, "Editor"))
 		->AddChild( (new Tabs( 10, 40, 230, 210, "EDIT TABS"))
@@ -351,9 +346,6 @@ void Menu::CreateEditWindow()
 			->AddChild( (new Tab( "Create" ))
 				->AddChild( (new Label(15, 10, "Scenario Name:")) )
 				->AddChild( (new Textbox(40, 40, 80, 1, "", "Scenario Name")) )
-				->AddChild( (new Checkbox(15, 90, 0, "Start With Random Universe")) )
-				->AddChild( (new Label(15, 120, "Seed:")) )
-				->AddChild( (new Textbox(50, 120, 80, 1, seed, "Random Universe Seed")) )
 			)
 		)
 	);
@@ -376,7 +368,7 @@ void Menu::StartEditor()
 	load = NULL;
 
 	// Since the Random Universe Editor is currently broken, disable this feature here.
-	SETOPTION( "options/scenario/random-universe", 0 );
+	//SETOPTION( "options/scenario/random-universe", 0 );
 
 	Tab* activeTab = ((Tabs*)UI::Search("/Window'Editor'/Tabs/"))->GetActiveTab();
 	if( activeTab->GetName() == "Edit" ) {
@@ -388,12 +380,6 @@ void Menu::StartEditor()
 		}
 	} else { // Create
 		simName = ((Textbox*)activeTab->Search("/Textbox'Scenario Name'/"))->GetText();
-
-		// Random Universe options
-		int israndom = ((Checkbox*)activeTab->Search("/Checkbox'Start With Random Universe'/"))->IsChecked();
-		int seed = atoi( ((Textbox*)activeTab->Search("/Textbox'Random Universe Seed'/"))->GetText().c_str() );
-		SETOPTION( "options/scenario/random-universe", israndom );
-		SETOPTION( "options/scenario/random-seed", seed );
 
 		scenario.New( simName );
 	}
@@ -461,7 +447,7 @@ void Menu::CreateNewPlayer( )
 		return;
 	}
 
-	playerToLoad = new PlayerInfo( playerName, simName, 0 );
+	playerToLoad = new PlayerInfo( playerName, simName );
 
 	StartGame( playerToLoad );
 }

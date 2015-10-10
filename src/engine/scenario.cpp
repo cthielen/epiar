@@ -104,7 +104,6 @@ bool Scenario::New( string newname ) {
 	Set("scenario/outfits", "outfits.xml" );
 	Set("scenario/sectors", "sectors.xml" );
 
-	Set("defaultPlayer/start", "");
 	Set("defaultPlayer/model", "");
 	Set("defaultPlayer/engine", "");
 	Set("defaultPlayer/credits", 0);
@@ -148,8 +147,8 @@ void Scenario::Save() {
 	}
 
 	// Check Defaults
-	if( planets->Get( Get("defaultPlayer/start")) == NULL)
-		LogMsg(WARN, "Bad Default Player Start Location '%s'.", Get("defaultPlayer/start").c_str() );
+	if( sectors->Get( Get("defaultPlayer/sector")) == NULL)
+		LogMsg(WARN, "Bad Default Player Start Location '%s'.", Get("defaultPlayer/sector").c_str() );
 	if( models->Get( Get("defaultPlayer/model")) == NULL)
 		LogMsg(WARN, "Bad Default Player Start Model '%s'.", Get("defaultPlayer/model").c_str() );
 	if( engines->Get( Get("defaultPlayer/engine")) == NULL)
@@ -182,10 +181,9 @@ bool Scenario::SetupToRun() {
 
 	LogMsg(INFO, "Scenario setup started ...");
 
-	Timer::Update(); // Start the Timer
-
 	// Load default Lua registers
 	LuaRegisters(L);
+
 	// Load ::Run()-specific Lua registers
 	AI_Lua::RegisterAI(L);
 
@@ -204,19 +202,11 @@ bool Scenario::SetupToRun() {
 		return false;
 	}
 
-	if( OPTION(int, "options/scenario/random-universe") ) {
-		if( OPTION(int, "options/scenario/random-seed") ) {
-			Lua::Call("createSystems", "i", OPTION(int, "options/scenario/random-seed") );
-		} else {
-			Lua::Call("createSystems");
-		}
-	} else {
-		// Add Planets
-		list<string>* planetNames = planets->GetNames();
-		for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname) {
-			Planet* p = planets->GetPlanet(*pname);
-			sprites->Add( p );
-		}
+	// Add Planets
+	list<string>* planetNames = planets->GetNames();
+	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname) {
+		Planet* p = planets->GetPlanet(*pname);
+		sprites->Add( p );
 	}
 
 	// Preload animation to prevent FPS drop on first ship explosion
@@ -264,9 +254,6 @@ void Scenario::Run() {
 
 	quit = false;
 
-	LogMsg(INFO, "Scenario started.");
-	Hud::Init();
-
 	if( player != NULL ) {
 		Hud::Alert("Loading %s.", player->GetName().c_str() );
 		Lua::Call("playerStart");
@@ -274,7 +261,13 @@ void Scenario::Run() {
 		LogMsg(WARN, "No Player has been loaded!");
 		assert( player != NULL );
 		quit = true;
+		return;
 	}
+
+	Timer::Update();
+
+	LogMsg(INFO, "Scenario started.");
+	Hud::Init();
 
 	// Message appear in reverse order, so this is upside down
 	Hud::Alert("Epiar is an unfinished product. Please report all bugs at epiar.net.");
@@ -424,16 +417,9 @@ bool Scenario::SetupToEdit() {
 		return false;
 	}
 
-	// Since the Random Universe Editor is currently broken, disable this feature here.
-	SETOPTION( "options/scenario/random-universe", 0 );
-
-	if( OPTION(int, "options/scenario/random-universe") ) {
-		Lua::Call("createSystems");
-	} else {
-		list<string>* planetNames = planets->GetNames();
-		for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
-			sprites->Add(  planets->GetPlanet(*pname) );
-		}
+	list<string>* planetNames = planets->GetNames();
+	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
+		sprites->Add(  planets->GetPlanet(*pname) );
 	}
 
 	LogMsg(INFO, "Scenario edit setup completed.");
@@ -528,15 +514,13 @@ bool Scenario::Parse( void ) {
 		LogMsg(ERR, "There was an error loading the alliances from '%s'.", (folderpath + Get("alliances")).c_str() );
 		return false;
 	}
-	if( 0 == OPTION(int, "options/scenario/random-universe")) {
-		if( sectors->Load( (folderpath + Get("sectors")) ) != true ) {
-		    LogMsg(WARN, "There was an error loading the sectors from '%s'.", (folderpath + Get("sectors")).c_str() );
-		    return false;
-		}
-		if( planets->Load( (folderpath + Get("planets")) ) != true ) {
-		    LogMsg(WARN, "There was an error loading the planets from '%s'.", (folderpath + Get("planets")).c_str() );
-		    return false;
-		}
+	if( sectors->Load( (folderpath + Get("sectors")) ) != true ) {
+	    LogMsg(WARN, "There was an error loading the sectors from '%s'.", (folderpath + Get("sectors")).c_str() );
+	    return false;
+	}
+	if( planets->Load( (folderpath + Get("planets")) ) != true ) {
+	    LogMsg(WARN, "There was an error loading the planets from '%s'.", (folderpath + Get("planets")).c_str() );
+	    return false;
 	}
 
 	// Check the Music
@@ -546,8 +530,8 @@ bool Scenario::Parse( void ) {
 	}
 
 	// Check the Player Defaults
-	if( planets->Get( Get("defaultPlayer/start")) == NULL) {
-		LogMsg(ERR, "Bad Default Player Start Location '%s'.", Get("defaultPlayer/start").c_str() );
+	if( sectors->Get( Get("defaultPlayer/sector")) == NULL) {
+		LogMsg(ERR, "Bad Default Player Start Location '%s'.", Get("defaultPlayer/sector").c_str() );
 		return false;
 	}
 	if( models->Get( Get("defaultPlayer/model")) == NULL) {
@@ -704,19 +688,19 @@ void Scenario::CreateNavMap( void )
  * \warn This will log any issues, but it will let
  * \param[in] playerName The player's name.
  */
-void Scenario::SetDefaultPlayer( string startPlanet, string modelName, string engineName, int credits ) {
+void Scenario::SetDefaultPlayer( string startSector, string modelName, string engineName, int credits ) {
 	LogMsg(INFO, "Setting the Player Defaults" );
 
 	// Log disrepencies, but don't fix.
-	if( planets->Get( startPlanet ) == NULL )
-		LogMsg(WARN, "Setting the Player's start planet to '%s', but this planet does not exist.", startPlanet.c_str() );
+	if( sectors->Get( startSector ) == NULL )
+		LogMsg(WARN, "Setting the Player's start sector to '%s', but the sector does not exist.", startSector.c_str() );
 	if( models->Get( modelName ) == NULL )
-		LogMsg(WARN, "Setting the Player's start model to '%s', but this model does not exist.", modelName.c_str() );
+		LogMsg(WARN, "Setting the Player's start model to '%s', but the model does not exist.", modelName.c_str() );
 	if( engines->Get( engineName ) == NULL )
-		LogMsg(WARN, "Setting the Player's start engine to '%s', but this engine does not exist.", engineName.c_str() );
+		LogMsg(WARN, "Setting the Player's start engine to '%s', but the engine does not exist.", engineName.c_str() );
 
 	// Set player defaults in the scenario xml
-	Set("defaultPlayer/start", startPlanet);
+	Set("defaultPlayer/sector", startSector);
 	Set("defaultPlayer/model", modelName);
 	Set("defaultPlayer/engine", engineName);
 	Set("defaultPlayer/credits", credits);
@@ -730,9 +714,9 @@ void Scenario::SetDefaultPlayer( string startPlanet, string modelName, string en
 void Scenario::CreateDefaultPlayer(string playerName) {
 	Coordinate startPos(0,0);
 
-	string startPlanet = Get("defaultPlayer/start");
-	if( planets->GetPlanet( startPlanet ) ) {
-		startPos = planets->GetPlanet( startPlanet )->GetWorldPosition();
+	string startSector = Get("defaultPlayer/sector");
+	if( sectors->GetSector( startSector ) ) {
+		//startPos = planets->GetPlanet( startPlanet )->GetWorldPosition();
 	}
 
 	assert( player == NULL );

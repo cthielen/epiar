@@ -42,7 +42,7 @@ Player* Player::Load( string filename ) {
 	newPlayer->FromXMLNode( doc, cur );
 
 	// We check the planet location at loadtime in case the planet has moved or the lastPlanet has changed.
-	// This happens with the --random-universe option.
+	// This happens with the --random-universe option. TODO: Does this matter? random-universe has been removed.
 	Planet* p = Planets::Instance()->GetPlanet( newPlayer->lastPlanet );
 	if( p != NULL ) {
 		newPlayer->SetWorldPosition( p->GetWorldPosition() );
@@ -655,11 +655,10 @@ PlayerInfo::PlayerInfo( Player* player, string scenario )
 
 /**\brief Construct the PlayerInfo from attributes
  */
-PlayerInfo::PlayerInfo(  string _name, string _scenario, int _seed )
+PlayerInfo::PlayerInfo(  string _name, string _scenario )
     :avatar(NULL)
     ,file("")
     ,scenario(_scenario)
-    ,seed(_seed)
     ,lastLoadTime(0)
 {
     SetName(_name);
@@ -673,7 +672,6 @@ void PlayerInfo::Update( Player* player, string simName ) {
 	avatar = (player->GetModel() != NULL) ? player->GetModel()->GetImage() : NULL;
 	file = player->GetFileName();
 	scenario = simName;
-	seed = OPTION(int, "options/scenario/random-seed");
 	lastLoadTime = player->GetLoadTime();
 }
 
@@ -717,12 +715,6 @@ bool PlayerInfo::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		scenario = "default";
 	}
 
-	if( (attr = FirstChildNamed(node,"seed")) ){
-		seed = NodeToInt(doc,attr);
-	} else {
-		seed = 0;
-	}
-
 	// A corrupt lastLoadTime isn't fatal, just use January 1, 1970.
 	if( (attr = FirstChildNamed(node,"lastLoadTime")) ){
 		lastLoadTime = NodeToInt(doc,attr);
@@ -749,8 +741,6 @@ xmlNodePtr PlayerInfo::ToXMLNode(string componentName) {
 	}
 
 	xmlNewChild(section, NULL, BAD_CAST "scenario", BAD_CAST scenario.c_str() );
-	snprintf(buff, sizeof(buff), "%d", seed );
-	xmlNewChild(section, NULL, BAD_CAST "seed", BAD_CAST buff );
 
 	// Last Load Time
 	snprintf(buff, sizeof(buff), "%d", (int)lastLoadTime );

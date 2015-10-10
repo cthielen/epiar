@@ -89,7 +89,7 @@ class PlayerInfo : public Component {
 	public:
 		PlayerInfo();
 		PlayerInfo( Player* player, string scenario );
-		PlayerInfo( string name, string scenario, int seed );
+		PlayerInfo( string name, string scenario );
 		void Update( Player* player, string scenario );
 
 		// Saving and Loading this Player to XML
@@ -101,7 +101,6 @@ class PlayerInfo : public Component {
 		Image* avatar; ///< Image for this player (Usually the ship's model)
 		string file; ///< The xml file associated with this player.
 		string scenario; ///< The Scenario that this Player is playing.
-		int seed; ///< The Seed for this Scenario.
 		time_t lastLoadTime; ///< The last time that this file was loaded.
 	private:
 };
