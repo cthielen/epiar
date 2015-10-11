@@ -176,7 +176,7 @@ void Scenario::unpause() {
 	interpolateOn = true;
 }
 
-bool Scenario::SetupToRun() {
+bool Scenario::Setup() {
 	bool luaLoad = true;
 
 	LogMsg(INFO, "Scenario setup started ...");

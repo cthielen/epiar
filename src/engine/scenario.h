@@ -31,7 +31,7 @@ class Scenario : public XMLFile {
 		bool New( string _folderpath );
 		bool Load( string _folderpath );
 
-		bool SetupToRun();
+		bool Setup();
 		bool SetupToEdit();
 
 		void Run();

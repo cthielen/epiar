@@ -112,24 +112,31 @@ bool Menu::AutoLoad()
 {
 	LogMsg(INFO,"Attempting to automatically load a player.");
 	PlayerInfo* info = Players::Instance()->LastPlayer();
+
 	if( info != NULL )
 	{
 		LogMsg(INFO, "Automatically loading player.", info->GetName().c_str() );
+
 		if( !scenario.Load( info->scenario ) )
 		{
 			LogMsg(ERR,"Failed to load the scenario '%s'.", info->scenario.c_str() );
 			return false;
 		}
-		if( !scenario.SetupToRun() )
+
+		if( !scenario.Setup() )
 		{
 			LogMsg(ERR,"Failed to setup the scenario '%s'.", info->scenario.c_str() );
 			return false;
 		}
+
 		scenario.LoadPlayer( info->GetName() );
 		scenario.Run();
+
 		return true;
 	}
+
 	LogMsg(WARN,"No available players to load.");
+
 	return false;
 }
 
@@ -269,10 +276,6 @@ void Menu::StartGame( void *info )
 
 	playerToLoad = (PlayerInfo*)info;
 
-	if(play) play->Hide();
-	if(load) load->Hide();
-	if(edit) edit->Hide();
-
 	// Gather Player Information
 	string simName = playerToLoad->scenario;
 	string playerName = playerToLoad->GetName();
@@ -285,7 +288,15 @@ void Menu::StartGame( void *info )
 		return;
 	}
 
-	if( !scenario.SetupToRun() )
+	// Create or Load the Player
+	if( players->PlayerExists(playerName) ) {
+		scenario.LoadPlayer( playerName );
+	} else{
+		scenario.CreateDefaultPlayer( playerName );
+		Lua::Call("intro");
+	}
+
+	if( !scenario.Setup() )
 	{
 		LogMsg(ERR, "Failed to setup the scenario '%s'.", simName.c_str());
 		Dialogs::Alert("Scenario loaded but failed to setup!");
@@ -298,23 +309,10 @@ void Menu::StartGame( void *info )
 
 	UI::SwapScreens( "In Game", menuSplash, gameSplash );
 	
-	// Create or Load the Player
-	if( players->PlayerExists(playerName) ) {
-		scenario.LoadPlayer( playerName );
-	} else{
-		scenario.CreateDefaultPlayer( playerName );
-		Lua::Call("intro");
-	}
-	
 	// Run the scenario
 	scenario.Run();
 
 	UI::SwapScreens( "Main Screen", gameSplash, menuSplash );
-
-	// Restore play/load/edit buttons
-	play->Show();
-	load->Show();
-	edit->Show();
 }
 
 /** This Window will launch the editor.
