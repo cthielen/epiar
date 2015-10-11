@@ -209,7 +209,6 @@ void Dialogs::OptionsWindow()
 		tab->AddChild( OptionBox( "options/log/sprites", "Save Sprites as XML", 20, (yoff+=20) ) );
 		tab->AddChild( OptionBox( "options/development/debug-ai", "Display AI State Machine", 20, (yoff+=20) ) );
 		tab->AddChild( OptionBox( "options/development/debug-ui", "Display UI Debug Information", 20, (yoff+=20) ) );
-		tab->AddChild( OptionBox( "options/development/ships-worldmap", "Display Ships on the Universe Map", 20, (yoff+=20) ) );
 	}
 
 	UI::Add(window);

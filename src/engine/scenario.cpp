@@ -633,7 +633,7 @@ void Scenario::CreateNavMap( void )
 		TO_INT(win->GetW()) - 18,
 		TO_INT(win->GetH()) - 33,
 		camera->GetFocusCoordinate(),
-		sprites );
+		sectors );
 
 	// Restore Saved Scale
 	if( mapScale > 0.0f ) {

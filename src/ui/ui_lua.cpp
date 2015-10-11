@@ -655,9 +655,9 @@ int UI_Lua::newMap(lua_State *L) {
 	luaL_getmetatable(L, EPIAR_UI);
 	lua_setmetatable(L, -2);
 
-	Scenario *sim = Scenario_Lua::GetScenario(L);
+	Scenario *scen = Scenario_Lua::GetScenario(L);
 	
-	*p = new Map(x, y, w, h, Coordinate(0,0), sim->GetSpriteManager() );
+	*p = new Map(x, y, w, h, Coordinate(0,0), scen->GetSectors() );
 
 	UI::Add(*p);
 

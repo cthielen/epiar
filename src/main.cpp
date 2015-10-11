@@ -154,7 +154,6 @@ void Main_Load_Settings() {
 	Options::AddDefault( "options/timing/alert-fade", 2500 );
 
 	// Development
-	Options::AddDefault( "options/development/ships-worldmap", 0 );
 	Options::AddDefault( "options/development/debug-ai", 0 );
 	Options::AddDefault( "options/development/debug-ui", 0 );
 
@@ -275,7 +274,6 @@ void Main_Parse_Args( int argc, char **argv ) {
 	argparser->SetOpt(LONGOPT, "log-xml",        "Log messages to xml files.");
 	argparser->SetOpt(LONGOPT, "log-out",        "(Default) Log messages to console.");
 	argparser->SetOpt(LONGOPT, "nolog-out",      "Disable logging messages to console.");
-	argparser->SetOpt(LONGOPT, "ships-worldmap", "Displays ships on the world map.");
 	argparser->SetOpt(VALUEOPT, "log-lvl",       "Logging level.(None,Fatal,Critical,Error,"
 	                                             "\n\t\t\t\tWarn,Alert,Notice,Info,Verbose[1-3],Debug[1-4])");
 	argparser->SetOpt(VALUEOPT, "log-fun",       "Filter log messages by function name.");
@@ -331,8 +329,6 @@ void Main_Parse_Args( int argc, char **argv ) {
 			SETOPTION("options/sound/explosions",0);
 			SETOPTION("options/sound/buttons",0);
 	}
-	if(argparser->HaveOpt("ships-worldmap"))
-	   SETOPTION("options/development/ships-worldmap",1);
 	if      ( argparser->HaveOpt("log-xml") ) 	{ SETOPTION("options/log/xml", 1);}
 	else if ( argparser->HaveOpt("nolog-xml") ) 	{ SETOPTION("options/log/xml", 0);}
 	if      ( argparser->HaveOpt("log-out") ) 	{ SETOPTION("options/log/out", 1);}

@@ -137,12 +137,12 @@ class Radar {
 		static void Draw( Camera* camera, SpriteManager* sprites );
 		static void SetVisibility( int visibility );
 		static int GetVisibility() { return visibility;}
-		static void StartLargeMode( Camera* camera, SpriteManager* sprites );
+		//static void StartLargeMode( Camera* camera, SpriteManager* sprites );
 		static int GetHeight();
 	
 	private:
 		static void WorldToBlip( Coordinate focus, Coordinate &w, Coordinate &b );
-		static void StopLargeMode();
+		//static void StopLargeMode();
 	
 		static int visibility;
 		static bool largeMode;

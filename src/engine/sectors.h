@@ -58,7 +58,9 @@ class Sectors : public Components {
 		static Sectors *Instance();
 		Sector *GetSector( string& SectorName ) { return (Sector*)this->Get(SectorName); }
 		Sector *GetSectorByPlanet( string& PlanetName );
+		list<Sector*>* GetAllSectors();
 		Component* newComponent() { return new Sector(); }
+		void GetBoundaries(float *north, float *south, float *east, float *west);
 		
 	protected:
 		Sectors() {};

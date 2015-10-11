@@ -1,7 +1,7 @@
 /**\file			ui_map.h
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
- * \date			Modified: Saturday, May 28, 2011
+ * \date			Modified: Sunday, October 11, 2015
  * \brief			
  * \details
  */
@@ -9,15 +9,15 @@
 #ifndef __H_UI_MAP
 #define __H_UI_MAP
 
+#include "engine/sectors.h"
 #include "graphics/image.h"
 #include "graphics/video.h"
 #include "ui/ui.h"
-#include "sprites/spritemanager.h"
 #include "utilities/coordinate.h"
 
 class Map: public Widget {
 	public:
-		Map( int x, int y, int w, int h, Coordinate center, SpriteManager* sprites );
+		Map( int x, int y, int w, int h, Coordinate center, Sectors* sectors );
 		~Map();
 
 		void Draw( int relx = 0, int rely = 0 );
@@ -25,7 +25,7 @@ class Map: public Widget {
 		void SetAlpha( float newAlpha ) { alpha = newAlpha; }
 		void SetCenter( Coordinate newCenter ) { center = newCenter; }
 		void SetScale( float newScale ) { scale = newScale; }
-		void SetFilter( int spriteFlags ) { spriteTypes = spriteFlags; }
+		//void SetFilter( int spriteFlags ) { spriteTypes = spriteFlags; }
 
 		void SetZoomable( bool canZoom ) { zoomable = canZoom; }
 		void SetPannable( bool canPan ) { pannable = canPan; }
@@ -39,6 +39,7 @@ class Map: public Widget {
 
 		string GetType( void ) { return string("Map"); }
 		virtual int GetMask( void ) { return WIDGET_MAP; }
+
 	protected:
 		virtual bool MouseLUp( int xi, int yi );
 		virtual bool MouseLDown( int xi, int yi );
@@ -47,7 +48,7 @@ class Map: public Widget {
 		virtual bool MouseDrag( int xi, int yi );
 
 	private:
-		int spriteTypes;
+		//int spriteTypes;
 		float alpha;
 		float scale;
 		Coordinate center;
@@ -55,7 +56,8 @@ class Map: public Widget {
 		bool zoomable;
 		bool pannable;
 
-		SpriteManager* sprites;
+		//SpriteManager* sprites;
+		Sectors *sectors;
 
 		static Font *MapFont;
 };

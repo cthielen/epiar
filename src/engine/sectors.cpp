@@ -207,5 +207,31 @@ Sector *Sectors::GetSectorByPlanet( string& PlanetName ) {
 	return NULL;
 }
 
+list<Sector*>* Sectors::GetAllSectors() {
+	list<Sector *>* sectorList = new list<Sector *>();
+
+	for( map<string,Component*>::iterator i = components.begin(); i != components.end(); ++i ) {
+		Sector *s = (Sector *)i->second;
+		assert(s != NULL);
+		sectorList->push_back(s);
+	}
+
+	return sectorList;
+}
+
+/* Sets pointer values such that a box containing all sector coordinates is given */
+void Sectors::GetBoundaries(float *north, float *south, float *east, float *west) {
+	*north = *south = *east = *west = 0;
+
+	for( map<string,Component*>::iterator i = components.begin(); i != components.end(); ++i ) {
+		Sector *s = (Sector *)i->second;
+
+		if(s->GetY() < *north) *north = s->GetY();
+		if(s->GetY() > *south) *south = s->GetY();
+		if(s->GetX() < *west) *west = s->GetX();
+		if(s->GetX() > *east) *east = s->GetX();
+	}
+}
+
 /** @} */
 

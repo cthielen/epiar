@@ -47,7 +47,7 @@ Font *Hud::AlertFont = NULL;
 Color Hud::AlertColor = WHITE;
 
 int Radar::visibility = QUADRANTSIZE;
-bool Radar::largeMode = false;
+//bool Radar::largeMode = false;
 
 Font *StatusBar::font = NULL;
 
@@ -295,13 +295,14 @@ void Hud::Draw( int flags, float fps, Camera* camera, SpriteManager* sprites ) {
  */
 void Hud::HandleInput( list<InputEvent> & events, Camera* camera, SpriteManager* sprites ) {
 	list<InputEvent>::iterator i;
+
 	for(i= events.begin(); i != events.end() ; ++i ) {
 		// Mouse Clicks
 		if( i->type == MOUSE && i->mstate==MOUSELDOWN) {
 			if( (i->mx > Video::GetWidth() - 129)
 			 && (i->my < Image::Get( "data/skin/hud_radarnav.png" )->GetHeight() + 5) )
 			{
-				Radar::StartLargeMode(camera, sprites);
+				//Radar::StartLargeMode(camera, sprites);
 			}
 			else
 			{
@@ -675,16 +676,16 @@ Radar::Radar( void ) {
  */
 void Radar::SetVisibility( int visibility ) {
 	Radar::visibility = visibility;
-	if( largeMode ) {
-		Map* map = (Map*)UI::Search("/Map/");
-		assert( map );
-		if( map ) {
-			map->SetScale( 300.0 / (2*visibility) );
-		}
-	}
+	//if( largeMode ) {
+	//	Map* map = (Map*)UI::Search("/Map/");
+	//	assert( map );
+	//	if( map ) {
+	//		map->SetScale( 300.0 / (2*visibility) );
+	//	}
+	//}
 }
 
-void Radar::StartLargeMode( Camera* camera, SpriteManager* sprites ) {
+/*void Radar::StartLargeMode( Camera* camera, SpriteManager* sprites ) {
 	largeMode = true;
 	Map* map = new Map( Video::GetWidth() - 300, 0, 300, 300, camera->GetFocusCoordinate(), sprites );
 	map->RegisterAction( Action_MouseLeave, new VoidAction( Radar::StopLargeMode ) );
@@ -699,7 +700,7 @@ void Radar::StartLargeMode( Camera* camera, SpriteManager* sprites ) {
 void Radar::StopLargeMode() {
 	UI::Close( UI::Search( "/Map/" ) );
 	largeMode = false;
-}
+}*/
 
 /**\brief Draws the radar.
  */
@@ -761,15 +762,14 @@ void Radar::Draw( Camera* camera, SpriteManager* sprites ) {
  * \retval b Pointer to radar coordinate
  */
 void Radar::WorldToBlip( Coordinate focus, Coordinate &w, Coordinate &b ) {
-
 	b.SetX( ( ( w.GetX() - focus.GetX() ) / float(visibility) ) * ( RADAR_WIDTH / 2.0 ) );
 	b.SetY( ( ( w.GetY() - focus.GetY() ) / float(visibility) ) * ( RADAR_HEIGHT / 2.0 ) );
 }
 
 int Radar::GetHeight() {
-	if( largeMode ) {
-		return 300;
-	} else {
+	//if( largeMode ) {
+	//	return 300;
+	//} else {
 		return Image::Get( "data/skin/hud_radarnav.png" )->GetHeight();
-	}
+	//}
 }

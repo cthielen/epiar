@@ -1,7 +1,7 @@
 /**\file			ui_map.cpp
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
- * \date			Modified: Thursday, October 8, 2015
+ * \date			Modified: Sunday, October 11, 2015
  * \brief			Map Widget
  * \details
  */
@@ -29,7 +29,7 @@ Font *Map::MapFont = NULL;
 /** \brief Map Constructor
  *
  */
-Map::Map( int x, int y, int w, int h, Coordinate center, SpriteManager* sprites )
+Map::Map( int x, int y, int w, int h, Coordinate center, Sectors* sectors )
 {
 	this->x = x;
 	this->y = y;
@@ -37,15 +37,7 @@ Map::Map( int x, int y, int w, int h, Coordinate center, SpriteManager* sprites 
 	this->w = w;
 	this->h = h;
 	this->center = center;
-	this->sprites = sprites;
-
-	spriteTypes = ( DRAW_ORDER_PLAYER   |
-	                DRAW_ORDER_PLANET );
-
-	// Show sprites only if this option is set.
-	if( OPTION(int,"options/development/ships-worldmap") ) {
-		spriteTypes |= DRAW_ORDER_SHIP;
-	}
+	this->sectors = sectors;
 
 	alpha = 1;
 
@@ -53,12 +45,13 @@ Map::Map( int x, int y, int w, int h, Coordinate center, SpriteManager* sprites 
 
 	// Initially strech the Map so that it covers all QuadTrees
 	float north, south, east, west, edge;
-	sprites->GetBoundaries(&north, &south, &east, &west);
+	sectors->GetBoundaries(&north, &south, &east, &west);
+
 	// edge is the maximum distance from zero of north, south, east, and west
 	edge = (north > -south) ? north : -south;
 	edge = (edge > -west) ? edge : -west;
 	edge = (edge > east) ? edge : east;
-	scale = (size) / (0.5 * (edge + QUADRANTSIZE));
+	scale = (size) / (0.5 * edge);
 
 	if( MapFont == NULL )
 	{
@@ -76,57 +69,27 @@ Map::Map( int x, int y, int w, int h, Coordinate center, SpriteManager* sprites 
  */
 Map::~Map()
 {
-	sprites = NULL;
+	sectors = NULL;
 }
 
 /** \brief Draw Map
  *
  */
-void Map::Draw( int relx, int rely )
-{
-	list<Sprite*> *spriteList;
-	list<Sprite*>::iterator iter;
+void Map::Draw( int relx, int rely ) {
+	list<Sector*>::iterator iter;
+	list<Sector*>* sectors = NULL;
 
 	// These variables are used for almost every sprite symbol
 	Coordinate pos, pos2;
 	Color col, field;
 
-	// The Backdrop
+	// Draw the backdrop
 	Video::DrawRect( relx + GetX(), rely + GetY(), w, h, BLACK, alpha);
 
 	Video::SetCropRect( relx + GetX(), rely + GetY(), w, h );
 
-	// TODO: Quadrant lines should be be drawn correctly.
-
-	// The Quadrant Lines
-	Coordinate i, top, bottom;
-	bottom = ClickToWorld( Coordinate(GetX(),GetY()) );
-	bottom = Coordinate( TO_INT(bottom.GetX() / (2*QUADRANTSIZE)),
-	                     TO_INT(bottom.GetY() / (2*QUADRANTSIZE)) );
-	bottom *= 2*QUADRANTSIZE;
-	bottom -= Coordinate(QUADRANTSIZE, QUADRANTSIZE);
-
-	top = ClickToWorld( Coordinate(GetX()+w, GetY()+h) );
-	top = Coordinate( TO_INT(top.GetX() / (2*QUADRANTSIZE)),
-	                  TO_INT(top.GetY() / (2*QUADRANTSIZE)) );
-	top *= 2*QUADRANTSIZE;
-	top += Coordinate(QUADRANTSIZE, QUADRANTSIZE);
-
-	for( i = bottom;
-	     i.GetX() <= top.GetX() ||
-	     i.GetY() <= top.GetY() ;
-	     i += Coordinate(2*QUADRANTSIZE, 2*QUADRANTSIZE) )
-	{
-		Coordinate point = WorldToScreen( i );
-		Video::DrawLine( relx + GetX()     , point.GetY(),
-						 relx + GetX() + w , point.GetY(), 0.07, 0.07, 0.07 , alpha );
-		Video::DrawLine( point.GetX(), rely + GetY(),
-						 point.GetX(), rely + GetY() + h , 0.07, 0.07, 0.07, alpha );
-	}
-
-	// Draw the Sprites
-	spriteList = sprites->GetSprites( spriteTypes );
-	for( iter = spriteList->begin(); iter != spriteList->end(); ++iter )
+	// Draw the sectors
+	for( iter = sectors->begin(); iter != sectors->end(); ++iter )
 	{
 		col = (*iter)->GetRadarColor();
 		pos = WorldToScreen( (*iter)->GetWorldPosition() );

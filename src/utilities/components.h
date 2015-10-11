@@ -20,8 +20,10 @@ class Component {
 		void SetName(string _name) { name = _name; }
 		virtual bool FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) = 0;
 		virtual xmlNodePtr ToXMLNode(string componentName) = 0;
+
 	protected:
 		string name;
+
 	private:
 };
 
@@ -40,14 +42,15 @@ class Components {
 
 		void SetFileName( const string& filename ) { this->filename = filename; }
 		string GetFileName( ) { return filename; }
-	protected:
 
+	protected:
 		Components() {};  ///< Protected default constuctor
 		Components( const Components & ); ///< Protected copy constuctor
 		Components& operator= (const Components&); ///< Protected copy constuctor
 
 		virtual Component* newComponent() = 0;
 		bool ParseXMLNode( xmlDocPtr doc, xmlNodePtr node );
+
 		string filename;
 		string rootName;
 		string componentName;
