@@ -49,8 +49,6 @@ class Menu {
 	static void CreateNewWindow();
 	static void CreateLoadWindow();
 	static void StartGame( void* playerInfo );
-	static void CreateEditWindow();
-	static void StartEditor();
 	static void QuitMenu();
 
 	// Player Management

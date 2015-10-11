@@ -31,11 +31,10 @@ class Scenario : public XMLFile {
 		bool New( string _folderpath );
 		bool Load( string _folderpath );
 
+		bool Initialize();
 		bool Setup();
-		bool SetupToEdit();
 
 		void Run();
-		bool Edit();
 
 		void CreateDefaultPlayer(string name);
 		void LoadPlayer(string name);

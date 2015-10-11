@@ -21,11 +21,11 @@ PlayerInfo* Menu::playerToLoad = NULL;
 
 Image* Menu::menuSplash = NULL;
 Image* Menu::gameSplash = NULL;
-Image* Menu::editSplash = NULL;
+//Image* Menu::editSplash = NULL;
 
 Picture *Menu::play = NULL;
 Picture *Menu::load = NULL;
-Picture *Menu::edit = NULL;
+//Picture *Menu::edit = NULL;
 Picture *Menu::options = NULL;
 Picture *Menu::exit = NULL;
 
@@ -123,13 +123,14 @@ bool Menu::AutoLoad()
 			return false;
 		}
 
-		if( !scenario.Setup() )
+		if( !scenario.Initialize() )
 		{
 			LogMsg(ERR,"Failed to setup the scenario '%s'.", info->scenario.c_str() );
 			return false;
 		}
 
 		scenario.LoadPlayer( info->GetName() );
+		scenario.Setup();
 		scenario.Run();
 
 		return true;
@@ -161,7 +162,7 @@ void Menu::SetupUI()
 	int screenNum = rand();
 	menuSplash = Image::Get( splashScreens[(screenNum+0) % numScreens] );
 	gameSplash = Image::Get( splashScreens[(screenNum+1) % numScreens] );
-	editSplash = Image::Get( splashScreens[(screenNum+2) % numScreens] );
+	//editSplash = Image::Get( splashScreens[(screenNum+2) % numScreens] );
 
 	// Add the splash screen
 	UI::Add( new Picture( 0, 0, Video::GetWidth(), Video::GetHeight(), menuSplash, true ) );
@@ -182,18 +183,13 @@ void Menu::SetupUI()
 		                       Image::Get( "data/graphics/txt_load_game_inactive.png") );
 	}
 
-	// Editor Button
-	edit = PictureButton( button_x, button_y + 150, Menu::CreateEditWindow,
-	                       Image::Get( "data/graphics/txt_editor_active.png"),
-	                       Image::Get( "data/graphics/txt_editor_inactive.png") );
-
 	// Options Button
-	options = PictureButton( button_x, button_y + 200, Dialogs::OptionsWindow,
+	options = PictureButton( button_x, button_y + 150, Dialogs::OptionsWindow,
 	                          Image::Get( "data/graphics/txt_options_active.png"),
 	                          Image::Get( "data/graphics/txt_options_inactive.png") );
 
 	// Exit Button
-	exit = PictureButton( button_x, button_y + 250, QuitMenu,
+	exit = PictureButton( button_x, button_y + 200, QuitMenu,
 	                      Image::Get( "data/graphics/txt_exit_active.png"),
 	                      Image::Get( "data/graphics/txt_exit_inactive.png") );
 
@@ -280,11 +276,18 @@ void Menu::StartGame( void *info )
 	string simName = playerToLoad->scenario;
 	string playerName = playerToLoad->GetName();
 
-	// Load the Scenario
+	// Load the Scenario from file
 	if( !scenario.Load( simName ) )
 	{
 		LogMsg(ERR, "Failed to load the scenario '%s'.", simName.c_str());
 		Dialogs::Alert("Failed to load scenario!");
+		return;
+	}
+
+	if( !scenario.Initialize() )
+	{
+		LogMsg(ERR, "Failed to initialize the scenario '%s'.", simName.c_str());
+		Dialogs::Alert("Scenario loaded but failed to setup!");
 		return;
 	}
 
@@ -296,8 +299,7 @@ void Menu::StartGame( void *info )
 		Lua::Call("intro");
 	}
 
-	if( !scenario.Setup() )
-	{
+	if( !scenario.Setup() ) {
 		LogMsg(ERR, "Failed to setup the scenario '%s'.", simName.c_str());
 		Dialogs::Alert("Scenario loaded but failed to setup!");
 		return;
@@ -313,91 +315,6 @@ void Menu::StartGame( void *info )
 	scenario.Run();
 
 	UI::SwapScreens( "Main Screen", gameSplash, menuSplash );
-}
-
-/** This Window will launch the editor.
- *  \details The User can either create a new scenario from scratch, or edit an existing scenario.
- */
-void Menu::CreateEditWindow()
-{
-	// Return to Editor if it has alread been loaded
-	if( scenario.isLoaded() ) {
-		UI::SwapScreens( "Editor", menuSplash, editSplash );
-		scenario.Edit();
-		UI::SwapScreens( "Main Screen", editSplash, menuSplash );
-		return;
-	}
-
-	// Don't create a Window if it already exists
-	if( UI::Search("/Window'Editor'/") != NULL ) {
-		return;
-	}
-
-	Window *editorWnd = NULL;
-	UI::Add( editorWnd = (new Window(250, 300, "Editor"))
-		->AddChild( (new Tabs( 10, 40, 230, 210, "EDIT TABS"))
-			->AddChild( (new Tab( "Edit" ))
-				->AddChild( (new Label(15, 15, "Pick the Scenario to Edit:")) )
-				->AddChild( (new Dropdown( 45, 45, 100, 30 ))
-					->AddOptions( Filesystem::Enumerate("data/scenario/") ) )
-			)
-			->AddChild( (new Tab( "Create" ))
-				->AddChild( (new Label(15, 10, "Scenario Name:")) )
-				->AddChild( (new Textbox(40, 40, 80, 1, "", "Scenario Name")) )
-			)
-		)
-	);
-	editorWnd->AddChild( new Button(10, 260, 100, 30, "Cancel", &UI::Close, editorWnd ) );
-	editorWnd->AddChild( new Button(140, 260, 100, 30, "Edit", Menu::StartEditor ) );
-	editorWnd->AddCloseButton();
-}
-
-/** Start an Editor Scenario
- */
-void Menu::StartEditor()
-{
-	string simName = "default";
-	assert( UI::Search("/Window'Editor'/Tabs/Tab/") != NULL );
-	assert( false == scenario.isLoaded() );
-
-	UI::Close( play ); // Play
-	UI::Close( load ); // Load
-	play = NULL;
-	load = NULL;
-
-	// Since the Random Universe Editor is currently broken, disable this feature here.
-	//SETOPTION( "options/scenario/random-universe", 0 );
-
-	Tab* activeTab = ((Tabs*)UI::Search("/Window'Editor'/Tabs/"))->GetActiveTab();
-	if( activeTab->GetName() == "Edit" ) {
-		simName = ((Dropdown*)activeTab->Search("/Dropdown/"))->GetText();
-		if( !scenario.Load( simName ) )
-		{
-			LogMsg(ERR,"Failed to load '%s' successfully",simName.c_str());
-			return;
-		}
-	} else { // Create
-		simName = ((Textbox*)activeTab->Search("/Textbox'Scenario Name'/"))->GetText();
-
-		scenario.New( simName );
-	}
-
-	if( !scenario.SetupToEdit() )
-	{
-		LogMsg(ERR,"Failed to setup the scenario '%s'.", simName.c_str());
-		return;
-	}
-
-	// Only attempt to Edit if the Scenario has loaded
-	assert( scenario.isLoaded() );
-
-	// Close all Windows
-	while( UI::Search("/Window/") )
-		UI::Close( UI::Search("/Window/") );
-	
-	UI::SwapScreens( "Editor", menuSplash, editSplash );
-	scenario.Edit();
-	UI::SwapScreens( "Main Screen", editSplash, menuSplash );
 }
 
 /** Erase a Player

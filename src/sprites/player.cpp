@@ -438,7 +438,7 @@ bool Player::ConfigureWeaponSlots( xmlDocPtr doc, xmlNodePtr node ) {
 xmlNodePtr Player::ToXMLNode(string componentName) {
 	char buff[256];
 	char *timestamp;
-    xmlNodePtr section = xmlNewNode(NULL, BAD_CAST componentName.c_str());
+	xmlNodePtr section = xmlNewNode(NULL, BAD_CAST componentName.c_str());
 
 	// Version information
 	snprintf(buff, sizeof(buff), "%d", EPIAR_VERSION_MAJOR);
@@ -920,6 +920,7 @@ PlayerInfo* Players::LastPlayer() {
 Player* Players::LoadPlayer(string playerName) {
 	PlayerInfo* info = GetPlayerInfo( playerName );
 	Player* newPlayer = Player::Load( info->file );
+
 	return newPlayer;
 }
 

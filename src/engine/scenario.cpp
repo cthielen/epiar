@@ -176,7 +176,8 @@ void Scenario::unpause() {
 	interpolateOn = true;
 }
 
-bool Scenario::Setup() {
+/* Loads Lua scripts, animation files */
+bool Scenario::Initialize() {
 	bool luaLoad = true;
 
 	LogMsg(INFO, "Scenario setup started ...");
@@ -203,11 +204,11 @@ bool Scenario::Setup() {
 	}
 
 	// Add Planets
-	list<string>* planetNames = planets->GetNames();
-	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname) {
-		Planet* p = planets->GetPlanet(*pname);
-		sprites->Add( p );
-	}
+	//list<string>* planetNames = planets->GetNames();
+	//for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname) {
+		//Planet* p = planets->GetPlanet(*pname);
+		//sprites->Add( p );
+	//}
 
 	// Preload animation to prevent FPS drop on first ship explosion
 	Ani::Get("data/animations/explosion1.ani");
@@ -216,6 +217,12 @@ bool Scenario::Setup() {
 	Lua::Call("randomizeseed");
 
 	LogMsg(INFO, "Scenario setup completed.");
+
+	return true;
+}
+
+/* Sets up sector sprites */
+bool Scenario::Setup() {
 
 	return true;
 }
@@ -395,76 +402,6 @@ void Scenario::Run() {
 	Hud::Close();
 
 	LogMsg(INFO,"Scenario stopped. Average framerate: %f frames / second", 1000.0 *((float)fpsTotal / Timer::GetTicks() ) );
-}
-
-bool Scenario::SetupToEdit() {
-	bool luaLoad = true;
-
-	LogMsg(INFO, "Scenario edit setup starting ...");
-
-	// Load main Lua registers
-	LuaRegisters(L);
-	// Load ::Edit()-specific Lua registers
-	Scenario_Lua::RegisterEditor(L);
-
-	luaLoad = Lua::Load("data/scripts/utilities.lua")
-	       && Lua::Load("data/scripts/universe.lua")
-	       && Lua::Load("data/scripts/commands.lua")
-	       && Lua::Load("data/scripts/editor.lua");
-
-	if (!luaLoad) {
-		LogMsg(ERR,"Fatal error starting Lua.");
-		return false;
-	}
-
-	list<string>* planetNames = planets->GetNames();
-	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
-		sprites->Add(  planets->GetPlanet(*pname) );
-	}
-
-	LogMsg(INFO, "Scenario edit setup completed.");
-
-	return true;
-}
-
-bool Scenario::Edit() {
-	quit = false;
-
-	// Generate a starfield
-	Starfield starfield( OPTION(int, "options/scenario/starfield-density") );
-
-	LogMsg(INFO, "Scenario Edit Starting");
-
-	Lua::Call("componentDebugger");
-
-	while( !quit ) {
-		HandleInput();
-
-		Timer::Update();
-
-		sprites->Update( L, true );
-		camera->Update( sprites );
-    sprites->UpdateScreenCoordinates();
-    starfield.Update( camera );
-		Hud::Update( L );
-
-		// Erase cycle
-		Video::Erase();
-
-		// Draw cycle
-		starfield.Draw();
-		sprites->Draw( camera->GetFocusCoordinate() );
-		UI::Draw();
-		Hud::Draw( HUD_Target | HUD_Map, 0.0f, camera, sprites );
-		console->Draw();
-		Video::Update();
-
-		Timer::Delay();
-	}
-
-	LogMsg(INFO, "Scenario Edit Stopping");
-
-	return true;
 }
 
 /**\brief Subroutine. Calls various Lua register functions needed by both Run and Edit
@@ -743,8 +680,11 @@ void Scenario::CreateDefaultPlayer(string playerName) {
  */
 void Scenario::LoadPlayer(string playerName) {
 	assert( player == NULL );
+
 	player = players->LoadPlayer( playerName );
+
 	sprites->Add( player );
+
 	camera->Focus( player );
 }
 
