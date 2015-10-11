@@ -7,8 +7,8 @@
 	<planet>
 		<name>Alexandria</name>
 		<alliance>United Earth Alliance</alliance>
-		<x>-2541</x>
-		<y>-2816</y>
+		<x>-1241</x>
+		<y>916</y>
 		<landable>1</landable>
 		<image>data/graphics/planet2.png</image>
 		<surface-image>data/graphics/planet1s.png</surface-image>
@@ -19,8 +19,8 @@
 	<planet>
 		<name>Antikythera</name>
 		<alliance>United Earth Alliance</alliance>
-		<x>345</x>
-		<y>215</y>
+		<x>355</x>
+		<y>205</y>
 		<landable>1</landable>
 		<image>data/graphics/planet1.png</image>
 		<surface-image>data/graphics/planet1s.png</surface-image>

@@ -728,8 +728,6 @@ void Radar::Draw( Camera* camera, SpriteManager* sprites ) {
 		Coordinate blip;
 		Sprite *sprite = *iter;
 
-		//if( sprite->GetDrawOrder() == DRAW_ORDER_PLAYER ) continue;
-
 		// Calculate the blip coordinate for this sprite
 		Coordinate wpos = sprite->GetWorldPosition();
 		WorldToBlip( focus, wpos, blip );
@@ -740,7 +738,7 @@ void Radar::Draw( Camera* camera, SpriteManager* sprites ) {
 		blip.SetX( blip.GetX() + radar_mid_x );
 		blip.SetY( blip.GetY() + radar_mid_y );
 
-		radarSize = int((sprite->GetRadarSize() / float(visibility)) * (RADAR_HEIGHT/4.0));
+		radarSize = int((sprite->GetRadarSize() / float(visibility)) * (RADAR_HEIGHT / 4.0));
 
 		if( radarSize >= 1 ) {
 			if(sprite->GetID() == Hud::GetTarget() && Timer::GetTicks() % 1000 < 100)
@@ -754,6 +752,7 @@ void Radar::Draw( Camera* camera, SpriteManager* sprites ) {
 				Video::DrawPoint( blip, sprite->GetRadarColor() );
 		}
 	}
+
 	delete spriteList;
 }
 

@@ -50,14 +50,14 @@ class Planet : public Sprite, public Component {
 		list<Weapon*> GetWeapons();
 		list<Outfit*> GetOutfits();
 
-		Alliance* GetAlliance() const {return alliance;}
-		bool GetLandable() const {return landable;}
-		string GetSummary() const {return summary;}
-		Image* GetSurfaceImage() const {return surface;}
-		list<Technology*> GetTechnologies() const { return technologies;}
+		Alliance* GetAlliance() const { return alliance; }
+		bool GetLandable() const { return landable; }
+		string GetSummary() const { return summary; }
+		Image* GetSurfaceImage() const { return surface; }
+		list<Technology*> GetTechnologies() const { return technologies; }
 
-		bool GetForbidden() {return forbidden;}
-		void SetForbidden(bool f) {forbidden = f;}
+		bool GetForbidden() { return forbidden; }
+		void SetForbidden(bool f) { forbidden = f; }
 
 	private:
 		Alliance* alliance;
