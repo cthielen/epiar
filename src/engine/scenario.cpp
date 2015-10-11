@@ -1,7 +1,7 @@
 /**\file			scenario.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Thursday, October 8, 2015
+ * \date			Modified: Sunday, October 11, 2015
  * \brief			Contains the main game loop
  * \details
  */
@@ -223,6 +223,47 @@ bool Scenario::Initialize() {
 
 /* Sets up sector sprites */
 bool Scenario::Setup() {
+	Sector *sector = NULL;
+
+	// Determine current sector
+	// If the player has a lastPlanet, use that, else use the scenario default
+	if( player == NULL ) {
+		LogMsg(ERR, "Cannot setup scenario: no player has been loaded.");
+		return false;
+	}
+
+	string lastPlanet = player->GetLastPlanet();
+	if(lastPlanet.empty() == false) {
+		LogMsg(INFO, "Setting up sector based on player's last planet ...");
+		sector = sectors->GetSectorByPlanet(lastPlanet);
+		if(sector == NULL) {
+			LogMsg(WARN, "Could not load player's last planet, unknown sector.");
+		}
+	} else {
+		LogMsg(INFO, "Setting up sector based on scenario defaults as player as no last planet.");
+	}
+
+	if(sector == NULL) {
+		// Couldn't find sector by lastPlanet, so use the scenario default
+		sector = (Sector *)sectors->Get( Get("defaultPlayer/sector") );
+		assert(sector != NULL);
+	}
+
+	LogMsg(INFO, "Setting up '%s' sector ...", sector->GetName().c_str());
+
+	// Add planets based on the sector
+	list<string> planetList = sector->GetPlanets();
+	for( list<string>::iterator i = planetList.begin(); i != planetList.end(); ++i ) {
+		Planet *p = (Planet *)planets->Get(*i);
+		if(p == NULL) {
+			LogMsg(ERR, "Could not find planet '%s' from sector to scene.", *i);
+			return false;
+		}
+
+		LogMsg(INFO, "\tAdding '%s' planet as it is in sector ...", p->GetName().c_str());
+
+		sprites->Add( p );
+	}
 
 	return true;
 }

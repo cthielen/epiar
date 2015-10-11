@@ -36,6 +36,7 @@ class Sector : public Component {
 		~Sector();
 
 		list<string> GetPlanets();
+		bool HasPlanet(string planetName);
 		int GetTraffic() { return traffic; }
 
 		float GetX() { return x; }
@@ -56,6 +57,7 @@ class Sectors : public Components {
 	public:
 		static Sectors *Instance();
 		Sector *GetSector( string& SectorName ) { return (Sector*)this->Get(SectorName); }
+		Sector *GetSectorByPlanet( string& PlanetName );
 		Component* newComponent() { return new Sector(); }
 		
 	protected:

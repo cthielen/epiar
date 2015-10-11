@@ -142,6 +142,18 @@ list<string> Sector::GetPlanets() {
 	return planets;
 }
 
+/* Returns true if sector has planet with name 'planetName', else false. */
+bool Sector::HasPlanet(string planetName) {
+	list<string> planets;
+	list<string>::iterator iter;
+
+	for(iter = this->planets.begin(); iter != this->planets.end(); ++iter) {
+		if(*iter == planetName) return true;
+	}
+
+	return false;
+}
+
 /**\brief Save this Sector to an xml node
  */
 xmlNodePtr Sector::ToXMLNode(string componentName) {
@@ -183,6 +195,16 @@ Sectors *Sectors::Instance( void ) {
 		pInstance->componentName = "sector";
 	}
 	return( pInstance );
+}
+
+Sector *Sectors::GetSectorByPlanet( string& PlanetName ) {
+	for( map<string,Component*>::iterator i = components.begin(); i != components.end(); ++i ) {
+		Sector *s = (Sector *)i->second;
+		assert(s != NULL);
+		if(s->HasPlanet(PlanetName)) return s;
+	}
+
+	return NULL;
 }
 
 /** @} */
