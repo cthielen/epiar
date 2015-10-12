@@ -25,7 +25,6 @@ class Map: public Widget {
 		void SetAlpha( float newAlpha ) { alpha = newAlpha; }
 		void SetCenter( Coordinate newCenter ) { center = newCenter; }
 		void SetScale( float newScale ) { scale = newScale; }
-		//void SetFilter( int spriteFlags ) { spriteTypes = spriteFlags; }
 
 		void SetZoomable( bool canZoom ) { zoomable = canZoom; }
 		void SetPannable( bool canPan ) { pannable = canPan; }
@@ -48,7 +47,6 @@ class Map: public Widget {
 		virtual bool MouseDrag( int xi, int yi );
 
 	private:
-		//int spriteTypes;
 		float alpha;
 		float scale;
 		Coordinate center;
@@ -56,7 +54,6 @@ class Map: public Widget {
 		bool zoomable;
 		bool pannable;
 
-		//SpriteManager* sprites;
 		Sectors *sectors;
 
 		static Font *MapFont;

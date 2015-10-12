@@ -38,6 +38,7 @@ class Sector : public Component {
 		list<string> GetPlanets();
 		bool HasPlanet(string planetName);
 		int GetTraffic() { return traffic; }
+		list<string> GetNeighbors() const { return neighbors; }
 
 		float GetX() { return x; }
 		float GetY() { return y; }

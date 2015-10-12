@@ -11,9 +11,38 @@
 		<y>0</y>
 		<traffic>7</traffic>
 		<neighbor>Alpha Centauri</neighbor>
+		<neighbor>Barnard's Star</neighbor>
+		<neighbor>Teegarden's Star</neighbor>
+		<neighbor>Ross 248</neighbor>
+		<neighbor>Sirius</neighbor>
 		<planet>Alexandria</planet>
 		<planet>Antikythera</planet>
 	</sector>
+
+	<sector>
+		<name>Sirius</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>-550</x>
+		<y>-75</y>
+		<traffic>1</traffic>
+	</sector>
+
+	<sector>
+		<name>Teegarden's Star</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>-100</x>
+		<y>300</y>
+		<traffic>1</traffic>
+	</sector>
+
+	<sector>
+		<name>Ross 248</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>-400</x>
+		<y>240</y>
+		<traffic>1</traffic>
+	</sector>
+
 	<sector>
 		<name>Alpha Centauri</name>
 		<alliance>United Earth Alliance</alliance>
@@ -21,6 +50,41 @@
 		<y>150</y>
 		<traffic>4</traffic>
 		<planet>Bersia</planet>
+		<neighbor>Lacaille 9352</neighbor>
+	</sector>
+
+	<sector>
+		<name>Lacaille 9352</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>1000</x>
+		<y>-150</y>
+		<traffic>1</traffic>
+		<neighbor>Lacaille 8760</neighbor>
+	</sector>
+	<sector>
+		<name>Lacaille 8760</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>1550</x>
+		<y>-15</y>
+		<traffic>1</traffic>
+	</sector>
+
+
+	<sector>
+		<name>Barnard's Star</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>-100</x>
+		<y>-300</y>
+		<traffic>1</traffic>
+		<neighbor>Rigel</neighbor>
+	</sector>
+
+	<sector>
+		<name>Rigel</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>35</x>
+		<y>-500</y>
+		<traffic>4</traffic>
 	</sector>
 
 </sectors>

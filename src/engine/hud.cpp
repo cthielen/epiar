@@ -710,7 +710,7 @@ void Radar::Draw( Camera* camera, SpriteManager* sprites ) {
 	int radarSize;
 	Coordinate focus = camera->GetFocusCoordinate();
 
-	if(largeMode) {
+	/*if(largeMode) {
 		if( visibility <= QUADRANTSIZE )
 		{
 			Map* map = (Map*)UI::Search( "/Map/" );
@@ -721,7 +721,7 @@ void Radar::Draw( Camera* camera, SpriteManager* sprites ) {
 			}
 		}
 		return;
-	}
+	}*/
 
 	list<Sprite*> *spriteList = sprites->GetSpritesNear(camera->GetFocusCoordinate(), (float)visibility);
 	for( list<Sprite*>::const_iterator iter = spriteList->begin(); iter != spriteList->end(); iter++)
