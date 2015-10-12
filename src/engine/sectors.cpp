@@ -81,7 +81,7 @@ Sector::~Sector() {
 /**\brief Parse one sector out of an xml node.
  */
 bool Sector::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
-	xmlNodePtr  attr;
+	xmlNodePtr attr;
 	string value;
 	Coordinate pos;
 
@@ -96,12 +96,12 @@ bool Sector::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 
 	if( (attr = FirstChildNamed(node, "x")) ){
 		value = NodeToString(doc, attr);
-		pos.SetX( atof( value.c_str() ));
+		x = atof( value.c_str() );
 	} else return false;
 
 	if( (attr = FirstChildNamed(node, "y")) ){
 		value = NodeToString(doc, attr);
-		pos.SetY( atof( value.c_str() ));
+		y = atof( value.c_str() );
 	} else return false;
 
 	if( (attr = FirstChildNamed(node, "traffic")) ){
@@ -113,14 +113,12 @@ bool Sector::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		value = NodeToString(doc, attr);
 		neighbors.push_back(value);
 	}
-	//neighbors.sort();
 	neighbors.unique();
 
 	for( attr = FirstChildNamed(node, "planet"); attr != NULL; attr = NextSiblingNamed(attr, "planet") ) {
 		value = NodeToString(doc, attr);
 		planets.push_back(value);
 	}
-	//planets.sort();
 	planets.unique();
 
 	return true;
@@ -207,6 +205,7 @@ Sector *Sectors::GetSectorByPlanet( string& PlanetName ) {
 	return NULL;
 }
 
+/* Returns a list<Sector*>* with all sectors filled in. Must be freed by client. */
 list<Sector*>* Sectors::GetAllSectors() {
 	list<Sector *>* sectorList = new list<Sector *>();
 
@@ -225,6 +224,8 @@ void Sectors::GetBoundaries(float *north, float *south, float *east, float *west
 
 	for( map<string,Component*>::iterator i = components.begin(); i != components.end(); ++i ) {
 		Sector *s = (Sector *)i->second;
+
+		cout << "Found sector (" << s->GetName() << ") with X, Y " << s->GetX() << ", " << s->GetY() << endl;
 
 		if(s->GetY() < *north) *north = s->GetY();
 		if(s->GetY() > *south) *south = s->GetY();
