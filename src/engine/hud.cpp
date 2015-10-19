@@ -1,6 +1,6 @@
 /**\file			hud.cpp
  * \author			Christopher Thielen (chris@epiar.net)
- * \date			Created  : Sunday, July 23, 2006
+ * \date			Created: Sunday, July 23, 2006
  * \date			Modified: Saturday, March 29, 2014
  * \brief			Handles the Heads-Up-Display
  * \details
