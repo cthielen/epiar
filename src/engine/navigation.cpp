@@ -11,30 +11,33 @@
 
 list<string> Navigation::Route;
 
-/**\class Hud
- * \brief Heads-Up-Display. */
+/**\class Navigation
+ * \brief Handles the navigation route. */
 
 void Navigation::Init( void ) {
-
+	Route.empty();
 }
 
 void Navigation::Close( void ) {
-
+	Route.empty();
 }
 
 bool Navigation::AddSector( string sectorName ) {
-	return false;
+	Route.push_back( sectorName );
+	return true;
 }
 
 bool Navigation::RemoveFinalSector( void ) {
-	return false;
+	Route.pop_back();
+	return true;
 }
 
 string Navigation::GetNextSector( void ) {
-	return NULL;
+	return Route.front();
 }
 
 bool Navigation::RemoveNextSector( void ) {
-	return false;
+	Route.pop_front();
+	return true;
 }
 
