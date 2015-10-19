@@ -17,6 +17,7 @@ epiar_SOURCES = src/main.cpp \
                 src/engine/hud.cpp \
                 src/engine/models.cpp \
                 src/engine/mission.cpp \
+                src/engine/navigation.cpp \
                 src/engine/outfit.cpp \
                 src/engine/scenario.cpp \
                 src/engine/scenario_lua.cpp \
