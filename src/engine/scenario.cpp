@@ -1,7 +1,7 @@
 /**\file			scenario.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Sunday, October 11, 2015
+ * \date			Modified: Monday, October 19, 2015
  * \brief			Contains the main game loop
  * \details
  */
@@ -71,6 +71,8 @@ Scenario::Scenario( void ) {
 	quit = false;
 
 	mapScale = -1.0f;
+
+	currentSector = NULL;
 }
 
 bool Scenario::New( string newname ) {
@@ -112,6 +114,8 @@ bool Scenario::New( string newname ) {
 	Set("scenario/players", "saves/saved-games.xml" );
 
 	loaded = true;
+
+	currentSector = NULL;
 
 	return true;
 }
@@ -203,13 +207,6 @@ bool Scenario::Initialize() {
 		return false;
 	}
 
-	// Add Planets
-	//list<string>* planetNames = planets->GetNames();
-	//for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname) {
-		//Planet* p = planets->GetPlanet(*pname);
-		//sprites->Add( p );
-	//}
-
 	// Preload animation to prevent FPS drop on first ship explosion
 	Ani::Get("data/animations/explosion1.ani");
 
@@ -223,8 +220,6 @@ bool Scenario::Initialize() {
 
 /* Sets up sector sprites */
 bool Scenario::Setup() {
-	Sector *sector = NULL;
-
 	// Determine current sector
 	// If the player has a lastPlanet, use that, else use the scenario default
 	if( player == NULL ) {
@@ -235,32 +230,32 @@ bool Scenario::Setup() {
 	string lastPlanet = player->GetLastPlanet();
 	if(lastPlanet.empty() == false) {
 		LogMsg(INFO, "Setting up sector based on player's last planet ...");
-		sector = sectors->GetSectorByPlanet(lastPlanet);
-		if(sector == NULL) {
+		currentSector = sectors->GetSectorByPlanet(lastPlanet);
+		if(currentSector == NULL) {
 			LogMsg(WARN, "Could not load player's last planet, unknown sector.");
 		}
 	} else {
-		LogMsg(INFO, "Setting up sector based on scenario defaults as player as no last planet.");
+		LogMsg(INFO, "Setting up current sector based on scenario defaults as player as no last planet.");
 	}
 
-	if(sector == NULL) {
-		// Couldn't find sector by lastPlanet, so use the scenario default
-		sector = (Sector *)sectors->Get( Get("defaultPlayer/sector") );
-		assert(sector != NULL);
+	if(currentSector == NULL) {
+		// Couldn't find current sector by lastPlanet, so use the scenario default
+		currentSector = (Sector *)sectors->Get( Get("defaultPlayer/sector") );
+		assert(currentSector != NULL);
 	}
 
-	LogMsg(INFO, "Setting up '%s' sector ...", sector->GetName().c_str());
+	LogMsg(INFO, "Setting up '%s' current sector ...", currentSector->GetName().c_str());
 
-	// Add planets based on the sector
-	list<string> planetList = sector->GetPlanets();
+	// Add planets based on the current sector
+	list<string> planetList = currentSector->GetPlanets();
 	for( list<string>::iterator i = planetList.begin(); i != planetList.end(); ++i ) {
 		Planet *p = (Planet *)planets->Get(*i);
 		if(p == NULL) {
-			LogMsg(ERR, "Could not find planet '%s' from sector to scene.", *i);
+			LogMsg(ERR, "Could not find planet '%s' from current sector to scene.", *i);
 			return false;
 		}
 
-		LogMsg(INFO, "\tAdding '%s' planet as it is in sector ...", p->GetName().c_str());
+		LogMsg(INFO, "\tAdding '%s' planet as it is in current sector ...", p->GetName().c_str());
 
 		sprites->Add( p );
 	}
@@ -613,11 +608,9 @@ void Scenario::HandleInput() {
 	}
 }
 
-void Scenario::CreateNavMap( void )
-{
+void Scenario::CreateNavMap( void ) {
 	// Toggle NavMap off if it already exists
-	if( UI::Search("/Window'Navigation'/") )
-	{
+	if( UI::Search("/Window'Navigation'/") ) {
 		UI::Close( UI::Search("/Window'Navigation'/") );
 		return;
 	}
@@ -633,7 +626,7 @@ void Scenario::CreateNavMap( void )
 		TO_INT(win->GetW()) - 18,
 		TO_INT(win->GetH()) - 33,
 		camera->GetFocusCoordinate(),
-		sectors );
+		this );
 
 	// Restore Saved Scale
 	if( mapScale > 0.0f ) {
@@ -645,15 +638,10 @@ void Scenario::CreateNavMap( void )
 	win->AddChild( map );
 	win->AddCloseButton();
 
-
 	// Pause now, but unpause when this window is closed.
 	pause();
 	win->RegisterAction(Action_Close, new ObjectAction(Unpause, this) );
 	UI::Add( win );
-
-	// Alternatively: make the Map a Modal Widget.  But this is not as nice.
-	//win->RegisterAction(Widget::Action_Close, new VoidAction(UI::ReleaseModality) );
-	//UI::ModalDialog( win );
 }
 
 /**\fn Scenario::isPaused()
@@ -727,6 +715,10 @@ void Scenario::LoadPlayer(string playerName) {
 	sprites->Add( player );
 
 	camera->Focus( player );
+}
+
+Sector* Scenario::GetCurrentSector() {
+	return currentSector;
 }
 
 /**\brief

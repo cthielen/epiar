@@ -1,7 +1,7 @@
 /**\file			ui_map.h
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
- * \date			Modified: Sunday, October 11, 2015
+ * \date			Modified: Monday, October 19, 2015
  * \brief			
  * \details
  */
@@ -9,6 +9,7 @@
 #ifndef __H_UI_MAP
 #define __H_UI_MAP
 
+#include "engine/scenario.h"
 #include "engine/sectors.h"
 #include "graphics/image.h"
 #include "graphics/video.h"
@@ -17,7 +18,7 @@
 
 class Map: public Widget {
 	public:
-		Map( int x, int y, int w, int h, Coordinate center, Sectors* sectors );
+		Map( int x, int y, int w, int h, Coordinate center, Scenario *scenario );
 		~Map();
 
 		void Draw( int relx = 0, int rely = 0 );
@@ -54,7 +55,7 @@ class Map: public Widget {
 		bool zoomable;
 		bool pannable;
 
-		Sectors *sectors;
+		Scenario* scenario;
 
 		static Font *MapFont;
 };

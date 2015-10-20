@@ -1,7 +1,7 @@
 /**\file			player.cpp
  * \author			Chris Thielen (chris@epiar.net)
  * \date			Created: Wednesday, July 5, 2006
- * \date			Modified: Saturday, January 5, 2008
+ * \date			Modified: Monday, October 19, 2015
  * \brief			Main player-specific functions and handle
  * \details
  */
@@ -31,6 +31,7 @@
 Player* Player::Load( string filename ) {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
+
 	Player* newPlayer = new Player();
 
 	File xmlfile = File (filename);
@@ -41,8 +42,8 @@ Player* Player::Load( string filename ) {
 
 	newPlayer->FromXMLNode( doc, cur );
 
-	// We check the planet location at loadtime in case the planet has moved or the lastPlanet has changed.
-	// This happens with the --random-universe option. TODO: Does this matter? random-universe has been removed.
+	// We check the planet location at loadtime in case planet moved or lastPlanet changed.
+	// This happens with --random-universe. TODO: Does this matter? random-universe was removed.
 	Planet* p = Planets::Instance()->GetPlanet( newPlayer->lastPlanet );
 	if( p != NULL ) {
 		newPlayer->SetWorldPosition( p->GetWorldPosition() );
@@ -57,14 +58,14 @@ Player* Player::Load( string filename ) {
 	assert( newPlayer->GetEngineName() != "" );
 
 	// Tell Lua to initialize these escorts.
-	for(list<Player::HiredEscort*>::iterator iter_escort = newPlayer->hiredEscorts.begin(); iter_escort != newPlayer->hiredEscorts.end(); iter_escort++){
+	for(list<Player::HiredEscort*>::iterator iter_escort = newPlayer->hiredEscorts.begin(); iter_escort != newPlayer->hiredEscorts.end(); iter_escort++) {
 		(*iter_escort)->Lua_Initialize( newPlayer->GetID(), newPlayer->GetWorldPosition() );
 	}
 
 	// Remember this Player
 	newPlayer->lastLoadTime = time(NULL);
 
-	LogMsg(INFO, "Successfully loaded the player: '%s'.",newPlayer->GetName().c_str() );
+	LogMsg(INFO, "Successfully loaded the player: '%s'.", newPlayer->GetName().c_str() );
 	LogMsg(INFO, "Loaded Player '%s' with Model='%s' Engine='%s' Credits = %d at (%.0f,%.0f).",
 		newPlayer->GetName().c_str(),
 		newPlayer->GetModel()->GetName().c_str(),
@@ -94,8 +95,10 @@ void Player::RemoveLuaControlFunc() {
  */
 void Player::AcceptMission( Mission *mission ) {
 	assert( mission != NULL );
+
 	mission->Accept();
 	missions.push_back( mission );
+
 	LogMsg(INFO, "Player has accepted the Mission to %s", mission->GetName().c_str() );
 }
 
@@ -103,8 +106,8 @@ void Player::AcceptMission( Mission *mission ) {
  */
 void Player::RejectMission( string missionName ) {
 	list<Mission*>::iterator iter;
-	for( iter=missions.begin(); iter!=missions.end(); ++iter )
-	{
+
+	for( iter=missions.begin(); iter!=missions.end(); ++iter ) {
 		if( (*iter)->GetName() == missionName ) {
 			(*iter)->Reject();
 			delete (*iter);
@@ -121,6 +124,7 @@ void Player::RejectMission( string missionName ) {
  */
 int Player::GetFavor(Alliance* alliance ) {
 	map<Alliance*,int>::iterator finder = favor.find( alliance );
+
 	if( finder == favor.end() ) {
 		return 0;
 	}
@@ -255,7 +259,7 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		SetName(NodeToString(doc,attr));
 	}
 
-	if( (attr = FirstChildNamed(node, "planet"))){
+	if( (attr = FirstChildNamed(node, "planet"))) {
 		string temp;
 		xmlNodePtr name = FirstChildNamed(attr,"name");
 		lastPlanet = NodeToString(doc,name);
@@ -263,12 +267,12 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		if( p != NULL ) {
 			SetWorldPosition( p->GetWorldPosition() );
 		}
-	}else return false;
+	} else return false;
 
-	if( (attr = FirstChildNamed(node,"model")) ){
+	if( (attr = FirstChildNamed(node,"model")) ) {
 		value = NodeToString(doc,attr);
 		Model* model = Models::Instance()->GetModel( value );
-		if( NULL!=model) {
+		if( NULL != model) {
 			SetModel( model );
 		} else {
 			LogMsg(ERR,"No such model as '%s'", value.c_str());
@@ -276,10 +280,10 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		}
 	} else return false;
 
-	if( (attr = FirstChildNamed(node,"engine")) ){
+	if( (attr = FirstChildNamed(node,"engine")) ) {
 		value = NodeToString(doc,attr);
 		Engine* engine = Engines::Instance()->GetEngine( value );
-		if( NULL!=engine) {
+		if( NULL != engine) {
 			SetEngine( engine );
 		} else {
 			LogMsg(ERR,"No such engine as '%s'", value.c_str());
@@ -288,22 +292,22 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	} else return false;
 
 
-	if( (attr = FirstChildNamed(node,"credits")) ){
+	if( (attr = FirstChildNamed(node,"credits")) ) {
 		value = NodeToString(doc,attr);
 		SetCredits( atoi(value.c_str()) );
 	} else return false;
 
-	for( attr = FirstChildNamed(node,"weapon"); attr!=NULL; attr = NextSiblingNamed(attr,"weapon") ){
+	for( attr = FirstChildNamed(node,"weapon"); attr != NULL; attr = NextSiblingNamed(attr,"weapon") ){
 		AddShipWeapon( NodeToString(doc,attr) );
 	}
 
-	for( attr = FirstChildNamed(node,"outfit"); attr!=NULL; attr = NextSiblingNamed(attr,"outfit") ){
+	for( attr = FirstChildNamed(node,"outfit"); attr != NULL; attr = NextSiblingNamed(attr,"outfit") ){
 		AddOutfit( NodeToString(doc,attr) );
 	}
 
-	for( attr = FirstChildNamed(node,"cargo"); attr!=NULL; attr = NextSiblingNamed(attr,"cargo") ){
-		xmlNodePtr type = FirstChildNamed(attr,"type");
-		xmlNodePtr ammt = FirstChildNamed(attr,"amount");
+	for( attr = FirstChildNamed(node,"cargo"); attr != NULL; attr = NextSiblingNamed(attr,"cargo") ){
+		xmlNodePtr type = FirstChildNamed(attr, "type");
+		xmlNodePtr ammt = FirstChildNamed(attr, "amount");
 		if(!type || !ammt)
 			return false;
 		if( NodeToInt(doc,ammt) > 0 )
@@ -312,9 +316,9 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		}
 	}
 
-	for( attr = FirstChildNamed(node,"ammo"); attr!=NULL; attr = NextSiblingNamed(attr,"ammo") ){
-		xmlNodePtr type = FirstChildNamed(attr,"type");
-		xmlNodePtr ammt = FirstChildNamed(attr,"amount");
+	for( attr = FirstChildNamed(node,"ammo"); attr != NULL; attr = NextSiblingNamed(attr,"ammo") ){
+		xmlNodePtr type = FirstChildNamed(attr, "type");
+		xmlNodePtr ammt = FirstChildNamed(attr, "amount");
 		if(!type || !ammt)
 			return false;
 		AmmoType ammoType = Weapon::AmmoNameToType( NodeToString(doc,type) );
@@ -324,7 +328,7 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		} else return false;
 	}
 
-	for( attr = FirstChildNamed(node,"Mission"); attr!=NULL; attr = NextSiblingNamed(attr,"Mission") ){
+	for( attr = FirstChildNamed(node,"Mission"); attr != NULL; attr = NextSiblingNamed(attr,"Mission") ){
 		Mission *mission = Mission::FromXMLNode(doc,attr);
 		if( mission != NULL ) {
 			LogMsg(INFO, "Successfully loaded the %s mission of player '%s'", mission->GetName().c_str(), this->GetName().c_str() );
@@ -334,18 +338,18 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		}
 	}
 
-	for( attr = FirstChildNamed(node,"favor"); attr!=NULL; attr = NextSiblingNamed(attr,"favor") ){
-		xmlNodePtr alliance = FirstChildNamed(attr,"alliance");
-		xmlNodePtr value = FirstChildNamed(attr,"value");
-		if(!alliance || !value)
+	for( attr = FirstChildNamed(node, "favor"); attr != NULL; attr = NextSiblingNamed(attr,"favor") ) {
+		xmlNodePtr alliance = FirstChildNamed(attr, "alliance");
+		xmlNodePtr value = FirstChildNamed(attr, "value");
+		if(!alliance || !value) {
 			return false;
-		if( NodeToInt(doc,value) > 0 )
-		{
-			UpdateFavor( NodeToString(doc,alliance), NodeToInt(doc,value) );
+		}
+		if( NodeToInt(doc,value) > 0 ) {
+			UpdateFavor( NodeToString(doc, alliance), NodeToInt(doc, value) );
 		}
 	}
 
-	for( attr = FirstChildNamed(node,"hiredEscort"); attr!=NULL; attr = NextSiblingNamed(attr,"hiredEscort") ){
+	for( attr = FirstChildNamed(node, "hiredEscort"); attr != NULL; attr = NextSiblingNamed(attr,"hiredEscort") ) {
 		xmlNodePtr typePtr = FirstChildNamed(attr, "type");
 		xmlNodePtr payPtr = FirstChildNamed(attr, "pay");
 		assert(typePtr && payPtr);
@@ -356,16 +360,15 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		this->AddHiredEscort(type, pay, -1);
 	}
 
-	if(this->ConfigureWeaponSlots(doc, node)){
+	if(this->ConfigureWeaponSlots(doc, node)) {
 		// great - it worked
 		LogMsg( INFO, "Successfully loaded weapon slots");
-	}
-	else {
+	} else {
 		LogMsg( ERR, "Weapon slot XML helper failed to configure weapon slots");
 	}
 
-	if( (attr = FirstChildNamed(node,"lastLoadTime")) ){
-		lastLoadTime = NodeToInt(doc,attr);
+	if( (attr = FirstChildNamed(node, "lastLoadTime")) ){
+		lastLoadTime = NodeToInt(doc, attr);
 	} else {
 		lastLoadTime = (time_t)0;
 	}
@@ -470,7 +473,7 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 	}
 
 	// Ammo
-	for(int a=0;a<max_ammo;a++){
+	for(int a = 0;a < max_ammo; a++) {
 		if(GetAmmo(AmmoType(a)) != 0 ){ // Don't save empty ammo Nodes
 			snprintf(buff, sizeof(buff), "%d", GetAmmo(AmmoType(a)) );
 
@@ -483,7 +486,7 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 
 	// Weapon Slots
 	// save info about whichever items players are able to change in their slot configuration (content and firing group)
-	for(unsigned int w=0; w < weaponSlots.size(); w++){
+	for(unsigned int w = 0; w < weaponSlots.size(); w++){
 		WeaponSlot *slot = &weaponSlots[w];
 		xmlNodePtr slotPtr = xmlNewNode(NULL, BAD_CAST "weapSlot");
 
@@ -498,9 +501,8 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 	// Cargo
 	map<Commodity*,unsigned int> cargo = this->GetCargo();
 	map<Commodity*,unsigned int>::iterator iter_com;
-	for(iter_com = cargo.begin(); iter_com!=cargo.end(); ++iter_com) {
-		if( !(*iter_com).second )
-		{
+	for(iter_com = cargo.begin(); iter_com != cargo.end(); ++iter_com) {
+		if( !(*iter_com).second ) {
 			continue; // Don't Save empty cargo Nodes
 		}
 		snprintf(buff, sizeof(buff), "%d", (*iter_com).second );
@@ -512,7 +514,7 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 
 	// Outfit
 	list<Outfit*> *outfits = this->GetOutfits();
-	for( list<Outfit*>::iterator it_w = outfits->begin(); it_w!=outfits->end(); ++it_w ){
+	for( list<Outfit*>::iterator it_w = outfits->begin(); it_w != outfits->end(); ++it_w ){
 		xmlNewChild(section, NULL, BAD_CAST "outfit", BAD_CAST (*it_w)->GetName().c_str() );
 	}
 
@@ -524,9 +526,8 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 
 	// Favor
 	map<Alliance*,int>::iterator iter_favor;
-	for(iter_favor = favor.begin(); iter_favor!=favor.end(); ++iter_favor) {
-		if( !(*iter_favor).second )
-		{
+	for(iter_favor = favor.begin(); iter_favor != favor.end(); ++iter_favor) {
+		if( !(*iter_favor).second ) {
 			continue; // Don't Save empty favor Nodes
 		}
 		snprintf(buff, sizeof(buff), "%d", (*iter_favor).second );
@@ -577,13 +578,12 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
  * \param[in] spriteID The ID of the Escort.
  *            spriteID should be -1 if the Escort has not been created yet.
  */
-void Player::AddHiredEscort(string type, int pay, int spriteID){
-
-	for(
+void Player::AddHiredEscort(string type, int pay, int spriteID) {
+	for (
 	   list<HiredEscort*>::iterator it = hiredEscorts.begin();
 	   it != hiredEscorts.end() && spriteID != -1; // if specified ID is -1, skip this loop
 	   it++
-	){
+	) {
 		// already have it listed after loading from XML; just update the sprite ID now that it has been created
 		if( (*it)->type == type && (*it)->spriteID == -1 ){
 			(*it)->spriteID = spriteID;
@@ -593,7 +593,6 @@ void Player::AddHiredEscort(string type, int pay, int spriteID){
 
 	// don't have it yet; add a new entry
 	this->hiredEscorts.push_back( new HiredEscort(type, (pay > 0 ? pay : 0), spriteID) );
-	//LogMsg(WARN, "Could not find the escort to update");
 }
 
 /**\class Player::HiredEscort
@@ -609,7 +608,7 @@ void Player::AddHiredEscort(string type, int pay, int spriteID){
  * \param[in] spriteID The ID of the Escort.
  *            spriteID should be -1 if the Escort has not been created yet.
  */
-Player::HiredEscort::HiredEscort(string _type, int _pay, int _spriteID){
+Player::HiredEscort::HiredEscort(string _type, int _pay, int _spriteID) {
 	type = _type;
 	pay = _pay;
 	spriteID = _spriteID;
@@ -618,8 +617,9 @@ Player::HiredEscort::HiredEscort(string _type, int _pay, int _spriteID){
 /**\brief Initialize the Lua AI state of a Hired Escort
  * This function which interacts with Lua may be seen as analogous to Mission::Accept()
  */
-void Player::HiredEscort::Lua_Initialize(int playerID, Coordinate playerPos){
+void Player::HiredEscort::Lua_Initialize(int playerID, Coordinate playerPos) {
 	char *command = (char*)malloc(256);
+
 	// Need to specify player ID and position because the
 	// player object can't be examined from Lua yet.
 	snprintf(command, 256, "initHiredEscort(%d, %f, %f, '%s', %d)", playerID, playerPos.GetX(), playerPos.GetY(), this->type.c_str(), this->pay);

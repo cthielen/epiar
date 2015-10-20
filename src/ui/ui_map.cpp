@@ -1,7 +1,7 @@
 /**\file			ui_map.cpp
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
- * \date			Modified: Sunday, October 11, 2015
+ * \date			Modified: Monday, October 19, 2015
  * \brief			Map Widget
  * \details
  */
@@ -29,14 +29,14 @@ Font *Map::MapFont = NULL;
 /** \brief Map Constructor
  *
  */
-Map::Map( int x, int y, int w, int h, Coordinate center, Sectors* sectors ) {
+Map::Map( int x, int y, int w, int h, Coordinate center, Scenario* scenario ) {
 	this->x = x;
 	this->y = y;
 
 	this->w = w;
 	this->h = h;
 	this->center = center;
-	this->sectors = sectors;
+	this->scenario = scenario;
 
 	alpha = 1;
 
@@ -44,19 +44,16 @@ Map::Map( int x, int y, int w, int h, Coordinate center, Sectors* sectors ) {
 
 	// Initially strech the Map so that it covers all QuadTrees
 	float north, south, east, west, edge;
-	sectors->GetBoundaries(&north, &south, &east, &west);
+	Sectors* sectors = this->scenario->GetSectors();
+	if(sectors != NULL) {
+		sectors->GetBoundaries(&north, &south, &east, &west);
 
-	// edge is the maximum distance from zero of north, south, east, and west
-	edge = (north > -south) ? north : -south;
-	edge = (edge > -west) ? edge : -west;
-	edge = (edge > east) ? edge : east;
-	scale = size / (1.5 * edge);
-
-	cout << "north: " << north << endl;
-	cout << "south: " << south << endl;
-	cout << "east: " << east << endl;
-	cout << "west: " << west << endl;
-	cout << "scale is: " << scale << endl;
+		// edge is the maximum distance from zero of north, south, east, and west
+		edge = (north > -south) ? north : -south;
+		edge = (edge > -west) ? edge : -west;
+		edge = (edge > east) ? edge : east;
+		scale = size / (1.5 * edge);
+	}
 
 	if( MapFont == NULL ) {
 		MapFont = new Font( SKIN("Skin/HUD/Map/Font") );
@@ -73,7 +70,9 @@ Map::Map( int x, int y, int w, int h, Coordinate center, Sectors* sectors ) {
  */
 Map::~Map()
 {
-	sectors = NULL;
+	scenario = NULL;
+	delete MapFont;
+	MapFont = NULL;
 }
 
 /** \brief Draw Map
@@ -82,12 +81,16 @@ Map::~Map()
 void Map::Draw( int relx, int rely ) {
 	list<Sector*>::iterator iter;
 	list<Sector*>* sectors = NULL;
+	Sector* currentSector = this->scenario->GetCurrentSector();
 
 	// These variables are used for almost every sprite symbol
-	Coordinate pos, pos2;
+	Coordinate pos;
 	Color col, field;
 
-	sectors = this->sectors->GetAllSectors();
+	Sectors* sectorsHandle = this->scenario->GetSectors();
+	if(sectorsHandle == NULL) return;
+
+	sectors = sectorsHandle->GetAllSectors();
 
 	// Draw the backdrop
 	Video::DrawRect( relx + GetX(), rely + GetY(), w, h, BLACK, alpha);
@@ -105,7 +108,7 @@ void Map::Draw( int relx, int rely ) {
 		startPos = WorldToScreen(Coordinate(sector->GetX(), sector->GetY()));
 
 		for( neighborItr = neighbors.begin(); neighborItr != neighbors.end(); ++neighborItr ) {
-			Sector *neighbor = (Sector *)this->sectors->Get( *neighborItr );
+			Sector *neighbor = (Sector *)sectorsHandle->Get( *neighborItr );
 			assert(neighbor != NULL);
 
 			Coordinate endPos;
@@ -121,16 +124,21 @@ void Map::Draw( int relx, int rely ) {
 	for( iter = sectors->begin(); iter != sectors->end(); ++iter ) {
 		Sector *sector = (Sector *)(*iter);
 
-		col = BLUE;
+		if(sector == currentSector) {
+			col = WHITE;
+		} else {
+			col = BLUE;
+		}
 		pos = WorldToScreen(Coordinate(sector->GetX(), sector->GetY()));
 
 		field = sector->GetAlliance()->GetColor();
 
-		// Draw a gradient for influence
-		for(float i = 1; i < 10; i += 0.25f) {
-			Video::DrawFilledCircle( pos, (10 * scale) / i, field, alpha * 0.05f );
+		Video::DrawFilledCircle( pos, (40 * scale) / 3, BLACK, alpha );
+		Video::DrawCircle( pos, (40 * scale) / 3, 1, col, alpha );
+
+		if(sector == currentSector) {
+			Video::DrawTarget( pos.GetX(), pos.GetY(), 10, 10, 3, 1, 1, 1 );
 		}
-		Video::DrawCircle( pos, 3, 1, col, alpha );
 	}
 
 	// Do a second pass to draw planet Names on top
@@ -187,6 +195,8 @@ Coordinate Map::WorldToScreen( Coordinate world ) {
 
 bool Map::MouseLUp( int xi, int yi ) {
 	Widget::MouseLUp( xi, yi );
+
+	cout << "mouse up at " << xi << ", " << yi << endl;
 
 	return false;
 }

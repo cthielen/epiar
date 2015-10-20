@@ -65,6 +65,8 @@ class Scenario : public XMLFile {
 		Input *GetInput() { return &inputs; }
 		Player *GetPlayer();
 
+		Sector* GetCurrentSector();
+
 		string GetName() { return Get("scenario/name"); }
 		string GetDescription() { return Get("scenario/description"); }
 
@@ -102,6 +104,7 @@ class Scenario : public XMLFile {
 		Song* bgmusic;
 		Input inputs;
 		Console *console;
+		Sector* currentSector;
 
 		// Description of this scenario
 		string folderpath;

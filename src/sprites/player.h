@@ -64,7 +64,7 @@ class Player : public Ship {
 		bool ConfigureWeaponSlots(xmlDocPtr, xmlNodePtr);
 	private:
 		string name;
-		time_t lastLoadTime; // TODO This may need to be renamed
+		time_t lastLoadTime;
 		string lastPlanet;
 		list<Mission*> missions;
 		map<Alliance*,int> favor;
@@ -120,6 +120,7 @@ class Players : public Components {
 			Engine *engine,
 			int credits,
 			Coordinate location);
+
 		Player* LoadPlayer(string playerName);
 		bool    DeletePlayer(string playerName);
 		bool	PlayerExists(string playerName);

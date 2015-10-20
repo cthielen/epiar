@@ -657,7 +657,7 @@ int UI_Lua::newMap(lua_State *L) {
 
 	Scenario *scen = Scenario_Lua::GetScenario(L);
 	
-	*p = new Map(x, y, w, h, Coordinate(0,0), scen->GetSectors() );
+	*p = new Map(x, y, w, h, Coordinate(0,0), scen );
 
 	UI::Add(*p);
 
