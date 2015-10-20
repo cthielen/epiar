@@ -70,8 +70,8 @@ bool UI::Initialize( string screenName ) {
 	boldFont->SetSize( convertTo<int>( SKIN("Skin/UI/Default/Size") ) );
 
  
-	beep = Sound::Get( "data/audio/Interface/28853__junggle__btn043.ogg" );
-	hover = Sound::Get( "data/audio/Interface/28820__junggle__btn010.ogg" );
+	beep = Sound::Get( "data/audio/interface/28853__junggle__btn043.ogg" );
+	hover = Sound::Get( "data/audio/interface/28820__junggle__btn010.ogg" );
 
 	return true;
 }

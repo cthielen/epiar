@@ -31,8 +31,6 @@ Picture *Menu::exit = NULL;
 
 Song *Menu::bgMusic = NULL;
 
-//if(OPTION(int, "options/sound/buttons")) Sound::Get( "data/audio/Interface/28853__junggle__btn043.ogg" )->Play();
-
 /**\class Menu
  *  \brief Epiar's Main Menu
  *
@@ -71,9 +69,9 @@ void Menu::Main_Menu( void )
 	}
 
 	// Set up music
-	bgMusic = Song::Get( "data/audio/Music/holst_mars.ogg" );
+	bgMusic = Song::Get( "data/audio/music/holst_mars.ogg" );
 	if( bgMusic == NULL ) {
-		LogMsg(WARN, "There was an error loading music from 'data/audio/Music/holst_mars.ogg'." );
+		LogMsg(WARN, "There was an error loading music from 'data/audio/music/holst_mars.ogg'." );
 	}
 
 	SetupUI();

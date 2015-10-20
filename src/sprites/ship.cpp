@@ -362,8 +362,8 @@ bool Ship::Jump( Coordinate position, bool jumpDrive ) {
 	// TODO Start playing a sound
 	if (isPlayer()) {
 		Sound *aSound;
-		if (jumpDrive) aSound = Sound::Get("data/audio/Effects/128590__corsica-s__transport-edit.wav");
-		else aSound = Sound::Get("data/audio/Effects/55853__sergenious__teleport.wav");
+		if (jumpDrive) aSound = Sound::Get("data/audio/effects/128590__corsica-s__transport-edit.wav");
+		else aSound = Sound::Get("data/audio/effects/55853__sergenious__teleport.wav");
         aSound -> SetVolume(10);
         aSound -> Play();
 	}
@@ -616,7 +616,7 @@ void Ship::Explode( lua_State *L )
 
 	// Play explode sound
 	if(OPTION(int, "options/sound/explosions")) {
-		Sound *explodesnd = Sound::Get("data/audio/Effects/18384__inferno__largex.wav.ogg");
+		Sound *explodesnd = Sound::Get("data/audio/effects/18384__inferno__largex.wav.ogg");
 		explodesnd->Play( GetWorldPosition() - camera->GetFocusCoordinate());
 	}
 
