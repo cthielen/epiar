@@ -481,7 +481,7 @@ ProtectFreighter = {
 	Create = function()
 		local reward = 10000 + math.random(100)*200
 		local planets = Epiar.planets()
-		local p = planets[math.random(#planets)]
+		local p = planets[1]
 		local planetName = p:GetName()
 
 		local pronoun

@@ -4,3 +4,7 @@ Menu<->Game transitions should fade to black and/or menu/game rendering
 Creating a new player shouldn't cause the button click sound twice
 Welcome dialog should not be in a different area than game start
 
+Bugs
+----
+Missions currently expect to be able to choose from the full range of planets. They are not sector-aware, and this causes many issues on landing.
+
