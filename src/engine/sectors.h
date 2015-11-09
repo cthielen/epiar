@@ -45,6 +45,8 @@ class Sector : public Component {
 
 		Alliance* GetAlliance() const { return alliance; }
 
+		friend ostream& operator<<(ostream & out, const Sector &s );
+
 	private:
 		Alliance* alliance;
 		list<string> planets;

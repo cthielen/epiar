@@ -48,7 +48,7 @@ epiar_SOURCES = src/main.cpp \
                 src/ui/ui_dropdown.cpp \
                 src/ui/ui_label.cpp \
                 src/ui/ui_lua.cpp \
-                src/ui/ui_map.cpp \
+                src/ui/ui_navmap.cpp \
                 src/ui/ui_picture.cpp \
                 src/ui/ui_paragraph.cpp \
                 src/ui/ui_scrollbar.cpp \

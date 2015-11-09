@@ -1,4 +1,4 @@
-/**\file			ui_map.h
+/**\file			ui_navmap.h
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
  * \date			Modified: Monday, October 19, 2015
@@ -6,8 +6,8 @@
  * \details
  */
 
-#ifndef __H_UI_MAP
-#define __H_UI_MAP
+#ifndef __H_UI_NAVMAP
+#define __H_UI_NAVMAP
 
 #include "engine/scenario.h"
 #include "engine/sectors.h"
@@ -16,10 +16,10 @@
 #include "ui/ui.h"
 #include "utilities/coordinate.h"
 
-class Map: public Widget {
+class NavMap: public Widget {
 	public:
-		Map( int x, int y, int w, int h, Coordinate center, Scenario *scenario );
-		~Map();
+		NavMap( int x, int y, int w, int h, Coordinate center, Scenario *scenario );
+		~NavMap();
 
 		void Draw( int relx = 0, int rely = 0 );
 
@@ -48,6 +48,8 @@ class Map: public Widget {
 		virtual bool MouseDrag( int xi, int yi );
 
 	private:
+		bool SectorNearClick(Sector *sector, Coordinate click);
+
 		float alpha;
 		float scale;
 		Coordinate center;
@@ -57,8 +59,8 @@ class Map: public Widget {
 
 		Scenario* scenario;
 
-		static Font *MapFont;
+		static Font *NavMapFont;
 };
 
-#endif // __H_UI_MAP
+#endif // __H_UI_NAVMAP
 

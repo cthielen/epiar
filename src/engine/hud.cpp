@@ -14,7 +14,7 @@
 #include "graphics/font.h"
 #include "sprites/player.h"
 #include "sprites/spritemanager.h"
-#include "ui/ui_map.h"
+#include "ui/ui_navmap.h"
 #include "utilities/log.h"
 #include "utilities/timer.h"
 #include "engine/camera.h"

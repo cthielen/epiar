@@ -1,4 +1,4 @@
-/**\file			ui_map.cpp
+/**\file			ui_navmap.cpp
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
  * \date			Modified: Monday, October 19, 2015
@@ -7,29 +7,30 @@
  */
 
 #include "includes.h"
-#include "ui/ui_map.h"
+#include "ui/ui_navmap.h"
 #include "sprites/planets.h"
 #include "sprites/effects.h"
 #include "utilities/timer.h"
+
+#define SECTOR_CLICK_SELECTION_RADIUS 9.0
 
 /** \addtogroup UI
  * @{
  */
 
-/**\class Map
+/**\class NavMap
  * \brief Widget for displaying Sprites
  *
  */
 
-
 #define MAP_ZOOM_RATIO 1.1f ///< The rate at which the Map Zooms in and out.
 
-Font *Map::MapFont = NULL;
+Font *NavMap::NavMapFont = NULL;
 
 /** \brief Map Constructor
  *
  */
-Map::Map( int x, int y, int w, int h, Coordinate center, Scenario* scenario ) {
+NavMap::NavMap( int x, int y, int w, int h, Coordinate center, Scenario* scenario ) {
 	this->x = x;
 	this->y = y;
 
@@ -55,10 +56,10 @@ Map::Map( int x, int y, int w, int h, Coordinate center, Scenario* scenario ) {
 		scale = size / (1.5 * edge);
 	}
 
-	if( MapFont == NULL ) {
-		MapFont = new Font( SKIN("Skin/HUD/Map/Font") );
-		MapFont->SetColor( Color( SKIN("Skin/HUD/Map/Color") ) );
-		MapFont->SetSize( convertTo<int>( SKIN("Skin/HUD/Map/Size") ) );
+	if( NavMapFont == NULL ) {
+		NavMapFont = new Font( SKIN("Skin/HUD/Map/Font") );
+		NavMapFont->SetColor( Color( SKIN("Skin/HUD/Map/Color") ) );
+		NavMapFont->SetSize( convertTo<int>( SKIN("Skin/HUD/Map/Size") ) );
 	}
 
 	zoomable = true;
@@ -68,17 +69,17 @@ Map::Map( int x, int y, int w, int h, Coordinate center, Scenario* scenario ) {
 /** \brief Map Destructor
  *
  */
-Map::~Map()
+NavMap::~NavMap()
 {
 	scenario = NULL;
-	delete MapFont;
-	MapFont = NULL;
+	delete NavMapFont;
+	NavMapFont = NULL;
 }
 
 /** \brief Draw Map
  *
  */
-void Map::Draw( int relx, int rely ) {
+void NavMap::Draw( int relx, int rely ) {
 	list<Sector*>::iterator iter;
 	list<Sector*>* sectors = NULL;
 	Sector* currentSector = this->scenario->GetCurrentSector();
@@ -145,7 +146,7 @@ void Map::Draw( int relx, int rely ) {
 	for( iter = sectors->begin(); iter != sectors->end(); ++iter ) {
 		Sector *sector = (Sector *)(*iter);
 		pos = WorldToScreen(Coordinate(sector->GetX(), sector->GetY()));
-		MapFont->Render( pos.GetX() + 5, pos.GetY(), sector->GetName().c_str() );
+		NavMapFont->Render( pos.GetX() + 5, pos.GetY(), sector->GetName().c_str() );
 	}
 
 	Video::UnsetCropRect();
@@ -156,7 +157,7 @@ void Map::Draw( int relx, int rely ) {
 
 /** \brief Convert click coordinates to World Coordinates
  */
-Coordinate Map::ClickToWorld( Coordinate click ) {
+Coordinate NavMap::ClickToWorld( Coordinate click ) {
 	Coordinate world = click;
 
 	world -= Coordinate( GetX(), GetY() ); // Offset by this Widget's origin
@@ -169,7 +170,7 @@ Coordinate Map::ClickToWorld( Coordinate click ) {
 
 /** \brief Convert world coordinates to relative click Coordinates
  */
-Coordinate Map::WorldToClick( Coordinate world ) {
+Coordinate NavMap::WorldToClick( Coordinate world ) {
 	Coordinate click = world;
 
 	click -= center;
@@ -182,7 +183,7 @@ Coordinate Map::WorldToClick( Coordinate world ) {
 
 /** \brief Convert world coordinates to screen Coordinates
  */
-Coordinate Map::WorldToScreen( Coordinate world ) {
+Coordinate NavMap::WorldToScreen( Coordinate world ) {
 	Coordinate screen = world;
 
 	screen -= center;
@@ -193,23 +194,43 @@ Coordinate Map::WorldToScreen( Coordinate world ) {
 	return screen;
 }
 
-bool Map::MouseLUp( int xi, int yi ) {
-	Widget::MouseLUp( xi, yi );
+bool NavMap::MouseLUp( int x, int y ) {
+	Widget::MouseLUp( x, y );
 
-	cout << "mouse up at " << xi << ", " << yi << endl;
+	Coordinate click;
+	click.SetX(x);
+	click.SetY(y);
+
+	cout << "mouse up at " << click << endl;
+
+	// Determine if they clicked on a sector
+	list<Sector*>* sectors = NULL;
+	list<Sector*>::iterator iter;
+	Sectors* sectorsHandle = this->scenario->GetSectors();
+	assert(sectorsHandle != NULL);
+
+	sectors = sectorsHandle->GetAllSectors();
+
+	for( iter = sectors->begin(); iter != sectors->end(); ++iter ) {
+		Sector *sector = (Sector *)(*iter);
+		
+		if(SectorNearClick(sector, click)) {
+			cout << "clicked on sector: " << *sector << endl;
+		}
+	}
 
 	return false;
 }
 
-bool Map::MouseLDown( int xi, int yi ) {
-	Widget::MouseLDown( xi, yi );
+bool NavMap::MouseLDown( int x, int y ) {
+	Widget::MouseLDown( x, y );
 
 	return false;
 }
 
 /** \brief Pan the Map
  */
-bool Map::MouseDrag( int xi, int yi ) {
+bool NavMap::MouseDrag( int xi, int yi ) {
 	if( pannable ) {
 		center -= Coordinate( (xi-x) - dragX , ((yi-y) - dragY) ) / scale;
 		dragX = xi-x;
@@ -223,7 +244,7 @@ bool Map::MouseDrag( int xi, int yi ) {
 
 /** \brief Zoom the map in
  */
-bool Map::MouseWUp( int xi, int yi )
+bool NavMap::MouseWUp( int xi, int yi )
 {
 	if( zoomable ) {
 		scale *= MAP_ZOOM_RATIO;
@@ -236,7 +257,7 @@ bool Map::MouseWUp( int xi, int yi )
 
 /** \brief Zoom the map out
  */
-bool Map::MouseWDown( int xi, int yi )
+bool NavMap::MouseWDown( int xi, int yi )
 {
 	if( zoomable ) {
 		scale /= MAP_ZOOM_RATIO;
@@ -245,6 +266,20 @@ bool Map::MouseWDown( int xi, int yi )
 	Widget::MouseWDown( xi, yi );
 
 	return true;
+}
+
+bool NavMap::SectorNearClick(Sector *sector, Coordinate click) {
+	assert(sector != NULL);
+
+	Coordinate sectorScreen = WorldToClick(Coordinate(sector->GetX(), sector->GetY()));
+
+	float distance = (sectorScreen - click).GetMagnitude();
+
+	//cout << "click (" << click << ") - sector (" << sectorScreen << ", " << sector->GetName() << ") = magnitude: " << distance << endl;
+
+	if(distance < SECTOR_CLICK_SELECTION_RADIUS) return true;	
+
+	return false;
 }
 
 /** @} */

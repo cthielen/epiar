@@ -175,6 +175,11 @@ xmlNodePtr Sector::ToXMLNode(string componentName) {
 	return section;
 }
 
+ostream& operator<<(ostream &out, const Sector &s) {
+	out << "(" << s.name << ": " << s.x << ", " << s.y << ")";
+	return out;
+}
+
 /**\class Sectors
  * \brief Collection of all Sectors
  *

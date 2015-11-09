@@ -651,13 +651,13 @@ int UI_Lua::newMap(lua_State *L) {
 	int h = int(luaL_checknumber (L, 4));
 
 	// Allocate memory for a pointer to object
-	Map **p = (Map**)lua_newuserdata(L, sizeof(Map**));
+	NavMap **p = (NavMap**)lua_newuserdata(L, sizeof(NavMap**));
 	luaL_getmetatable(L, EPIAR_UI);
 	lua_setmetatable(L, -2);
 
 	Scenario *scen = Scenario_Lua::GetScenario(L);
 	
-	*p = new Map(x, y, w, h, Coordinate(0,0), scen );
+	*p = new NavMap(x, y, w, h, Coordinate(0,0), scen );
 
 	UI::Add(*p);
 
@@ -1202,10 +1202,10 @@ int UI_Lua::getWorldPosition(lua_State *L) {
 	if ( !(n == 1 || n == 3) )
 		return luaL_error(L, "Got %d arguments expected 1 (self) or 3 (self, x, y)", n);
 
-	// Get the Map Widget
+	// Get the NavMap Widget
 	Widget *widget = checkWidget(L, 1);
 	luaL_argcheck(L, widget->GetMask() & WIDGET_MAP, 1, "`Map' expected.");
-	Map* map = (Map*)widget;
+	NavMap* map = (NavMap*)widget;
 
 	// Get the resulting world position
 	Coordinate world;
@@ -1228,12 +1228,13 @@ int UI_Lua::SetPannable(lua_State *L) {
 	if ( n != 2 )
 		return luaL_error(L, "Got %d arguments expected 2 (self, pan)", n);
 
-	// Get the Map Widget
+	// Get the NavMap Widget
 	Widget *widget = checkWidget(L, 1);
 	luaL_argcheck(L, widget->GetMask() & WIDGET_MAP, 1, "`Map' expected.");
-	Map* map = (Map*)widget;
+	NavMap* map = (NavMap*)widget;
 
 	map->SetPannable( luaL_checkinteger(L, 2) );
+
 	return 0;
 }
 
@@ -1242,10 +1243,10 @@ int UI_Lua::SetZoomable(lua_State *L) {
 	if ( n != 2 )
 		return luaL_error(L, "Got %d arguments expected 2 (self, zoom)", n);
 
-	// Get the Map Widget
+	// Get the NavMap Widget
 	Widget *widget = checkWidget(L, 1);
 	luaL_argcheck(L, widget->GetMask() & WIDGET_MAP, 1, "`Map' expected.");
-	Map* map = (Map*)widget;
+	NavMap* map = (NavMap*)widget;
 
 	map->SetZoomable( luaL_checkinteger(L, 2) );
 	return 0;

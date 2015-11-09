@@ -279,7 +279,7 @@ void Unpause(void *scenarioInstance) {
 }
 
 void SaveMapScale( void *scenarioInstance ) {
-	Map* map = (Map*)UI::Search("/Window'Navigation'/Map/");
+	NavMap* map = (NavMap*)UI::Search("/Window'Navigation'/Map/");
 	if( map != NULL) {
 		((Scenario *)scenarioInstance)->SetMapScale( map->GetScale() );
 	} else {
@@ -622,7 +622,7 @@ void Scenario::CreateNavMap( void ) {
 		TO_INT(Video::GetHeight() * 0.8),
 		"Navigation" );
 
-	Map* map = new Map( 10, 26,
+	NavMap* map = new NavMap( 10, 26,
 		TO_INT(win->GetW()) - 18,
 		TO_INT(win->GetH()) - 33,
 		camera->GetFocusCoordinate(),
