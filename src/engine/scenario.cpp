@@ -546,19 +546,14 @@ void Scenario::HandleInput() {
 		//Video::SaveScreenshot();
 	//}
 
-	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, 'n') ) )
-	{
+	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, 'n') ) ) {
 		CreateNavMap();
 	}
 
-	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, 'p') ) )
-	{
-		if ( UI::Search("/Window'Epiar is Paused'/") )
-		{
+	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, 'p') ) ) {
+		if ( UI::Search("/Window'Epiar is Paused'/") ) {
 			UI::Close( UI::Search("/Window'Epiar is Paused'/") );
-		}
-		else
-		{
+		} else {
 			Window* win = new Window(
 				TO_INT(Video::GetWidth() * 0.4),
 				TO_INT(Video::GetHeight() * 0.4),
@@ -581,18 +576,15 @@ void Scenario::HandleInput() {
 		}
 	}
 
-	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, '?') ) )
-	{
+	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, '?') ) ) {
 		Dialogs::OptionsWindow();
 	}
 
-	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, '/') ) )
-	{
+	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, '/') ) ) {
 		Lua::Call("keyboardCommands");
 	}
 
-	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, 'j') ) )
-	{
+	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, 'j') ) ) {
 		list<string>* names = planets->GetNames();
 		int i = 0;
 		int x = rand() % names->size();
@@ -602,8 +594,7 @@ void Scenario::HandleInput() {
 		player->Jump( p->GetWorldPosition() + GaussianCoordinate(), true );
 	}
 
-	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_ESCAPE ) ) )
-	{
+	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_ESCAPE ) ) ) {
 		quit = true;
 	}
 }
