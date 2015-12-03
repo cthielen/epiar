@@ -6,11 +6,15 @@ Welcome dialog should not be in a different area than game start
 
 Milestones
 ----------
-0.6.0 - Sector-based gameplay (January 2016?)
+0.6.0 - Sector-based gameplay, in-game menu dialog (January 2016?)
 0.7.0 - Mission, trading, AI cleanup (February 2016?)
 0.8.0 - Alliance/sector loyalty importance, building fleets/giving orders (April 2016?)
 0.9.0 - Demanding tribute from planets, SDL2-conversion (June 2016?)
 1.0.0 - Bug fixes, animation tweaks, clean-ups, OS packaging/repos/press (August 2016?)
+
+Others
+------
+User-friendly editor
 
 Bugs
 ----
