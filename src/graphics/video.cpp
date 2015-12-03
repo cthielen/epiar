@@ -1,6 +1,7 @@
 /**\file			video.cpp
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
+ * \date			Modified: Wednesday, December 2, 2015
  * \brief
  * \details
  */
@@ -498,17 +499,19 @@ void Video::DrawFilledCircle( int x, int y, int radius, Color c, float a) {
 /**\brief Draw a filled circle.
  */
 void Video::DrawFilledCircle( int x, int y, int radius, float r, float g, float b, float a) {
-	glColor4f(r,g,b,a);
+	glColor4f(r, g, b, a);
 	glEnable(GL_BLEND);
 	glBegin(GL_TRIANGLE_STRIP);
+
 	Trig* t = Trig::Instance();
-	for(int angle = 0; angle < 360; angle += 5)
-	{
-		glVertex2d(x,y);
+
+	for(int angle = 0; angle < 360; angle += 5) {
+		glVertex2d(x, y);
 		glVertex2d(radius * t->GetCos(angle) + x, radius * t->GetSin(angle) + y);
 	}
+
 	// One more triangle to finish the circle. (ang=0)
-	glVertex2d(x,y);
+	glVertex2d(x, y);
 	glVertex2d(radius + x, y);
 	glEnd();
 }
@@ -516,21 +519,30 @@ void Video::DrawFilledCircle( int x, int y, int radius, float r, float g, float 
 /**\brief Draws a targeting overlay.
  */
 void Video::DrawTarget( int x, int y, int w, int h, int d, float r, float g, float b, float a ) {
+	float w2 = w / 2.;
+	float h2 = h / 2.;
+
 	// d is for 'depth' and is the number of crosshair pixels
-	glColor4f(r,g,b,a);
+	glColor4f(r, g, b, a);
+
 	glBegin(GL_LINES);
+
 		// Upper Left Corner
-		glVertex2d(x-w/2,y-h/2); glVertex2d(x-w/2,y-h/2+d);
-		glVertex2d(x-w/2,y-h/2); glVertex2d(x-w/2+d,y-h/2);
+		glVertex2d(x - w2, y - h2); glVertex2d(x - w2, y - h2 + d);
+		glVertex2d(x - w2, y - h2); glVertex2d(x - w2 + d, y - h2);
+
 		// Upper Right Corner
-		glVertex2d(x+w/2,y-h/2); glVertex2d(x+w/2,y-h/2+d);
-		glVertex2d(x+w/2,y-h/2); glVertex2d(x+w/2-d,y-h/2);
+		glVertex2d(x + w2, y - h2); glVertex2d(x + w2, y - h2 + d);
+		glVertex2d(x + w2, y - h2); glVertex2d(x + w2 - d, y - h2);
+
 		// Lower Left Corner
-		glVertex2d(x-w/2,y+h/2); glVertex2d(x-w/2,y+h/2-d);
-		glVertex2d(x-w/2,y+h/2); glVertex2d(x-w/2+d,y+h/2);
+		glVertex2d(x - w2, y + h2); glVertex2d(x - w2, y + h2 - d);
+		glVertex2d(x - w2, y + h2); glVertex2d(x - w2 + d, y + h2);
+
 		// Lower Right Corner
-		glVertex2d(x+w/2,y+h/2); glVertex2d(x+w/2,y+h/2-d);
-		glVertex2d(x+w/2,y+h/2); glVertex2d(x+w/2-d,y+h/2);
+		glVertex2d(x + w2, y + h2); glVertex2d(x + w2, y + h2 - d);
+		glVertex2d(x + w2, y + h2); glVertex2d(x + w2 - d, y + h2);
+
 	glEnd();
 }
 

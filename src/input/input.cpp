@@ -75,6 +75,7 @@ ostream& operator<<(ostream &out, const InputEvent&e) {
 Input::Input() {
 	memset( heldKeys, 0, sizeof( bool ) * SDLK_LAST );
 	lastMouseMove = Timer::GetTicks();
+	cout << "INIT INPUT!!!!" << endl;
 }
 
 /**\brief Polls the event queue and sends the list of events to subsystems.
@@ -119,7 +120,7 @@ list<InputEvent> Input::Update( ) {
 	}
 
 	// Constantly emit InputEvent for held down Keys
-	for(int k=0;k<SDLK_LAST;k++) {
+	for(int k = 0; k < SDLK_LAST; k++) {
 		if(heldKeys[k])
 			events.push_back( InputEvent( KEY, KEYPRESSED, k ) );
 	}
@@ -130,6 +131,12 @@ list<InputEvent> Input::Update( ) {
 	
 	// this could be false - returning quitSignal doesn't imply quitting
 	return events;
+}
+
+/**\brief Returns true if 'key' is currently held down, else false.
+ */
+bool Input::keyIsHeld(SDLKey key) {
+	return false; //heldKeys[key];
 }
 
 /**\brief Converts SDL_MouseButtonEvent to Epiar's Input model.

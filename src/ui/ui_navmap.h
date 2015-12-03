@@ -59,7 +59,9 @@ class NavMap: public Widget {
 
 		Scenario* scenario;
 
-		static Font *NavMapFont;
+		Sector* selectedSector;
+
+		static Font* NavMapFont;
 };
 
 #endif // __H_UI_NAVMAP

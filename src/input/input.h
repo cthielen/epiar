@@ -22,19 +22,19 @@
 // and then, after a delay, fired off at an even interal for a key repeat rate (e.g. holding
 // down a key in your editor would produce a series of KEYTYPED events)
 typedef enum {KEYUP, KEYDOWN, KEYPRESSED, KEYTYPED} keyState;
-typedef enum {	UNHANDLED=0,
-				MOUSEMOTION,
-				MOUSELUP,		// Left mouse
-				MOUSELDOWN,
-				MOUSEMUP,		// Middle mouse
-				MOUSEMDOWN,
-				MOUSERUP,		// Right mouse
-				MOUSERDOWN,
-// Since wheel scrolls fire off two events consecutively,
-// We'll only need to handle one.
-				MOUSEWUP,		// Wheel
-				MOUSEWDOWN
-			} mouseState;
+typedef enum {	UNHANDLED = 0,
+		MOUSEMOTION,
+		MOUSELUP,		// Left mouse
+		MOUSELDOWN,
+		MOUSEMUP,		// Middle mouse
+		MOUSEMDOWN,
+		MOUSERUP,		// Right mouse
+		MOUSERDOWN,
+		// Since wheel scrolls fire off two events consecutively,
+		// We'll only need to handle one.
+		MOUSEWUP,		// Wheel
+		MOUSEWDOWN
+} mouseState;
 typedef enum {KEY, MOUSE} eventType;
 
 class InputEvent {
@@ -105,6 +105,8 @@ class Input {
 		static bool SearchSpecificEvent( list<InputEvent> & events, InputEvent key );
 		static bool HandleSpecificEvent( list<InputEvent> & events, InputEvent key );
 		static void PrintEvents( string title, list<InputEvent> & events );
+
+		static bool keyIsHeld(SDLKey key);
 	
 	private:
 		mouseState _CheckMouseState( Uint8 button, bool up );

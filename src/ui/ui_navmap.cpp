@@ -1,12 +1,13 @@
 /**\file			ui_navmap.cpp
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
- * \date			Modified: Monday, October 19, 2015
+ * \date			Modified: Wednesday, December 2, 2015
  * \brief			Map Widget
  * \details
  */
 
 #include "includes.h"
+#include "input/input.h"
 #include "ui/ui_navmap.h"
 #include "sprites/planets.h"
 #include "sprites/effects.h"
@@ -25,7 +26,7 @@
 
 #define MAP_ZOOM_RATIO 1.1f ///< The rate at which the Map Zooms in and out.
 
-Font *NavMap::NavMapFont = NULL;
+Font* NavMap::NavMapFont = NULL;
 
 /** \brief Map Constructor
  *
@@ -38,6 +39,8 @@ NavMap::NavMap( int x, int y, int w, int h, Coordinate center, Scenario* scenari
 	this->h = h;
 	this->center = center;
 	this->scenario = scenario;
+
+	this->selectedSector = NULL;
 
 	alpha = 1;
 
@@ -125,20 +128,20 @@ void NavMap::Draw( int relx, int rely ) {
 	for( iter = sectors->begin(); iter != sectors->end(); ++iter ) {
 		Sector *sector = (Sector *)(*iter);
 
-		if(sector == currentSector) {
-			col = WHITE;
-		} else {
-			col = BLUE;
-		}
+		// TODO: If sector has no planets, draw as WHITE instead of BLUE
+		col = BLUE;
 		pos = WorldToScreen(Coordinate(sector->GetX(), sector->GetY()));
 
 		field = sector->GetAlliance()->GetColor();
 
-		Video::DrawFilledCircle( pos, (40 * scale) / 3, BLACK, alpha );
-		Video::DrawCircle( pos, (40 * scale) / 3, 1, col, alpha );
-
+		Video::DrawFilledCircle( pos, (45 * scale) / 3, BLACK, alpha );
 		if(sector == currentSector) {
-			Video::DrawTarget( pos.GetX(), pos.GetY(), 10, 10, 3, 1, 1, 1 );
+			Video::DrawFilledCircle( pos, (27 * scale) / 3, LIGHTBLUE, alpha );
+		}
+		Video::DrawCircle( pos, (45 * scale) / 3, 1, col, alpha );
+
+		if(sector == selectedSector) {
+			Video::DrawTarget( pos.GetX(), pos.GetY(), (35 * scale), (35 * scale), 3, 1, 1, 1 );
 		}
 	}
 
@@ -201,8 +204,6 @@ bool NavMap::MouseLUp( int x, int y ) {
 	click.SetX(x);
 	click.SetY(y);
 
-	cout << "mouse up at " << click << endl;
-
 	// Determine if they clicked on a sector
 	list<Sector*>* sectors = NULL;
 	list<Sector*>::iterator iter;
@@ -215,7 +216,12 @@ bool NavMap::MouseLUp( int x, int y ) {
 		Sector *sector = (Sector *)(*iter);
 		
 		if(SectorNearClick(sector, click)) {
-			cout << "clicked on sector: " << *sector << endl;
+			selectedSector = sector;
+
+			// Is shift held down? If so, they are trying to plot a course ...
+			if(Input::keyIsHeld(SDLK_LSHIFT)) {
+
+			}
 		}
 	}
 
@@ -274,8 +280,6 @@ bool NavMap::SectorNearClick(Sector *sector, Coordinate click) {
 	Coordinate sectorScreen = WorldToClick(Coordinate(sector->GetX(), sector->GetY()));
 
 	float distance = (sectorScreen - click).GetMagnitude();
-
-	//cout << "click (" << click << ") - sector (" << sectorScreen << ", " << sector->GetName() << ") = magnitude: " << distance << endl;
 
 	if(distance < SECTOR_CLICK_SELECTION_RADIUS) return true;	
 
