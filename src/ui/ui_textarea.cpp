@@ -70,42 +70,46 @@ bool Textarea::KeyPress( SDLKey key ) {
 	stringstream key_ss;
 	string key_s;
 	
-	switch(key){
-	// Ignore Modifiers
-	case SDLK_LSHIFT:
-	case SDLK_RSHIFT:
-	case SDLK_RMETA:
-	case SDLK_LMETA:
-	case SDLK_RALT:
-	case SDLK_LALT:
-	case SDLK_RCTRL:
-	case SDLK_LCTRL:
-	case SDLK_RSUPER:
-	case SDLK_LSUPER:
-	// Special Non-Printable Keys
-	case SDLK_ESCAPE:
-	// TODO: add cursor movement support
-	case SDLK_LEFT:
-	case SDLK_RIGHT:
-	case SDLK_UP:
-	case SDLK_DOWN:
-		return false;
-	case SDLK_BACKSPACE:
-		lines.Erase( 1 );
-		break;
-	case SDLK_SPACE:
-		lines.AppendText( " " );
-		break;
-	case SDLK_KP_ENTER:
-	case SDLK_RETURN:
-	case '\n':
-		lines.AppendText( "\n" );
-		break;
-	default:
-		key_ss << (char)key;
-		key_ss >> key_s;
-		lines.AppendText( key_s );
-		break;
+	switch(key) {
+		// Ignore Modifiers
+		case SDLK_LSHIFT:
+		case SDLK_RSHIFT:
+		case SDLK_RMETA:
+		case SDLK_LMETA:
+		case SDLK_RALT:
+		case SDLK_LALT:
+		case SDLK_RCTRL:
+		case SDLK_LCTRL:
+		case SDLK_RSUPER:
+		case SDLK_LSUPER:
+		// Special Non-Printable Keys
+		case SDLK_ESCAPE:
+		// TODO: add cursor movement support
+		case SDLK_LEFT:
+		case SDLK_RIGHT:
+		case SDLK_UP:
+		case SDLK_DOWN:
+			return false;
+
+		case SDLK_BACKSPACE:
+			lines.Erase( 1 );
+			break;
+
+		case SDLK_SPACE:
+			lines.AppendText( " " );
+			break;
+
+		case SDLK_KP_ENTER:
+		case SDLK_RETURN:
+		//case '\n':
+			lines.AppendText( "\n" );
+			break;
+
+		default:
+			key_ss << (char)key;
+			key_ss >> key_s;
+			lines.AppendText( key_s );
+			break;
 	}
 	
 	return true;
