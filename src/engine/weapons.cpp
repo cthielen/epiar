@@ -193,47 +193,47 @@ bool Weapon::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		return false;
 	}
 
-	if( (attr = FirstChildNamed(node,"fireDelay")) ){
+	if( (attr = FirstChildNamed(node, "fireDelay")) ) {
 		fireDelay = NodeToInt(doc,attr);
 	} else {
-		LogMsg(ERR,"Could not find child node fireDelay while searching component");
+		LogMsg(ERR, "Could not find child node fireDelay while searching component");
 		return false;
 	}
 
-	if( (attr = FirstChildNamed(node,"lifetime")) ){
+	if( (attr = FirstChildNamed(node, "lifetime")) ) {
 		lifetime = NodeToInt(doc,attr);
 	} else {
-		LogMsg(ERR,"Could not find child node lifetime while searching component");
+		LogMsg(ERR, "Could not find child node lifetime while searching component");
 		return false;
 	}
 
-	if( (attr = FirstChildNamed(node,"tracking")) ){
+	if( (attr = FirstChildNamed(node,"tracking")) ) {
 		float _tracking = NodeToFloat(doc,attr);
 		if (_tracking > 1.0f ) _tracking = 1.0f;
 		if (_tracking < 0.0001f ) _tracking = 0.0f;
 		tracking = _tracking;
 	} else {
-		LogMsg(ERR,"Could not find child node tracking while searching component");
+		LogMsg(ERR, "Could not find child node tracking while searching component");
 		return false;
 	}
 
-	if( (attr = FirstChildNamed(node,"msrp")) ){
+	if( (attr = FirstChildNamed(node, "msrp")) ) {
 		value = NodeToString(doc,attr);
 		SetMSRP( (short int)atoi( value.c_str() ));
 	} else {
-		LogMsg(ERR,"Could not find child node msrp while searching component");
+		LogMsg(ERR, "Could not find child node msrp while searching component");
 		return false;
 	}
 
-	if( (attr = FirstChildNamed(node,"sound")) ){
+	if( (attr = FirstChildNamed(node, "sound")) ) {
 		value = NodeToString(doc,attr);
 		this->sound = Sound::Get( value );
-		if( this->sound==NULL) {
+		if( this->sound == NULL) {
 			// Do not return false here - they may be disabling audio on purpose or audio may not be supported on their system
-			LogMsg(NOTICE,"Could not load sound file while searching component");
+			LogMsg(NOTICE, "Could not load sound file while searching component");
 		}
 	} else {
-		LogMsg(ERR,"Could not find child node sound while searching component");
+		LogMsg(ERR, "Could not find child node sound while searching component");
 		return false;
 	}
 

@@ -1,7 +1,7 @@
 /**\file			player.cpp
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Wednesday, July 5, 2006
- * \date			Modified: Monday, October 19, 2015
+ * \date			Modified: Thursday, December 3, 2015
  * \brief			Main player-specific functions and handle
  * \details
  */
@@ -244,8 +244,8 @@ void Player::Save( string scenario ) {
 	xmlSaveFormatFileEnc( (std::string(PHYSFS_getWriteDir()) + std::string(PHYSFS_getDirSeparator()) + GetFileName()).c_str(), xmlPtr, "ISO-8859-1", 1);
 
 	// Update and Save this player's info in the master players list.
-	Players::Instance()->GetPlayerInfo( GetName() )->Update( this, scenario );
-	Players::Instance()->Save();
+	PlayerList::Instance()->GetPlayerInfo( GetName() )->Update( this, scenario );
+	PlayerList::Instance()->Save();
 }
 
 /**\brief Parse one player out of an xml node
@@ -799,17 +799,17 @@ xmlNodePtr PlayerInfo::ConvertOldVersion( xmlDocPtr doc, xmlNodePtr node ) {
 	return new_node;
 }
 
-/**\class Players
+/**\class PlayerList
  * \brief Collection of Player objects
  */
-Players *Players::pInstance = 0; // initialize pointer
+PlayerList *PlayerList::pInstance = 0; // initialize pointer
 
-/**\brief Returns or creates the Players instance.
- * \return Pointer to the Players instance
+/**\brief Returns or creates the PlayerList instance.
+ * \return Pointer to the PlayerList instance
  */
-Players *Players::Instance( void ) {
+PlayerList *PlayerList::Instance( void ) {
 	if( pInstance == 0 ) { // is this the first call?
-		pInstance = new Players; // create the solid instance
+		pInstance = new PlayerList; // create the solid instance
 		pInstance->rootName = "players";
 		pInstance->componentName = "player";
 	}
@@ -819,7 +819,7 @@ Players *Players::Instance( void ) {
 /**\brief Create a new Player
  * This is used instead of a normal class constructor
  */
-Player* Players::CreateNew(
+Player* PlayerList::CreateNew(
             string scenario,
             string playerName,
 			Model *model,
@@ -854,10 +854,10 @@ Player* Players::CreateNew(
 
 /**\brief Deletes a player
  */
-bool Players::DeletePlayer(string playerName) {
+bool PlayerList::DeletePlayer(string playerName) {
 	bool ret;
 
-	// remove player from Players list
+	// remove player from PlayerList
 	PlayerInfo* info = GetPlayerInfo( playerName );
 	if( (ret = Remove( (Component*)info ) ) == false) {
 		LogMsg(ERR, "Could not remove player!\n");
@@ -882,7 +882,7 @@ bool Players::DeletePlayer(string playerName) {
 
 /**\brief Returns true if a player already exists
  */
-bool Players::PlayerExists(string playerName) {
+bool PlayerList::PlayerExists(string playerName) {
 	list<string>* names = GetNames();
 	list<string>::iterator i;
 
@@ -897,7 +897,7 @@ bool Players::PlayerExists(string playerName) {
 
 /**\brief Get the PlayerInfo for the most recent player
  */
-PlayerInfo* Players::LastPlayer() {
+PlayerInfo* PlayerList::LastPlayer() {
 	list<string>* names = GetNames();
 	list<string>::iterator i;
 	PlayerInfo* latest = NULL;
@@ -917,7 +917,7 @@ PlayerInfo* Players::LastPlayer() {
 
 /**\brief Load a given Player
  */
-Player* Players::LoadPlayer(string playerName) {
+Player* PlayerList::LoadPlayer(string playerName) {
 	PlayerInfo* info = GetPlayerInfo( playerName );
 	Player* newPlayer = Player::Load( info->file );
 

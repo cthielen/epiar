@@ -1,7 +1,7 @@
 /**\file			ai_lua.cpp
  * \author			Matt Zweig (thezweig@gmail.com)
  * \date			Created: Thursday, October 29, 2009
- * \date			Modified: Monday, November 16 2009
+ * \date			Modified: Thursday, December 3, 2015
  * \brief			Lua Bridge for AI objects
  * \details
  */
@@ -716,7 +716,7 @@ int AI_Lua::ShipAcceptMission(lua_State *L){
 	// Check that only players accept missions
 	Ship* ship = checkShip(L,1);
 	if( ship->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
-		return luaL_error(L, "Only Players may accept Missions");
+		return luaL_error(L, "Only players may accept Missions");
 	}
 	Player *player = (Player*)ship;
 	
@@ -742,7 +742,7 @@ int AI_Lua::ShipRejectMission(lua_State *L){
 	// Check that only players accept missions
 	Ship* ship = checkShip(L,1);
 	if( ship->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
-		return luaL_error(L, "Only Players may accept Missions");
+		return luaL_error(L, "Only players may accept Missions");
 	}
 	Player *player = (Player*)ship;
 	
@@ -1295,7 +1295,7 @@ int AI_Lua::ShipGetMissions(lua_State* L) {
 	Ship* ship = checkShip(L,1);
 	if(ship==NULL) return 0;
 	if( ship->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
-		return luaL_error(L, "Only Players may accept Missions");
+		return luaL_error(L, "Only players may accept Missions");
 	}
 	Player *player = (Player*)ship;
 
@@ -1349,7 +1349,7 @@ int AI_Lua::ShipSetMerciful(lua_State* L){
 		AI* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		if( ai->GetDrawOrder() == DRAW_ORDER_PLAYER ) {
-			return luaL_error(L, "Cannot force Players to be merciful.");
+			return luaL_error(L, "Cannot force players to be merciful.");
 		}
 		int merciful = luaL_checkint (L, 2);
 		(ai)->SetMerciful( merciful );
@@ -1640,7 +1640,7 @@ int AI_Lua::ShipSetLuaControlFunc(lua_State* L){
 		Player *p = (Player *)checkShip(L,1);
 		if( p == NULL ) return 0;
 		if( p->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
-			return luaL_error(L, "Only Players may be controlled ");
+			return luaL_error(L, "Only players may be controlled ");
 		}
 		string controlFunc = luaL_checkstring (L, 2);
 		(p)->SetLuaControlFunc( controlFunc );
@@ -1660,7 +1660,7 @@ int AI_Lua::ShipLand(lua_State* L){
 		Player *player = (Player *)checkShip(L,1);
 		if( player == NULL ) return 0;
 		if( player->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
-			return luaL_error(L, "Only Players may accept Missions");
+			return luaL_error(L, "Only players may accept Missions");
 		}
 
 		// Get the Planet
@@ -1705,7 +1705,7 @@ int AI_Lua::ShipUpdateFavor(lua_State* L){
 	Player* player = (Player*)AI_Lua::checkShip(L,1);
 	if( player == NULL ) return 0;
 	if( player->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
-		return luaL_error(L, "Only Players may update their favor");
+		return luaL_error(L, "Only players may update their favor");
 	}
 	string allianceName = luaL_checkstring (L, 2);
 	int value = luaL_checkint (L, 3);
@@ -1735,7 +1735,7 @@ int AI_Lua::ShipGetFavor(lua_State* L){
 	Player* player = (Player*)AI_Lua::checkShip(L,1);
 	if( player == NULL ) return 0;
 	if( player->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
-		return luaL_error(L, "Only Players have favor");
+		return luaL_error(L, "Only players have favor");
 	}
 
 	if( n == 2 ) {

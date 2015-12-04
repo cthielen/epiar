@@ -16,16 +16,14 @@
 
 bool Menu::quitSignal = false;
 
-Scenario Menu::scenario;
+Scenario* Menu::scenario = NULL;
 PlayerInfo* Menu::playerToLoad = NULL;
 
 Image* Menu::menuSplash = NULL;
 Image* Menu::gameSplash = NULL;
-//Image* Menu::editSplash = NULL;
 
 Picture *Menu::play = NULL;
 Picture *Menu::load = NULL;
-//Picture *Menu::edit = NULL;
 Picture *Menu::options = NULL;
 Picture *Menu::exit = NULL;
 
@@ -56,8 +54,8 @@ void Menu::Main_Menu( void )
     
 	quitSignal = false;
 
-	Players *players = Players::Instance();
-	players->Load( "saves/saved-games.xml", true, true);
+	PlayerList *playerList = PlayerList::Instance();
+	playerList->Load( "saves/saved-games.xml", true, true);
 
 	if( OPTION(int,"options/scenario/automatic-load") )
 	{
@@ -109,27 +107,32 @@ void Menu::Main_Menu( void )
 bool Menu::AutoLoad()
 {
 	LogMsg(INFO,"Attempting to automatically load a player.");
-	PlayerInfo* info = Players::Instance()->LastPlayer();
+	PlayerInfo* info = PlayerList::Instance()->LastPlayer();
 
 	if( info != NULL )
 	{
 		LogMsg(INFO, "Automatically loading player.", info->GetName().c_str() );
 
-		if( !scenario.Load( info->scenario ) )
+		assert(scenario == NULL);
+		scenario = new Scenario();
+
+		if( !scenario->Load( info->scenario ) )
 		{
 			LogMsg(ERR,"Failed to load the scenario '%s'.", info->scenario.c_str() );
+			delete scenario; scenario = NULL;
 			return false;
 		}
 
-		if( !scenario.Initialize() )
+		if( !scenario->Initialize() )
 		{
 			LogMsg(ERR,"Failed to setup the scenario '%s'.", info->scenario.c_str() );
+			delete scenario; scenario = NULL;
 			return false;
 		}
 
-		scenario.LoadPlayer( info->GetName() );
-		scenario.Setup();
-		scenario.Run();
+		scenario->LoadPlayer( info->GetName() );
+		scenario->Setup();
+		scenario->Run();
 
 		return true;
 	}
@@ -142,8 +145,7 @@ bool Menu::AutoLoad()
 /** Create the Basic Main Menu
  *  \details The Splash Screen is random.
  */
-void Menu::SetupUI()
-{
+void Menu::SetupUI() {
 	int button_x = Video::GetWidth() - 300;
 	int button_y = Video::GetHalfHeight() - 175; // the menu buttons are about 500px tall
 
@@ -160,7 +162,6 @@ void Menu::SetupUI()
 	int screenNum = rand();
 	menuSplash = Image::Get( splashScreens[(screenNum+0) % numScreens] );
 	gameSplash = Image::Get( splashScreens[(screenNum+1) % numScreens] );
-	//editSplash = Image::Get( splashScreens[(screenNum+2) % numScreens] );
 
 	// Add the splash screen
 	UI::Add( new Picture( 0, 0, Video::GetWidth(), Video::GetHeight(), menuSplash, true ) );
@@ -174,8 +175,7 @@ void Menu::SetupUI()
 	                      Image::Get( "data/graphics/txt_new_game_inactive.png") );
 
 	// Load Button
-	if( (Players::Instance()->Size() > 0) )
-	{
+	if( (PlayerList::Instance()->Size() > 0) ) {
 		load = PictureButton( button_x, button_y + 100, Menu::CreateLoadWindow,
 		                       Image::Get( "data/graphics/txt_load_game_active.png"),
 		                       Image::Get( "data/graphics/txt_load_game_inactive.png") );
@@ -200,8 +200,7 @@ void Menu::SetupUI()
 
 /** This Window is used to create new Players.
  */
-void Menu::CreateNewWindow()
-{
+void Menu::CreateNewWindow() {
 	if( UI::Search("/Window'New Game'/") != NULL ) return;
 
 	Window* win = new Window(250, 180, "New Game");
@@ -223,23 +222,22 @@ void Menu::CreateNewWindow()
 
 /** This Window shows a list of potential Players.
  */
-void Menu::CreateLoadWindow()
-{
+void Menu::CreateLoadWindow() {
 	if( UI::Search("/Window'Load Game'/") != NULL ) return;
 
-	list<string> *names = Players::Instance()->GetNames();
+	list<string> *names = PlayerList::Instance()->GetNames();
 
 	Window* win = new Window(450, 95 + (names->size() * 130), "Load Game");
 	UI::Add( win );
 
-	PlayerInfo* last = Players::Instance()->LastPlayer();
+	PlayerInfo* last = PlayerList::Instance()->LastPlayer();
 
 	// Create a new Frame for each Player
 	int p = 0;
 	list<string>::iterator iter;
 
 	for( iter = names->begin(); iter != names->end(); ++iter, ++p ) {
-		PlayerInfo *info = Players::Instance()->GetPlayerInfo( *iter );
+		PlayerInfo *info = PlayerList::Instance()->GetPlayerInfo( *iter );
 
 		win->AddChild( (new Frame( 25, 130 * p + 40, 400, 120 ))
 			->AddChild( (new Picture(35, 35, 80, 80, info->avatar, false, true) ) )
@@ -264,9 +262,8 @@ void Menu::CreateLoadWindow()
  *  The PlayerInfo describes which Scenario to load and which Player to load.
  *  If the Player doesn't already exist, a default player is created by Scenario.
  */
-void Menu::StartGame( void *info )
-{
-	Players *players = Players::Instance();
+void Menu::StartGame( void *info ) {
+	PlayerList* playerList = PlayerList::Instance();
 
 	playerToLoad = (PlayerInfo*)info;
 
@@ -274,43 +271,48 @@ void Menu::StartGame( void *info )
 	string simName = playerToLoad->scenario;
 	string playerName = playerToLoad->GetName();
 
+	assert(scenario == NULL);
+	scenario = new Scenario();
+
 	// Load the Scenario from file
-	if( !scenario.Load( simName ) )
-	{
+	if( !scenario->Load( simName ) ) {
 		LogMsg(ERR, "Failed to load the scenario '%s'.", simName.c_str());
 		Dialogs::Alert("Failed to load scenario!");
 		return;
 	}
 
-	if( !scenario.Initialize() )
-	{
+	if( !scenario->Initialize() ) {
 		LogMsg(ERR, "Failed to initialize the scenario '%s'.", simName.c_str());
 		Dialogs::Alert("Scenario loaded but failed to setup!");
 		return;
 	}
 
 	// Create or Load the Player
-	if( players->PlayerExists(playerName) ) {
-		scenario.LoadPlayer( playerName );
+	if( playerList->PlayerExists(playerName) ) {
+		scenario->LoadPlayer( playerName );
 	} else{
-		scenario.CreateDefaultPlayer( playerName );
+		scenario->CreateDefaultPlayer( playerName );
 		Lua::Call("intro");
 	}
 
-	if( !scenario.Setup() ) {
+	if( !scenario->Setup() ) {
 		LogMsg(ERR, "Failed to setup the scenario '%s'.", simName.c_str());
 		Dialogs::Alert("Scenario loaded but failed to setup!");
 		return;
 	}
 
 	// Close all Windows
-	while( UI::Search("/Window/") )
+	while( UI::Search("/Window/") ) {
 		UI::Close( UI::Search("/Window/") );
+	}
 
 	UI::SwapScreens( "In Game", menuSplash, gameSplash );
 	
 	// Run the scenario
-	scenario.Run();
+	scenario->Run();
+
+	// Close the scenario
+	delete scenario; scenario = NULL;
 
 	UI::SwapScreens( "Main Screen", gameSplash, menuSplash );
 }
@@ -324,7 +326,7 @@ void Menu::ErasePlayer( void* playerInfo )
 
 	if(choice) {
 		string playerName = ((PlayerInfo*)playerInfo)->GetName();
-		Players *players = Players::Instance();
+		PlayerList* players = PlayerList::Instance();
 
 		if(players->DeletePlayer(playerName))
 			Dialogs::Alert("Player deleted successfully.");
@@ -345,7 +347,7 @@ void Menu::ErasePlayer( void* playerInfo )
  */
 void Menu::CreateNewPlayer( )
 {
-	Players *players = Players::Instance();
+	PlayerList* players = PlayerList::Instance();
 
 	string playerName = ((Textbox*)UI::Search("/Window'New Game'/Textbox'Player Name:'/"))->GetText();
 	string simName = ((Dropdown*)UI::Search("/Window'New Game'/Dropdown/"))->GetText();

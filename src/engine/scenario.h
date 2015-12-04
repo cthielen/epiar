@@ -27,6 +27,7 @@
 class Scenario : public XMLFile {
 	public:
 		Scenario();
+		~Scenario();
 
 		bool New( string _folderpath );
 		bool Load( string _folderpath );
@@ -60,7 +61,7 @@ class Scenario : public XMLFile {
 		Technologies *GetTechnologies() { return technologies; }
 		Outfits *GetOutfits() { return outfits; }
 		Sectors *GetSectors() { return sectors; }
-		Players *GetPlayers() { return players; }
+		PlayerList *GetPlayerList() { return playerList; }
 		Camera *GetCamera() { return camera; }
 		Input *GetInput() { return &inputs; }
 		Player *GetPlayer();
@@ -95,7 +96,7 @@ class Scenario : public XMLFile {
 		Technologies *technologies;
 		Outfits *outfits;
 		Sectors *sectors;
-		Players *players;
+		PlayerList *playerList;
 		Player *player;
 		Camera *camera;
 		Calendar *calendar;

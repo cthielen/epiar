@@ -53,7 +53,7 @@ class Player : public Ship {
 		// Escort-related functions (needed for XML saving/loading)
 		void AddHiredEscort(string type, int pay, int spriteID);
 
-		friend class Players;
+		friend class PlayerList;
 
 	protected:
 		Player();
@@ -105,9 +105,9 @@ class PlayerInfo : public Component {
 	private:
 };
 
-class Players : public Components {
+class PlayerList : public Components {
 	public:
-		static Players *Instance();
+		static PlayerList *Instance();
 		Component* newComponent() { return new PlayerInfo(); }
 
 		PlayerInfo* GetPlayerInfo(string name) { return (PlayerInfo*)Components::Get( name ); }
@@ -126,12 +126,12 @@ class Players : public Components {
 		bool	PlayerExists(string playerName);
 
 	protected:
-		Players() {};
-		Players( const Players & );
-		Players& operator= (const Players&);
+		PlayerList() {};
+		PlayerList( const PlayerList & );
+		PlayerList& operator= (const PlayerList&);
 
 	private:
-		static Players *pInstance;
+		static PlayerList *pInstance;
 };
 
 #endif // __H_PLAYER__

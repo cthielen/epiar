@@ -21,8 +21,8 @@ class Menu {
 
 	private:
 	static bool quitSignal;
-	// The Scenario
-	static Scenario scenario;
+	// The Scenario to be played
+	static Scenario* scenario;
 	static PlayerInfo* playerToLoad;
 
 	// Images

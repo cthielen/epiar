@@ -84,7 +84,7 @@ class Weapons : public Components {
 		Weapon *GetWeapon( string& weaponName ) { return (Weapon*) this->Get(weaponName); }
 		Component* newComponent() { return new Weapon(); }
 	protected:
-		Weapons(){};
+		Weapons() {};
 		Weapons( const Weapons & );
 		Weapons& operator= (const Weapons&);
 	private:

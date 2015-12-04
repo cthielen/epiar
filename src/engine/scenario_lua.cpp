@@ -1,7 +1,7 @@
 /**\file			scenario_lua.cpp
- * \author			Matt Zweig
+ * \author			Matt Zweig, Christopher Thielen
  * \date			Created: Friday, September 3, 2010
- * \date			Modified: Thursday, October 8, 2015
+ * \date			Modified: Thursday, December 3, 2015
  * \brief			Scenario Managment from Lua
  * \details
  */
@@ -291,7 +291,7 @@ int Scenario_Lua::UnRegisterKey(lua_State *L) {
  *  \returns list of strings
  */
 int Scenario_Lua::GetPlayerNames(lua_State *L) {
-	list<string> *names = GetScenario(L)->GetPlayers()->GetNames();
+	list<string> *names = GetScenario(L)->GetPlayerList()->GetNames();
 	Lua::pushStringList(L,names);
 	return 1;
 }
@@ -306,11 +306,11 @@ int Scenario_Lua::LoadPlayer(lua_State *L) {
 	}
 	string playerName = (string) luaL_checkstring(L,1);
 	LogMsg(INFO,"Loading Player: %s",playerName.c_str());
-	PlayerInfo* info = GetScenario(L)->GetPlayers()->GetPlayerInfo( playerName );
+	PlayerInfo* info = GetScenario(L)->GetPlayerList()->GetPlayerInfo( playerName );
 	if( info==NULL ) {
 		return luaL_error(L, "There is no Player by the name '%s'",playerName.c_str());
 	}
-	GetScenario(L)->GetPlayers()->LoadPlayer(playerName);
+	GetScenario(L)->GetPlayerList()->LoadPlayer(playerName);
 	return 0;
 }
 

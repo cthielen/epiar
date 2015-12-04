@@ -56,7 +56,7 @@ Scenario::Scenario( void ) {
 	technologies = Technologies::Instance();
 	outfits = Outfits::Instance();
 	sectors = Sectors::Instance();
-	players = Players::Instance();
+	playerList = PlayerList::Instance();
 	player = NULL;
 
 	camera = Camera::Instance();
@@ -261,6 +261,42 @@ bool Scenario::Setup() {
 	}
 
 	return true;
+}
+
+
+Scenario::~Scenario() {
+	assert(L != NULL);
+	L = NULL;
+
+	sprites = NULL;
+
+	// TODO: Shouldn't we be unloading these?
+	commodities = NULL;
+	planets = NULL;
+	engines = NULL;
+	models = NULL;
+	weapons = NULL;
+	alliances = NULL;
+	technologies = NULL;
+	outfits = NULL;
+	sectors = NULL;
+	playerList = NULL;
+	player = NULL;
+	camera = NULL;
+	delete calendar; calendar = NULL;
+
+	bgmusic = NULL;
+	
+	folderpath = "";
+
+	currentFPS = 0.0f;
+	paused = false;
+	loaded = false;
+	quit = false;
+
+	mapScale = -1.0f;
+	delete console; console = NULL;
+	currentSector = NULL;
 }
 
 /**\brief Callback for Death dialog UI
@@ -680,7 +716,7 @@ void Scenario::CreateDefaultPlayer(string playerName) {
 	assert( models->GetModel( Get("defaultPlayer/model") ) );
 	assert( engines->GetEngine( Get("defaultPlayer/engine") ) );
 
-	player = players->CreateNew(
+	player = playerList->CreateNew(
 		GetName(),
 		playerName,
 		models->GetModel( Get("defaultPlayer/model") ),
@@ -701,7 +737,7 @@ void Scenario::CreateDefaultPlayer(string playerName) {
 void Scenario::LoadPlayer(string playerName) {
 	assert( player == NULL );
 
-	player = players->LoadPlayer( playerName );
+	player = playerList->LoadPlayer( playerName );
 
 	sprites->Add( player );
 
