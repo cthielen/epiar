@@ -21,7 +21,7 @@ class SpriteManager {
 		bool Delete( Sprite *sprite );
 
 		void Update( lua_State *L, bool lowFps);
-    void UpdateScreenCoordinates( void );
+		void UpdateScreenCoordinates( void );
 		void Draw( Coordinate focus );
 		void DrawQuadrantMap( Coordinate focus );
 
@@ -40,12 +40,13 @@ class SpriteManager {
 
 	protected:
 		SpriteManager();
+
 	private:
 		// These structures each contain a complete list of all Sprites.
 		// Each one is useful for a different purpose, depending on the way that the sprites need to be accessed.
-		map<Coordinate,QuadTree*> trees;    ///< Collection of all Sprites.  Use the tree when referring to the sprites at a location.
-		list<Sprite*> *spritelist;          ///< Collection of all Sprites.  Use the list when referring to all sprites.
-		map<int,Sprite*> *spritelookup;     ///< Collection of all Sprites.  Use the map when referring to sprites by their unique ID.
+		map<Coordinate,QuadTree*> trees;    ///< Collection of all Sprites. Use the tree when referring to the sprites at a location.
+		list<Sprite*> *spritelist;          ///< Collection of all Sprites. Use the list when referring to all sprites.
+		map<int,Sprite*> *spritelookup;     ///< Collection of all Sprites. Use the map when referring to sprites by their unique ID.
 
 		Sprite *player;                     ///< The Player Sprite.
 

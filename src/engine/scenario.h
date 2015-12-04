@@ -1,7 +1,7 @@
 /**\filename			scenario.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Thursday, October 8, 2015
+ * \date			Modified: Thursday, December 3, 2015
  * \brief			Contains the main game loop
  * \details
  */
@@ -63,7 +63,6 @@ class Scenario : public XMLFile {
 		Sectors *GetSectors() { return sectors; }
 		PlayerList *GetPlayerList() { return playerList; }
 		Camera *GetCamera() { return camera; }
-		Input *GetInput() { return &inputs; }
 		Player *GetPlayer();
 
 		Sector* GetCurrentSector();
@@ -103,7 +102,6 @@ class Scenario : public XMLFile {
 
 		// Scenario specific variables
 		Song* bgmusic;
-		Input inputs;
 		Console *console;
 		Sector* currentSector;
 

@@ -1,7 +1,7 @@
 /**\file			scenario.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Monday, October 19, 2015
+ * \date			Modified: Thursday, December 3, 2015
  * \brief			Contains the main game loop
  * \details
  */
@@ -565,7 +565,7 @@ void Scenario::HandleInput() {
 	list<InputEvent> events;
 
 	// Collect user input events
-	events = inputs.Update();
+	events = Input::Update();
 
 	// Pass the Events to the systems that handle them.
 	UI::HandleInput( events );
@@ -574,7 +574,7 @@ void Scenario::HandleInput() {
 
 	if( !paused )
 	{
-		inputs.HandleLuaCallBacks( events );
+		Input::HandleLuaCallBacks( events );
 	}
 
 	//if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_PERIOD ) ) )

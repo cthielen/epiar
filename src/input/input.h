@@ -1,7 +1,7 @@
 /**\file			input.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 4, 2006
- * \date			Modified: Saturday, January 5, 2008
+ * \date			Modified: Thursday, December 3, 2015
  * \brief
  * \details
  */
@@ -95,12 +95,11 @@ ostream& operator<<(ostream &out, const InputEvent&e);
 
 class Input {
 	public:
-		Input();
-		list<InputEvent> Update( void );
+		static list<InputEvent> Update( void );
 
-		void HandleLuaCallBacks( list<InputEvent> & events );
-		void RegisterCallBack( InputEvent key, string command );
-		void UnRegisterCallBack( InputEvent key );
+		static void HandleLuaCallBacks( list<InputEvent> & events );
+		static void RegisterCallBack( InputEvent key, string command );
+		static void UnRegisterCallBack( InputEvent key );
 
 		static bool SearchSpecificEvent( list<InputEvent> & events, InputEvent key );
 		static bool HandleSpecificEvent( list<InputEvent> & events, InputEvent key );
@@ -109,20 +108,20 @@ class Input {
 		static bool keyIsHeld(SDLKey key);
 	
 	private:
-		mouseState _CheckMouseState( Uint8 button, bool up );
-		void _UpdateHandleSignal( SDL_Event *event );
-		void _UpdateHandleKeyDown( SDL_Event *event );
-		void _UpdateHandleKeyUp( SDL_Event *event );
-		void _UpdateHandleMouseDown( SDL_Event *event );
-		void _UpdateHandleMouseUp( SDL_Event *event );
-		void _UpdateHandleMouseMotion( SDL_Event *event );
+		static mouseState _CheckMouseState( Uint8 button, bool up );
+		static void _UpdateHandleSignal( SDL_Event *event );
+		static void _UpdateHandleKeyDown( SDL_Event *event );
+		static void _UpdateHandleKeyUp( SDL_Event *event );
+		static void _UpdateHandleMouseDown( SDL_Event *event );
+		static void _UpdateHandleMouseUp( SDL_Event *event );
+		static void _UpdateHandleMouseMotion( SDL_Event *event );
 
-		void PushTypeEvent( list<InputEvent> & events, SDLKey key );
+		static void PushTypeEvent( list<InputEvent> & events, SDLKey key );
 
-		bool heldKeys[SDLK_LAST]; // set to true as long as a key is held down
-		list<InputEvent> events; // a list of all the events that occurred for this loop. we pass this list around to various sub-input systems
-		map<InputEvent,string> eventMappings; // Lua callbacks mapped to a key
-		Uint32 lastMouseMove;
+		static bool heldKeys[SDLK_LAST]; // set to true as long as a key is held down
+		static list<InputEvent> events; // all the events for the loop. we pass this list to various sub-systems
+		static map<InputEvent,string> eventMappings; // Lua callbacks mapped to a key
+		static Uint32 lastMouseMove;
 };
 
 #endif // __h_input__

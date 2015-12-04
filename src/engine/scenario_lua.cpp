@@ -249,7 +249,6 @@ int Scenario_Lua::RegisterKey(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
   
 	if(n == 3) {
-		Scenario *sim = GetScenario(L);
 		int triggerKey;
 		if( lua_isnumber(L,1) ) {
 			triggerKey = (int)(luaL_checkint(L,1));
@@ -258,7 +257,7 @@ int Scenario_Lua::RegisterKey(lua_State *L) {
 		}
 		keyState triggerState = (keyState)(luaL_checkint(L,2));
 		string command = (string)luaL_checkstring(L,3);
-		sim->GetInput()->RegisterCallBack(InputEvent(KEY, triggerState, triggerKey), command);
+		Input::RegisterCallBack(InputEvent(KEY, triggerState, triggerKey), command);
 	} else {
 		luaL_error(L, "Got %d arguments expected 3 (Key, State, Command)", n);
 	}
@@ -270,7 +269,6 @@ int Scenario_Lua::RegisterKey(lua_State *L) {
 int Scenario_Lua::UnRegisterKey(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if(n == 2) {
-		Scenario *sim = GetScenario(L);
 		int triggerKey;
 		if( lua_isnumber(L,1) ) {
 			triggerKey = (int)(luaL_checkint(L,1));
@@ -278,7 +276,7 @@ int Scenario_Lua::UnRegisterKey(lua_State *L) {
 			triggerKey = (int)(luaL_checkstring(L,1)[0]);
 		}
 		keyState triggerState = (keyState)(luaL_checkint(L,2));
-		sim->GetInput()->UnRegisterCallBack(InputEvent(KEY, triggerState, triggerKey));
+		Input::UnRegisterCallBack(InputEvent(KEY, triggerState, triggerKey));
 	} else {
 		luaL_error(L, "Got %d arguments expected 2 (Key, State)", n);
 	}

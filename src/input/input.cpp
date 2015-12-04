@@ -70,17 +70,14 @@ ostream& operator<<(ostream &out, const InputEvent&e) {
 	return out;
 }
 
-/**\brief Input constructor.
- */
-Input::Input() {
-	memset( heldKeys, 0, sizeof( bool ) * SDLK_LAST );
-	lastMouseMove = Timer::GetTicks();
-	cout << "INIT INPUT!!!!" << endl;
-}
+bool Input::heldKeys[SDLK_LAST] = {0};
+Uint32 Input::lastMouseMove = 0;
+list<InputEvent> Input::events;
+map<InputEvent,string> Input::eventMappings;
 
 /**\brief Polls the event queue and sends the list of events to subsystems.
  */
-list<InputEvent> Input::Update( ) {
+list<InputEvent> Input::Update() {
 	SDL_Event event;
 	
 	events.clear();
@@ -125,7 +122,7 @@ list<InputEvent> Input::Update( ) {
 			events.push_back( InputEvent( KEY, KEYPRESSED, k ) );
 	}
 
-	if((Timer::GetTicks() - lastMouseMove > OPTION(Uint32,"options/timing/mouse-fade")) ){
+	if((Timer::GetTicks() - lastMouseMove > OPTION(Uint32, "options/timing/mouse-fade")) ){
 		Video::DisableMouse();
 	}
 	
