@@ -1,5 +1,5 @@
 /**\file			image.cpp
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Saturday, January 31, 2009
  * \date			Modified: Saturday, November 21, 2009
  * \brief			Image loading and display

@@ -1,5 +1,5 @@
 /**\file			lua.h
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Saturday, January 5, 2008
  * \date			Modified: Saturday, November 21, 2009
  * \brief			Provides abilities to load, store, and run Lua scripts

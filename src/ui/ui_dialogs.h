@@ -1,5 +1,5 @@
 /**\file			ui_common.h
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Thursday, May 5, 2011
  * \date			Modified: Thursday, May 5, 2011
  * \brief

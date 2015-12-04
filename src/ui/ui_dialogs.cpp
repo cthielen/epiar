@@ -1,5 +1,5 @@
 /**\file			ui_dialogs.cpp
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Thusday, May 5, 2011
  * \date			Modified: Thursday, May 5, 2011
  * \brief

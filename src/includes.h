@@ -1,5 +1,5 @@
 /**\file		includes.h
- * \author		Chris Thielen
+ * \author		Christopher Thielen
  * \author		and others
  * \date		Saturday, November 21, 2009
  * \date		Saturday, November 21, 2009

@@ -1,5 +1,5 @@
 /**\file			graphics.h
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Saturday, January 31, 2009
  * \date			Modified: Sunday, November 22, 2009
  * \brief			Graphics demo & debugging

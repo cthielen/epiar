@@ -1,5 +1,5 @@
 /**\file			ui_frame.h
- * \author			Chris Thielen (chris@epiar.net)
+ * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: August 24, 2010
  * \date			Modified: August 24, 2010
  * \brief
