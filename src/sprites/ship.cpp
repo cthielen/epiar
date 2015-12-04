@@ -1,13 +1,14 @@
 /**\file			ship.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Friday, November 14, 2009
+ * \date			Modified: Thursday, December 3, 2015
  * \brief
  * \details
  */
 
 #include "includes.h"
 #include "common.h"
+#include "menu.h"
 #include "sprites/ship.h"
 #include "engine/camera.h"
 #include "engine/scenario_lua.h"
@@ -541,7 +542,7 @@ FireStatus Ship::Fire( Group group, int target ) {
 FireStatus Ship::FireSlot( int slot, int target )
 {
 	Trig *trig = Trig::Instance();
-	SpriteManager *sprites = SpriteManager::Instance();
+	SpriteManager *sprites = Menu::GetCurrentScenario()->GetSpriteManager();
 	Weapon* currentWeapon = weaponSlots[slot].content;
 	float projectileAngle = 0.0f;
 

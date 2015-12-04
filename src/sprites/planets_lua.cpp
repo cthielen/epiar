@@ -34,7 +34,7 @@ void Planets_Lua::RegisterPlanets(lua_State *L){
 		// Normally we would put a "new" function here.
 		// Lua may not ever need to create planets though.
 		{"Get", &Planets_Lua::Get},
-		{"NewPlanet", &Planets_Lua::NewPlanet},
+		//{"NewPlanet", &Planets_Lua::NewPlanet},
 		{NULL, NULL}
 	};
 
@@ -101,7 +101,7 @@ int Planets_Lua::Get(lua_State* L){
 
 /**\brief Create a new Planet
  */
-int Planets_Lua::NewPlanet(lua_State* L){
+/*int Planets_Lua::NewPlanet(lua_State* L){
 	int i,n = lua_gettop(L);  // Number of arguments
 
 	// Temporary intermediatary variables
@@ -151,13 +151,13 @@ int Planets_Lua::NewPlanet(lua_State* L){
 
 
 	// Check that all pointers are non-NULL.
-	if(_image==NULL) {
+	if(_image == NULL) {
 		return luaL_error(L, "No image '%s'", imageName.c_str());
 	}
-	if(_alliance==NULL) {
+	if(_alliance == NULL) {
 		return luaL_error(L, "No alliance '%s'", _allianceName.c_str());
 	}
-	if(_surface==NULL) {
+	if(_surface == NULL) {
 		return luaL_error(L, "No surface '%s'", surfaceName.c_str());
 	}
 
@@ -174,13 +174,16 @@ int Planets_Lua::NewPlanet(lua_State* L){
 		_technologies
 		);
 
-	// Save the Planet!
+	// Save the planet
 	Image::Store(_name,_image);
+
 	SpriteManager::Instance()->Add((Sprite*)p);
 	Planets::Instance()->Add((Component*)p);
-    Scenario_Lua::PushSprite(L,p);
+
+	Scenario_Lua::PushSprite(L,p);
+	
 	return 1;
-}
+}*/
 
 /*
 Planet **Planets_Lua::pushPlanet(lua_State *L){

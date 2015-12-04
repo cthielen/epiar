@@ -46,7 +46,7 @@ Scenario::Scenario( void ) {
 	L = Lua::CurrentState();
 	Scenario_Lua::StoreScenario(L,this);
 
-	sprites = SpriteManager::Instance();
+	sprites = new SpriteManager();
 	commodities = Commodities::Instance();
 	engines = Engines::Instance();
 	planets = Planets::Instance();
@@ -268,7 +268,7 @@ Scenario::~Scenario() {
 	assert(L != NULL);
 	L = NULL;
 
-	sprites = NULL;
+	delete sprites; sprites = NULL;
 
 	// TODO: Shouldn't we be unloading these?
 	commodities = NULL;

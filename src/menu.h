@@ -2,6 +2,7 @@
  * \author		Christopher Thielen (chris@epiar.net)
  * \author		and others.
  * \date		Created: Tuesday, April 26, 2011
+ * \date		Modified: Thursday, December 3, 2015
  * \brief		Export Main_Menu function.
  * \details
  */
@@ -17,7 +18,8 @@
 
 class Menu {
 	public:
-		static void Main_Menu( void ); // Run the Main Menu
+		static void Run( void );
+		static Scenario* GetCurrentScenario( void );
 
 	private:
 		static bool quitSignal;
@@ -32,11 +34,11 @@ class Menu {
 
 		// Menu Buttons
 		// These pointers are only necessary because UI::Search does not support Picture paths.
-		static Picture *play;
-		static Picture *load;
-		static Picture *edit;
-		static Picture *options;
-		static Picture *exit;
+		static Picture* play;
+		static Picture* load;
+		static Picture* edit;
+		static Picture* options;
+		static Picture* exit;
 	
 		// Music
 		static Song* bgMusic;
@@ -60,10 +62,4 @@ class Menu {
 		static void ChangePicture( void* picture, void* image);
 };
 
-#ifdef EPIAR_UI_TESTS
-void UI_Test();
-void ModalityTest();
-#endif // EPIAR_UI_TESTS
-
 #endif // __H_MENU
-

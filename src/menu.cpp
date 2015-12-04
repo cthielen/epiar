@@ -2,6 +2,7 @@
  * \author		Christopher Thielen (chris@epiar.net)
  * \author		and others.
  * \date		Created: Tuesday, April 26, 2011
+ * \date		Modified: Thursday, December 3, 2015
  * \brief		Runs the main menu
  * \details
  */
@@ -47,8 +48,7 @@ Song *Menu::bgMusic = NULL;
 /** The Main Loop for the Menu screen.
  * \note Press ESC or hit the 'Quit' button to quit.
  */
-void Menu::Main_Menu( void )
-{
+void Menu::Run( void ) {
 	Input inputs;
 	list<InputEvent> events;
     
@@ -100,12 +100,17 @@ void Menu::Main_Menu( void )
 	} while(!quitSignal);
 }
 
+/** Returns the currently loaded scenraio, if any.
+ */
+Scenario* Menu::GetCurrentScenario( void ) {
+	return scenario;
+}
+
 /** Load the most recent Player
  * \note When the user leaves the Scenario, the game will quit.
  * \returns true if the player was loaded successfully.
  */
-bool Menu::AutoLoad()
-{
+bool Menu::AutoLoad() {
 	LogMsg(INFO,"Attempting to automatically load a player.");
 	PlayerInfo* info = PlayerList::Instance()->LastPlayer();
 
@@ -190,11 +195,6 @@ void Menu::SetupUI() {
 	exit = PictureButton( button_x, button_y + 200, QuitMenu,
 	                      Image::Get( "data/graphics/txt_exit_active.png"),
 	                      Image::Get( "data/graphics/txt_exit_inactive.png") );
-
-#ifdef EPIAR_UI_TESTS
-	// Test that the GUI features work
-	UI_Test();
-#endif // EPIAR_UI_TESTS
 
 }
 
@@ -320,8 +320,7 @@ void Menu::StartGame( void *info ) {
 /** Erase a Player
  * \note The user must confirm their choice first.
  */
-void Menu::ErasePlayer( void* playerInfo )
-{
+void Menu::ErasePlayer( void* playerInfo ) {
 	bool choice = Dialogs::Confirm("Are you sure you want erase this player?");
 
 	if(choice) {
@@ -345,8 +344,7 @@ void Menu::ErasePlayer( void* playerInfo )
  *  \note This doesn't actually create the Payer, this creates a PlayerInfo and
  *  selects the Scenario.  StartGame is where the Player object is first created.
  */
-void Menu::CreateNewPlayer( )
-{
+void Menu::CreateNewPlayer() {
 	PlayerList* players = PlayerList::Instance();
 
 	string playerName = ((Textbox*)UI::Search("/Window'New Game'/Textbox'Player Name:'/"))->GetText();
@@ -369,15 +367,13 @@ void Menu::CreateNewPlayer( )
 
 /** Change a Picture to a different Image
  */
-void Menu::ChangePicture( void* picture, void* image)
-{
+void Menu::ChangePicture( void* picture, void* image) {
 	((Picture*)picture)->Set( (Image*)image );
 }
 
 /** Make a Picture change images when the mouse hovers over it.
  */
-Picture* Menu::PictureButton( int x, int y, void (*callback)(), Image* activeImage, Image* inactiveImage)
-{
+Picture* Menu::PictureButton( int x, int y, void (*callback)(), Image* activeImage, Image* inactiveImage) {
 	Picture* pic = new Picture( x, y, inactiveImage );
 	pic->RegisterAction( Action_MouseLUp, new VoidAction( callback ) );
 	pic->RegisterAction( Action_MouseEnter, new MessageAction( ChangePicture, pic,   activeImage) );
@@ -388,163 +384,7 @@ Picture* Menu::PictureButton( int x, int y, void (*callback)(), Image* activeIma
 
 /** Quit the Main Menu
  */
-void Menu::QuitMenu()
-{
+void Menu::QuitMenu() {
     quitSignal = true;
 }
 
-#ifdef EPIAR_UI_TESTS
-
-void AddImage( void*widget, void*image, int x, int y )
-{
-	Container* container = ((Container*)widget);
-	container->AddChild( new Picture( x, y, (Image*)image ) );
-}
-
-string LOREM =
-	"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor"
-	" incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis "
-	"nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-	" Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu"
-	" fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in"
-	" culpa qui officia deserunt mollit anim id est laborum.";
-
-
-void ModalityTest() {
-	Window* window = new Window( Video::GetWidth()/2-150, Video::GetHeight()/2-150, 300, 300, "Dialog" );
-	window->AddChild( (new Paragraph(30, 30, 250, 30, "This is a Modal Dialog.  You should be unable to click elsewhere until you click the 'Release' button below." )) );
-	window->AddChild( (new Button(100, 135, 100, 30, "Release", UI::ReleaseModality )) );
-	UI::ModalDialog( window );
-}
-void TestConfirm()
-{
-	Dialogs::Confirm( LOREM );
-}
-void TestAlert()
-{
-	Dialogs::Alert( LOREM );
-}
-
-void UI_Test() {
-	// Example of Nestable UI Creation
-	UI::Add(
-		(new Window( 20, 20, 600, 600, "A Window"))
-		->AddChild( (new Tabs( 50, 50, 500, 500, "TEST TABS"))
-			->AddChild( (new Tab( "Nested Frames" ))
-				->AddChild( (new Button(10, 10, 100, 30, "Dummy 1",    NULL    )) )
-				->AddChild( (new Frame( 50,50,400,400 ))
-					->AddChild( (new Button(10, 10, 100, 30, "Dummy 2",    NULL    )) )
-					->AddChild( (new Frame( 50,50,300,300 ))
-						->AddChild( (new Button(10, 10, 100, 30, "Dummy 3",    NULL    )) )
-						->AddChild( (new Frame( 50,50,200,200 ))
-							->AddChild( (new Button(10, 10, 100, 30, "Dummy 4",    NULL    )) )
-						)
-					)
-				)
-			)
-			->AddChild( (new Tab( "Scoll to Buttons" ))
-				->AddChild( (new Label(10,   0, "Scroll Down")) )
-				->AddChild( (new Frame( 150, 50, 200, 300 ))
-					->AddChild( (new Label(10,   0, "Scroll Down")) )
-					->AddChild( (new Button(10, 300, 100, 30, "Dummy",    NULL    )) )
-					->AddChild( (new Label(10, 600, "Scroll Up")) )
-				)
-				->AddChild( (new Label(10, 600, "Scroll Up")) )
-			)
-			->AddChild( (new Tab("A Picture"))
-				->AddChild( (new Picture(10, 0, 400, 400, "data/art/menu2.png")) )
-			)
-			->AddChild( (new Tab("Inputs"))
-				->AddChild( (new Textbox(30, 30, 100, 1, "Some Text Goes Here", "A Textbox")) )
-				->AddChild( (new Checkbox(30, 100, 0, "A Checkbox")) )
-				->AddChild( (new Slider(30, 200, 200, 100, "A Slider", 0.4f )) )
-				->AddChild( (new Button(10, 300, 100, 30, "Dummy", NULL )) )
-				->AddChild( (new Dropdown(200, 200, 100, 30))
-					->AddOption("Lorem")
-					->AddOption("Ipsum")
-					->AddOption("Dolar")
-					->AddOption("Sit")
-				)
-				->AddChild( (new Dropdown(300, 200, 100, 20))
-					->AddOption("One Fish")
-					->AddOption("Two Fish")
-					->AddOption("Red Fish")
-					->AddOption("Blue Fish")
-				)
-				->AddChild( (new Paragraph(300, 250, 100, 20, LOREM)) )
-				->AddChild( (new Textarea(10, 300, 250, 500, LOREM, "A Textarea")) )
-			)
-			->AddChild( (new Tab("Dialogs"))
-				->AddChild( (new Button(10, 10, 100, 30, "Modality Test", ModalityTest )) )
-				->AddChild( (new Button(10, 50, 100, 30, "Confirm Test", TestConfirm )) )
-				->AddChild( (new Button(10, 90, 100, 30, "Alert Test", TestAlert )) )
-			)
-		)
-	);
-
-	Tab* clickTestTab = new Tab("Click Test");
-	clickTestTab->RegisterAction( Action_MouseLUp, new PositionalAction( AddImage, clickTestTab, Image::Get("data/graphics/shuttle.png") ) );
-	((Container*)UI::Search("/'A Window'/'TEST TABS'/"))->AddChild( clickTestTab );
-
-	// Check that the UI Searching is working
-	assert( NULL != UI::Search("/[0]/") );
-	assert( NULL != UI::Search("/Window/") );
-	assert( NULL != UI::Search("/Window/Tabs/") );
-	assert( NULL != UI::Search("/(100,100)/") );
-	assert( NULL != UI::Search("/'A Window'/'TEST TABS'/") );
-	assert( NULL != UI::Search("/'A Window'/'TEST TABS'/Tab/") );
-	assert( NULL != UI::Search("/'A Window'/'TEST TABS'/[0]/") );
-	assert( NULL != UI::Search("/'A Window'/'TEST TABS'/Tab[1]/") );
-	assert( NULL != UI::Search("/'A Window'/'TEST TABS'/[0]/Frame/") );
-	assert( NULL != UI::Search("/'A Window'/'TEST TABS'/[0]/(60,60)/") );
-	assert( NULL != UI::Search("/'A Window'/'TEST TABS'/Tab/") );
-	assert( NULL != UI::Search("/'A Window'/'TEST TABS'/Tab/Frame/Button/") );
-	assert( NULL != UI::Search("/'A Window'/'TEST TABS'/Tab/Frame/Frame/Button/") );
-	assert( NULL != UI::Search("/'A Window'/'TEST TABS'/Tab/Frame/Frame/Frame/Button/") );
-
-	// Check Odd but acceptable Queries
-	// Slashes at the beginning and end are optional but expected
-	assert( NULL != UI::Search("Window") );
-	assert( NULL != UI::Search("/Window") );
-	assert( NULL != UI::Search("Window/") );
-	// Extra Slashes just grab the first child
-	assert( NULL != UI::Search("/Window//") );
-	assert( NULL != UI::Search("/Window//Tab/") );
-
-	// Check that Bad Inputs find nothing
-	assert( NULL == UI::Search("/[-1]/") );
-	//assert( NULL == UI::Search("/[fdsa]/") ); // TODO: Should fail, but Asserts in string convert
-	//assert( NULL == UI::Search("/(foo,bar)/") ); // TODO: Should fail, but Asserts in string convert
-	assert( NULL == UI::Search("/WindowWindow/") );
-	assert( NULL == UI::Search("/'foobar'/") );
-	//assert( NULL == UI::Search("/[]/") ); // TODO: This should fail but doesn't. The empty string is converted to an Int
-	//assert( NULL == UI::Search("/(,)/") ); // TODO: This should fail but doesn't. The empty string is converted to an Int
-
-	// Check that Malformed Queries Fail and return nothing.
-	// Malformed Indexes
-	//assert( NULL == UI::Search("/[/") ); // TODO: Should fail, but Asserts in string convert
-	//assert( NULL == UI::Search("/]/") ); // TODO: Should fail, but Asserts in string convert
-	assert( NULL == UI::Search("/[1)/") );
-	assert( NULL == UI::Search("/[100,100]/") );
-	// Malformed Coordinates
-	//assert( NULL == UI::Search("/(/") ); // TODO: Should fail, but Asserts in string convert
-	//assert( NULL == UI::Search("/)/") ); // TODO: Should fail, but Asserts in string convert
-	assert( NULL == UI::Search("/,/") ); 
-	//assert( NULL == UI::Search("/(100 100)/") ); // TODO: Should fail, but Asserts in string convert
-	assert( NULL == UI::Search("/(100,100]/") );
-	// Malformed Strings
-	assert( NULL == UI::Search("/Window'/") );
-	assert( NULL == UI::Search("/Window\"/") );
-	assert( NULL == UI::Search("/'Window/") );
-	assert( NULL == UI::Search("/\"Window/") );
-
-	// Set a test Form button
-	Tab* inputTab = (Tab*)UI::Search("/'A Window'/'TEST TABS'/Tab'Inputs'/");
-	assert( NULL != inputTab );
-	assert( inputTab->GetMask() & WIDGET_TAB );
-	inputTab->SetFormButton(
-		(Button*) UI::Search("/'A Window'/'TEST TABS'/Tab'Some Inputs'/Button'Dummy'/")
-	);
-}
-
-#endif // EPIAR_UI_TESTS

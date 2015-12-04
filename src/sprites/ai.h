@@ -65,10 +65,10 @@ class AI : public Ship {
 
 		// AI Combat Mechanics:
 
-		typedef struct{
+		typedef struct {
 			int damage; ///< Damage received by this ship
 			int id; ///< The enemy ship's unique id
-		}enemy; ///< Simple tracker for how much damage has been taken from other ships
+		} enemy; ///< Simple tracker for how much damage has been taken from other ships
 
 		int target; ///< The enemy that this AI is currently fighting
 		bool merciful; ///< Is this ship merciful to the player?
@@ -82,7 +82,5 @@ class AI : public Ship {
 		static bool CompareAI(Sprite* a, Sprite* b);
 		static bool InRange(Coordinate a, Coordinate b);
 };
-
-
 
 #endif /*AI_H_*/

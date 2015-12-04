@@ -1,6 +1,7 @@
 /**\file			spritemanager.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
+ * \date			Modified: Thursday, December 3, 2015
  * \brief
  * \details
  */
@@ -13,8 +14,8 @@
 
 class SpriteManager {
 	public:
-		static SpriteManager *Instance();
-		SpriteManager& operator=( SpriteManager& object );
+		SpriteManager();
+		~SpriteManager();
 
 		void Add( Sprite *sprite );
 		void AddPlayer( Sprite *sprite );
@@ -38,9 +39,6 @@ class SpriteManager {
 
 		void Save();
 
-	protected:
-		SpriteManager();
-
 	private:
 		// These structures each contain a complete list of all Sprites.
 		// Each one is useful for a different purpose, depending on the way that the sprites need to be accessed.
@@ -51,7 +49,6 @@ class SpriteManager {
 		Sprite *player;                     ///< The Player Sprite.
 
 		list<Sprite *> spritesToDelete;     ///< The list of Sprites that should be deleted at the end of this Update.
-		static SpriteManager *pInstance;    ///< The Static SpriteManager Instance.
 
 		int tickCount;                      ///< Counts number of ticks to track updates to quadrants.  Max value is the number of ticks to update all quadrants
 		const int semiRegularPeriod;        ///< The period at which every semi-regular quadrant is updated

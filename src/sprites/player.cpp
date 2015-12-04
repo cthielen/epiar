@@ -8,6 +8,7 @@
 
 #include "includes.h"
 #include "common.h"
+#include "menu.h"
 #include "sprites/player.h"
 #include "sprites/planets.h"
 #include "sprites/spritemanager.h"
@@ -541,12 +542,12 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 	for(list<HiredEscort*>::iterator iter_escort = hiredEscorts.begin(); iter_escort != hiredEscorts.end(); iter_escort++){
 		// Check that the sprite hasn't already been destroyed. (If it has, leave it out.)
 		///\todo We should remove the SpriteManager reference here to remove a dependency on global variables.
-		if(
+		if (
 		   (*iter_escort)->spriteID != -1 &&
-		   SpriteManager::Instance()->GetSpriteByID(
+		   Menu::GetCurrentScenario()->GetSpriteManager()->GetSpriteByID(
 		      (*iter_escort)->spriteID
 		   ) != NULL
-		){
+		) {
 			xmlNodePtr hePtr = xmlNewNode(NULL, BAD_CAST "hiredEscort");
 			xmlNewChild(hePtr, NULL, BAD_CAST "type", BAD_CAST (*iter_escort)->type.c_str() );
 			snprintf(buff, sizeof(buff), "%d", (*iter_escort)->pay);

@@ -88,15 +88,20 @@ void Projectile::Update( lua_State *L ) {
 	// Check for projectile collisions
 	Sprite* impact = sprites->GetNearestSprite( (Sprite*)this, 100,DRAW_ORDER_SHIP|DRAW_ORDER_PLAYER );
 	if( (impact != NULL) && (impact->GetID() != ownerID) && ((this->GetWorldPosition() - impact->GetWorldPosition()).GetMagnitude() < impact->GetRadarSize() )) {
-		int damageDone=(weapon->GetPayload())*damageBoost;
+		int damageDone = (weapon->GetPayload())*damageBoost;
+
 		((Ship*)impact)->Damage( damageDone );
-		if(impact->GetDrawOrder()==DRAW_ORDER_SHIP)
-			((AI*)impact)->AddEnemy(ownerID,damageDone);
+
+		if(impact->GetDrawOrder() == DRAW_ORDER_SHIP) {
+			((AI*)impact)->AddEnemy(ownerID, damageDone);
+		}
+
 		sprites->Delete( (Sprite*)this );
 		
 		// Create a fire burst where this projectile hit the ship's shields.
 		// TODO: This shows how much we need to improve our collision detection.
 		Effect* hit = new Effect(this->GetWorldPosition(), "data/animations/shield.ani", 0);
+
 		hit->SetAngle( -this->GetAngle() );
 		hit->SetMomentum( impact->GetMomentum() );
 		sprites->Add( hit );
