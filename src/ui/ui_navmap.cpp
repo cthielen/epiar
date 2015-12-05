@@ -1,7 +1,7 @@
 /**\file			ui_navmap.cpp
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
- * \date			Modified: Wednesday, December 2, 2015
+ * \date			Modified: Saturday, December 5, 2015
  * \brief			Map Widget
  * \details
  */
@@ -13,7 +13,7 @@
 #include "sprites/effects.h"
 #include "utilities/timer.h"
 
-#define SECTOR_CLICK_SELECTION_RADIUS 9.0
+#define SECTOR_CLICK_SELECTION_RADIUS 35.0
 
 /** \addtogroup UI
  * @{
@@ -200,9 +200,7 @@ Coordinate NavMap::WorldToScreen( Coordinate world ) {
 bool NavMap::MouseLUp( int x, int y ) {
 	Widget::MouseLUp( x, y );
 
-	Coordinate click;
-	click.SetX(x);
-	click.SetY(y);
+	Coordinate click(x, y);
 
 	// Determine if they clicked on a sector
 	list<Sector*>* sectors = NULL;
@@ -281,7 +279,7 @@ bool NavMap::SectorNearClick(Sector *sector, Coordinate click) {
 
 	float distance = (sectorScreen - click).GetMagnitude();
 
-	if(distance < SECTOR_CLICK_SELECTION_RADIUS) return true;	
+	if(distance < (SECTOR_CLICK_SELECTION_RADIUS * scale)) return true;	
 
 	return false;
 }
