@@ -6,6 +6,7 @@
  * \details
  */
 
+#include "engine/navigation.h"
 #include "includes.h"
 #include "input/input.h"
 #include "ui/ui_navmap.h"
@@ -216,9 +217,11 @@ bool NavMap::MouseLUp( int x, int y ) {
 		if(SectorNearClick(sector, click)) {
 			selectedSector = sector;
 
+			cout << "Set selected sector to " << selectedSector->GetName() << endl;
+
 			// Is shift held down? If so, they are trying to plot a course ...
 			if(Input::keyIsHeld(SDLK_LSHIFT)) {
-				
+				Navigation::AddSector(selectedSector->GetName());
 			}
 		}
 	}
