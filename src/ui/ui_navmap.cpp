@@ -218,7 +218,7 @@ bool NavMap::MouseLUp( int x, int y ) {
 
 			// Is shift held down? If so, they are trying to plot a course ...
 			if(Input::keyIsHeld(SDLK_LSHIFT)) {
-
+				
 			}
 		}
 	}

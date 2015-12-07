@@ -230,13 +230,18 @@ void Sectors::GetBoundaries(float *north, float *south, float *east, float *west
 	for( map<string,Component*>::iterator i = components.begin(); i != components.end(); ++i ) {
 		Sector *s = (Sector *)i->second;
 
-		cout << "Found sector (" << s->GetName() << ") with X, Y " << s->GetX() << ", " << s->GetY() << endl;
-
 		if(s->GetY() < *north) *north = s->GetY();
 		if(s->GetY() > *south) *south = s->GetY();
 		if(s->GetX() < *west) *west = s->GetX();
 		if(s->GetX() > *east) *east = s->GetX();
 	}
+}
+
+/* Returns true if 'possibleNeighbor' is a neighbor of 'origin' */
+bool Sectors::SectorHasNeighbor(Sector *origin, Sector *possibleNeighbor) {
+	list<string> neighbors = origin->GetNeighbors();
+
+	return (std::find(neighbors.begin(), neighbors.end(), possibleNeighbor->GetName()) != neighbors.end());
 }
 
 /** @} */

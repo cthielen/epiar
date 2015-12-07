@@ -133,7 +133,7 @@ list<InputEvent> Input::Update() {
 /**\brief Returns true if 'key' is currently held down, else false.
  */
 bool Input::keyIsHeld(SDLKey key) {
-	return false; //heldKeys[key];
+	return heldKeys[key];
 }
 
 /**\brief Converts SDL_MouseButtonEvent to Epiar's Input model.
