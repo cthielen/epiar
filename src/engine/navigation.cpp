@@ -79,3 +79,31 @@ bool Navigation::RemoveNextSector( void ) {
 	return true;
 }
 
+// Returns true if both 'a' and 'b' are part of the navigation route (including the current sector).
+// Usage assumes but function does not check that 'a' and 'b' are neighbors.
+bool Navigation::IsEnroute(Sector *a, Sector *b) {
+	Sector *currentSector = Menu::GetCurrentScenario()->GetCurrentSector();
+	list<string> validSectors = Navigation::Route;
+
+	validSectors.push_back(currentSector->GetName());
+
+	if(a == NULL) return false;
+	if(b == NULL) return false;
+
+	if((std::find(validSectors.begin(), validSectors.end(), a->GetName()) != validSectors.end()) == false) {
+		return false;
+	}
+	if((std::find(validSectors.begin(), validSectors.end(), b->GetName()) != validSectors.end()) == false) {
+		return false;
+	}
+
+	return true;
+}
+
+void Navigation::PrintRoute() {
+	cout << "Navigation Route:" << endl;
+	for(list<string>::iterator itr = Navigation::Route.begin(); itr != Navigation::Route.end(); itr++) {
+		cout << "\t" << *itr << endl;
+	}
+}
+

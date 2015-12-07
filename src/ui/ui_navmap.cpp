@@ -120,8 +120,15 @@ void NavMap::Draw( int relx, int rely ) {
 
 			endPos = WorldToScreen(Coordinate(neighbor->GetX(), neighbor->GetY()));
 
-			// Draw the connecting line
-			Video::DrawLine( startPos.GetX(), startPos.GetY(), endPos.GetX(), endPos.GetY(), DARKGREY);
+			// If this connecting line is a navigation route, draw in a different color
+			if(Navigation::IsEnroute(sector, neighbor)) {
+				// Draw the connecting line
+				Video::DrawLine( startPos.GetX(), startPos.GetY(), endPos.GetX(), endPos.GetY(), GREEN);
+				Video::DrawLine( startPos.GetX(), startPos.GetY() + 1, endPos.GetX(), endPos.GetY() + 1, GREEN);
+			} else {
+				// Draw the connecting line
+				Video::DrawLine( startPos.GetX(), startPos.GetY(), endPos.GetX(), endPos.GetY(), DARKGREY);
+			}
 		}
 	}
 

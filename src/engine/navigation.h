@@ -9,6 +9,7 @@
 #ifndef __h_navigation__
 #define __h_navigation__
 
+#include "engine/sectors.h"
 #include "includes.h"
 
 class Navigation {
@@ -22,8 +23,12 @@ class Navigation {
 		static string GetNextSector( void );
 		static bool RemoveNextSector( void );
 
+		static bool IsEnroute(Sector *a, Sector *b);
+
 	private:
 		static list<string> Route;
+
+		static void PrintRoute();
 };
 
 #endif // __h_navigation__
