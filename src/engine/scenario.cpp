@@ -659,6 +659,10 @@ void Scenario::CreateNavMap( void ) {
 	if( mapScale > 0.0f ) {
 		map->SetScale( mapScale );
 	}
+
+	Sector *currentSector = GetCurrentSector();
+	map->SetCenter( Coordinate(currentSector->GetX(), currentSector->GetY()) );
+
 	map->RegisterAction(Action_MouseWDown, new ObjectAction(SaveMapScale, this) );
 	map->RegisterAction(Action_MouseWUp, new ObjectAction(SaveMapScale, this) );
 

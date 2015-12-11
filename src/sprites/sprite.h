@@ -34,7 +34,7 @@ class Sprite {
 		Coordinate GetScreenPosition( void ) const;
 
 		virtual void Update( lua_State *L );
-    void UpdateScreenCoordinates( void );
+		void UpdateScreenCoordinates( void );
 		virtual void Draw( void );
 
 		int GetID( void ) { return id; }

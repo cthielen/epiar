@@ -110,7 +110,7 @@ void NavMap::Draw( int relx, int rely ) {
 		Coordinate startPos;
 
 		col = GREEN;
-		startPos = WorldToScreen(Coordinate(sector->GetX(), sector->GetY()));
+		startPos = WorldToMap(Coordinate(sector->GetX(), sector->GetY()));
 
 		for( neighborItr = neighbors.begin(); neighborItr != neighbors.end(); ++neighborItr ) {
 			Sector *neighbor = (Sector *)sectorsHandle->Get( *neighborItr );
@@ -118,7 +118,7 @@ void NavMap::Draw( int relx, int rely ) {
 
 			Coordinate endPos;
 
-			endPos = WorldToScreen(Coordinate(neighbor->GetX(), neighbor->GetY()));
+			endPos = WorldToMap(Coordinate(neighbor->GetX(), neighbor->GetY()));
 
 			// If this connecting line is a navigation route, draw in a different color
 			if(Navigation::IsEnroute(sector, neighbor)) {
@@ -138,7 +138,7 @@ void NavMap::Draw( int relx, int rely ) {
 
 		// TODO: If sector has no planets, draw as WHITE instead of BLUE
 		col = BLUE;
-		pos = WorldToScreen(Coordinate(sector->GetX(), sector->GetY()));
+		pos = WorldToMap(Coordinate(sector->GetX(), sector->GetY()));
 
 		field = sector->GetAlliance()->GetColor();
 
@@ -156,7 +156,7 @@ void NavMap::Draw( int relx, int rely ) {
 	// Do a second pass to draw planet Names on top
 	for( iter = sectors->begin(); iter != sectors->end(); ++iter ) {
 		Sector *sector = (Sector *)(*iter);
-		pos = WorldToScreen(Coordinate(sector->GetX(), sector->GetY()));
+		pos = WorldToMap(Coordinate(sector->GetX(), sector->GetY()));
 		NavMapFont->Render( pos.GetX() + 5, pos.GetY(), sector->GetName().c_str() );
 	}
 
@@ -192,17 +192,18 @@ Coordinate NavMap::WorldToClick( Coordinate world ) {
 	return click;
 }
 
-/** \brief Convert world coordinates to screen Coordinates
+/** \brief Convert world coordinates to map Coordinates, taking current
+ *         sector as the center.
  */
-Coordinate NavMap::WorldToScreen( Coordinate world ) {
-	Coordinate screen = world;
+Coordinate NavMap::WorldToMap( Coordinate world ) {
+	Coordinate map = world;
 
-	screen -= center;
-	screen *= scale; // Descale the screen
-	screen += Coordinate( w / 2, h / 2 ); // Offset by the center of this widget
-	screen += Coordinate( GetAbsX(), GetAbsY() ); // Offset by the absolute screen coordinate
+	map -= center;
+	map *= scale; // Descale the map
+	map += Coordinate( w / 2, h / 2 ); // Offset by the center of this widget
+	map += Coordinate( GetAbsX(), GetAbsY() ); // Offset by the absolute screen coordinate
 
-	return screen;
+	return map;
 }
 
 bool NavMap::MouseLUp( int x, int y ) {

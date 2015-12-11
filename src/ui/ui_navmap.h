@@ -35,7 +35,7 @@ class NavMap: public Widget {
 
 		Coordinate ClickToWorld( Coordinate click );
 		Coordinate WorldToClick( Coordinate world );
-		Coordinate WorldToScreen( Coordinate world );
+		Coordinate WorldToMap( Coordinate world );
 
 		string GetType( void ) { return string("Map"); }
 		virtual int GetMask( void ) { return WIDGET_MAP; }
