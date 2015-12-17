@@ -274,8 +274,8 @@ void Main_Parse_Args( int argc, char **argv ) {
 	argparser->SetOpt(LONGOPT, "log-xml",        "Log messages to xml files.");
 	argparser->SetOpt(LONGOPT, "log-out",        "(Default) Log messages to console.");
 	argparser->SetOpt(LONGOPT, "nolog-out",      "Disable logging messages to console.");
-	argparser->SetOpt(VALUEOPT, "log-lvl",       "Logging level.(None,Fatal,Critical,Error,"
-	                                             "\n\t\t\t\tWarn,Alert,Notice,Info,Verbose[1-3],Debug[1-4])");
+	argparser->SetOpt(VALUEOPT, "log-lvl",       "Logging level.(None,Fatal,Error,"
+	                                             "\n\t\t\t\tWarn,Info,Debug)");
 	argparser->SetOpt(VALUEOPT, "log-fun",       "Filter log messages by function name.");
 	argparser->SetOpt(VALUEOPT, "log-msg",       "Filter log messages by string content.");
 
@@ -340,7 +340,11 @@ void Main_Parse_Args( int argc, char **argv ) {
 
 	if("" != funfilt) Log::Instance().SetFunFilter(funfilt);
 	if("" != msgfilt) Log::Instance().SetMsgFilter(msgfilt);
-	if("" != loglvl)  Log::Instance().SetLevel( loglvl );
+	if("" != loglvl) {
+		if(Log::Instance().SetLevel( loglvl ) == false) {
+			cout << "Log level: '" << loglvl << "' not understood." << endl;
+		}
+	}
 
 	// Print unused options.
 	list<string> unused = argparser->GetUnused();
@@ -361,12 +365,12 @@ void Main_Log_Environment( void ) {
 	LogMsg(INFO, "Epiar Version %s", EPIAR_VERSION_FULL );
 
 #ifdef COMP_MSVC
-	LogMsg(INFO, "Compiled with MSVC vers: _MSC_VER" );
+	LogMsg(DEBUG, "Compiled with MSVC vers: _MSC_VER" );
 #endif // COMP_MSVC
 
 #ifdef COMP_GCC
-	LogMsg(INFO, "Compiled with GCC vers: %d.%d.%d", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ );
+	LogMsg(DEBUG, "Compiled with GCC vers: %d.%d.%d", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ );
 #endif // COMP_GCC
 
-	LogMsg(INFO,"Executable Path: %s", argparser->GetPath().c_str() );
+	LogMsg(DEBUG, "Executable Path: %s", argparser->GetPath().c_str() );
 }

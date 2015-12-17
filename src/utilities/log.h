@@ -1,7 +1,7 @@
 /**\file			log.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 4, 2006
- * \date			Modified: Sunday, November 22, 2009
+ * \date			Modified: Wednesday, December 16, 2015
  * \brief			Main logging facilities for the codebase
  * \details
  */
@@ -36,20 +36,10 @@ typedef enum {
 	INVALID = 0,		/**< Invalid log level, used for internal purposes.*/
 	NONE,			/**< No logging. */
 	FATAL,			/**< Will kill the program. */
-	CRITICAL,		/**< Will make the program function incorrectly. */
-	ERR,			/**< Unexpected errors. */
-	WARN,			/**< Expected (but should be noted) problems. */
-	ALERT,			/**< Something that might cause a problem. */
-	NOTICE,			/**< Notify the of an event occurring. */
+	DEBUG,			/**< Debug information. */
 	INFO,			/**< (System level) Information that the user might want. */
-	UIINPUT,		/**< User Interface motions. */
-	VERBOSE1,		/**< (Subsystem level) Information for the user. */
-	VERBOSE2,		/**< (Method level) Information for the user. */
-	VERBOSE3,		/**< (Function level) Information for the user. */
-	DEBUG1,			/**< Low occurrence debug information. */
-	DEBUG2,			/**< Medium occurrence (Occurs only on user actions).*/
-	DEBUG3,			/**< Medium high occurrence (Occurs regularly).*/
-	DEBUG4,			/**< High occurrence (> once per second).*/
+	WARN,			/**< Expected (but should be noted) problems. */
+	ERR,			/**< Unexpected errors. */
 	ALL             /**< This is always the highest Logging level.*/
 } LogLevel;
 
@@ -104,7 +94,9 @@ class LogEntry {
 			this->lvl = lvl;
 			this->message = message;
 		}
+
 		LogLevel lvl;
+
 		string func;
 		string message;
 };

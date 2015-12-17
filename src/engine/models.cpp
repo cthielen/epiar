@@ -322,7 +322,7 @@ int Model::GetWeaponSlotCount(){
 }
 
 void Model::WSDebug(WeaponSlot slot){
-	LogMsg(DEBUG1,
+	LogMsg(DEBUG,
 		"WeaponSlots: name=%s x=%d y=%d angle=%f motionAngle=%f content=%s firingGroup=%d",
 		slot.name.c_str(),
 		slot.x,
@@ -336,7 +336,7 @@ void Model::WSDebug(WeaponSlot slot){
 }
 
 void Model::WSDebug(vector<WeaponSlot>& slots){
-	LogMsg(DEBUG1, "WeaponSlots for Model: %s", GetName().c_str() );
+	LogMsg(DEBUG, "WeaponSlots for Model: %s", GetName().c_str() );
 	for(unsigned int i = 0; i < slots.size(); i++){
 		WSDebug(slots[i]);
 	}

@@ -27,19 +27,26 @@ Log& Log::Instance( void ){
 /**\brief Allows changing of the log level dynamically (string version).*/
 bool Log::SetLevel( const string& _loglvl ){
 	// Check logging level
-	this->loglvl=this->ReverseLookUp( _loglvl );
-	if( this->loglvl == INVALID ){
-		LogMsg(DEBUG1,"Invalid logging level specified, reverting to default log level.");
-		this->loglvl=this->loglvldefault;
+	this->loglvl = this->ReverseLookUp( _loglvl );
+
+	if( this->loglvl == INVALID ) {
+		LogMsg(WARN, "Invalid logging level specified, reverting to default log level.");
+		this->loglvl = this->loglvldefault;
+
 		return false;
 	}
+
+	cout << "loglvl set to: " << this->loglvl << endl;
+
 	return true;
 }
 
 /**\brief Allows changing of the log level dynamically ( enum version ).*/
 bool Log::SetLevel( LogLevel _loglvl ){
-	LogMsg(DEBUG1,"Changing Log Level from '%s' to '%s'.", lvlStrings[loglvl].c_str(), lvlStrings[_loglvl].c_str());
-	this->loglvl=_loglvl;
+	LogMsg(DEBUG, "Changing Log Level from '%s' to '%s'.", lvlStrings[loglvl].c_str(), lvlStrings[_loglvl].c_str());
+
+	this->loglvl = _loglvl;
+
 	return true;
 }
 
@@ -48,7 +55,7 @@ void Log::SetFunFilter( const string& _funfilter ){
 	this->funfilter.clear();
 	// Check function filter
 	if( !_funfilter.empty() ){
-		LogMsg(DEBUG1,"Filtering log by function named: %s.", _funfilter.c_str());
+		LogMsg(DEBUG, "Filtering log by function named: %s.", _funfilter.c_str());
 		this->funfilter = _funfilter;
 	}
 }
@@ -58,7 +65,7 @@ void Log::SetMsgFilter( const string& msgfilter ){
 	this->filter.clear();
 	// Check message filter
 	if( !msgfilter.empty() ){
-		LogMsg(DEBUG1,"Filter log by message text: %s", msgfilter.c_str());
+		LogMsg(DEBUG, "Filter log by message text: %s", msgfilter.c_str());
 		this->filter=msgfilter;
 	}
 }
@@ -91,9 +98,11 @@ void Log::Close( void ) {
  * \todo The filtering is broken and should be refactored.
  */
 void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) {
+	//cout << "lvl requested: " << lvl << ", level set: " << this->loglvl << ", message: " << message << ", < test: " << (lvl < this->loglvl) << endl;
 	// Check log level
-	if( lvl < this->loglvl )
+	if( lvl < this->loglvl ) {
 		return;
+	}
 
 	// Check function filter
 	if( !this->funfilter.empty() ){
@@ -102,10 +111,10 @@ void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) 
 	}
 
 	// Check message filter
-	if( !this->filter.empty() ){
+	//if( !this->filter.empty() ){
 		//if( !message.find( this->filter  ) )
 		//	return;
-	}
+	//}
 
 	va_list args;
 	time_t rawtime;
@@ -171,64 +180,43 @@ void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) 
 
 /**\brief Constructor, used to initialize variables.*/
 Log::Log()
-	:loglvldefault(ALL)
+	:loglvldefault(WARN)
 {
-	lvlStrings[NONE]="None";
-	lvlStrings[FATAL]="Fatal";
-	lvlStrings[CRITICAL]="Critical";
-	lvlStrings[ERR]="Error";
-	lvlStrings[WARN]="Warn";
-	lvlStrings[ALERT]="Alert";
-	lvlStrings[NOTICE]="Notice";
-	lvlStrings[UIINPUT]="Input";
-	lvlStrings[INFO]="Info";
-	lvlStrings[VERBOSE1]="Verbose1";
-	lvlStrings[VERBOSE2]="Verbose2";
-	lvlStrings[VERBOSE3]="Verbose3";
-	lvlStrings[DEBUG1]="Debug1";
-	lvlStrings[DEBUG2]="Debug2";
-	lvlStrings[DEBUG3]="Debug3";
-	lvlStrings[DEBUG4]="Debug4";
+	lvlStrings[NONE] = "None";
+	lvlStrings[FATAL] = "Fatal";
+	lvlStrings[ERR] = "Error";
+	lvlStrings[WARN] = "Warn";
+	lvlStrings[INFO] = "Info";
+	lvlStrings[DEBUG] = "Debug";
+
+	loglvl = loglvldefault;
 
 #ifndef _WIN32
 	int Black   = 30;
-	int Blue    = 34;
+	//int Blue    = 34;
 	int Green   = 32;
 	int Cyan    = 36;
 	int Red     = 31;
-	int Purple  = 35;
+	//int Purple  = 35;
 	int Brown   = 33;
 
 	// BLACK
 	colors[NONE]    = Black;
 	// Red
 	colors[FATAL]   = Red;
-	colors[CRITICAL]= Red;
 	colors[ERR]     = Red;
 	// Brown
 	colors[WARN]    = Brown;
-	colors[ALERT]   = Brown;
-	// Blue
-	colors[NOTICE]  = Blue;
 	// Cyan
 	colors[INFO]    = Cyan;
-	// Purple
-	colors[UIINPUT] = Purple;
-	colors[VERBOSE1]= Purple;
-	colors[VERBOSE2]= Purple;
-	colors[VERBOSE3]= Purple;
 	// Green
-	colors[DEBUG1]  = Green;
-	colors[DEBUG2]  = Green;
-	colors[DEBUG3]  = Green;
-	colors[DEBUG4]  = Green;
+	colors[DEBUG]  = Green;
 	
 	istty = isatty(fileno(stdin));
 #endif
 
 	// generate the log's filename based on the time
 	logFilename = string("Epiar-Log-") + GetTimestamp() + string(".xml");
-	//printf("Logging to: '%s'\n",logFilename.c_str());
 
 	fp = NULL;
 }
@@ -253,10 +241,11 @@ string Log::GetTimestamp( void ) {
 }
 
 /**\brief Does a reverse lookup of the log level based on a string.*/
-LogLevel Log::ReverseLookUp( const string& _lvl ){
+LogLevel Log::ReverseLookUp( const string& _lvl ) {
 	// Figure out which log level we're doing.
 	map<LogLevel,string>::iterator it;
-	for ( it=lvlStrings.begin() ; it != lvlStrings.end(); it++ ){
+
+	for ( it = lvlStrings.begin() ; it != lvlStrings.end(); it++ ){
 		if( (*it).second == _lvl )
 			return (*it).first;
 	}

@@ -385,7 +385,6 @@ Widget *Container::Search( string full_query ) {
 						return NULL;
 					}
 					for( i = current->children.begin(); i != current->children.end(); ++i ) {
-						// LogMsg(DEBUG1, "Checking %s %s (%d,%d) 0x%08X\n", (*i)->GetName().c_str(), (*i)->GetType().c_str(), (*i)->GetX(), (*i)->GetY(), (*i)->GetMask() );
 						if( query.FOUND_NAME && (query.name != (*i)->GetName()) ) {
 							continue;
 						}
@@ -488,7 +487,6 @@ Widget *Container::Search( string full_query ) {
 	#undef ABSORB
 	#undef ABSORB_STR
 
-	//LogMsg(DEBUG1, "Found %s %s (%d,%d) 0x%08X\n", (*i)->GetName().c_str(), (*i)->GetType().c_str(), (*i)->GetX(), (*i)->GetY(), (*i)->GetMask() );
 	return (Widget*)current;
 }
 

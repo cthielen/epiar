@@ -428,14 +428,14 @@ void Scenario::Run() {
 			{
 				if (lowFpsFrameCount <= 0)
 				{
-					LogMsg (DEBUG4, "Turning off wave-updates for sprites as 600 frames have passed");
+					LogMsg (DEBUG, "Turning off wave-updates for sprites as 600 frames have passed.");
 					lowFps = false;
 				}
 			}
 
 			if (!lowFps && currentFPS < 15)
 			{
-				LogMsg (DEBUG4, "Turning on wave-updates for sprites as FPS has gone below 15");
+				LogMsg (DEBUG, "Turning on wave-updates for sprites as FPS has gone below 15 fps.");
 				lowFps = true;			//if FPS has dropped below 15 then switch to wave-update method for 600 frames
 				lowFpsFrameCount = 600;
 			}

@@ -158,7 +158,7 @@ bool Video::Initialize( void ) {
 		LogMsg(ERR, "Could not initialize SDL: %s", SDL_GetError() );
 		return( false );
 	} else {
-		LogMsg(INFO, "SDL video initialized using %s driver.", SDL_VideoDriverName( buf, 31 ) );
+		LogMsg(DEBUG, "SDL video initialized using %s driver.", SDL_VideoDriverName( buf, 31 ) );
 	}
 
 	atexit( SDL_Quit );
@@ -221,18 +221,18 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	// the video card
 	if( videoInfo->hw_available ) {
 		videoFlags |= SDL_HWSURFACE;
-		LogMsg(INFO, "Using hardware surfaces." );
+		LogMsg(DEBUG, "Using hardware surfaces." );
 	} else {
 		videoFlags |= SDL_SWSURFACE;
-		LogMsg(INFO, "Not using hardware surfaces." );
+		LogMsg(DEBUG, "Not using hardware surfaces." );
 	}
 
 	// using SDL given information, set hardware acceleration if supported
 	if( videoInfo->blit_hw ) {
 		videoFlags |= SDL_HWACCEL;
-		LogMsg(INFO, "Using hardware accelerated blitting." );
+		LogMsg(DEBUG, "Using hardware accelerated blitting." );
 	} else {
-		LogMsg(INFO, "Not using hardware accelerated blitting." );
+		LogMsg(DEBUG, "Not using hardware accelerated blitting." );
 	}
 
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
@@ -243,7 +243,7 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	if( !ret ) {
 		LogMsg(WARN, "Video mode %dx%dx%d not available.", w, h, bpp );
 	} else {
-		LogMsg(INFO, "Video mode %dx%dx%d supported.", w, h, bpp );
+		LogMsg(DEBUG, "Video mode %dx%dx%d supported.", w, h, bpp );
 	}
 
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,   16);
@@ -297,7 +297,7 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	w2 = w / 2;
 	h2 = h / 2;
 
-	LogMsg(INFO, "Video mode initialized at %dx%dx%d\n", screen->w, screen->h, screen->format->BitsPerPixel );
+	LogMsg(DEBUG, "Video mode initialized at %dx%dx%d\n", screen->w, screen->h, screen->format->BitsPerPixel );
 
 	return( true );
 }

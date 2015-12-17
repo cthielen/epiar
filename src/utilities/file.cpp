@@ -276,13 +276,13 @@ bool File::Close() {
 	if ( retval != 0 )
 #endif
 	{
-		LogMsg(ERR,"%s: Unable to close file handle.%s",
+		LogMsg(ERR, "%s: Unable to close file handle.%s",
 			validName.c_str(), PHYSFS_getLastError());
 		return false;
 	}
 	contentSize = 0;
 
-	LogMsg(INFO, "File '%s' closed/saved successfully.", validName.c_str());
+	LogMsg(DEBUG, "File '%s' closed/saved successfully.", validName.c_str());
 
 	return true;
 }
@@ -293,12 +293,13 @@ bool File::Exists( const string& filename ) {
 
 #ifdef USE_PHYSICSFS
 	if ( !PHYSFS_exists( cName ) ){
-		LogMsg(ERR,"%s: %s.", LastErrorMessage().c_str(), cName);
+		LogMsg(ERR, "%s: %s.", LastErrorMessage().c_str(), cName);
 		return false;
 	}
 #else
 	struct stat fileStatus;
 	int stat_ret = stat(cName, &fileStatus );
+
 	if ( stat_ret != 0 ) {
         LogMsg(ERR,"%s: %s.", LastErrorMessage().c_str(), cName); break;
 		return false;

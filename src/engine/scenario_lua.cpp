@@ -1071,10 +1071,10 @@ int Scenario_Lua::SetInfo(lua_State *L) {
 
 		Sound *sound = Sound::Get(soundName);
 		Image *picture = Image::Get(pictureName);
-		if(sound==NULL)
-			LogMsg(NOTICE, "Could not create engine: there is no sound file '%s'.",soundName.c_str());
-		if(picture==NULL)
-			LogMsg(NOTICE, "Could not create engine: there is no image file '%s'.",pictureName.c_str());
+		if(sound == NULL)
+			LogMsg(WARN, "Could not create engine: there is no sound file '%s'.",soundName.c_str());
+		if(picture == NULL)
+			LogMsg(WARN, "Could not create engine: there is no image file '%s'.",pictureName.c_str());
 		if((sound==NULL) || (picture==NULL))
 			return 0;
 
@@ -1096,16 +1096,14 @@ int Scenario_Lua::SetInfo(lua_State *L) {
 		int cargo = Lua::getIntField(3,"Cargo");
 
 		Image *image = Image::Get(imageName);
-		if(image == NULL)
-		{
-			LogMsg(NOTICE, "Could not create model: there is no image file '%s'.",imageName.c_str());
+		if(image == NULL) {
+			LogMsg(WARN, "Could not create model: there is no image file '%s'.",imageName.c_str());
 			return 0;
 		}
 
 		Engine *engine = GetScenario(L)->GetEngines()->GetEngine( engineName );
-		if(engine == NULL)
-		{
-			LogMsg(NOTICE, "Could not create model: there is no engine named '%s'.",imageName.c_str());
+		if(engine == NULL) {
+			LogMsg(WARN, "Could not create model: there is no engine named '%s'.",imageName.c_str());
 			return 0;
 		}
 
@@ -1176,24 +1174,24 @@ int Scenario_Lua::SetInfo(lua_State *L) {
 			if( NULL != GetScenario(L)->GetTechnologies()->GetTechnology(*i) ) {
 				 techs.push_back( GetScenario(L)->GetTechnologies()->GetTechnology(*i) );
 			} else {
-				LogMsg(NOTICE, "Could not create planet: there is no Technology Group '%s'.",(*i).c_str());
+				LogMsg(WARN, "Could not create planet: there is no Technology Group '%s'.",(*i).c_str());
 				return 0;
 			}
 		}
 
 		// Check that the String values actually match real hash keys.
-		if(Image::Get(imageName)==NULL){
-			 LogMsg(NOTICE, "Could not create planet: there is no Image at '%s'.",imageName.c_str());
+		if(Image::Get(imageName) == NULL){
+			 LogMsg(WARN, "Could not create planet: there is no Image at '%s'.",imageName.c_str());
 			 return 0;
 		}
 
 		if(GetScenario(L)->GetAlliances()->GetAlliance(allianceName)==NULL){
-			 LogMsg(NOTICE, "Could not create planet: there is no Alliance named '%s'.",allianceName.c_str());
+			 LogMsg(WARN, "Could not create planet: there is no Alliance named '%s'.",allianceName.c_str());
 			 return 0;
 		}
 
-		if(Image::Get(surfaceName)==NULL){
-			 LogMsg(NOTICE, "Could not create planet: there is no surface at '%s'.",surfaceName.c_str());
+		if(Image::Get(surfaceName) == NULL) {
+			 LogMsg(WARN, "Could not create planet: there is no surface at '%s'.",surfaceName.c_str());
 			 return 0;
 		}
 

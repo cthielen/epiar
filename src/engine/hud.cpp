@@ -98,7 +98,7 @@ StatusBar::StatusBar(string _title, int _width, QuadPosition _pos, string _updat
 	title[sizeof(title)-1] = '\0';
 	memset( name, '\0', sizeof(name) );
 	lua_updater = _updater;
-	LogMsg (DEBUG4, "Creating a new StatusBar '%s' : Name(%s) / Ratio( %f)\n",title, name, ratio);
+	LogMsg (DEBUG, "Creating a new StatusBar '%s' : Name(%s) / Ratio( %f)\n", title, name, ratio);
 	assert(pos >= 0);
 	assert(pos <= 4);
 

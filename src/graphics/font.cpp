@@ -40,7 +40,7 @@ Font* Font::Get( string filename ) {
 		if(value->Load(filename)){
 			Resource::Store(filename,(Resource*)value);
 		} else {
-			LogMsg(DEBUG1,"Couldn't Find Font '%s'",filename.c_str());
+			LogMsg(WARN, "Couldn't Find Font '%s'", filename.c_str());
 			delete value;
 			return NULL;
 		}
@@ -53,7 +53,7 @@ Font* Font::Get( string filename ) {
 Font* Font::GetSkin( string skinPath ) {
 	string path = SKIN( skinPath );
 	if( path == "" ) {
-		LogMsg(DEBUG1,"Couldn't Find Font '%s'",skinPath.c_str());
+		LogMsg(WARN, "Couldn't Find Font '%s'", skinPath.c_str());
 		assert(0);
 	}
 	return Get( path );
@@ -62,7 +62,7 @@ Font* Font::GetSkin( string skinPath ) {
 /**\brief Destroys the font.*/
 Font::~Font() {
 	delete (FTTextureFont*)this->font;
-	LogMsg(INFO, "Font '%s' freed.", fontname.c_str() );
+	LogMsg(DEBUG, "Font '%s' freed.", fontname.c_str() );
 }
 
 /**\brief Sets the new color and alpha value.
@@ -108,7 +108,7 @@ bool Font::Load( string filename ) {
 
 	font->FaceSize(12);
 
-	LogMsg(INFO, "Font '%s' loaded.\n", fontname.c_str() );
+	LogMsg(DEBUG, "Font '%s' loaded.\n", fontname.c_str() );
 
 	return( true );
 }

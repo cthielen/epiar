@@ -96,16 +96,15 @@
 
 /**\brief Ship constructor that initializes default values.
  */
-Ship::Ship()
-{
+Ship::Ship() {
 	model = NULL;
 	engine = NULL;
 	flareAnimation = NULL;
 
 	/* Initalize ship's condition */
-	status.damageBooster=1.0;
-	status.engineBooster=1.0;
-	status.shieldBooster=1.0;
+	status.damageBooster = 1.0;
+	status.engineBooster = 1.0;
+	status.shieldBooster = 1.0;
 	status.hullDamage = 0;
 	status.shieldDamage = 0;
 	status.lastWeaponChangeAt = 0;
@@ -118,14 +117,15 @@ Ship::Ship()
 	status.isRotatingRight = false;
 	status.isDisabled = false;
 	status.isJumping = false;
-	for(int a=0;a<max_ammo;a++){
-		ammo[a]=0;
+
+	for(int a = 0; a < max_ammo; a++) {
+		ammo[a] = 0;
 	}
 
 	shipStats = Outfit();
 
 	SetRadarColor( RED );
-	SetAngle( float( rand() %360 ) );
+	SetAngle( float( rand() % 360 ) );
 }
 
 /**\brief Ship Destructor
@@ -135,7 +135,6 @@ Ship::~Ship() {
 		delete flareAnimation;
 		flareAnimation=NULL;
 	}
-
 }
 
 /**\brief Sets the ship model.
@@ -143,8 +142,9 @@ Ship::~Ship() {
  * \return true if successful
  * \sa Model
  */
-bool Ship::SetModel( Model *model) {
+bool Ship::SetModel( Model *model ) {
 	assert( model );
+
 	if( model ) {
 		this->model = model;
 
@@ -152,7 +152,7 @@ bool Ship::SetModel( Model *model) {
 		this->weaponSlots = model->GetWeaponSlots();
 
 		// go ahead and build a weapon list from it
-		for(unsigned int i = 0; i < weaponSlots.size(); i++){
+		for(unsigned int i = 0; i < weaponSlots.size(); i++) {
 			this->AddToShipWeaponList( weaponSlots[i].content );
 		}
 
@@ -360,15 +360,22 @@ bool Ship::Jump( Coordinate position, bool jumpDrive ) {
 	status.isJumping = true;
 	status.jumpStartTime = Timer::GetTicks();
 	status.jumpDestination = position;
+
 	// TODO Start playing a sound
 	if (isPlayer()) {
 		Sound *aSound;
-		if (jumpDrive) aSound = Sound::Get("data/audio/effects/128590__corsica-s__transport-edit.wav");
-		else aSound = Sound::Get("data/audio/effects/55853__sergenious__teleport.wav");
-        aSound -> SetVolume(10);
-        aSound -> Play();
+		if (jumpDrive) {
+			aSound = Sound::Get("data/audio/effects/128590__corsica-s__transport-edit.wav");
+		} else {
+			aSound = Sound::Get("data/audio/effects/55853__sergenious__teleport.wav");
+		}
+
+		aSound -> SetVolume(10);
+ 		aSound -> Play();
 	}
+
 	SetAngle( (position - GetWorldPosition()).GetAngle() );
+
 	return true;
 }
 

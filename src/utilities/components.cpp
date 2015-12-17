@@ -206,7 +206,7 @@ bool Components::Load(string filename, bool fileoptional, bool skipcorrupt) {
 		return fileoptional;
 	}
 
-	LogMsg(INFO, "Loading '%s' for parsing.", filename.c_str() );
+	LogMsg(DEBUG, "Loading '%s' for parsing.", filename.c_str() );
 	
 	cur = xmlDocGetRootElement( doc );
 	
@@ -221,7 +221,7 @@ bool Components::Load(string filename, bool fileoptional, bool skipcorrupt) {
 		xmlFreeDoc( doc );
 		return false;
 	} else {
-		LogMsg(INFO, "'%s' file found and valid, parsing...", filename.c_str() );
+		LogMsg(DEBUG, "'%s' file found and valid, parsing...", filename.c_str() );
 	}
 	
 	// Get the version number
@@ -259,7 +259,8 @@ bool Components::Load(string filename, bool fileoptional, bool skipcorrupt) {
 	
 	xmlFreeDoc( doc );
 	
-	LogMsg(INFO, "Parsing of file '%s' done, found %d objects. File is version %d.%d.%d.", filename.c_str(), numObjs, versionMajor, versionMinor, versionMacro );
+	LogMsg(DEBUG, "Parsing of file '%s' done, found %d objects. File is version %d.%d.%d.", filename.c_str(), numObjs, versionMajor, versionMinor, versionMacro );
+
 	return success;
 }
 

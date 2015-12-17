@@ -230,7 +230,7 @@ bool Weapon::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		this->sound = Sound::Get( value );
 		if( this->sound == NULL) {
 			// Do not return false here - they may be disabling audio on purpose or audio may not be supported on their system
-			LogMsg(NOTICE, "Could not load sound file while searching component");
+			LogMsg(WARN, "Could not load sound file while searching component");
 		}
 	} else {
 		LogMsg(ERR, "Could not find child node sound while searching component");

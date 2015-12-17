@@ -62,18 +62,20 @@ Image::~Image() {
 /**\brief Lazy fetch an Image
  */
 Image* Image::Get( string filename ) {
-	Image* value;
+	Image* value = NULL;
 	value = static_cast<Image*>(Resource::Get(filename));
+
 	if( value == NULL ) {
 		value = new Image();
-		if(value->Load(filename)){
-			Resource::Store(filename,(Resource*)value);
+		if(value->Load(filename)) {
+			Resource::Store(filename, (Resource*)value);
 		} else {
-			LogMsg(DEBUG1,"Couldn't Find Image '%s'",filename.c_str());
+			LogMsg(DEBUG, "Couldn't Find Image '%s'", filename.c_str());
 			delete value;
 			return NULL;
 		}
 	}
+
 	return value;
 }
 

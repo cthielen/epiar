@@ -77,7 +77,7 @@ XMLFile::~XMLFile() {
 }
 
 bool XMLFile::Save() {
-	LogMsg(INFO, "Saving XML File '%s'.",filename.c_str() );
+	LogMsg(DEBUG, "Saving XML File '%s'.", filename.c_str() );
 
 	xmlChar *xmlbuff;
 	int buffersize;
@@ -88,12 +88,11 @@ bool XMLFile::Save() {
 	}
 	xmlFree(xmlbuff);
 
-	//xmlSaveFormatFileEnc( filename.c_str(), xmlPtr, "ISO-8859-1", 1);
 	return true;
 }
 
 bool XMLFile::Save( const string& filename ) {
-	LogMsg(INFO, "Saving XML File '%s'.",filename.c_str() );
+	LogMsg(DEBUG, "Saving XML File '%s'.", filename.c_str() );
 
 	xmlChar *xmlbuff;
 	int buffersize;
@@ -104,7 +103,6 @@ bool XMLFile::Save( const string& filename ) {
 	}
 	xmlFree(xmlbuff);
 
-	//xmlSaveFormatFileEnc( filename.c_str(), xmlPtr, "ISO-8859-1", 1);
 	return true;
 }
 
@@ -135,9 +133,11 @@ string XMLFile::Get( const string& path ) {
 }
 
 void XMLFile::Set( const string& path, const string& value ) {
-	LogMsg(INFO,"Replacing Option['%s'] from '%s' to '%s'",path.c_str(),Get(path).c_str(),value.c_str());
+	LogMsg(DEBUG, "Replacing Option['%s'] from '%s' to '%s'", path.c_str(), Get(path).c_str(), value.c_str());
+
 	xmlNodePtr p =  FindNode(path,true);
 	xmlNodeSetContent(p, BAD_CAST value.c_str() );
+
 	assert( value == Get(path));
 }
 
@@ -154,7 +154,7 @@ void XMLFile::Set( const string& path, const float value ) {
 	stringstream val_ss;
 	val_ss << value;
 	val_ss >> stringvalue;
-	LogMsg(INFO,"Replacing Option['%s'] from '%s' to '%s'",path.c_str(),Get(path).c_str(),stringvalue.c_str());
+	LogMsg(DEBUG, "Replacing Option['%s'] from '%s' to '%s'",path.c_str(),Get(path).c_str(),stringvalue.c_str());
 	xmlNodeSetContent(FindNode(path,true), BAD_CAST stringvalue.c_str() );
 	assert( stringvalue == Get(path));
 }
@@ -165,7 +165,7 @@ void XMLFile::Set( const string& path, const int value ) {
 	stringstream val_ss;
 	val_ss << value;
 	val_ss >> stringvalue;
-	LogMsg(INFO,"Replacing Option['%s'] from '%s' to '%s'",path.c_str(),Get(path).c_str(),stringvalue.c_str());
+	LogMsg(DEBUG, "Replacing Option['%s'] from '%s' to '%s'",path.c_str(),Get(path).c_str(),stringvalue.c_str());
 	xmlNodePtr p =  FindNode(path,true);
 	xmlNodeSetContent(p, BAD_CAST stringvalue.c_str() );
 	assert( stringvalue == Get(path));

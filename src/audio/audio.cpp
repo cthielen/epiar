@@ -34,19 +34,20 @@ bool Audio::Initialize( void ){
 		return false;				// Already initialized
 
 	if(SDL_Init(SDL_INIT_AUDIO) < 0) {
-		LogMsg(CRITICAL,"SDL could not initialize audio: %s", SDL_GetError());
+		LogMsg(ERR, "SDL could not initialize audio: %s", SDL_GetError());
 	}
 
 	if(Mix_OpenAudio(this->audio_rate,
 				this->audio_format,
 				this->audio_channels,
 				this->audio_buffers)){
-		LogMsg(CRITICAL,"Audio initialization failed!: %s", Mix_GetError());
+		LogMsg(ERR, "Audio initialization failed!: %s", Mix_GetError());
+
 		return false;
 	}
 
 	Mix_QuerySpec(&this->audio_rate, &this->audio_format, &this->audio_channels);
-	LogMsg(INFO,"SDL_mixer gave us rate %d, format %d, channels %d", this->audio_rate, this->audio_format, this->audio_channels);
+	LogMsg(DEBUG, "SDL_mixer gave us rate %d, format %d, channels %d", this->audio_rate, this->audio_format, this->audio_channels);
 
 #if defined(SDL_MIXER_MAJOR_VERSION) && (SDL_MIXER_MAJOR_VERSION>1) \
 	&& (SDL_MIXER_MINOR_VERSON>2) && (SDL_MIXER_PATCHLEVEL>=10)
@@ -71,7 +72,6 @@ bool Audio::Shutdown( void ){
 	/* This is the cleaning up part */
 	this->HaltAll();
 
-
 #if defined(SDL_MIXER_MAJOR_VERSION) && (SDL_MIXER_MAJOR_VERSION>1) \
 	&& (SDL_MIXER_MINOR_VERSON>2) && (SDL_MIXER_PATCHLEVEL>=10)
 	// Free every library loaded
@@ -87,10 +87,10 @@ bool Audio::Shutdown( void ){
 	Uint16 format;
 	ntimes = Mix_QuerySpec( &freq, &format, &chan );
 
-	LogMsg(INFO,"Audio Query: %d Frequencies, Format: %d, Channels: %s.", freq, format, (chan==2?"Stereo":"Mono"));
+	LogMsg(DEBUG, "Audio Query: %d Frequencies, Format: %d, Channels: %s.", freq, format, (chan==2?"Stereo":"Mono"));
 
 	if(ntimes != 1 ) {
-		LogMsg(WARN,"Audio was initialized %d times.", ntimes);
+		LogMsg(WARN, "Audio was initialized %d times.", ntimes);
 	}
 
 	// Close only if open

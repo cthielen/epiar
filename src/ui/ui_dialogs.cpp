@@ -60,7 +60,7 @@ bool Dialogs::Confirm( const string message )
 
 	UI::ModalDialog( win );
 
-	LogMsg(DEBUG2,"Player has chosen: %s", (value ? "OK" : "Cancel"));
+	LogMsg(DEBUG, "Player has chosen: %s", (value ? "OK" : "Cancel"));
 
 	return value;
 }
