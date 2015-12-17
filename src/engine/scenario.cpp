@@ -533,9 +533,11 @@ bool Scenario::Parse( void ) {
 	}
 
 	// Check the Music
-	bgmusic = Song::Get( Get("music") );
-	if( bgmusic == NULL ) {
-		LogMsg(WARN, "There was an error loading music from '%s'.", Get("music").c_str() );
+	if( Get("music").length() > 0 ) {
+		bgmusic = Song::Get( Get("music") );
+		if( bgmusic == NULL ) {
+			LogMsg(WARN, "There was an error loading music from '%s'.", Get("music").c_str() );
+		}
 	}
 
 	// Check the Player Defaults

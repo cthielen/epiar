@@ -18,7 +18,7 @@
     <fireDelay>200</fireDelay>
     <lifetime>500</lifetime>
     <tracking>0.0000</tracking>
-    <sound>data/audio/Weapons/rlaunch.ogg</sound>
+    <sound>data/audio/weapons/rlaunch.ogg</sound>
     <msrp>2000</msrp>
   </weapon>
   <weapon>
@@ -35,7 +35,7 @@
     <fireDelay>1000</fireDelay>
     <lifetime>550</lifetime>
     <tracking>0.0000</tracking>
-    <sound>data/audio/Weapons/slimeball.ogg</sound>
+    <sound>data/audio/weapons/slimeball.ogg</sound>
     <msrp>-31072</msrp>
   </weapon>
   <weapon>
@@ -52,7 +52,7 @@
     <fireDelay>200</fireDelay>
     <lifetime>1000</lifetime>
     <tracking>0.0000</tracking>
-    <sound>data/audio/Weapons/iceball.ogg</sound>
+    <sound>data/audio/weapons/iceball.ogg</sound>
     <msrp>2000</msrp>
   </weapon>
   <weapon>
@@ -69,7 +69,7 @@
     <fireDelay>1000</fireDelay>
     <lifetime>6000</lifetime>
     <tracking>1.0000</tracking>
-    <sound>data/audio/Weapons/flaunch.ogg</sound>
+    <sound>data/audio/weapons/flaunch.ogg</sound>
     <msrp>3000</msrp>
   </weapon>
   <weapon>
@@ -86,7 +86,7 @@
     <fireDelay>1000</fireDelay>
     <lifetime>60000</lifetime>
     <tracking>0.0000</tracking>
-    <sound>data/audio/Weapons/rlaunch.ogg</sound>
+    <sound>data/audio/weapons/rlaunch.ogg</sound>
     <msrp>2000</msrp>
   </weapon>
   <weapon>
@@ -103,7 +103,7 @@
     <fireDelay>350</fireDelay>
     <lifetime>1500</lifetime>
     <tracking>0.0000</tracking>
-    <sound>data/audio/Weapons/iceball.ogg</sound>
+    <sound>data/audio/weapons/iceball.ogg</sound>
     <msrp>1000</msrp>
   </weapon>
   <weapon>
@@ -120,7 +120,7 @@
     <fireDelay>500</fireDelay>
     <lifetime>3000</lifetime>
     <tracking>0.0500</tracking>
-    <sound>data/audio/Weapons/slimeball.ogg</sound>
+    <sound>data/audio/weapons/slimeball.ogg</sound>
     <msrp>10000</msrp>
   </weapon>
   <weapon>
@@ -137,7 +137,7 @@
     <fireDelay>200</fireDelay>
     <lifetime>1000</lifetime>
     <tracking>0.0100</tracking>
-    <sound>data/audio/Weapons/slimeball.ogg</sound>
+    <sound>data/audio/weapons/slimeball.ogg</sound>
     <msrp>3000</msrp>
   </weapon>
   <weapon>
@@ -154,7 +154,7 @@
     <fireDelay>300</fireDelay>
     <lifetime>1000</lifetime>
     <tracking>0.0100</tracking>
-    <sound>data/audio/Weapons/iceball.ogg</sound>
+    <sound>data/audio/weapons/iceball.ogg</sound>
     <msrp>5000</msrp>
   </weapon>
   <weapon>
@@ -171,7 +171,7 @@
     <fireDelay>1000</fireDelay>
     <lifetime>30000</lifetime>
     <tracking>0.0200</tracking>
-    <sound>data/audio/Weapons/flaunch.ogg</sound>
+    <sound>data/audio/weapons/flaunch.ogg</sound>
     <msrp>14000</msrp>
   </weapon>
   <weapon>
@@ -188,7 +188,7 @@
     <fireDelay>200</fireDelay>
     <lifetime>500</lifetime>
     <tracking>0.0000</tracking>
-    <sound>data/audio/Weapons/rlaunch.ogg</sound>
+    <sound>data/audio/weapons/rlaunch.ogg</sound>
     <msrp>3000</msrp>
   </weapon>
 </weapons>

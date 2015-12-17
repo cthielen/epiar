@@ -18,6 +18,7 @@
 	<sectors>sectors.xml</sectors>
 
 	<music></music>
+
 	<defaultPlayer>
 		<model>Shuttle</model>
 		<engine>Altaire Corp. NM66 Sublight Thrusters</engine>
