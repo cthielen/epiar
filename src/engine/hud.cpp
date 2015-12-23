@@ -1,7 +1,7 @@
 /**\file			hud.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, July 23, 2006
- * \date			Modified: Saturday, March 29, 2014
+ * \date			Modified: Wednesday, December 23, 2015
  * \brief			Handles the Heads-Up-Display
  * \details
  */
@@ -262,16 +262,20 @@ void Hud::Close( void ) {
  */
 void Hud::Update( lua_State *L ) {
 	int j;
-	list<AlertMessage> toDelete;
 	list<AlertMessage>::iterator i;
-	for( i= AlertMessages.begin(), j=1; i != AlertMessages.end(); ++i,++j ){
-		if(MessageExpired(*i))
-			toDelete.push_back(*i);
+
+	i = AlertMessages.begin();
+	while( i != AlertMessages.end() ) {
+		bool messageExpired = MessageExpired(*i);
+
+		if(messageExpired) {
+			AlertMessages.erase(i++);
+		} else {
+			++i;
+		}
 	}
-	for( i= toDelete.begin(); i != toDelete.end(); ++i ){
-		AlertMessages.remove(*i);
-	}
-	for( j = 0; j< MAX_STATUS_BARS; j++){
+
+	for( j = 0; j < MAX_STATUS_BARS; j++) {
 		if( Bars[j] != NULL ) {
 			Bars[j]->Update( L );
 		}
@@ -296,7 +300,7 @@ void Hud::Draw( int flags, float fps, Camera* camera, SpriteManager* sprites ) {
 void Hud::HandleInput( list<InputEvent> & events, Camera* camera, SpriteManager* sprites ) {
 	list<InputEvent>::iterator i;
 
-	for(i= events.begin(); i != events.end() ; ++i ) {
+	for(i = events.begin(); i != events.end() ; ++i ) {
 		// Mouse Clicks
 		if( i->type == MOUSE && i->mstate==MOUSELDOWN) {
 			if( (i->mx > Video::GetWidth() - 129)

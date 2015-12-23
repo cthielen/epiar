@@ -1,7 +1,7 @@
 /**\file			scenario.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Thursday, December 3, 2015
+ * \date			Modified: Wednesday, December 23, 2015
  * \brief			Contains the main game loop
  * \details
  */
@@ -251,7 +251,7 @@ bool Scenario::Setup() {
 	for( list<string>::iterator i = planetList.begin(); i != planetList.end(); ++i ) {
 		Planet *p = (Planet *)planets->Get(*i);
 		if(p == NULL) {
-			LogMsg(ERR, "Could not find planet '%s' from current sector to scene.", *i);
+			LogMsg(ERR, "Could not find planet '%s' from current sector to scene.", (*i).c_str());
 			return false;
 		}
 
@@ -286,7 +286,7 @@ Scenario::~Scenario() {
 	delete calendar; calendar = NULL;
 
 	bgmusic = NULL;
-	
+
 	folderpath = "";
 
 	currentFPS = 0.0f;
