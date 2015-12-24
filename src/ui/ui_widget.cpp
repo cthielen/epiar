@@ -126,7 +126,7 @@ Widget* Widget::RegisterAction( action_type type, Action* action )
 		delete actions[type];
 	}
 	actions[type] = action;
-	
+
 	return this;
 }
 
@@ -323,7 +323,7 @@ bool Widget::KeyboardLeave( void ){
 
 /**\brief Generic keyboard key press function.
  */
-bool Widget::KeyPress( SDLKey key ) {
+bool Widget::KeyPress( SDL_Keycode key ) {
 	LogMsg(DEBUG, "Key press detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	return false;
@@ -353,7 +353,7 @@ xmlNodePtr Widget::ToNode() {
 
 	if(hidden) xmlSetProp( thisNode, BAD_CAST "hidden", BAD_CAST "true" );
 	if(disabled) xmlSetProp( thisNode, BAD_CAST "disabled", BAD_CAST "true" );
-	
+
 	return thisNode;
 }
 

@@ -1,11 +1,10 @@
 /**\file			video.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Saturday, January 5, 2008
+ * \date			Modified: Thursday, December 24, 2015
  * \brief
  * \details
  */
-
 
 #ifndef __H_VIDEO__
 #define __H_VIDEO__
@@ -15,6 +14,7 @@
 #define GL_BGRA  GL_RGBA
 #endif
 
+#include "graphics/color.h"
 #include "graphics/image.h"
 #include "includes.h"
 #include "utilities/coordinate.h"
@@ -22,39 +22,10 @@
 
 #define EPIAR_VIDEO "Video"
 
-#define BLACK     ( Color(0x00,0x00,0x00) )
-#define WHITE     ( Color(0xFF,0xFF,0xFF) )
-#define RED       ( Color(0xFF,0x00,0x00) )
-#define ORANGE    ( Color(0xFF,0x7F,0x00) )
-#define YELLOW    ( Color(0xFF,0xFF,0x00) )
-#define GREEN     ( Color(0x00,0xFF,0x00) )
-#define BLUE      ( Color(0x00,0x00,0xFF) )
-#define LIGHTBLUE ( Color(0x00,0x88,0xFF) )
-#define PURPLE    ( Color(0x80,0x00,0x80) )
-#define GREY      ( Color(0x80,0x80,0x80) )
-#define LIGHTGREY ( Color(0xC0,0xC0,0xC0) )
-#define DARKGREY  ( Color(0x40,0x40,0x40) )
-#define GRAY      GREY
-#define GOLD      ( Color(0xFF,0xD7,0x80) )
-
-class Color {
-	public:
-	float r, g, b;
-
-	Color();
-	Color& operator=(Color other);
-
-	Color( int r, int g, int b );
-	Color( float r, float g, float b );
-	Color( string str );
-
-	Color operator*(float delta);
-};
-
 class Rect {
 	public:
 		float x, y, w, h;
-		
+
 		Rect() { x = y = w = h = 0.0f; }
 		Rect( float x, float y, float w, float h ) { this->x = x; this->y = y; this->w = w; this->h = h; }
 		Rect( int x, int y, int w, int h ) { this->x = TO_FLOAT(x); this->y = TO_FLOAT(y); this->w = TO_FLOAT(w); this->h = TO_FLOAT(h); }
@@ -64,7 +35,7 @@ class Video {
  	public:
 		static bool Initialize( void );
 		static bool Shutdown( void );
-		
+
   		static bool SetWindow( int w, int h, int bpp, bool fullscreen );
 
   		static void RegisterVideo(lua_State *L);
@@ -103,7 +74,7 @@ class Video {
 
 		static void SetCropRect( int x, int y, int w, int h );
 		static void UnsetCropRect( void );
-		
+
 		static void Blur( void );
 
 		static Image *CaptureScreen( void );
@@ -117,8 +88,8 @@ class Video {
   		static int w, h; // width/height of screen
 		static int w2, h2; // width/height divided by 2
 		static stack<Rect> cropRects;
-		static SDL_Surface *screen; // pointer to main video surface
+		static SDL_Window *window;
+		static SDL_Renderer *renderer;
 };
 
 #endif // __H_VIDEO__
-

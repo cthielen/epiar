@@ -26,6 +26,7 @@ epiar_SOURCES = src/main.cpp \
                 src/engine/technologies.cpp \
                 src/engine/weapons.cpp \
                 src/graphics/animation.cpp \
+				src/graphics/color.cpp \
                 src/graphics/font.cpp \
                 src/graphics/image.cpp \
                 src/graphics/video.cpp \
@@ -91,4 +92,3 @@ include data/icons/Makefile.am
 include data/scenario/Makefile.am
 
 AM_CPPFLAGS = -DDATADIR="\"$(datadir)/epiar\""
-

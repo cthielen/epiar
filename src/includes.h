@@ -2,7 +2,7 @@
  * \author		Christopher Thielen
  * \author		and others
  * \date		Saturday, November 21, 2009
- * \date		Saturday, November 21, 2009
+ * \date		Thursday, December 24, 2015
  * \brief		Contains common system libraries.
  * \details
  */
@@ -28,6 +28,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <list>
 #include <map>
@@ -41,8 +42,7 @@
 #include <stdlib.h>
 
 // Library includes
-#include "SDL.h"
-#include "SDL_thread.h"
+#include <SDL2/SDL.h>
 #include "SDL_image.h"
 #include "SDL_mixer.h"
 #include <libxml/xmlmemory.h>
@@ -56,7 +56,6 @@
 #else
 #include <GL/gl.h>
 #include <GL/glu.h>
-//#include "GL/glext.h"
 #endif
 
 // Local includes

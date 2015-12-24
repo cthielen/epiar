@@ -49,7 +49,7 @@ Container::~Container( void ) {
 	lmouseDown = NULL;
 	mmouseDown = NULL;
 	rmouseDown = NULL;
-	
+
 	vscrollbar = NULL;
 	formbutton = NULL;
 }
@@ -223,7 +223,7 @@ Widget *Container::DetermineMouseFocus( int relx, int rely ) {
  */
 bool Container::IsAttached( Widget* possible ) {
 	list<Widget *>::iterator i;
-	
+
 	// Check the direct children.
 	for( i = children.begin(); i != children.end(); ++i ) {
 		if( (*i) == possible ) {
@@ -231,7 +231,7 @@ bool Container::IsAttached( Widget* possible ) {
 			return true;
 		}
 	}
-	
+
 	// Check the grandchildren
 	for( i = children.begin(); i != children.end(); ++i ) {
 		if( (*i)->GetMask() & WIDGET_CONTAINER ) {
@@ -349,7 +349,7 @@ Widget *Container::Search( string full_query ) {
 	} else {
 		LogMsg(WARN, "Query '%s' did not begin with a '/'", full_query.c_str() );
 	}
-	
+
 	// Search all the tokens
 	//LogMsg(INFO, "QUERY: '%s'", full_query.c_str() );
 	for(; iter != tokenized.end(); ++iter ) {
@@ -405,7 +405,7 @@ Widget *Container::Search( string full_query ) {
 						query.flags = 0;
 						break;
 					}
-					
+
 					if( found == false ) {
 						LogMsg(INFO, "The query '%s' failed to find a widget at section %d", full_query.c_str(), section );
 						return NULL;
@@ -611,16 +611,16 @@ Widget *Container::PrevChild( Widget* widget, int mask) {
  */
 void Container::Draw( int relx, int rely ) {
 	int x, y;
-	
+
 	x = GetX() + relx + InnerRect.left;
 	y = GetY() + rely + InnerRect.top;
 
 	// Crop to prevent child widgets from spilling
 	Video::SetCropRect(x, y, this->w - InnerRect.right - InnerRect.left, this->h - InnerRect.bottom - InnerRect.top);
-	
+
 	// Draw any children
 	list<Widget *>::iterator i;
-	
+
 	for( i = children.begin(); i != children.end(); ++i ) {
 		// Skip scrollbars
 		if ( (*i) == this->vscrollbar ){
@@ -634,9 +634,9 @@ void Container::Draw( int relx, int rely ) {
 
 		(*i)->Draw( x, y - yscroll );
 	}
-	
+
 	Video::UnsetCropRect();
-	
+
 	Widget::Draw(relx, rely);
 }
 
@@ -711,7 +711,7 @@ bool Container::MouseLUp( int xi, int yi ){
 		}
 	}
 	//LogMsg(UIINPUT,"Mouse Left up detect in %s.",this->name.c_str());
-	
+
 	return this->mouseHandled;
 }
 
@@ -737,7 +737,7 @@ bool Container::MouseLDown( int xi, int yi ) {
 	}
 
 	// We clicked on a widget
-	
+
 	if( event_on == vscrollbar ) {
 		event_on->MouseLDown( xr, yr );
 	} else {
@@ -958,14 +958,14 @@ bool Container::KeyboardLeave( void ){
 
 /**\brief Generic keyboard key press function.
  */
-bool Container::KeyPress( SDLKey key ) {
+bool Container::KeyPress( SDL_Keycode key ) {
 	Widget *next;
 	if( keyboardFocus ) {
-		
+
 		// If this key is a TAB and the keyboard is currently focused on a Textbox,
 		// then move to the next textbox
 		if( (key == SDLK_TAB) && ( keyboardFocus->GetMask() & (WIDGET_TEXTBOX) ) ) {
-			
+
 			next = NextChild( keyboardFocus, WIDGET_TEXTBOX );
 			if( next == NULL ) {
 				// Wrap around to the top

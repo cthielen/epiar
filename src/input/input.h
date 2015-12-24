@@ -1,7 +1,7 @@
 /**\file			input.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 4, 2006
- * \date			Modified: Thursday, December 3, 2015
+ * \date			Modified: Thursday, December 24, 2015
  * \brief
  * \details
  */
@@ -41,7 +41,7 @@ class InputEvent {
 	public:
 		friend bool operator==(const InputEvent& e1, const InputEvent& e2 ) {
 			if( e1.type != e2.type ) return( false );
-			
+
 			if( e1.type == KEY ) {
 				if( e1.key != e2.key ) return( false );
 				if( e1.kstate != e2.kstate ) return( false );
@@ -50,7 +50,7 @@ class InputEvent {
 				if( e1.mx != e2.mx ) return( false );
 				if( e1.my != e2.my ) return( false );
 			}
-			
+
 			return( true );
 		}
 
@@ -67,14 +67,9 @@ class InputEvent {
 			return false;
 		}
 
-		InputEvent( eventType type, keyState kstate, SDLKey key ) {
+		InputEvent( eventType type, keyState kstate, SDL_Keycode key ) {
 			this->type = type;
 			this->key = key;
-			this->kstate = kstate;
-		}
-		InputEvent( eventType type, keyState kstate, int key ) {
-			this->type = type;
-			this->key = (SDLKey)key;
 			this->kstate = kstate;
 		}
 		InputEvent( eventType type, mouseState mstate, int mx, int my ) {
@@ -85,7 +80,7 @@ class InputEvent {
 		}
 
 		eventType type; ///< keyboard or mouse event?
-		SDLKey key; ///< which key?
+		SDL_Keycode key; ///< which key?
 		keyState kstate; ///< just went up (fires once), just went down (fires once), or is pressed down currently (fires many times)
 		mouseState mstate; ///< Mouse Movement or button clicks
 		int mx, my; //< mouse coordinates
@@ -105,8 +100,8 @@ class Input {
 		static bool HandleSpecificEvent( list<InputEvent> & events, InputEvent key );
 		static void PrintEvents( string title, list<InputEvent> & events );
 
-		static bool keyIsHeld(SDLKey key);
-	
+		static bool keyIsHeld(SDL_Keycode key);
+
 	private:
 		static mouseState _CheckMouseState( Uint8 button, bool up );
 		static void _UpdateHandleSignal( SDL_Event *event );
@@ -116,9 +111,9 @@ class Input {
 		static void _UpdateHandleMouseUp( SDL_Event *event );
 		static void _UpdateHandleMouseMotion( SDL_Event *event );
 
-		static void PushTypeEvent( list<InputEvent> & events, SDLKey key );
+		static void PushTypeEvent( list<InputEvent> & events, SDL_Keycode key );
 
-		static bool heldKeys[SDLK_LAST]; // set to true as long as a key is held down
+		static std::map<SDL_Keycode, bool> heldKeys; // set to true as long as a key is held down
 		static list<InputEvent> events; // all the events for the loop. we pass this list to various sub-systems
 		static map<InputEvent,string> eventMappings; // Lua callbacks mapped to a key
 		static Uint32 lastMouseMove;

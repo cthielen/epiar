@@ -1,7 +1,7 @@
 /**\file			image.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Saturday, January 31, 2009
- * \date			Modified: Saturday, November 21, 2009
+ * \date			Modified: Thursday, December 24, 2015
  * \brief			Image loading and display
  * \details
  * See this note section in image.h for an important clarification about the handling
@@ -174,7 +174,7 @@ void Image::_Draw( int x, int y, float r, float g, float b, float alpha, float a
  	glEnable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 
-	// calculate the coordinates of the quad	
+	// calculate the coordinates of the quad
 	// avoid trig when you can
 	if( angle != 0.f ) {
 		Trig *trig = Trig::Instance();
@@ -206,7 +206,7 @@ void Image::_Draw( int x, int y, float r, float g, float b, float alpha, float a
 	glBindTexture( GL_TEXTURE_2D, image );
 
 	//glPushMatrix();
-	
+
 	// the deltas are the differences needed in width, e.g. a resize_ratio_w of 1.1 would produce a value
 	// equal to the original width of the image but adding 10%. 0.9 would then be 10% smaller, etc.
 	float resize_w_delta = (w * resize_ratio_w) - w;
@@ -413,7 +413,7 @@ void Image::DrawTiled( int x, int y, int fill_w, int fill_h, float alpha ) {
 SDL_Surface *Image::ExpandCanvas( SDL_Surface *s, int w, int h ) {
 	SDL_Surface *expanded = NULL;
 	SDL_Surface *original = s;
-	
+
 	// create the expanded surface
 	expanded = SDL_CreateRGBSurface(original->flags, w, h, original->format->BitsPerPixel,
 	                                original->format->Rmask, original->format->Gmask, original->format->Bmask,
@@ -421,7 +421,8 @@ SDL_Surface *Image::ExpandCanvas( SDL_Surface *s, int w, int h ) {
 	assert( expanded );
 
 	// make sure alpha values are copied properly
-	SDL_SetAlpha( original, 0, SDL_ALPHA_OPAQUE );
+	//SDL_SetAlpha( original, 0, SDL_ALPHA_OPAQUE );
+	SDL_SetSurfaceAlphaMod( original, 0 );
 
 	// copy the old image to the upper-left corner of the expanded canvas
 	SDL_Rect area;
@@ -430,14 +431,14 @@ SDL_Surface *Image::ExpandCanvas( SDL_Surface *s, int w, int h ) {
 	area.w = original->w;
 	area.h = original->h;
 	SDL_BlitSurface( original, &area, expanded, &area );
-	
+
 	// re-calculate the texture coordinates given to opengl during drawing (u/v coordinates)
 	scale_w = (float)original->w / (float)w;
 	scale_h = (float)original->h / (float)h;
-	
+
 	// update the callee's pointer to the new image and free the old one
 	SDL_FreeSurface( original );
-	
+
 	return( expanded );
 }
 

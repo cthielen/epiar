@@ -46,14 +46,14 @@ Textbox::Textbox( int x, int y, int w, int rows, string text, string label ) {
 	this->w = w;
 	this->h = rows * rowHeight;
 	this->name = label;
-	
+
 	this->text = text;
 }
 
 /**\brief Draws the textbox.*/
 void Textbox::Draw( int relx, int rely ) {
 	int x, y;
-	
+
 	x = GetX() + relx;
 	y = GetY() + rely;
 
@@ -64,7 +64,7 @@ void Textbox::Draw( int relx, int rely ) {
 	// draw the text
 	Video::SetCropRect(x, y, this->w, this->h);
 	int tw = font->Render( x + rowPad + 3, y + rowPad - 3, text );
-	
+
 	// draw the cursor (if it has focus and we're on an even second (easy blink every second))
 	if( IsActive() && ((SDL_GetTicks() % 500) < 300) && !this->disabled ) {
 		Video::DrawRect( x + 4 + tw, y + 3, 1, h - 6, foreground );
@@ -74,7 +74,7 @@ void Textbox::Draw( int relx, int rely ) {
 	Widget::Draw(relx,rely);
 }
 
-bool Textbox::KeyPress( SDLKey key ) {
+bool Textbox::KeyPress( SDL_Keycode key ) {
 	string keyname = SDL_GetKeyName( key );
 	stringstream key_ss;
 	string key_s;
@@ -102,10 +102,10 @@ bool Textbox::KeyPress( SDLKey key ) {
 	default:
 		break;
 	}
-	
+
 	key_ss << (char)key;
 	key_ss >> key_s;
-	
+
 	if(keyname == "backspace") {
 		int len = text.length() - 1;
 		if(len < 0) len = 0;
@@ -115,9 +115,8 @@ bool Textbox::KeyPress( SDLKey key ) {
 	} else {
 		text.append( key_s );
 	}
-	
+
 	return true;
 }
 
 /** @} */
-

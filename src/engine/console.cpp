@@ -1,7 +1,7 @@
 /**\file			console.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Saturday, February 21, 2009
- * \date			Modified: Sunday, November 22, 2009
+ * \date			Modified: Thursday, December 24, 2015
  * \brief			Handles the Heads-Up-Display
  * \details
  */
@@ -61,20 +61,18 @@ void Console::HandleInput( list<InputEvent> & events ) {
 						case SDLK_ESCAPE:
 							enabled = false;
 						break;
-						
+
 						// Ignore Modifiers
 						case SDLK_LSHIFT:
 						case SDLK_RSHIFT:
-						case SDLK_RMETA:
-						case SDLK_LMETA:
+						case SDLK_RGUI:
+						case SDLK_LGUI:
 						case SDLK_RALT:
 						case SDLK_LALT:
 						case SDLK_RCTRL:
 						case SDLK_LCTRL:
-						case SDLK_RSUPER:
-						case SDLK_LSUPER:
 						break;
-						
+
 						// Cursor Movements
 						case SDLK_LEFT:
 							cursor = cursor!=0 ? cursor-1 : cursor;
@@ -107,7 +105,7 @@ void Console::HandleInput( list<InputEvent> & events ) {
 						// Remove it from the queue
 						i = events.erase( i );
 						skipIncrement = true;
-	
+
 					}
 				}
 			break;

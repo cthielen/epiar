@@ -16,7 +16,7 @@
 class Textarea : public Widget {
 	public:
 		Textarea( int _x, int _y, int _w, int _h, string text = "", string label = "");
-		
+
 		void Draw( int relx, int rely = 0 );
 
 		string GetType( void ) {return string("Textarea");}
@@ -26,7 +26,7 @@ class Textarea : public Widget {
 		void SetText(string s) { lines.SetText(s); }
 
 	protected:
-		bool KeyPress( SDLKey key );
+		bool KeyPress( SDL_Keycode key );
 
 	private:
 		Text lines;

@@ -68,7 +68,7 @@ class Container : public Widget {
 		virtual bool MouseWDown( int xi, int yi );
 		virtual bool KeyboardEnter( void );
 		virtual bool KeyboardLeave( void );
-		virtual bool KeyPress( SDLKey key );
+		virtual bool KeyPress( SDL_Keycode key );
 
 		list<Widget *> children;
 		// If mouse input is handled - We default to true

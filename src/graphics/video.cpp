@@ -1,7 +1,7 @@
 /**\file			video.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Wednesday, December 2, 2015
+ * \date			Modified: Thursday, December 24, 2015
  * \brief
  * \details
  */
@@ -13,108 +13,6 @@
 #include "utilities/log.h"
 #include "utilities/xml.h"
 #include "utilities/trig.h"
-
-/**\class Color
- * \brief RGB coloring
- * \var Color::r
- *  \brief Red component
- * \var Color::g
- *  \brief Green component
- * \var Color::b
- *  \brief Blue component
- */
-
-/** \brief Default Color Constructor
- *  \details Defaults to White
- */
-Color::Color()
-{
-	r = g = b = 1.0f;
-}
-
-/** \brief Color Assignment Opererator
- */
-Color& Color::operator=(Color other)
-{
-	r = other.r;
-	g = other.g;
-	b = other.b;
-	return *this;
-}
-
-/** \brief Color Constructor from Integers
- *  \param[in] red Red percentage as int between 0x00 and 0xFF.
- *  \param[in] green Green percentage as int between 0x00 and 0xFF.
- *  \param[in] blue Blue percentage as int between 0x00 and 0xFF.
- */
-Color::Color( int red, int green, int blue )
-{
-	r = static_cast<float> (red   / 255.0f);
-	g = static_cast<float> (green / 255.0f);
-	b = static_cast<float> (blue  / 255.0f);
-}
-
-/** \brief Color Constructor from Floats
- *  \param[in] red Red percentage as int between 0.0f and 1.0f.
- *  \param[in] green Green percentage as int between 0.0f and 1.0f.
- *  \param[in] blue Blue percentage as int between 0.0f and 1.0f.
- */
-Color::Color( float red, float green, float blue )
-{
-	r = red;
-	g = green;
-	b = blue;
-}
-
-/** \brief Color Constructor from Hex String
- *  \param[in] str A string of the form RRGGBB where RR, GG, and BB are the
- *  hex values of the Red, Green and Blue components of the color.
- *  This can be optionally preceeded by "0x" or "0X".
- *
- *  \example "0xFF0000" is Red
- */
-Color::Color( string str )
-{
-	// string must be in hex format.
-	int n;
-	stringstream ss;
-	ss << std::hex << str;
-	ss >> n;
-
-	r = ((n >> 16) & 0xFF ) / 255.0f;
-	g = ((n >>  8) & 0xFF ) / 255.0f;
-	b = ((n      ) & 0xFF ) / 255.0f;
-}
-
-/** \brief Enforce that a float is between 0.0 and 1.0
- *  \todo This should be moved to a math utilities file.
- */
-inline float enforce_ratio(float x)
-{
-	if( x < 0.0f )
-		return 0.0f;
-	if( x > 1.0f )
-		return 1.0f;
-	return x;
-}
-
-/** \brief Color Multiplier
- *	\note Colors can't be darker than black or brighter than white.  This is enforced.
- */
-Color Color::operator*(float ratio)
-{
-	Color out = *this;
-
-	out.r *= ratio;
-	out.g *= ratio;
-	out.b *= ratio;
-
-	out.r = enforce_ratio( out.r );
-	out.g = enforce_ratio( out.g );
-	out.b = enforce_ratio( out.b );
-
-	return out;
-}
 
 /**\class Rect
  * \brief Wrapper for a rectangle.
@@ -145,52 +43,53 @@ int Video::h = 0;
 int Video::w2 = 0;
 int Video::h2 = 0;
 stack<Rect> Video::cropRects;
-SDL_Surface *Video::screen = NULL;
+SDL_Window *window = NULL;
+SDL_Renderer *renderer = NULL;
 
 /**\brief Initializes the Video display.
  */
 bool Video::Initialize( void ) {
-	char buf[32] = {0};
-	const SDL_VideoInfo *videoInfo;
-	
+	//char buf[32] = {0};
+	//const SDL_VideoInfo *videoInfo;
+
 	// initialize SDL
 	if( SDL_Init( SDL_INIT_VIDEO ) != 0 ) {
 		LogMsg(ERR, "Could not initialize SDL: %s", SDL_GetError() );
 		return( false );
 	} else {
-		LogMsg(DEBUG, "SDL video initialized using %s driver.", SDL_VideoDriverName( buf, 31 ) );
+		LogMsg(DEBUG, "SDL video initialized using FIXME driver."); //, SDL_VideoDriverName( buf, 31 ) );
 	}
 
 	atexit( SDL_Quit );
-	
-	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
-	videoInfo = SDL_GetVideoInfo();
+	//SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+
+	//videoInfo = SDL_GetVideoInfo();
 
 	int w = OPTION( int, "options/video/w" );
 	int h = OPTION( int, "options/video/h" );
 	bool fullscreen = OPTION( bool, "options/video/fullscreen" );
 
-	// Sanitize Width and Height
-	// TODO: Surely 0 is invalid, but what's the lower limit?
-	if( (w <= 0) || (w > videoInfo->current_w) ) { w = videoInfo->current_w; }
-	if( (h <= 0) || (h > videoInfo->current_w) ) { h = videoInfo->current_h; }
-
-	if( OPTION( int, "options/video/fullscreen" ) ) {
-		// fullscreen set, use native resolution
-		w = videoInfo->current_w;
-		h = videoInfo->current_h;
-	}
+	// // Sanitize Width and Height
+	// // TODO: Surely 0 is invalid, but what's the lower limit?
+	// if( (w <= 0) || (w > videoInfo->current_w) ) { w = videoInfo->current_w; }
+	// if( (h <= 0) || (h > videoInfo->current_w) ) { h = videoInfo->current_h; }
+	//
+	// if( OPTION( int, "options/video/fullscreen" ) ) {
+	// 	// fullscreen set, use native resolution
+	// 	w = videoInfo->current_w;
+	// 	h = videoInfo->current_h;
+	// }
 
 	Video::SetWindow( w, h, OPTION( int, "options/video/bpp"), fullscreen );
-	
+
 	return( true );
 }
 
 /**\brief Shuts down the Video display.
  */
 bool Video::Shutdown( void ) {
-	
+
 	EnableMouse();
 
 	return( true );
@@ -199,52 +98,52 @@ bool Video::Shutdown( void ) {
 /**\brief Sets the window properties.
  */
 bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
-	const SDL_VideoInfo *videoInfo; // handle to SDL video information
-	Uint32 videoFlags = 0; // bitmask to pass to SDL_SetVideoMode()
-	int ret = 0;
+	//const SDL_VideoInfo *videoInfo; // handle to SDL video information
+	//Uint32 videoFlags = 0; // bitmask to pass to SDL_SetVideoMode()
+	//int ret = 0;
 
 	// get information about the video card (namely, does it support
 	// hardware surfaces?)
-	videoInfo = SDL_GetVideoInfo();
-	if(! videoInfo )
-		LogMsg(WARN, "SDL_GetVideoInfo() returned NULL" );
+	// videoInfo = SDL_GetVideoInfo();
+	// if(! videoInfo )
+	// 	LogMsg(WARN, "SDL_GetVideoInfo() returned NULL" );
 
-	// enable OpenGL and various other options
-	videoFlags = SDL_OPENGL;
-	videoFlags |= SDL_GL_DOUBLEBUFFER;
-	videoFlags |= SDL_HWPALETTE;
+	// // enable OpenGL and various other options
+	// videoFlags = SDL_OPENGL;
+	// videoFlags |= SDL_GL_DOUBLEBUFFER;
+	// videoFlags |= SDL_HWPALETTE;
 
 	// enable fullscreen if set (see main.cpp, parseOptions)
-	if( fullscreen ) videoFlags |= SDL_FULLSCREEN;
+	//if( fullscreen ) videoFlags |= SDL_FULLSCREEN;
 
-	// using SDL given information, use hardware surfaces if supported by
-	// the video card
-	if( videoInfo->hw_available ) {
-		videoFlags |= SDL_HWSURFACE;
-		LogMsg(DEBUG, "Using hardware surfaces." );
-	} else {
-		videoFlags |= SDL_SWSURFACE;
-		LogMsg(DEBUG, "Not using hardware surfaces." );
-	}
-
-	// using SDL given information, set hardware acceleration if supported
-	if( videoInfo->blit_hw ) {
-		videoFlags |= SDL_HWACCEL;
-		LogMsg(DEBUG, "Using hardware accelerated blitting." );
-	} else {
-		LogMsg(DEBUG, "Not using hardware accelerated blitting." );
-	}
+	// // using SDL given information, use hardware surfaces if supported by
+	// // the video card
+	// if( videoInfo->hw_available ) {
+	// 	videoFlags |= SDL_HWSURFACE;
+	// 	LogMsg(DEBUG, "Using hardware surfaces." );
+	// } else {
+	// 	videoFlags |= SDL_SWSURFACE;
+	// 	LogMsg(DEBUG, "Not using hardware surfaces." );
+	// }
+	//
+	// // using SDL given information, set hardware acceleration if supported
+	// if( videoInfo->blit_hw ) {
+	// 	videoFlags |= SDL_HWACCEL;
+	// 	LogMsg(DEBUG, "Using hardware accelerated blitting." );
+	// } else {
+	// 	LogMsg(DEBUG, "Not using hardware accelerated blitting." );
+	// }
 
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
-	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1); // vsync
+	//SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1); // vsync
 
-	ret = SDL_VideoModeOK( w, h, bpp, videoFlags );
-	if( !ret ) {
-		LogMsg(WARN, "Video mode %dx%dx%d not available.", w, h, bpp );
-	} else {
-		LogMsg(DEBUG, "Video mode %dx%dx%d supported.", w, h, bpp );
-	}
+	// ret = SDL_VideoModeOK( w, h, bpp, videoFlags );
+	// if( !ret ) {
+	// 	LogMsg(WARN, "Video mode %dx%dx%d not available.", w, h, bpp );
+	// } else {
+	// 	LogMsg(DEBUG, "Video mode %dx%dx%d supported.", w, h, bpp );
+	// }
 
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,   16);
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE, 16);
@@ -255,17 +154,34 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	SDL_Surface *icon = NULL;
 	File icon_file( "data/graphics/icon.bmp" ); // File is used to calculate path
 	icon = SDL_LoadBMP( icon_file.GetAbsolutePath().c_str() );
-	SDL_WM_SetIcon(icon, NULL);
-	SDL_FreeSurface(icon); // presumably we can do this
+	if(icon != NULL) {
+		SDL_SetWindowIcon(window, icon);
+		SDL_FreeSurface(icon); icon = NULL;
+	} else {
+		LogMsg(WARN, "Unable to load window icon data/graphics/icon.bmp." );
+	}
 
 	// set window title
-	SDL_WM_SetCaption("Epiar", "Epiar");
+	//SDL_WM_SetCaption("Epiar", "Epiar");
 
-	// finally, set the video mode (creating a window)
-	if( ( screen = SDL_SetVideoMode( w, h, bpp, videoFlags ) ) == NULL ) {
-		LogMsg(ERR, "Could not set video mode: %s", SDL_GetError() );
+	window = SDL_CreateWindow("Epiar", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	if(window == NULL) {
+		LogMsg(ERR, "Could not create window: %s", SDL_GetError() );
 		return( false );
 	}
+
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if(renderer == NULL) {
+		SDL_DestroyWindow(window); window = NULL;
+		LogMsg(ERR, "Could not create renderer: %s", SDL_GetError() );
+		return( false );
+	}
+
+	// // finally, set the video mode (creating a window)
+	// if( ( screen = SDL_SetVideoMode( w, h, bpp, videoFlags ) ) == NULL ) {
+	// 	LogMsg(ERR, "Could not set video mode: %s", SDL_GetError() );
+	// 	return( false );
+	// }
 
 	// set up some needed opengl facilities
 	glEnable( GL_TEXTURE_2D );
@@ -290,14 +206,16 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
 
-	Video::w = w;
-	Video::h = h;
+	// Video::w = w;
+	// Video::h = h;
+
+	SDL_GetWindowSize(window, &Video::w, &Video::h);
 
 	// compute the half dimensions
 	w2 = w / 2;
 	h2 = h / 2;
 
-	LogMsg(DEBUG, "Video mode initialized at %dx%dx%d\n", screen->w, screen->h, screen->format->BitsPerPixel );
+	LogMsg(DEBUG, "Video mode initialized at %dx%dxbpp fixme\n", Video::w, Video::h );
 
 	return( true );
 }
@@ -334,7 +252,8 @@ int Video::lua_getHeight(lua_State *L) {
  */
 void Video::Update( void ) {
 	glFlush();
-	SDL_GL_SwapBuffers();
+	//SDL_GL_SwapBuffers();
+	SDL_RenderPresent(renderer);
 	//glAccum(GL_ACCUM, 0.8f);
 	glFinish();
 }
@@ -344,14 +263,14 @@ void Video::Update( void ) {
 void Video::PreDraw( void ) {
 	// Clear the draw and depth buffers
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
- 
+
 	// Take the contents of the current accumulation buffer and copy it to the colour buffer with each pixel multiplied by a factor
 	// i.e. we clear the screen, draw the last frame again (which we saved in the accumulation buffer), then draw our stuff at its new location on top of that
 	//glAccum(GL_RETURN, 0.75f);
- 
+
 	// Clear the accumulation buffer (don't worry, we re-grab the screen into the accumulation buffer after drawing our current frame!)
 	//glClear(GL_ACCUM_BUFFER_BIT);
- 
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -367,8 +286,9 @@ void Video::Blur( void ) {
 /**\brief Clears screen.
  */
 void Video::Erase( void ) {
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	//glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	//glLoadIdentity();
+	SDL_RenderClear(renderer);
 }
 
 /**\brief Returns the width of the screen.
@@ -644,33 +564,34 @@ Image *Video::CaptureScreen( void ) {
 /**\brief Takes a screenshot of the game and saves it to a file.
  */
 void Video::SaveScreenshot( string filename ) {
-	unsigned int size = w * h * 4;
-	int *pixelData, *pixelDataOrig;
+	// unsigned int size = w * h * 4;
+	// int *pixelData, *pixelDataOrig;
+	//
+	// pixelData = (int *)malloc( size );
+	// pixelDataOrig = (int *)malloc( size );
+	// memset( pixelData, 0, size );
+	// memset( pixelDataOrig, 0, size );
+	//
+	// glPixelStorei( GL_PACK_ROW_LENGTH, 0 ) ;
+	// glPixelStorei( GL_PACK_ALIGNMENT, 1 ) ;
+	// glReadPixels( 0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, pixelDataOrig ) ;
+	//
+	// // image if flipped vertically - fix this
+	// for(int x = 1; x < w; x++) {
+	// 	for(int y = 1; y < h; y++) {
+	// 		pixelData[x + (y * w)] = pixelDataOrig[x + ((h-y) * w)];
+	// 	}
+	// }
+	//
+	// SDL_Surface *s = SDL_CreateRGBSurfaceFrom( pixelData, w, h, screen->format->BitsPerPixel, screen->pitch, screen->format->Rmask, screen->format->Gmask, screen->format->Bmask, screen->format->Amask);
+	//
+	// if( filename == "" ) filename = string("Screenshot_") + Log::GetTimestamp() + string(".bmp");
+	//
+	// SDL_SaveBMP( s, filename.c_str() );
+	//
+	// SDL_FreeSurface( s );
+	// free( pixelData );
+	// free( pixelDataOrig );
 
-	pixelData = (int *)malloc( size );
-	pixelDataOrig = (int *)malloc( size );
-	memset( pixelData, 0, size );
-	memset( pixelDataOrig, 0, size );
-
-	glPixelStorei( GL_PACK_ROW_LENGTH, 0 ) ;
-	glPixelStorei( GL_PACK_ALIGNMENT, 1 ) ;
-	glReadPixels( 0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, pixelDataOrig ) ;
-
-	// image if flipped vertically - fix this
-	for(int x = 1; x < w; x++) {
-		for(int y = 1; y < h; y++) {
-			pixelData[x + (y * w)] = pixelDataOrig[x + ((h-y) * w)];
-		}
-	}
-
-	SDL_Surface *s = SDL_CreateRGBSurfaceFrom( pixelData, w, h, screen->format->BitsPerPixel, screen->pitch, screen->format->Rmask, screen->format->Gmask, screen->format->Bmask, screen->format->Amask);
-
-	if( filename == "" ) filename = string("Screenshot_") + Log::GetTimestamp() + string(".bmp");
-
-	SDL_SaveBMP( s, filename.c_str() );
-
-	SDL_FreeSurface( s );
-	free( pixelData );
-	free( pixelDataOrig );
+	LogMsg(WARN, "Video::SaveScreenshot() is unimplemented." );
 }
-

@@ -45,7 +45,7 @@ class Widget {
 	public:
 		Widget( void );
 		virtual ~Widget( void );
-		
+
 		// Function to retrieve dimensions
 		virtual int GetX( void ){ return this->x; }
 		virtual int GetY( void ){ return this->y; }
@@ -59,7 +59,7 @@ class Widget {
 
 		virtual int GetAbsX( void );
 		virtual int GetAbsY( void );
-		
+
 		virtual string GetType( void ) { return string("GenericWidget"); }
 		virtual int GetMask( void ) { return WIDGET_NONE; }
 		virtual Widget* GetParent( void ) { return parent; }
@@ -101,7 +101,7 @@ class Widget {
 		virtual bool MouseWDown( int xi, int yi );
 		virtual bool KeyboardEnter( void );
 		virtual bool KeyboardLeave( void );
-		virtual bool KeyPress( SDLKey key );
+		virtual bool KeyPress( SDL_Keycode key );
 
 		string name;            ///< This widget's Name.  Names should be relatively unique.
 		bool hovering;          ///< Is the user currently hovering over this widget?

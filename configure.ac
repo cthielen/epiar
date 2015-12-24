@@ -101,14 +101,14 @@ case "$target" in *-apple-darwin*)
 	LIBS="$LIBS `xml2-config --libs`"
 esac
 
-dnl Check for SDL
-SDL_VERSION=1.2.15
+dnl Check for SDL2
+SDL_VERSION=2.0.3
 
 case "$target" in
 	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd* | *-apple-darwin*)
-		AM_PATH_SDL($SDL_VERSION, :, AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!]))
-		CFLAGS="$CFLAGS $SDL_CFLAGS -DCOMP_GCC"
-		LIBS="$LIBS $SDL_LIBS"
+		AM_PATH_SDL2($SDL_VERSION, :, AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!]))
+		CFLAGS="$CFLAGS $SDL2_CFLAGS -DCOMP_GCC"
+		LIBS="$LIBS $SDL2_LIBS"
 esac
 
 dnl Set up OpenGL for OS X
@@ -121,28 +121,18 @@ esac
 dnl Check for SDL_image
 case "$target" in
 	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd* | *-apple-darwin*)
-	PKG_CHECK_MODULES([SDL_image], [SDL_image >= 1.2.10])
-	CFLAGS="$CFLAGS $SDL_image_CFLAGS"
-	LIBS="$LIBS $SDL_image_LIBS"
+	PKG_CHECK_MODULES([SDL2_image], [SDL2_image >= 2.0.0])
+	CFLAGS="$CFLAGS $SDL2_image_CFLAGS"
+	LIBS="$LIBS $SDL2_image_LIBS"
 esac
-dnl case "$target" in
-dnl 	*-apple-darwin*)
-dnl 	CFLAGS="$CFLAGS -I/Library/Frameworks/SDL_image.Framework/Headers"
-dnl 	LIBS="$LIBS -framework SDL_image"
-dnl esac
 
 dnl Check for SDL_mixer
 case "$target" in
 	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd* | *-apple-darwin*)
-	PKG_CHECK_MODULES([SDL_mixer], [SDL_mixer >= 1.2.11])
-	CFLAGS="$CFLAGS $SDL_mixer_CFLAGS"
-	LIBS="$LIBS $SDL_mixer_LIBS"
+	PKG_CHECK_MODULES([SDL2_mixer], [SDL2_mixer >= 2.0.0])
+	CFLAGS="$CFLAGS $SDL2_mixer_CFLAGS"
+	LIBS="$LIBS $SDL2_mixer_LIBS"
 esac
-dnl case "$target" in
-dnl 	*-apple-darwin*)
-dnl 	CFLAGS="$CFLAGS -I/Library/Frameworks/SDL_mixer.Framework/Headers"
-dnl 	LIBS="$LIBS -framework SDL_mixer"
-dnl esac
 
 dnl Set MS Windows specific options - For afont and ntohl (Win32 provides this through Winsock)
 case "$target" in

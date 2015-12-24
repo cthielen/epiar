@@ -17,7 +17,7 @@
 class Textbox : public Widget {
 	public:
 		Textbox( int x, int y, int w, int rows, string text = "", string label = "");
-		
+
 		void Draw( int relx, int rely = 0 );
 
 		string GetType( void ) {return string("Textbox");}
@@ -27,7 +27,7 @@ class Textbox : public Widget {
 		void SetText(string s) { text = s; }
 
 	protected:
-		bool KeyPress( SDLKey key );
+		bool KeyPress( SDL_Keycode key );
 
 	private:
 		string text;

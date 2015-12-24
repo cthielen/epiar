@@ -47,7 +47,7 @@ Textarea::Textarea( int _x, int _y, int _w, int _h, string text, string label )
  */
 void Textarea::Draw( int relx, int rely ) {
 	int x, y;
-	
+
 	x = GetX() + relx;
 	y = GetY() + rely;
 
@@ -65,11 +65,11 @@ void Textarea::Draw( int relx, int rely ) {
 
 /**\brief Accept Key Presses
  */
-bool Textarea::KeyPress( SDLKey key ) {
+bool Textarea::KeyPress( SDL_Keycode key ) {
 	string keyname = SDL_GetKeyName( key );
 	stringstream key_ss;
 	string key_s;
-	
+
 	switch(key) {
 		// Ignore Modifiers
 		case SDLK_LSHIFT:
@@ -111,9 +111,8 @@ bool Textarea::KeyPress( SDLKey key ) {
 			lines.AppendText( key_s );
 			break;
 	}
-	
+
 	return true;
 }
 
 /** @} */
-

@@ -1,7 +1,7 @@
 /**\file			input.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 4, 2006
- * \date			Modified: Saturday, January 5, 2008
+ * \date			Modified: Thursday, December 24, 2015
  * \brief
  * \details
  */
@@ -22,14 +22,14 @@
  *
  *          Input also handles Registered mappings between Keys and Lua Functions.
  *
- * \see InputEvent 
+ * \see InputEvent
  */
 
 /**\class InputEvent
  * \brief Handles Input events. For specific key handling, see the Lua scripts.
  *
- * \fn InputEvent::InputEvent( eventType type, keyState kstate, SDLKey key )
- *  \brief Handles input events based on SDLKey.
+ * \fn InputEvent::InputEvent( eventType type, keyState kstate, SDL_Keycode key )
+ *  \brief Handles input events based on SDL_Keycode.
  * \fn InputEvent::InputEvent( eventType type, keyState kstate, int key )
  *  \brief Handles input events based on key code.
  * \fn InputEvent::InputEvent( eventType type, mouseState mstate, int mx, int my )
@@ -43,16 +43,16 @@
  *
  * \var InputEvent::key
  *  \brief The key pressed
- * 
+ *
  * \var InputEvent::kstate
  *  \brief Key state (up, down, or hold)
- * 
+ *
  * \var InputEvent::mstate
  *  \brief Mouse state
- * 
+ *
  * \var InputEvent::mx
  *  \brief Mouse x coordinate.
- * 
+ *
  * \var InputEvent::my
  *  \brief Mouse y coordinate.
  */
@@ -70,7 +70,7 @@ ostream& operator<<(ostream &out, const InputEvent&e) {
 	return out;
 }
 
-bool Input::heldKeys[SDLK_LAST] = {0};
+std::map<SDL_Keycode, bool> Input::heldKeys;
 Uint32 Input::lastMouseMove = 0;
 list<InputEvent> Input::events;
 map<InputEvent,string> Input::eventMappings;
@@ -79,7 +79,7 @@ map<InputEvent,string> Input::eventMappings;
  */
 list<InputEvent> Input::Update() {
 	SDL_Event event;
-	
+
 	events.clear();
 
 	while( SDL_PollEvent( &event ) ) {
@@ -117,29 +117,29 @@ list<InputEvent> Input::Update() {
 	}
 
 	// Constantly emit InputEvent for held down Keys
-	for(int k = 0; k < SDLK_LAST; k++) {
-		if(heldKeys[k])
-			events.push_back( InputEvent( KEY, KEYPRESSED, k ) );
+	std::map<SDL_Keycode, bool>::iterator itr;
+	for(itr = heldKeys.begin(); itr != heldKeys.end(); itr++ ) {
+		events.push_back( InputEvent( KEY, KEYPRESSED, itr->first ) );
 	}
 
 	if((Timer::GetTicks() - lastMouseMove > OPTION(Uint32, "options/timing/mouse-fade")) ){
 		Video::DisableMouse();
 	}
-	
+
 	// this could be false - returning quitSignal doesn't imply quitting
 	return events;
 }
 
 /**\brief Returns true if 'key' is currently held down, else false.
  */
-bool Input::keyIsHeld(SDLKey key) {
-	return heldKeys[key];
+bool Input::keyIsHeld(SDL_Keycode key) {
+	return (heldKeys.find(key) != heldKeys.end());
 }
 
 /**\brief Converts SDL_MouseButtonEvent to Epiar's Input model.
  */
 mouseState Input::_CheckMouseState( Uint8 button, bool up ){
-	switch (button){
+	switch (button) {
 		case SDL_BUTTON_LEFT:
 			return (up? MOUSELUP : MOUSELDOWN);
 		case SDL_BUTTON_MIDDLE:
@@ -165,7 +165,7 @@ void Input::_UpdateHandleMouseMotion( SDL_Event *event ) {
 	// translate so (0,0) is lower-left of screen
 	x = event->motion.x;
 	y = event->motion.y;
-	
+
 	events.push_back( InputEvent( MOUSE, MOUSEMOTION, x, y ) );
 	Video::EnableMouse();
 	lastMouseMove = Timer::GetTicks();
@@ -194,12 +194,13 @@ void Input::_UpdateHandleMouseUp( SDL_Event *event ) {
 
 	Uint16 x, y;
 	mouseState state=_CheckMouseState(event->button.button,true);
-	// translate so (0,0) is lower-left of screen					
+	// translate so (0,0) is lower-left of screen
 	x = event->button.x;
 	y = event->button.y;
 
-	if (state)
+	if (state) {
 		events.push_back( InputEvent( MOUSE, state, x, y ) );
+	}
 }
 
 /**\brief Translates key down events to Epiar events.
@@ -211,7 +212,6 @@ void Input::_UpdateHandleKeyDown( SDL_Event *event ) {
 	// typed events go here because SDL will repeat KEYDOWN events for us at the set SDL repeat rate
 	PushTypeEvent( events, event->key.keysym.sym );
 	heldKeys[ event->key.keysym.sym ] = 1;
-
 }
 
 /**\brief Translates key up events to Epiar events.
@@ -223,7 +223,7 @@ void Input::_UpdateHandleKeyUp( SDL_Event *event ) {
 	heldKeys[ event->key.keysym.sym ] = 0;
 }
 
-void Input::PushTypeEvent( list<InputEvent> & events, SDLKey key ) {
+void Input::PushTypeEvent( list<InputEvent> & events, SDL_Keycode key ) {
 	int letter=key;
 
 	// Convert lower to upper case characters
@@ -271,7 +271,7 @@ void Input::PushTypeEvent( list<InputEvent> & events, SDLKey key ) {
 
 	// DEBUG: Name = int = char -> emitted char
 	//cout<<SDL_GetKeyName(key)<<" = "<<key<<" = '"<<char(key)<<"' -> '"<<char(letter)<<"'"<<endl;
-	
+
 	events.push_back( InputEvent( KEY, KEYTYPED, letter ) );
 }
 
@@ -345,4 +345,3 @@ void Input::PrintEvents( string title, list<InputEvent> & events ) {
 	}
 	cout << endl;
 }
-

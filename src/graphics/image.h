@@ -1,7 +1,7 @@
 /**\file			image.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Saturday, January 31, 2009
- * \date			Modified: Saturday, November 21, 2009
+ * \date			Modified: Thursday, December 24, 2015
  * \brief			Image loading and display
  * \details
  * You don't have to worry about OpenGL's power of 2 image dimension requirements.
@@ -82,4 +82,3 @@ class Image : public Resource {
 };
 
 #endif // __H_IMAGE__
-
