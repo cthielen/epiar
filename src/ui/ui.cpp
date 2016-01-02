@@ -275,8 +275,6 @@ void UI::SwapScreens(string newname, Image* oldBackground, Image* newBackground 
 		int newX = Video::GetWidth();
 		Timer::Update();
 		while( newX > 0 ) {
-			Video::PreDraw();
-
 			oldX -= dx;
 			newX -= dx;
 
@@ -455,7 +453,6 @@ void UI::ModalDialog( Window *window ) {
 	UI::RegisterKeyboardFocus( window );
 
 	// Draw Things Once
-	Video::PreDraw();
 	UI::Draw();
 	Video::Update();
 

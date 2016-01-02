@@ -43,16 +43,13 @@ int Video::h = 0;
 int Video::w2 = 0;
 int Video::h2 = 0;
 stack<Rect> Video::cropRects;
-SDL_Window *window = NULL;
-SDL_Renderer *renderer = NULL;
+SDL_Window *Video::window = NULL;
+SDL_Renderer *Video::renderer = NULL;
 
 /**\brief Initializes the Video display.
  */
 bool Video::Initialize( void ) {
-	//char buf[32] = {0};
-	//const SDL_VideoInfo *videoInfo;
-
-	// initialize SDL
+	// Initialize SDL
 	if( SDL_Init( SDL_INIT_VIDEO ) != 0 ) {
 		LogMsg(ERR, "Could not initialize SDL: %s", SDL_GetError() );
 		return( false );
@@ -62,26 +59,18 @@ bool Video::Initialize( void ) {
 
 	atexit( SDL_Quit );
 
-	//SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
-
-	//videoInfo = SDL_GetVideoInfo();
-
 	int w = OPTION( int, "options/video/w" );
 	int h = OPTION( int, "options/video/h" );
 	bool fullscreen = OPTION( bool, "options/video/fullscreen" );
 
-	// // Sanitize Width and Height
-	// // TODO: Surely 0 is invalid, but what's the lower limit?
-	// if( (w <= 0) || (w > videoInfo->current_w) ) { w = videoInfo->current_w; }
-	// if( (h <= 0) || (h > videoInfo->current_w) ) { h = videoInfo->current_h; }
-	//
-	// if( OPTION( int, "options/video/fullscreen" ) ) {
-	// 	// fullscreen set, use native resolution
-	// 	w = videoInfo->current_w;
-	// 	h = videoInfo->current_h;
-	// }
-
 	Video::SetWindow( w, h, OPTION( int, "options/video/bpp"), fullscreen );
+
+	if( IMG_Init( IMG_INIT_PNG ) != IMG_INIT_PNG ) {
+		LogMsg(ERR, "Could not initialize SDL_image: %s", SDL_GetError() );
+		return( false );
+	}
+
+	atexit( IMG_Quit );
 
 	return( true );
 }
@@ -89,8 +78,10 @@ bool Video::Initialize( void ) {
 /**\brief Shuts down the Video display.
  */
 bool Video::Shutdown( void ) {
-
 	EnableMouse();
+
+	SDL_DestroyRenderer( renderer ); renderer = NULL;
+	SDL_DestroyWindow( window ); window = NULL;
 
 	return( true );
 }
@@ -98,58 +89,6 @@ bool Video::Shutdown( void ) {
 /**\brief Sets the window properties.
  */
 bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
-	//const SDL_VideoInfo *videoInfo; // handle to SDL video information
-	//Uint32 videoFlags = 0; // bitmask to pass to SDL_SetVideoMode()
-	//int ret = 0;
-
-	// get information about the video card (namely, does it support
-	// hardware surfaces?)
-	// videoInfo = SDL_GetVideoInfo();
-	// if(! videoInfo )
-	// 	LogMsg(WARN, "SDL_GetVideoInfo() returned NULL" );
-
-	// // enable OpenGL and various other options
-	// videoFlags = SDL_OPENGL;
-	// videoFlags |= SDL_GL_DOUBLEBUFFER;
-	// videoFlags |= SDL_HWPALETTE;
-
-	// enable fullscreen if set (see main.cpp, parseOptions)
-	//if( fullscreen ) videoFlags |= SDL_FULLSCREEN;
-
-	// // using SDL given information, use hardware surfaces if supported by
-	// // the video card
-	// if( videoInfo->hw_available ) {
-	// 	videoFlags |= SDL_HWSURFACE;
-	// 	LogMsg(DEBUG, "Using hardware surfaces." );
-	// } else {
-	// 	videoFlags |= SDL_SWSURFACE;
-	// 	LogMsg(DEBUG, "Not using hardware surfaces." );
-	// }
-	//
-	// // using SDL given information, set hardware acceleration if supported
-	// if( videoInfo->blit_hw ) {
-	// 	videoFlags |= SDL_HWACCEL;
-	// 	LogMsg(DEBUG, "Using hardware accelerated blitting." );
-	// } else {
-	// 	LogMsg(DEBUG, "Not using hardware accelerated blitting." );
-	// }
-
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-
-	//SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1); // vsync
-
-	// ret = SDL_VideoModeOK( w, h, bpp, videoFlags );
-	// if( !ret ) {
-	// 	LogMsg(WARN, "Video mode %dx%dx%d not available.", w, h, bpp );
-	// } else {
-	// 	LogMsg(DEBUG, "Video mode %dx%dx%d supported.", w, h, bpp );
-	// }
-
-	SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,   16);
-	SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE, 16);
-	SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,  16);
-	SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE, 16);
-
 	// Set the application icon (must be done before SDL_SetVideoMode)
 	SDL_Surface *icon = NULL;
 	File icon_file( "data/graphics/icon.bmp" ); // File is used to calculate path
@@ -160,9 +99,6 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	} else {
 		LogMsg(WARN, "Unable to load window icon data/graphics/icon.bmp." );
 	}
-
-	// set window title
-	//SDL_WM_SetCaption("Epiar", "Epiar");
 
 	window = SDL_CreateWindow("Epiar", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	if(window == NULL) {
@@ -177,37 +113,7 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 		return( false );
 	}
 
-	// // finally, set the video mode (creating a window)
-	// if( ( screen = SDL_SetVideoMode( w, h, bpp, videoFlags ) ) == NULL ) {
-	// 	LogMsg(ERR, "Could not set video mode: %s", SDL_GetError() );
-	// 	return( false );
-	// }
-
-	// set up some needed opengl facilities
-	glEnable( GL_TEXTURE_2D );
-	glShadeModel( GL_SMOOTH );
-	glClearColor( 0.0f, 0.0f, 0.0f, 0.5f );
-	glClearDepth( 1.0f );
-	glEnable( GL_DEPTH_TEST );
-	glDepthFunc( GL_LEQUAL );
-	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	// for motion blur
-	glClearAccum(0.0, 0.0, 0.0, 1.0);
-	glClear(GL_ACCUM_BUFFER_BIT);
-
-	// set up a pseudo-2D viewpoint
-	glViewport( 0, 0, w, h );
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
-	glOrtho( 0, w, h, 0, -1, 1);
-	glMatrixMode( GL_MODELVIEW );
-	glLoadIdentity();
-
-	// Video::w = w;
-	// Video::h = h;
+	SDL_SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_BLEND );
 
 	SDL_GetWindowSize(window, &Video::w, &Video::h);
 
@@ -216,6 +122,8 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	h2 = h / 2;
 
 	LogMsg(DEBUG, "Video mode initialized at %dx%dxbpp fixme\n", Video::w, Video::h );
+
+	cout << "window is " << Video::w << ", " << Video::h << endl;
 
 	return( true );
 }
@@ -251,43 +159,14 @@ int Video::lua_getHeight(lua_State *L) {
 /**\brief Video updates.
  */
 void Video::Update( void ) {
-	glFlush();
-	//SDL_GL_SwapBuffers();
+	cout << "presenting renderer" << endl;
 	SDL_RenderPresent(renderer);
-	//glAccum(GL_ACCUM, 0.8f);
-	glFinish();
-}
-
-/**\brief Pre-draw commands.
- */
-void Video::PreDraw( void ) {
-	// Clear the draw and depth buffers
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// Take the contents of the current accumulation buffer and copy it to the colour buffer with each pixel multiplied by a factor
-	// i.e. we clear the screen, draw the last frame again (which we saved in the accumulation buffer), then draw our stuff at its new location on top of that
-	//glAccum(GL_RETURN, 0.75f);
-
-	// Clear the accumulation buffer (don't worry, we re-grab the screen into the accumulation buffer after drawing our current frame!)
-	//glClear(GL_ACCUM_BUFFER_BIT);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
-void Video::Blur( void ) {
-	float q = .6f;
-
-	glAccum(GL_MULT, q);
-	glAccum(GL_ACCUM, 1.0f - q);
-	glAccum(GL_RETURN, 1.0f);
 }
 
 /**\brief Clears screen.
  */
 void Video::Erase( void ) {
-	//glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-	//glLoadIdentity();
+	cout << "clearing renderer" << endl;
 	SDL_RenderClear(renderer);
 }
 
@@ -548,17 +427,18 @@ void Video::UnsetCropRect( void ) {
 /**\brief Takes a screenshot of the game and saves it to an Image.
  */
 Image *Video::CaptureScreen( void ) {
-	GLuint screenCapture;
+	//GLuint screenCapture;
 
-	glGenTextures( 1, &screenCapture );
+	//glGenTextures( 1, &screenCapture );
 
-	glBindTexture(GL_TEXTURE_2D, screenCapture);
+	//glBindTexture(GL_TEXTURE_2D, screenCapture);
 
-	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 0, 0, w, h, 0);
+	//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 0, 0, w, h, 0);
 
-	Image *screenshot = new Image( screenCapture, w, h );
+	//Image *screenshot = new Image( screenCapture, w, h );
 
-	return( screenshot );
+	//return( screenshot );
+	return NULL;
 }
 
 /**\brief Takes a screenshot of the game and saves it to a file.

@@ -2,7 +2,7 @@
  * \author		Christopher Thielen (chris@epiar.net)
  * \author		and others.
  * \date		Created: Tuesday, April 26, 2011
- * \date		Modified: Thursday, December 3, 2015
+ * \date		Modified: Friday, January 1, 2016
  * \brief		Export Main_Menu function.
  * \details
  */
@@ -22,7 +22,7 @@ class Menu {
 		static Scenario* GetCurrentScenario( void );
 
 	private:
-		static bool quitSignal;
+		static bool quit;
 		// The Scenario to be played
 		static Scenario* scenario;
 		static PlayerInfo* playerToLoad;

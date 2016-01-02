@@ -1,7 +1,7 @@
 /**\file			video.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Thursday, December 24, 2015
+ * \date			Modified: Friday, January 1, 2016
  * \brief
  * \details
  */
@@ -43,7 +43,7 @@ class Video {
   		static void Update( void );
   		static void Erase( void );
 
-  		static void PreDraw( void );
+		static SDL_Renderer* GetRenderer( void ) { return renderer; }
 
   		static void EnableMouse( void );
   		static void DisableMouse( void );
@@ -74,8 +74,6 @@ class Video {
 
 		static void SetCropRect( int x, int y, int w, int h );
 		static void UnsetCropRect( void );
-
-		static void Blur( void );
 
 		static Image *CaptureScreen( void );
 		static void SaveScreenshot( string filename = "" );

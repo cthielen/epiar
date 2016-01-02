@@ -390,7 +390,6 @@ void Scenario::Run() {
 		Video::Erase();
 
 		// Draw cycle
-		Video::PreDraw();
 		starfield.Draw();
 		sprites->Draw( camera->GetFocusCoordinate() );
 		Hud::Draw( HUD_ALL, currentFPS, camera, sprites );

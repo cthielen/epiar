@@ -1,7 +1,7 @@
 /**\file			image.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Saturday, January 31, 2009
- * \date			Modified: Thursday, December 24, 2015
+ * \date			Modified: Friday, January 1, 2016
  * \brief			Image loading and display
  * \details
  * You don't have to worry about OpenGL's power of 2 image dimension requirements.
@@ -28,7 +28,7 @@ class Image : public Resource {
 		// Create instance by loading image from file
 		Image( const string& filename );
 		// Create instance by using an existing OpenGL texture
-		Image( GLuint texture, int w, int h );
+		Image( SDL_Texture* texture, int w, int h );
 		~Image();
 
 		static Image* Get(string filename);
@@ -63,13 +63,6 @@ class Image : public Resource {
 		// Draw the image (angle in degrees)
 		void _Draw( int x, int y, float r, float g, float b, float alpha = 1.f, float angle = 0.f, float resize_ratio_w = 1.f, float resize_ratio_h = 1.f );
 
-		// Converts an SDL surface to an OpenGL texture
-		bool ConvertToTexture( SDL_Surface *s );
-		// Expands surface 's' to width/height of w/h, keeping the original image in the upper-left
-		SDL_Surface *ExpandCanvas( SDL_Surface *s, int w, int h );
-		// Returns the next highest power of two if num is not a power of two
-		int PowerOfTwo(int num);
-
 		int w, h; // virtual w/h (effective, same as original file)
 		int real_w, real_h; // real w/h, size of expanded canvas (image) should expansion be needed
 		            //   to meet power of two requirements
@@ -77,7 +70,7 @@ class Image : public Resource {
 		                        // the larger canvas actually contains the original image (<= 1.0)
 		                        // defaults = 1.0, this factor is always used, so non-expanded images are
 		                        // simply "scaled" at 1.0. THIS HAS NOTHING TO DO WITH RESIZE()
-		GLuint image; // OpenGL pointer to texture
+		SDL_Texture* image;
 		string filepath;
 };
 

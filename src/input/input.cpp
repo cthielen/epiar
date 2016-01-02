@@ -147,11 +147,12 @@ mouseState Input::_CheckMouseState( Uint8 button, bool up ){
 		case SDL_BUTTON_RIGHT:
 			return (up? MOUSERUP : MOUSERDOWN);
 		// We'll only handle one event, return unhandled on down events.
-		case SDL_BUTTON_WHEELUP:
-			return (up? MOUSEWUP : UNHANDLED);
-		case SDL_BUTTON_WHEELDOWN:
-			return (up? MOUSEWDOWN : UNHANDLED);
+		//case SDL_BUTTON_WHEELUP:
+			//return (up? MOUSEWUP : UNHANDLED);
+		//case SDL_BUTTON_WHEELDOWN:
+			//return (up? MOUSEWDOWN : UNHANDLED);
 	}
+
 	return UNHANDLED;
 }
 

@@ -56,9 +56,9 @@ bool File::OpenRead( const string& filename ) {
 #ifdef USE_PHYSICSFS
 	fp = PHYSFS_openRead( cName );
 #else
-	fp = fopen(cName,"rb");
+	fp = fopen(cName, "rb");
 #endif
-	if( fp == NULL ){
+	if( fp == NULL ) {
 		LogMsg(ERR,"Could not open file: %s.\n%s", cName,
 			PHYSFS_getLastError());
 		return false ;
@@ -69,8 +69,9 @@ bool File::OpenRead( const string& filename ) {
 #else
 	struct stat fileStatus;
 	int stat_ret = stat(cName, &fileStatus );
-	if (stat_ret)
+	if(stat_ret) {
 		return false;
+	}
 	contentSize = fileStatus.st_size;
 #endif
 	validName.assign( filename );

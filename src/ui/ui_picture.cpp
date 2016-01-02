@@ -140,14 +140,15 @@ void Picture::Center(int x, int y) {
  */
 void Picture::Draw( int relx, int rely ) {
 	int x, y;
+
 	x = this->x + relx;
 	y = this->y + rely;
 
-	if( !hidden) {
+	if( hidden == false ) {
 		// The Picture size
 		Video::DrawRect( x, y,
 		               w, h,
-		               color.r,color.g,color.b,alpha );
+		               color.r, color.g, color.b, alpha );
 		if(bitmap != NULL) {
 			if(stretch) {
 				bitmap->DrawStretch( x, y, w, h, static_cast<float>(rotation));
@@ -157,7 +158,7 @@ void Picture::Draw( int relx, int rely ) {
 		}
 	}
 
-	Widget::Draw(relx,rely);
+	Widget::Draw(relx, rely);
 }
 
 /**\brief Change the Image in this Picture.

@@ -79,18 +79,18 @@ bool Textbox::KeyPress( SDL_Keycode key ) {
 	stringstream key_ss;
 	string key_s;
 
-	switch(key){
+	switch(key) {
 	// Ignore Modifiers
 	case SDLK_LSHIFT:
 	case SDLK_RSHIFT:
-	case SDLK_RMETA:
-	case SDLK_LMETA:
+	//case SDLK_RMETA:
+	//case SDLK_LMETA:
 	case SDLK_RALT:
 	case SDLK_LALT:
 	case SDLK_RCTRL:
 	case SDLK_LCTRL:
-	case SDLK_RSUPER:
-	case SDLK_LSUPER:
+	//case SDLK_RSUPER:
+	//case SDLK_LSUPER:
 	// Special Non-Printable Keys
 	case SDLK_ESCAPE:
 	// TODO: add cursor movement support

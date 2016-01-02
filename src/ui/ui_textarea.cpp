@@ -74,14 +74,14 @@ bool Textarea::KeyPress( SDL_Keycode key ) {
 		// Ignore Modifiers
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
-		case SDLK_RMETA:
-		case SDLK_LMETA:
+		//case SDLK_RMETA:
+		//case SDLK_LMETA:
 		case SDLK_RALT:
 		case SDLK_LALT:
 		case SDLK_RCTRL:
 		case SDLK_LCTRL:
-		case SDLK_RSUPER:
-		case SDLK_LSUPER:
+		//case SDLK_RSUPER:
+		//case SDLK_LSUPER:
 		// Special Non-Printable Keys
 		case SDLK_ESCAPE:
 		// TODO: add cursor movement support

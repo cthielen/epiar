@@ -2,7 +2,7 @@
  * \author		Christopher Thielen (chris@epiar.net)
  * \author		and others.
  * \date		Created: Tuesday, April 26, 2011
- * \date		Modified: Thursday, December 3, 2015
+ * \date		Modified: Friday, January 1, 2016
  * \brief		Runs the main menu
  * \details
  */
@@ -15,18 +15,17 @@
 #include "utilities/filesystem.h"
 #include "utilities/timer.h"
 
-bool Menu::quitSignal = false;
+bool Menu::quit = false;
 
 Scenario* Menu::scenario = NULL;
 PlayerInfo* Menu::playerToLoad = NULL;
 
 Image* Menu::menuSplash = NULL;
-Image* Menu::gameSplash = NULL;
 
-Picture *Menu::play = NULL;
-Picture *Menu::load = NULL;
-Picture *Menu::options = NULL;
-Picture *Menu::exit = NULL;
+Picture* Menu::play = NULL;
+Picture* Menu::load = NULL;
+Picture* Menu::options = NULL;
+Picture* Menu::exit = NULL;
 
 Song *Menu::bgMusic = NULL;
 
@@ -52,16 +51,14 @@ void Menu::Run( void ) {
 	Input inputs;
 	list<InputEvent> events;
     
-	quitSignal = false;
+	quit = false;
 
 	PlayerList *playerList = PlayerList::Instance();
 	playerList->Load( "saves/saved-games.xml", true, true);
 
-	if( OPTION(int,"options/scenario/automatic-load") )
-	{
-		if( AutoLoad() )
-		{
-			LogMsg(INFO,"AutoLoaded Game Complete. Quitting Epiar.");
+	if( OPTION(int,"options/scenario/automatic-load") ) {
+		if( AutoLoad() ) {
+			LogMsg(INFO,"Auto-loaded game finished. Quitting ...");
 			return;
 		}
 	}
@@ -76,6 +73,13 @@ void Menu::Run( void ) {
 
 	bgMusic->Play(); // play the music
 
+
+	Video::Erase();
+	UI::Draw();
+	Video::Update();
+	SDL_Delay(1500);
+	return;
+
 	// Input Loop
 	do {
 		// Collect user input events
@@ -86,18 +90,17 @@ void Menu::Run( void ) {
 		int loops = Timer::Update();
 		if(loops) {
 			Video::Erase();
-			Video::PreDraw();
 			UI::Draw();
 			Video::Update();
 		}
 
 		if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_ESCAPE ) ) ) {
-			quitSignal = true;
+			quit = true;
 		}
 
 		// Wait until the next click
 		Timer::Delay();
-	} while(!quitSignal);
+	} while(quit == false);
 }
 
 /** Returns the currently loaded scenraio, if any.
@@ -164,15 +167,13 @@ void Menu::SetupUI() {
 	};
 
 	int numScreens = (sizeof(splashScreens) / sizeof(splashScreens[0]));
-	int screenNum = rand();
-	menuSplash = Image::Get( splashScreens[(screenNum+0) % numScreens] );
-	gameSplash = Image::Get( splashScreens[(screenNum+1) % numScreens] );
+	menuSplash = Image::Get( splashScreens[rand() % numScreens] );
 
 	// Add the splash screen
 	UI::Add( new Picture( 0, 0, Video::GetWidth(), Video::GetHeight(), menuSplash, true ) );
 
 	// Add the logo
-	UI::Add( new Picture(20, Video::GetHeight() - 120, Image::Get("data/art/logo.png") ) );
+	UI::Add( new Picture( 20, Video::GetHeight() - 120, Image::Get("data/art/logo.png" ) ) );
 
 	// New Button
 	play = PictureButton( button_x, button_y + 50, Menu::CreateNewWindow,
@@ -195,7 +196,6 @@ void Menu::SetupUI() {
 	exit = PictureButton( button_x, button_y + 200, QuitMenu,
 	                      Image::Get( "data/graphics/txt_exit_active.png"),
 	                      Image::Get( "data/graphics/txt_exit_inactive.png") );
-
 }
 
 /** This Window is used to create new Players.
@@ -306,15 +306,11 @@ void Menu::StartGame( void *info ) {
 		UI::Close( UI::Search("/Window/") );
 	}
 
-	UI::SwapScreens( "In Game", menuSplash, gameSplash );
-	
 	// Run the scenario
 	scenario->Run();
 
 	// Close the scenario
 	delete scenario; scenario = NULL;
-
-	UI::SwapScreens( "Main Screen", gameSplash, menuSplash );
 }
 
 /** Erase a Player
@@ -327,10 +323,11 @@ void Menu::ErasePlayer( void* playerInfo ) {
 		string playerName = ((PlayerInfo*)playerInfo)->GetName();
 		PlayerList* players = PlayerList::Instance();
 
-		if(players->DeletePlayer(playerName))
+		if(players->DeletePlayer(playerName)) {
 			Dialogs::Alert("Player deleted successfully.");
-		else
+		} else {
 			Dialogs::Alert("A problem occurred while deleting the player.");
+		}
 
 	    UI::Close( UI::Search("/Window'Load Game'/") );
 	}
@@ -385,6 +382,6 @@ Picture* Menu::PictureButton( int x, int y, void (*callback)(), Image* activeIma
 /** Quit the Main Menu
  */
 void Menu::QuitMenu() {
-    quitSignal = true;
+    quit = true;
 }
 
