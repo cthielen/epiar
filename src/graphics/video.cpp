@@ -100,20 +100,20 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 		LogMsg(WARN, "Unable to load window icon data/graphics/icon.bmp." );
 	}
 
-	window = SDL_CreateWindow("Epiar", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("Epiar", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_SHOWN);
 	if(window == NULL) {
 		LogMsg(ERR, "Could not create window: %s", SDL_GetError() );
 		return( false );
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	if(renderer == NULL) {
 		SDL_DestroyWindow(window); window = NULL;
 		LogMsg(ERR, "Could not create renderer: %s", SDL_GetError() );
 		return( false );
 	}
 
-	SDL_SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_BLEND );
+	//SDL_SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_BLEND );
 
 	SDL_GetWindowSize(window, &Video::w, &Video::h);
 
@@ -122,8 +122,6 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	h2 = h / 2;
 
 	LogMsg(DEBUG, "Video mode initialized at %dx%dxbpp fixme\n", Video::w, Video::h );
-
-	cout << "window is " << Video::w << ", " << Video::h << endl;
 
 	return( true );
 }
@@ -159,14 +157,12 @@ int Video::lua_getHeight(lua_State *L) {
 /**\brief Video updates.
  */
 void Video::Update( void ) {
-	cout << "presenting renderer" << endl;
 	SDL_RenderPresent(renderer);
 }
 
 /**\brief Clears screen.
  */
 void Video::Erase( void ) {
-	cout << "clearing renderer" << endl;
 	SDL_RenderClear(renderer);
 }
 
@@ -185,9 +181,9 @@ int Video::GetHeight( void ) {
 /**\brief draws a point, a single pixel, on the screen
  */
 void Video::DrawPoint( int x, int y, float r, float g, float b ) {
-	glDisable(GL_TEXTURE_2D);
-	glColor3f( r, g, b );
-	glRecti( x, y, x + 1, y + 1 );
+	//glDisable(GL_TEXTURE_2D);
+	//glColor3f( r, g, b );
+	//glRecti( x, y, x + 1, y + 1 );
 }
 
 /**\brief Draw a point using Coordinate and Color.
@@ -211,21 +207,22 @@ void Video::DrawLine( int x1, int y1, int x2, int y2, Color c, float a ) {
 /**\brief Draw a Line.
  */
 void Video::DrawLine( int x1, int y1, int x2, int y2, float r, float g, float b, float a ) {
-	glColor4f( r, g, b, a );
-	glBegin(GL_LINES);
-	glVertex2d(x1,y1);
-	glVertex2d(x2,y2);
-	glEnd();
+	//glColor4f( r, g, b, a );
+	//glBegin(GL_LINES);
+	//glVertex2d(x1,y1);
+	//glVertex2d(x2,y2);
+	//glEnd();
 }
+
 
 
 /**\brief Draws a filled rectangle
  */
 void Video::DrawRect( int x, int y, int w, int h, float r, float g, float b, float a ) {
-	glDisable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glColor4f( r, g, b, a );
-	glRecti( x, y, x + w, y + h );
+	//glDisable(GL_TEXTURE_2D);
+	//glEnable(GL_BLEND);
+	//glColor4f( r, g, b, a );
+	//glRecti( x, y, x + w, y + h );
 }
 
 void Video::DrawRect( int x, int y, int w, int h, Color c, float a ) {
@@ -243,16 +240,16 @@ void Video::DrawBox( int x, int y, int w, int h, Color c, float a ) {
 /**\brief Draws an unfilled rectangle
  */
 void Video::DrawBox( int x, int y, int w, int h, float r, float g, float b, float a ) {
-	glDisable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glColor4f( r, g, b, a );
-	glBegin(GL_LINE_STRIP);
-	glVertex2d(x,y);
-	glVertex2d(x+w,y);
-	glVertex2d(x+w,y+h);
-	glVertex2d(x,y+h);
-	glVertex2d(x,y);
-	glEnd();
+	//glDisable(GL_TEXTURE_2D);
+	//glEnable(GL_BLEND);
+	//glColor4f( r, g, b, a );
+	//glBegin(GL_LINE_STRIP);
+	//glVertex2d(x,y);
+	//glVertex2d(x+w,y);
+	//glVertex2d(x+w,y+h);
+	//glVertex2d(x,y+h);
+	//glVertex2d(x,y);
+	//glEnd();
 
 }
 
@@ -271,7 +268,7 @@ void Video::DrawCircle( Coordinate c, int radius, float line_width, Color col, f
 /**\brief Draws a circle
  */
 void Video::DrawCircle( int x, int y, int radius, float line_width, float r, float g, float b, float a) {
-	glDisable(GL_TEXTURE_2D);
+	/*glDisable(GL_TEXTURE_2D);
 	glColor4f( r, g, b, a );
 	glLineWidth(line_width);
 	glBegin(GL_LINE_STRIP);
@@ -284,7 +281,7 @@ void Video::DrawCircle( int x, int y, int radius, float line_width, float r, flo
 	glVertex2d(radius + x, y);
 	glEnd();
 	// Reset Line Width
-	glLineWidth(1);
+	glLineWidth(1);*/
 }
 
 void Video::DrawFilledCircle( Coordinate p, int radius, Color c, float a) {
@@ -298,7 +295,7 @@ void Video::DrawFilledCircle( int x, int y, int radius, Color c, float a) {
 /**\brief Draw a filled circle.
  */
 void Video::DrawFilledCircle( int x, int y, int radius, float r, float g, float b, float a) {
-	glColor4f(r, g, b, a);
+	/*glColor4f(r, g, b, a);
 	glEnable(GL_BLEND);
 	glBegin(GL_TRIANGLE_STRIP);
 
@@ -312,7 +309,7 @@ void Video::DrawFilledCircle( int x, int y, int radius, float r, float g, float 
 	// One more triangle to finish the circle. (ang=0)
 	glVertex2d(x, y);
 	glVertex2d(radius + x, y);
-	glEnd();
+	glEnd();*/
 }
 
 /**\brief Draws a targeting overlay.
@@ -321,7 +318,7 @@ void Video::DrawTarget( int x, int y, int w, int h, int d, float r, float g, flo
 	float w2 = w / 2.;
 	float h2 = h / 2.;
 
-	// d is for 'depth' and is the number of crosshair pixels
+	/*// d is for 'depth' and is the number of crosshair pixels
 	glColor4f(r, g, b, a);
 
 	glBegin(GL_LINES);
@@ -342,7 +339,7 @@ void Video::DrawTarget( int x, int y, int w, int h, int d, float r, float g, flo
 		glVertex2d(x + w2, y + h2); glVertex2d(x + w2, y + h2 - d);
 		glVertex2d(x + w2, y + h2); glVertex2d(x + w2 - d, y + h2);
 
-	glEnd();
+	glEnd();*/
 }
 
 /**\brief Enables the mouse
@@ -374,7 +371,7 @@ int Video::GetHalfHeight( void ) {
 void Video::SetCropRect( int x, int y, int w, int h ){
 	int xn, yn, wn, hn;
 
-	if (cropRects.empty()) {
+	/*if (cropRects.empty()) {
 		glEnable(GL_SCISSOR_TEST);
 
 		xn = x;
@@ -403,13 +400,13 @@ void Video::SetCropRect( int x, int y, int w, int h ){
 	cropRects.push(Rect( xn, yn, wn, hn ));
 
 	// Need to convert top down y-axis
-	glScissor( xn, Video::h - (yn + hn), wn, hn );
+	glScissor( xn, Video::h - (yn + hn), wn, hn );*/
 }
 
 /**\brief Unset the previous crop rectangle after use.
  */
 void Video::UnsetCropRect( void ) {
-	if (!cropRects.empty()) // Shouldn't be empty
+	/*if (!cropRects.empty()) // Shouldn't be empty
 		cropRects.pop();
 	else
 		LogMsg(WARN,"You unset the crop rect too many times.");
@@ -421,7 +418,7 @@ void Video::UnsetCropRect( void ) {
 		Rect prevrect = cropRects.top();
 
 		glScissor( TO_INT(prevrect.x), Video::h - (TO_INT(prevrect.y) + TO_INT(prevrect.h)), TO_INT(prevrect.w), TO_INT(prevrect.h) );
-	}
+	}*/
 }
 
 /**\brief Takes a screenshot of the game and saves it to an Image.

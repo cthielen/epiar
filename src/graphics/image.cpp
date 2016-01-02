@@ -115,33 +115,21 @@ bool Image::Load( const string& filename ) {
  */
 bool Image::Load( char *buf, int bufSize ) {
 	SDL_RWops *rw;
-	SDL_Surface *s = NULL;
 
 	rw = SDL_RWFromMem( buf, bufSize );
-	if( !rw ) {
+	if( rw == NULL ) {
 		LogMsg(WARN, "Image loading failed. Could not create RWops" );
 		return( false );
 	}
 
-	s = IMG_Load_RW( rw, 0 );
+	image = IMG_LoadTexture_RW( Video::GetRenderer(), rw, 0 );
 	SDL_FreeRW(rw);
-
-	if( s == NULL ) {
-		LogMsg(WARN, "Image loading failed. Could not load image from RWops" );
-		return( false );
-	}
-
-	w = s->w;
-	h = s->h;
-
-	image = SDL_CreateTextureFromSurface( Video::GetRenderer(), s );
 	if( image == NULL ) {
 		LogMsg(WARN, "Failed to load image from buffer" );
-		SDL_FreeSurface( s );
 		return( false );
 	}
 
-	SDL_FreeSurface( s );
+	SDL_QueryTexture(image, NULL, NULL, &w, &h);
 
 	return( true );
 }
@@ -172,8 +160,6 @@ void Image::_Draw( int x, int y, float r, float g, float b, float alpha, float a
 	dest.y = y;
 	dest.w = w * resize_ratio_w;
 	dest.h = h * resize_ratio_h;
-
-	cout << "drawing an image at " << x << ", " << y << endl;
 
 	SDL_SetTextureAlphaMod(image, alpha * 255.);
 	SDL_RenderCopyEx(Video::GetRenderer(), image, NULL, &dest, angle, NULL, SDL_FLIP_NONE );

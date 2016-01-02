@@ -73,13 +73,6 @@ void Menu::Run( void ) {
 
 	bgMusic->Play(); // play the music
 
-
-	Video::Erase();
-	UI::Draw();
-	Video::Update();
-	SDL_Delay(1500);
-	return;
-
 	// Input Loop
 	do {
 		// Collect user input events

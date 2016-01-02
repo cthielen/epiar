@@ -442,12 +442,12 @@ void Ship::Draw( void ) {
 
 	if( status.isJumping ) {
 		// When the ship is jumping, move it to the screen edge
-		glPushMatrix();
+		//glPushMatrix();
 		Coordinate jumpDir = (status.jumpDestination - position);
 		jumpDir.EnforceMagnitude( Video::GetHalfWidth() );
 		jumpDir *= ((float)Timer::GetRealTicks() - (float)status.jumpStartTime) / 1000.0;
 		//cout << "Jump:" << status.jumpDestination << " Pos:" << position << " dir:" << jumpDir <<endl;
-		glTranslatef( jumpDir.GetX(), jumpDir.GetY(), 0.0);
+		//glTranslatef( jumpDir.GetX(), jumpDir.GetY(), 0.0);
 	}
 
 	Sprite::Draw();
@@ -487,7 +487,7 @@ void Ship::Draw( void ) {
 #endif
 
 	if( status.isJumping ) {
-		glPopMatrix();
+		//glPopMatrix();
 	}
 }
 
