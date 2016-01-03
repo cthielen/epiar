@@ -203,53 +203,32 @@ void Image::DrawFit( int x, int y, int box_w, int box_h, float angle ) {
 /**\brief Draw the image tiled to fill a rectangle of w/h - will crop to meet w/h and won't overflow
  */
 void Image::DrawTiled( int x, int y, int fill_w, int fill_h, float alpha ) {
-	if( !image ) {
+	if( image == NULL ) {
 		LogMsg(WARN, "Trying to draw without loading an image first." );
 		return;
 	}
 
-	// TODO: re-implement
-
-	return;
-
-	/*glPushMatrix();
-
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Clear The Background Color To Black
-	glClearDepth(1.0); // Enables Clearing Of The Depth Buffer
-	glShadeModel(GL_SMOOTH); // Enables Smooth Color Shading
-	glEnable(GL_TEXTURE_2D); // Enable 2D Texture Mapping
- 	glEnable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
-
-	// draw it
-	glColor4f(1, 1, 1, alpha);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture( GL_TEXTURE_2D, image );
-
 	Video::SetCropRect(x, y, fill_w, fill_h); // don't need to invert y here
 
-	glBegin( GL_QUADS );
 	for( int j = 0; j < fill_h; j += h) {
 		for( int i = 0; i < fill_w; i += w) {
-			glTexCoord2f( 0., 0. ); glVertex2f( static_cast<GLfloat>(x+i), static_cast<GLfloat>(y+j) ); // Lower Left
-			glTexCoord2f( scale_w, 0. ); glVertex2f( static_cast<GLfloat>(x+w+i) , static_cast<GLfloat>(y+j)); // Lower Right
-			glTexCoord2f( scale_w, scale_h ); glVertex2f( static_cast<GLfloat>(x+w+i) , static_cast<GLfloat>(y+h+j) ); // Upper Right
-			glTexCoord2f( 0., scale_h ); glVertex2f( static_cast<GLfloat>(x+i), static_cast<GLfloat>(y+h+j) ); // Upper Left
+			SDL_Rect src, dest;
+
+			src.x = 0;
+			src.y = 0;
+			src.w = fill_w < w ? fill_w : w;
+			src.h = fill_h < h ? fill_h : h;
+			dest.x = x + i;
+			dest.y = y + j;
+			dest.w = fill_w < w ? fill_w : w;
+			dest.h = fill_h < h ? fill_h : h;
+
+			SDL_SetTextureAlphaMod(image, alpha * 255.);
+			SDL_RenderCopyEx(Video::GetRenderer(), image, &src, &dest, 0., NULL, SDL_FLIP_NONE );
 		}
 	}
-	glEnd();
 
 	Video::UnsetCropRect();
-
-	glEnable(GL_DEPTH_TEST); // Enable Depth Testing
-	glDisable(GL_BLEND); // Disable Blending
-
-	glDisable(GL_TEXTURE_2D); // Disable 2D Texture Mapping
-	glBindTexture(GL_TEXTURE_2D,0); // Unbind The Blur Texture
-
-	glPopMatrix();*/
 }
 
 
