@@ -240,7 +240,7 @@ void UI::Save( void ) {
  * \param[in] newname The name of the screen to be loaded.
  * \todo The Background images should be built into the Screens themselves.
  */
-void UI::SwapScreens(string newname, Image* oldBackground, Image* newBackground ) {
+void UI::SwapScreens(string newname) {
 	Container *oldScreen;
 	Container *newScreen;
 
@@ -259,53 +259,6 @@ void UI::SwapScreens(string newname, Image* oldBackground, Image* newBackground 
 
 	// Swap in the new Screen
 	currentScreen = newScreen;
-
-	return;
-
-	// Animate one screen sliding over another
-	// Since anything less than 10ms is unreliable from the timer perspective, 
-	// There is a 10ms delay between frames.
-	// Since "options/timing/screen-swap" is in ms use screen-swap / 10.
-	// Only do this animation if it will finish in a finite time, so skip if time=0 or dx=0
-	if ( (0 < OPTION(int, "options/timing/screen-swap") / 10)
-	  && (0 < Video::GetWidth() / (OPTION(int, "options/timing/screen-swap")/10)) )
-	{
-		int dx = Video::GetWidth() / (OPTION(int, "options/timing/screen-swap")/10);
-		int oldX = 0;
-		int newX = Video::GetWidth();
-		Timer::Update();
-		while( newX > 0 ) {
-			oldX -= dx;
-			newX -= dx;
-
-			// Prevent the screen from going to far and then 'bouncing' back
-			if( newX < 0 ) {
-				oldX -= newX;
-				newX = 0;
-			}
-
-			Video::Erase();
-			//printf("Ticks: %d old %d new %d total %d\n", SDL_GetTicks(), oldX, newX, newX+oldX);
-
-			oldBackground->DrawStretch( oldX, 0, Video::GetWidth(), Video::GetHeight() );
-			Image::Get("data/art/logo.png")->Draw(newX + Video::GetWidth() - 240, Video::GetHeight() - 120 );
-			oldScreen->SetX( oldX );
-			oldScreen->Draw( );
-			DrawDeferred();
-
-			newBackground->DrawStretch( newX, 0, OPTION( int, "options/video/w" ), OPTION( int, "options/video/h"));
-			Image::Get("data/art/logo.png")->Draw(newX + Video::GetWidth() - 240, Video::GetHeight() - 120 );
-			newScreen->SetX( newX );
-			newScreen->Draw( );
-			DrawDeferred();
-			
-			Video::Update();
-			Timer::Delay();
-			Timer::Update();
-		}
-		oldScreen->SetX( 0 );
-		newScreen->SetX( 0 );
-	}
 }
 
 /**\brief Handles Input Events from the event queue.

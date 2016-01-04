@@ -62,11 +62,13 @@
 ostream& operator<<(ostream &out, const InputEvent&e) {
 	static const char _mouseMeanings[3] = {'M','U','D'};
 	static const char _keyMeanings[4] = {'^','V','P','T'};
+
 	if ( e.type == KEY ) {
 		out << "KEY([" << SDL_GetKeyName(e.key) << "] " << e.key << ' ' << _keyMeanings[int( e.kstate )] << ")";
 	} else { // Mouse
 		out << "MOUSE(" << e.mx<< ',' << e.my << ' ' << _mouseMeanings[int( e.mstate )] << ")";
 	}
+
 	return out;
 }
 
@@ -122,7 +124,7 @@ list<InputEvent> Input::Update() {
 		events.push_back( InputEvent( KEY, KEYPRESSED, itr->first ) );
 	}
 
-	if((Timer::GetTicks() - lastMouseMove > OPTION(Uint32, "options/timing/mouse-fade")) ){
+	if((Timer::GetTicks() - lastMouseMove > OPTION(Uint32, "options/timing/mouse-fade")) ) {
 		Video::DisableMouse();
 	}
 
@@ -209,6 +211,7 @@ void Input::_UpdateHandleMouseUp( SDL_Event *event ) {
 void Input::_UpdateHandleKeyDown( SDL_Event *event ) {
 	assert( event );
 
+	cout << "pushing to events KEYDOWN for " << event->key.keysym.sym << endl;
 	events.push_back( InputEvent( KEY, KEYDOWN, event->key.keysym.sym ) );
 	// typed events go here because SDL will repeat KEYDOWN events for us at the set SDL repeat rate
 	PushTypeEvent( events, event->key.keysym.sym );
@@ -280,14 +283,15 @@ void Input::PushTypeEvent( list<InputEvent> & events, SDL_Keycode key ) {
  */
 void Input::HandleLuaCallBacks( list<InputEvent> & events ) {
 	list<InputEvent>::iterator i = events.begin();
+
 	while( i != events.end() ) {
 		map<InputEvent,string>::iterator val = eventMappings.find( *i );
-		if( val != eventMappings.end() ){
+
+		if( val != eventMappings.end() ) {
 			Lua::Run( val->second );
 			i = events.erase( i );
-		}
-		else{
-			++i;
+		} else {
+			i++;
 		}
 	}
 }

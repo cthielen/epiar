@@ -299,8 +299,12 @@ void Menu::StartGame( void *info ) {
 		UI::Close( UI::Search("/Window/") );
 	}
 
+	UI::SwapScreens( "In Game" );
+
 	// Run the scenario
 	scenario->Run();
+
+	UI::SwapScreens( "Main Screen" );
 
 	// Close the scenario
 	delete scenario; scenario = NULL;

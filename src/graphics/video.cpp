@@ -163,6 +163,7 @@ void Video::Update( void ) {
 /**\brief Clears screen.
  */
 void Video::Erase( void ) {
+	SDL_SetRenderDrawColor(renderer, 0., 0., 0., 255.);
 	SDL_RenderClear(renderer);
 }
 
@@ -181,9 +182,8 @@ int Video::GetHeight( void ) {
 /**\brief draws a point, a single pixel, on the screen
  */
 void Video::DrawPoint( int x, int y, float r, float g, float b ) {
-	//glDisable(GL_TEXTURE_2D);
-	//glColor3f( r, g, b );
-	//glRecti( x, y, x + 1, y + 1 );
+	SDL_SetRenderDrawColor(renderer, r * 255., g * 255., b * 255., 255.);
+	SDL_RenderDrawPoint(renderer, x, y);
 }
 
 /**\brief Draw a point using Coordinate and Color.

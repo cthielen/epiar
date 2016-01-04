@@ -355,8 +355,9 @@ void Scenario::Run() {
 	Starfield starfield( 1000 );
 
 	// Load sample game music
-	if(bgmusic && OPTION(int, "options/sound/background"))
-		bgmusic->Play();
+	if(bgmusic && OPTION(int, "options/sound/background")) {
+		//bgmusic->Play();
+	}
 
 	// main game loop
 	bool lowFps = false;
@@ -573,8 +574,7 @@ void Scenario::HandleInput() {
 	console->HandleInput( events );
 	Hud::HandleInput( events, camera, sprites );
 
-	if( !paused )
-	{
+	if( !paused ) {
 		Input::HandleLuaCallBacks( events );
 	}
 

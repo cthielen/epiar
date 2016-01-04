@@ -235,11 +235,16 @@ int Scenario_Lua::Getoption(lua_State *L) {
  */
 int Scenario_Lua::Setoption(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
-	if (n != 2)
+
+	if (n != 2) {
 		return luaL_error(L, "Got %d arguments expected 1 (option,value)", n);
+	}
+
 	string path = (string)lua_tostring(L, 1);
 	string value = (string)lua_tostring(L, 2);
+
 	SETOPTION(path,value);
+
 	return 0;
 }
 
@@ -250,17 +255,20 @@ int Scenario_Lua::RegisterKey(lua_State *L) {
   
 	if(n == 3) {
 		int triggerKey;
+
 		if( lua_isnumber(L,1) ) {
 			triggerKey = (int)(luaL_checkint(L,1));
 		} else {
 			triggerKey = (int)(luaL_checkstring(L,1)[0]);
 		}
+
 		keyState triggerState = (keyState)(luaL_checkint(L,2));
 		string command = (string)luaL_checkstring(L,3);
 		Input::RegisterCallBack(InputEvent(KEY, triggerState, triggerKey), command);
 	} else {
 		luaL_error(L, "Got %d arguments expected 3 (Key, State, Command)", n);
 	}
+
 	return 0;
 }
 

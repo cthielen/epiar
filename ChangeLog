@@ -1,3 +1,7 @@
+Sunday, January 3, 2016
+	Christopher Thielen:
+		* Main menu and non-textual UI now render correctly.
+
 Thursday, December 24, 2015
 	Christopher Thielen:
 		* Moved color functions out of video into separate class

@@ -231,12 +231,12 @@ void Ship::Rotate( float direction ) {
 	float rotPerSecond, timerDelta, maxturning;
 	float angle = GetAngle();
 
-	if( !model ) {
+	if( model == NULL ) {
 		LogMsg(WARN, "Attempt to rotate sprite with no model." );
 		return;
 	}
 
-	if(  status.isJumping == true ) {
+	if( status.isJumping == true ) {
 		return;
 	}
 
@@ -246,11 +246,11 @@ void Ship::Rotate( float direction ) {
 	maxturning = static_cast<float>((rotPerSecond * timerDelta) * 360.);
 
 	// Cap the ship rotation
-	if (fabs(direction) > maxturning){
-		if (direction > 0 ){
+	if (fabs(direction) > maxturning) {
+		if (direction > 0 ) {
 			angle += maxturning;
 			status.isRotatingLeft = true;
-		}else{
+		} else {
 			angle -= maxturning;
 			status.isRotatingRight = true;
 		}
@@ -260,6 +260,8 @@ void Ship::Rotate( float direction ) {
 
 	// Normalize
 	angle = normalizeAngle(angle);
+
+	cout << "ship rotating to angle: " << angle << endl;
 
 	SetAngle( angle );
 

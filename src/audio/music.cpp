@@ -52,15 +52,18 @@ Song::~Song(){
 /**\brief Plays the current song.
  */
 bool Song::Play( bool loop ){
-	if ( this->song == NULL )
+	if ( (this == NULL) || (this->song == NULL) )
 		return false;
 
-	if ( loop )
+	if ( loop ) {
 		Mix_PlayMusic( this->song, 1 );
-	else
+	} else {
 		Mix_PlayMusic( this->song, 0 );
+	}
+
 	/** \bug: SDL_mixer doesn't seem to respect VolumeMusic when starting a new song.*/
 	Mix_VolumeMusic( Mix_VolumeMusic(-1) );
+
 	return true;
 }
 

@@ -46,7 +46,7 @@ class UI {
 
 		static void Save( void );
 
-		static void SwapScreens(string newname, Image* oldBackground, Image* newBackground );
+		static void SwapScreens(string newname);
 
 		static Font* font;
 		static Font* boldFont;

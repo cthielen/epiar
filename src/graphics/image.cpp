@@ -1,7 +1,7 @@
 /**\file			image.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Saturday, January 31, 2009
- * \date			Modified: Friday, January 1, 2016
+ * \date			Modified: Sunday, January 3, 2016
  * \brief			Image loading and display
  * \details
  * See this note section in image.h for an important clarification about the handling
