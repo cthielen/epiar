@@ -1,6 +1,9 @@
 Sunday, January 3, 2016
 	Christopher Thielen:
 		* Main menu and non-textual UI now render correctly.
+		* Restored some gameplay. Inverted Y-axis no longer appears to
+		be the case.
+		* Dropped FTGL and began SDL_ttf conversion.
 
 Thursday, December 24, 2015
 	Christopher Thielen:

@@ -81,14 +81,6 @@ dnl fi
 fi
 
 
-dnl Include FTGL
-case "$target" in
-	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd* | *-apple-darwin*)
-	PKG_CHECK_MODULES([FTGL], [ftgl >= 2.1.3])
-	CFLAGS="$CFLAGS $FTGL_CFLAGS"
-	LIBS="$LIBS $FTGL_LIBS"
-esac
-
 dnl Check for libxml2
 case "$target" in
 	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd*)
@@ -112,11 +104,11 @@ case "$target" in
 esac
 
 dnl Set up OpenGL for OS X
-case "$target" in
-	*-apple-darwin*)
-	CFLAGS="$CFLAGS -I/System/Library/Frameworks/OpenGL.framework/Headers"
-	LIBS="$LIBS -framework OpenGL"
-esac
+dnl case "$target" in
+dnl 	*-apple-darwin*)
+dnl 	CFLAGS="$CFLAGS -I/System/Library/Frameworks/OpenGL.framework/Headers"
+dnl 	LIBS="$LIBS -framework OpenGL"
+dnl esac
 
 dnl Check for SDL_image
 case "$target" in
@@ -132,6 +124,14 @@ case "$target" in
 	PKG_CHECK_MODULES([SDL2_mixer], [SDL2_mixer >= 2.0.0])
 	CFLAGS="$CFLAGS $SDL2_mixer_CFLAGS"
 	LIBS="$LIBS $SDL2_mixer_LIBS"
+esac
+
+dnl Check for SDL_ttf
+case "$target" in
+	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd* | *-apple-darwin*)
+	PKG_CHECK_MODULES([SDL2_ttf], [SDL2_ttf >= 2.0.12])
+	CFLAGS="$CFLAGS $SDL2_ttf_CFLAGS"
+	LIBS="$LIBS $SDL2_ttf_LIBS"
 esac
 
 dnl Set MS Windows specific options - For afont and ntohl (Win32 provides this through Winsock)

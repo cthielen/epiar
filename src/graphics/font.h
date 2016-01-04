@@ -1,7 +1,7 @@
 /**\file			font.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Saturday, February 20, 2010
+ * \date			Modified: Sunday, January 3, 2016
  * \brief
  * \details
  */
@@ -10,29 +10,27 @@
 #define H_FONT
 
 #include "includes.h"
-#include <FTGL/ftgl.h>
 #include "graphics/video.h"
 #include "utilities/resource.h"
 
 class Font : public Resource {
 		public:
-			enum XPos{
+			enum XPos {
 				LEFT,   /**< Renders left aligned (default).*/
 				CENTER, /**< Renders centered on the point.*/
 				RIGHT   /**< Renders right aligned.*/
-				};
-			enum YPos{
+			};
+			enum YPos {
 				TOP,    /**< Renders top aligned (default).*/
 				MIDDLE, /**< Renders centered on the point.*/
 				BOTTOM  /**< Renders bottom aligned.*/
-				};
+			};
 
 			Font();
 			Font( string filename );
 			~Font();
 
 			static Font* Get(string filename);
-			static Font* GetSkin(string filename);
 
 			bool Load( string filename );
 
@@ -47,16 +45,15 @@ class Font : public Resource {
 
 			int Render( int x, int y, const string& text,XPos xpos=LEFT, YPos ypos=TOP );
 			int RenderTight( int x, int y, const string& text,XPos xpos=LEFT, YPos ypos=TOP );
-			int RenderWrapped( int x, int y, const string& text, int w );
 
 		private:
-			int RenderInternal( int x, int y, const string& text, int h, XPos xpos, YPos ypos);
+			int _Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos);
 
 			string fontname; // filename of the loaded font
 			float r, g, b, a; // color of text
 			int height, width, base;
 
-			FTTextureFont* font;
+			TTF_Font* font;
 };
 
 #endif // H_FONT

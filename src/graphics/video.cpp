@@ -65,12 +65,22 @@ bool Video::Initialize( void ) {
 
 	Video::SetWindow( w, h, OPTION( int, "options/video/bpp"), fullscreen );
 
+	/* Initialize SDL_image */
 	if( IMG_Init( IMG_INIT_PNG ) != IMG_INIT_PNG ) {
 		LogMsg(ERR, "Could not initialize SDL_image: %s", SDL_GetError() );
 		return( false );
 	}
 
 	atexit( IMG_Quit );
+
+
+	/* Initialize SDL_ttf */
+	if( TTF_Init( ) < 0 ) {
+		LogMsg(ERR, "Could not initialize SDL_ttf: %s", SDL_GetError() );
+		return( false );
+	}
+
+	atexit( TTF_Quit );
 
 	return( true );
 }

@@ -45,18 +45,10 @@
 #include <SDL2/SDL.h>
 #include "SDL_image.h"
 #include "SDL_mixer.h"
+#include "SDL_ttf.h"
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <zlib.h>
-
-#if __APPLE__
-//#include <OpenGL/gl.h>
-//#include <OpenGL/glu.h>
-//#include <unistd.h>
-#else
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-#endif
 
 // Local includes
 #include "defines.h"
