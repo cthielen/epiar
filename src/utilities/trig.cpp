@@ -65,13 +65,13 @@ double Trig::GetSin( double ang ) {
 	return( sin(ang) );
 }
 
-// rotates point (x, y) about point (ax, ay) and sets nx, ny to new point
+// Rotates point (x, y) about point (ax, ay) and sets nx, ny to new point. 'ang' is in radians
 void Trig::RotatePoint( float x, float y, float ax, float ay, float *nx, float *ny, float ang ) {
 	float theta = atan2( y - ay, x - ax );
-	float dist = sqrt( ((x - ax)*(x-ax)) + ((y - ay)*(y-ay)) );
+	float dist = sqrt( ((x - ax) * (x - ax)) + ((y - ay) * (y - ay)) );
 	float ntheta = theta + ang;
 
 	*nx = ax + (dist * cos( ntheta ) );
-	*ny = ay - (dist * sin( ntheta ) );
+	*ny = ay + (dist * sin( ntheta ) );
 }
 

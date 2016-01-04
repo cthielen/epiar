@@ -26,8 +26,8 @@ class Scenario_Lua {
 		static int Pause(lua_State *L);
 
 		// Options Interfaces
-		static int Getoption(lua_State *L);
-		static int Setoption(lua_State *L);
+		static int GetOption(lua_State *L);
+		static int SetOption(lua_State *L);
 
 		// Input Interfaces
 		static int RegisterKey(lua_State *L);

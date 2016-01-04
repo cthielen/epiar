@@ -1,7 +1,7 @@
 /**\file			input.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 4, 2006
- * \date			Modified: Thursday, December 24, 2015
+ * \date			Modified: Sunday, January 3, 2016
  * \brief
  * \details
  */
@@ -11,8 +11,9 @@
 #include "input/input.h"
 #include "engine/scenario.h"
 #include "engine/scenario_lua.h"
-#include "utilities/log.h"
 #include "graphics/video.h"
+#include "utilities/log.h"
+#include "utilities/lua.h"
 #include "utilities/timer.h"
 
 /**\class Input
@@ -138,9 +139,48 @@ bool Input::keyIsHeld(SDL_Keycode key) {
 	return (heldKeys.find(key) != heldKeys.end());
 }
 
+void l_pushtableinteger(lua_State* L , const char* key , int value) {
+	lua_pushstring(L, key);
+	lua_pushinteger(L, value);
+	lua_settable(L, -3);
+} 
+
+/**\brief Exports SDLKey enum to Lua (used by commands.lua)
+ */
+void Input::RegisterLuaVariables( void ) {
+	lua_State* L = Lua::CurrentState();
+	
+	lua_newtable(L);
+	l_pushtableinteger(L, "left", SDLK_LEFT);
+	l_pushtableinteger(L, "right", SDLK_RIGHT);
+	l_pushtableinteger(L, "up", SDLK_UP);
+	l_pushtableinteger(L, "down", SDLK_DOWN);
+	l_pushtableinteger(L, "space", SDLK_SPACE);
+	l_pushtableinteger(L, "escape", SDLK_ESCAPE);
+	l_pushtableinteger(L, "pause", SDLK_PAUSE);
+	l_pushtableinteger(L, "backspace", SDLK_BACKSPACE);
+	l_pushtableinteger(L, "tab", SDLK_TAB);
+	l_pushtableinteger(L, "clear", SDLK_CLEAR);
+	l_pushtableinteger(L, "return", SDLK_RETURN);
+	l_pushtableinteger(L, "end", SDLK_END);
+	l_pushtableinteger(L, "insert", SDLK_INSERT);
+	l_pushtableinteger(L, "home", SDLK_HOME);
+	l_pushtableinteger(L, "pageup", SDLK_PAGEUP);
+	l_pushtableinteger(L, "pagedown", SDLK_PAGEDOWN);
+	l_pushtableinteger(L, "capslock", SDLK_CAPSLOCK);
+	l_pushtableinteger(L, "rshift", SDLK_RSHIFT);
+	l_pushtableinteger(L, "lshift", SDLK_LSHIFT);
+
+	lua_setglobal(L, "SDLKeys" );
+}
+
+/*Key = {
+	rctrl=305, lctrl=306, ralt=307, lalt=308, rmeta=309, lmeta=310, lsuper=311, rsuper=312,
+}*/
+
 /**\brief Converts SDL_MouseButtonEvent to Epiar's Input model.
  */
-mouseState Input::_CheckMouseState( Uint8 button, bool up ){
+mouseState Input::_CheckMouseState( Uint8 button, bool up ) {
 	switch (button) {
 		case SDL_BUTTON_LEFT:
 			return (up? MOUSELUP : MOUSELDOWN);
@@ -211,11 +251,11 @@ void Input::_UpdateHandleMouseUp( SDL_Event *event ) {
 void Input::_UpdateHandleKeyDown( SDL_Event *event ) {
 	assert( event );
 
-	cout << "pushing to events KEYDOWN for " << event->key.keysym.sym << endl;
 	events.push_back( InputEvent( KEY, KEYDOWN, event->key.keysym.sym ) );
 	// typed events go here because SDL will repeat KEYDOWN events for us at the set SDL repeat rate
 	PushTypeEvent( events, event->key.keysym.sym );
-	heldKeys[ event->key.keysym.sym ] = 1;
+
+	heldKeys.insert( std::pair<SDL_Keycode, bool>( event->key.keysym.sym, true ) );
 }
 
 /**\brief Translates key up events to Epiar events.
@@ -224,7 +264,7 @@ void Input::_UpdateHandleKeyUp( SDL_Event *event ) {
 	assert( event );
 
 	events.push_back( InputEvent( KEY, KEYUP, event->key.keysym.sym ) );
-	heldKeys[ event->key.keysym.sym ] = 0;
+	heldKeys.erase( event->key.keysym.sym );
 }
 
 void Input::PushTypeEvent( list<InputEvent> & events, SDL_Keycode key ) {
@@ -316,12 +356,14 @@ void Input::UnRegisterCallBack( InputEvent event ) {
  */
 bool Input::SearchSpecificEvent( list<InputEvent> & events, InputEvent trigger ) {
 	list<InputEvent>::iterator i = events.begin();
+
 	while( i != events.end() ) {
 		if( (*i) == trigger ) {
 			return true;
 		}
-		++i;
+		i++;
 	}
+
 	return false;
 }
 
@@ -331,10 +373,12 @@ bool Input::SearchSpecificEvent( list<InputEvent> & events, InputEvent trigger )
  * \returns true if the event was found and removed.
  */
 bool Input::HandleSpecificEvent( list<InputEvent> & events, InputEvent trigger ) {
-	bool found = SearchSpecificEvent(events,trigger);
+	bool found = SearchSpecificEvent(events, trigger);
+
 	if( found ) {
 		events.remove( trigger );
 	}
+
 	return found;
 }
 
@@ -345,7 +389,7 @@ void Input::PrintEvents( string title, list<InputEvent> & events ) {
 	list<InputEvent>::iterator i = events.begin();
 	if( events.size() == 0 ) return;
 	while( i != events.end() ) {
-		cout<<*i << " ";
+		cout << *i << " ";
 		++i;
 	}
 	cout << endl;

@@ -261,8 +261,6 @@ void Ship::Rotate( float direction ) {
 	// Normalize
 	angle = normalizeAngle(angle);
 
-	cout << "ship rotating to angle: " << angle << endl;
-
 	SetAngle( angle );
 
 	// Play engine sound
@@ -295,7 +293,7 @@ void Ship::Accelerate( void ) {
 	float acceleration = (shipStats.GetForceOutput() * status.engineBooster ) / shipStats.GetMass();
 
 	momentum += Coordinate( trig->GetCos( angle ) * acceleration * Timer::GetDelta(),
-	                -1 * trig->GetSin( angle ) * acceleration * Timer::GetDelta() );
+	                trig->GetSin( angle ) * acceleration * Timer::GetDelta() );
 
 	momentum.EnforceMagnitude(speed);
 
@@ -448,7 +446,6 @@ void Ship::Draw( void ) {
 		Coordinate jumpDir = (status.jumpDestination - position);
 		jumpDir.EnforceMagnitude( Video::GetHalfWidth() );
 		jumpDir *= ((float)Timer::GetRealTicks() - (float)status.jumpStartTime) / 1000.0;
-		//cout << "Jump:" << status.jumpDestination << " Pos:" << position << " dir:" << jumpDir <<endl;
 		//glTranslatef( jumpDir.GetX(), jumpDir.GetY(), 0.0);
 	}
 

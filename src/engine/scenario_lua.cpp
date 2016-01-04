@@ -63,8 +63,8 @@ void Scenario_Lua::RegisterScenario(lua_State *L) {
 		{"ispaused", &Scenario_Lua::Ispaused},
 
 		// OPTION Functions
-		{"getoption", &Scenario_Lua::Getoption},
-		{"setoption", &Scenario_Lua::Setoption},
+		{"getoption", &Scenario_Lua::GetOption},
+		{"setoption", &Scenario_Lua::SetOption},
 
 		// Player Functions
 		{"loadPlayer", &Scenario_Lua::LoadPlayer},
@@ -118,8 +118,8 @@ void Scenario_Lua::RegisterScenario(lua_State *L) {
 		{"listSounds", &Scenario_Lua::ListSounds},
 		{NULL, NULL}
 	};
-	luaL_register(L,"Epiar",EngineFunctions);
 
+	luaL_register(L, "Epiar", EngineFunctions);
 }
 
 /** \brief Register functions specific to the editor
@@ -133,6 +133,7 @@ void Scenario_Lua::RegisterEditor(lua_State *L) {
 		{"setDescription", &Scenario_Lua::SetDescription},
 		{NULL, NULL}
 	};
+
 	luaL_register(L,"Epiar",EditorFunctions);
 }
 
@@ -218,13 +219,17 @@ int Scenario_Lua::SavePlayer(lua_State *L){
  *  \param [in] key Path to a specific OPTION.
  *  \returns string representation of the OPTION's value.
  */
-int Scenario_Lua::Getoption(lua_State *L) {
+int Scenario_Lua::GetOption(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
-	if (n != 1)
+	if (n != 1) {
 		return luaL_error(L, "Got %d arguments expected 1 (option)", n);
+	}
+
 	string path = (string)lua_tostring(L, 1);
 	string value = OPTION(string,path);
+
 	lua_pushstring(L, value.c_str());
+
 	return 1;
 }
 
@@ -233,7 +238,7 @@ int Scenario_Lua::Getoption(lua_State *L) {
  *  \param [in] value the OPTION's new value.
  *  \note All Lua primitives should support lua_tostring, so ints and floats can be used.
  */
-int Scenario_Lua::Setoption(lua_State *L) {
+int Scenario_Lua::SetOption(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n != 2) {

@@ -95,6 +95,7 @@ class Input {
 		static void HandleLuaCallBacks( list<InputEvent> & events );
 		static void RegisterCallBack( InputEvent key, string command );
 		static void UnRegisterCallBack( InputEvent key );
+		static void RegisterLuaVariables( void );
 
 		static bool SearchSpecificEvent( list<InputEvent> & events, InputEvent key );
 		static bool HandleSpecificEvent( list<InputEvent> & events, InputEvent key );

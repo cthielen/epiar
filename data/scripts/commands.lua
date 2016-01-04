@@ -1,18 +1,7 @@
--- SDL Key Translations
-Key = {
-	backspace=8, tab=9, clear=12, pause=19, escape=27, space=32,
-	up=273, down=274, right=1073741903, left=1073741904, insert=277, home=278, pageup=280, pagedown=281,
-	-- Should we support the function keys?
-	f1=282, f2=283, f3=284, f4=285, f5=286, f6=287, f7=288, f8=289, f9=290, f10=291, f11=292, f12=293, f13=294, f14=295, f15=296,
-	numlock=300, capslock=301, scrolllock=302, rshift=303, lshift=304, rctrl=305, lctrl=306, ralt=307, lalt=308, rmeta=309, lmeta=310, lsuper=311, rsuper=312,
-	-- Special Lua keywords
-	["return"]=13, ["end"]=279
-}
-
---- Translates key
+--- Translates key (SDLKeys is exported in input.cpp)
 function sdlkey(k)
-	if Key[k] then
-		return Key[k]
+	if SDLKeys[k] then
+		return SDLKeys[k]
 	else
 		return k
 	end
@@ -31,7 +20,7 @@ defaultCommands = {
 function registerCommands(cmds)
     for i,cmd in pairs(cmds) do
 		-- Remember this command for later
-        table.insert(commands,cmd)
+		table.insert(commands,cmd)
 		-- Register this command to the C Engine
 		keyval, name, code, keymode = cmd[1],cmd[2],cmd[3],cmd[4]
 		Epiar.UnRegisterKey(sdlkey(keyval), keymode)

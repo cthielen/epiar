@@ -20,6 +20,7 @@
 #include "engine/starfield.h"
 #include "engine/console.h"
 #include "graphics/video.h"
+#include "input/input.h"
 #include "sprites/ai.h"
 #include "sprites/ai_lua.h"
 #include "sprites/effects.h"
@@ -191,6 +192,8 @@ bool Scenario::Initialize() {
 
 	// Load ::Run()-specific Lua registers
 	AI_Lua::RegisterAI(L);
+
+	Input::RegisterLuaVariables();
 
 	luaLoad = Lua::Load("data/scripts/utilities.lua")
 	       && Lua::Load("data/scripts/universe.lua")
