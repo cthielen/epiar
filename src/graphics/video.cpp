@@ -229,10 +229,16 @@ void Video::DrawLine( int x1, int y1, int x2, int y2, float r, float g, float b,
 /**\brief Draws a filled rectangle
  */
 void Video::DrawRect( int x, int y, int w, int h, float r, float g, float b, float a ) {
-	//glDisable(GL_TEXTURE_2D);
-	//glEnable(GL_BLEND);
-	//glColor4f( r, g, b, a );
-	//glRecti( x, y, x + w, y + h );
+	SDL_Rect rect;
+
+	rect.x = x;
+	rect.y = y;
+	rect.w = w;
+	rect.h = h;
+ 
+	SDL_SetRenderDrawColor( renderer, r, g, b, a );
+  
+	SDL_RenderFillRect( renderer, &rect );
 }
 
 void Video::DrawRect( int x, int y, int w, int h, Color c, float a ) {

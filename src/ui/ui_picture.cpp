@@ -146,9 +146,9 @@ void Picture::Draw( int relx, int rely ) {
 
 	if( hidden == false ) {
 		// The Picture size
-		Video::DrawRect( x, y,
-		               w, h,
-		               color.r, color.g, color.b, alpha );
+		//Video::DrawRect( x, y,
+		//               w, h,
+		//               color.r, color.g, color.b, alpha );
 		if(bitmap != NULL) {
 			if(stretch) {
 				bitmap->DrawStretch( x, y, w, h, static_cast<float>(rotation));

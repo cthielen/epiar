@@ -125,7 +125,7 @@ void Window::Draw( int relx, int rely ) {
 	bitmaps[7]->DrawAlpha( x + w - bitmaps[7]->GetWidth(), y + h - bitmaps[7]->GetHeight(), alpha );
 
 	// Draw the window title
-	UI::boldFont->RenderTight(x + (w / 2), y + bitmaps[1]->GetHalfHeight(), name, Font::CENTER,Font::MIDDLE);
+	UI::boldFont->Render(x + (w / 2), y + bitmaps[1]->GetHalfHeight(), name, Font::CENTER, Font::MIDDLE);
 
 	Container::Draw(relx,rely);
 }

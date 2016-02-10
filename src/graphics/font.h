@@ -43,8 +43,8 @@ class Font : public Resource {
 			int LineHeight( void );
 			int TightHeight( void );
 
-			int Render( int x, int y, const string& text,XPos xpos=LEFT, YPos ypos=TOP );
-			int RenderTight( int x, int y, const string& text,XPos xpos=LEFT, YPos ypos=TOP );
+			int Render( int x, int y, const string& text, XPos xpos = LEFT, YPos ypos = TOP );
+			int RenderTight( int x, int y, const string& text, XPos xpos = LEFT, YPos ypos = TOP );
 
 		private:
 			int _Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos);

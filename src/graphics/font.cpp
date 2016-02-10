@@ -153,8 +153,9 @@ int Font::TightHeight( void ){
 /**\brief Renders a string with natural padding.
  * \return The consumed width (This includes a small bit of padding on the right)
  */
-int Font::Render( int x, int y, const string& text,XPos xpos, YPos ypos ){
-	int h = this->LineHeight();
+int Font::Render( int x, int y, const string& text, XPos xpos, YPos ypos ){
+	//int h = this->LineHeight();
+	int h = TTF_FontAscent(font);
 
 	return this->_Render(x, y, text, h, xpos, ypos);
 }
@@ -162,13 +163,15 @@ int Font::Render( int x, int y, const string& text,XPos xpos, YPos ypos ){
 /**\brief Renders a string with no padding.
  * \return The consumed width (This includes a small bit of padding on the right)
  */
-int Font::RenderTight(int x, int y, const string& text,XPos xpos, YPos ypos ){
+int Font::RenderTight(int x, int y, const string& text, XPos xpos, YPos ypos ){
 	int h = this->TightHeight();
 
 	return this->_Render(x, y, text, h, xpos, ypos);
 }
 
 /**\brief Internal rendering function. Returns the consumed width. */
+// TODO: Remember the last rendered 'text' contents and save the SDL_Texture if it hasn't changed.
+//       This probably happens a lot with rendering the HUD, nav map labels, etc.
 int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos) {
 	int xn = 0;
 	int yn = 0;
@@ -197,8 +200,9 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 	// Y coordinates are flipped
 	switch( ypos ) {
 		case TOP:
+			return 0;
 			cout << "render top (y, h, descent) = (" << y << ", " << h << ", " << TTF_FontDescent(this->font) << ")" << endl;
-			yn = y; // + h - TO_INT(floor(TTF_FontDescent(this->font)));
+			yn = y - h - TO_INT(floor(TTF_FontDescent(this->font)));
 			break;
 		case MIDDLE:
 			cout << "render middle (" << y << ")" << endl;
@@ -206,6 +210,7 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 			yn = y - (h / 2) + TO_INT(floor(TTF_FontDescent(this->font)));
 			break;
 		case BOTTOM:
+			return 0;
 			cout << "render bottom" << endl;
 			yn = y - TO_INT(floor(TTF_FontDescent(this->font)));
 			break;
@@ -237,9 +242,13 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 	rect.y = yn;
 	rect.w = s->w;
 	rect.h = s->h;
+
 	SDL_Texture *t = SDL_CreateTextureFromSurface(Video::GetRenderer(), s);
+
 	int ret_w = s->w;
 	SDL_FreeSurface(s);
+
+	//Video::DrawRect(x, y, rect.w, rect.h, 0, 0, 0, 1.0);
 	SDL_RenderCopy(Video::GetRenderer(), t, NULL, &rect);
 	SDL_DestroyTexture(t);
 
