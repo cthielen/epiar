@@ -84,22 +84,25 @@ void Button::Draw( int relx, int rely ) {
 
 	assert(bitmap_current);
 
-	// draw the button (loaded image is simply scaled)
+	// Draw the button (loaded image is simply scaled)
 	bitmap_current->DrawStretch( x, y, this->w, this->h );
 
-	// draw the label
+	// Draw the label
 	Video::SetCropRect(x + 1, y + 1, this->w - 2, this->h - 2); // constants adjust for the 1px border
-	UI::font->RenderTight( x + (w / 2), y + (h / 2), this->name, Font::CENTER,Font::MIDDLE );
+	UI::font->RenderTight( x + (w / 2), y + (h / 2), this->name, Font::CENTER, Font::MIDDLE );
 	Video::UnsetCropRect();
 
-	Widget::Draw(relx,rely);
+	Widget::Draw(relx, rely);
 }
 
 /**\brief When Left mouse is down on the button.*/
 bool Button::MouseLDown( int xi, int yi ) {
 	Widget::MouseLDown( xi, yi );
-	if(OPTION(int, "options/sound/buttons")) UI::beep->Play();
+
+	if(OPTION(int, "options/sound/buttons")) { UI::beep->Play(); }
+
 	bitmap_current = bitmap_pressed;
+
 	return true;
 }
 

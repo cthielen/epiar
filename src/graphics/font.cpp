@@ -19,12 +19,12 @@
 
 /**\brief Constructs new font (default color white).
  */
-Font::Font():r(1.f),g(1.f),b(1.f),a(1.f),font(NULL) {}
+Font::Font():r(1.f),g(1.f),b(1.f),a(1.f),font(NULL),lastRenderedTexture(NULL) {}
 
 /**\brief Construct new font based on file.
  * \param filename String containing file.
  */
-Font::Font( string filename ):r(1.f),g(1.f),b(1.f),a(1.f),font(NULL) {
+Font::Font( string filename ):r(1.f),g(1.f),b(1.f),a(1.f),font(NULL),lastRenderedTexture(NULL) {
 	bool success;
 	success = Load( filename );
 	assert( success );
@@ -33,7 +33,7 @@ Font::Font( string filename ):r(1.f),g(1.f),b(1.f),a(1.f),font(NULL) {
 /**\brief Lazy fetch an Font
  */
 Font* Font::Get( string filename ) {
-	Font* value;
+	Font* value = NULL;
 
 	value = static_cast<Font*>(Resource::Get(filename));
 
@@ -56,6 +56,7 @@ Font* Font::Get( string filename ) {
 Font::~Font() {
 	TTF_CloseFont(font);
 	font = NULL;
+	if(lastRenderedTexture) { SDL_DestroyTexture(lastRenderedTexture); }
 	LogMsg(DEBUG, "Font '%s' freed.", fontname.c_str() );
 }
 
@@ -170,8 +171,6 @@ int Font::RenderTight(int x, int y, const string& text, XPos xpos, YPos ypos ){
 }
 
 /**\brief Internal rendering function. Returns the consumed width. */
-// TODO: Remember the last rendered 'text' contents and save the SDL_Texture if it hasn't changed.
-//       This probably happens a lot with rendering the HUD, nav map labels, etc.
 int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos) {
 	int xn = 0;
 	int yn = 0;
@@ -188,7 +187,7 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 			xn = x - this->TextWidth(text) / 2;
 			break;
 		case RIGHT:
-			xn = x-this->TextWidth(text);
+			xn = x - this->TextWidth(text);
 			break;
 		default:
 			LogMsg(ERR, "Invalid xpos");
@@ -219,38 +218,61 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 			assert(0);
 	}
 
-	SDL_Surface *s = NULL;
-
-	SDL_Color fg;
-
-	fg.r = r * 255.;
-	fg.g = g * 255.;
-	fg.b = b * 255.;
-	fg.a = a * 255.;
-
-	s = TTF_RenderUTF8_Blended(font, text.c_str(), fg);
-	if(s == NULL) {
-		cout << "Could not render '" << text << "'!" << endl;
-		if(text.length() == 0) {
-			cout << "why text null?" << endl;
-		}
-		return 0;
-	}
-
+	int ret_w = -1;
 	SDL_Rect rect;
-	rect.x = xn;
-	rect.y = yn;
-	rect.w = s->w;
-	rect.h = s->h;
+	SDL_Texture *t = NULL;
 
-	SDL_Texture *t = SDL_CreateTextureFromSurface(Video::GetRenderer(), s);
+	if(lastRenderedText == text) {
+		assert(lastRenderedTexture != NULL);
 
-	int ret_w = s->w;
-	SDL_FreeSurface(s);
+		rect.x = xn;
+		rect.y = yn;
+		rect.w = lastRenderedW;
+		rect.h = lastRenderedH;
+
+		t = lastRenderedTexture;
+
+		ret_w = rect.w;
+	} else {
+		SDL_Surface *s = NULL;
+		SDL_Color fg;
+
+		fg.r = r * 255.;
+		fg.g = g * 255.;
+		fg.b = b * 255.;
+		fg.a = a * 255.;
+
+		s = TTF_RenderUTF8_Blended(font, text.c_str(), fg);
+		if(s == NULL) {
+			cout << "Could not render '" << text << "'!" << endl;
+
+			if(text.length() == 0) {
+				cout << "Why is text null?" << endl;
+			}
+
+			return 0;
+		}
+
+		rect.x = xn;
+		rect.y = yn;
+		rect.w = s->w;
+		rect.h = s->h;
+
+		t = SDL_CreateTextureFromSurface(Video::GetRenderer(), s);
+
+		ret_w = s->w;
+		lastRenderedW = s->w;
+		lastRenderedH = s->h;
+
+		SDL_FreeSurface(s);
+
+		if(lastRenderedTexture) { SDL_DestroyTexture(lastRenderedTexture); }
+		lastRenderedTexture = t;
+		lastRenderedText = text;
+	}
 
 	//Video::DrawRect(x, y, rect.w, rect.h, 0, 0, 0, 1.0);
 	SDL_RenderCopy(Video::GetRenderer(), t, NULL, &rect);
-	SDL_DestroyTexture(t);
 
 	cout << "rendered '" << text << "' at " << xn << ", " << yn << " with color " << r << ", " << g << ", " << b << ", " << a << endl;
 

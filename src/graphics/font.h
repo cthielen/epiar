@@ -54,6 +54,9 @@ class Font : public Resource {
 			int height, width, base;
 
 			TTF_Font* font;
+			SDL_Texture* lastRenderedTexture; // cache of last rendered texture
+			string lastRenderedText;
+			int lastRenderedW, lastRenderedH;
 };
 
 #endif // H_FONT
