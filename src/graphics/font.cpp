@@ -176,7 +176,7 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 	int yn = 0;
 
 	if(text.length() == 0) {
-		return 0; // why does this happen?
+		return 0; // Okay mister!
 	}
 
 	switch( xpos ) {
@@ -194,24 +194,25 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 			assert(0);
 	}
 	
-	cout << "---" << endl;
+	//cout << "---" << endl;
 
 	// Y coordinates are flipped
 	switch( ypos ) {
 		case TOP:
-			return 0;
-			cout << "render top (y, h, descent) = (" << y << ", " << h << ", " << TTF_FontDescent(this->font) << ")" << endl;
-			yn = y - h - TO_INT(floor(TTF_FontDescent(this->font)));
+			// Top of text will touch the given 'y'
+			//cout << "render top (y, h, descent) = (" << y << ", " << h << ", " << TTF_FontDescent(this->font) << ")" << endl;
+			yn = y; // - TO_INT(floor(TTF_FontDescent(this->font)));
 			break;
 		case MIDDLE:
-			cout << "render middle (" << y << ")" << endl;
-			cout << "descent is" << TO_INT(floor(TTF_FontDescent(this->font))) << endl;
+			// Middle of text line will run through the given 'y'
+			//cout << "render middle (" << y << ")" << endl;
+			//cout << "descent is" << TO_INT(floor(TTF_FontDescent(this->font))) << endl;
 			yn = y - (h / 2) + TO_INT(floor(TTF_FontDescent(this->font)));
 			break;
 		case BOTTOM:
-			return 0;
-			cout << "render bottom" << endl;
-			yn = y - TO_INT(floor(TTF_FontDescent(this->font)));
+			// Bottom of text will touch the given 'y'
+			//cout << "render bottom" << endl;
+			yn = y - h + TO_INT(floor(TTF_FontDescent(this->font)));
 			break;
 		default:
 			LogMsg(ERR, "Invalid ypos");
@@ -271,10 +272,10 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 		lastRenderedText = text;
 	}
 
-	//Video::DrawRect(x, y, rect.w, rect.h, 0, 0, 0, 1.0);
+	//Video::DrawRect(x, y, rect.w, rect.h, 128, 128, 128, 1.0);
 	SDL_RenderCopy(Video::GetRenderer(), t, NULL, &rect);
 
-	cout << "rendered '" << text << "' at " << xn << ", " << yn << " with color " << r << ", " << g << ", " << b << ", " << a << endl;
+	//cout << "rendered '" << text << "' at " << xn << ", " << yn << " with color " << r << ", " << g << ", " << b << ", " << a << endl;
 
 	return ret_w;
 }
