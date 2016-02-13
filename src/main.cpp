@@ -216,10 +216,10 @@ void Main_Init_Singletons() {
 	Timer::Initialize();
 	Video::Initialize();
 
-	SansSerif       = new Font( "data/fonts/FreeSans.ttf" );
-	BitType         = new Font( "data/fonts/visitor2.ttf" );
-	Serif           = new Font( "data/fonts/FreeSerif.ttf" );
-	Mono            = new Font( "data/fonts/ConsolaMono.ttf" );
+	SansSerif       = new Font( "data/fonts/FreeSans.ttf", 12 );
+	BitType         = new Font( "data/fonts/visitor2.ttf", 12 );
+	Serif           = new Font( "data/fonts/FreeSerif.ttf", 12 );
+	Mono            = new Font( "data/fonts/ConsolaMono.ttf", 12 );
 
 	UI::Initialize("Main Screen");
 

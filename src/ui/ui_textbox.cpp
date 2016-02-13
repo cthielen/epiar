@@ -32,7 +32,7 @@ Textbox::Textbox( int x, int y, int w, int rows, string text, string label ) {
 	int rowHeight;
 
 	if ( font == NULL ) {
-		font = new Font( SKIN( "Skin/UI/Textbox/Font" ) );
+		font = new Font( SKIN( "Skin/UI/Textbox/Font" ), 12 );
 		foreground = Color( SKIN( "Skin/UI/Textbox/Color/Foreground" ) );
 		background = Color( SKIN( "Skin/UI/Textbox/Color/Background" ) );
 		edge       = Color( SKIN( "Skin/UI/Textbox/Color/Edge" ) );

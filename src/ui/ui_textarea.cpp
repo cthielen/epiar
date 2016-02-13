@@ -30,7 +30,7 @@ Color Textarea::edge = BLACK;
 /**\brief Constructor for the Textarea.
  */
 Textarea::Textarea( int _x, int _y, int _w, int _h, string text, string label )
-	:lines( Font::Get( SKIN( "Skin/UI/Textbox/Font" ) ), text, _w )
+	:lines( Font::Get( SKIN( "Skin/UI/Textbox/Font" ), 12 ), text, _w )
 {
 	x = _x;
 	y = _y;

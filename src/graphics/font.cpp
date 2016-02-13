@@ -1,7 +1,7 @@
 /**\file			font.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Sunday, January 3, 2016
+ * \date			Modified: Saturday, February 13, 2016
  * \brief
  * \details
  */
@@ -24,23 +24,27 @@ Font::Font():r(1.f),g(1.f),b(1.f),a(1.f),font(NULL),lastRenderedTexture(NULL) {}
 /**\brief Construct new font based on file.
  * \param filename String containing file.
  */
-Font::Font( string filename ):r(1.f),g(1.f),b(1.f),a(1.f),font(NULL),lastRenderedTexture(NULL) {
+Font::Font( string filename, unsigned int size ):r(1.f),g(1.f),b(1.f),a(1.f),font(NULL),lastRenderedTexture(NULL) {
 	bool success;
-	success = Load( filename );
+	success = Load( filename, size );
 	assert( success );
 }
 
 /**\brief Lazy fetch an Font
  */
-Font* Font::Get( string filename ) {
+Font* Font::Get( string filename, unsigned int size ) {
 	Font* value = NULL;
+	std::ostringstream ss;
 
-	value = static_cast<Font*>(Resource::Get(filename));
+	ss << filename << "-" << size;
+
+	// Resource key is filename + "-" + size, e.g. "font1.ttf-12"
+	value = static_cast<Font*>(Resource::Get(ss.str()));
 
 	if( value == NULL ) {
 		value = new Font();
 
-		if(value->Load(filename)){
+		if(value->Load(filename, size)){
 			Resource::Store(filename,(Resource*)value);
 		} else {
 			LogMsg(WARN, "Couldn't Find Font '%s'", filename.c_str());
@@ -81,7 +85,7 @@ void Font::SetColor( float r, float g, float b, float a ) {
 /**\brief Loads the font (uses FTGL Texture Fonts).
  * \param filename Path to font file.
  */
-bool Font::Load( string filename ) {
+bool Font::Load( string filename, unsigned int size ) {
 	File fontFile;
 
 	if( fontFile.OpenRead( filename.c_str() ) == false) {
@@ -96,29 +100,23 @@ bool Font::Load( string filename ) {
 	}
 
 	fontname = fontFile.GetAbsolutePath();
-	font = TTF_OpenFont( fontname.c_str(), 12 );
+	font = TTF_OpenFont( fontname.c_str(), size );
 
 	if( font == NULL ) {
 		LogMsg(ERR, "Failed to load font '%s'.\n", fontname.c_str() );
 		return( false );
 	}
 
+	this->size = size;
+
 	LogMsg(DEBUG, "Font '%s' loaded.\n", fontname.c_str() );
 
 	return( true );
 }
 
-/**\brief Set's the size of the font (default is 12).*/
-void Font::SetSize( int size ){
-	cout << "Font::SetSize() needs to be worked around" << endl;
-	//this->font->FaceSize( size );
-}
-
 /**\brief Retrieves the size of the font.*/
 unsigned int Font::GetSize( void ){
-	cout << "Font::GetSize() needs to be worked around" << endl;
-	return 12;
-	//return this->font->FaceSize();
+	return size;
 }
 
 /**\brief Returns the width of the text (no padding).*/

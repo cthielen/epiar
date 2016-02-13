@@ -103,8 +103,7 @@ StatusBar::StatusBar(string _title, int _width, QuadPosition _pos, string _updat
 	assert(pos <= 4);
 
 	if( font == NULL ) {
-		font = Font::Get( SKIN("Skin/HUD/StatusBar/Font") );
-		font->SetSize( convertTo<int>(SKIN("Skin/HUD/StatusBar/Size")) );
+		font = Font::Get( SKIN("Skin/HUD/StatusBar/Font"), convertTo<int>(SKIN("Skin/HUD/StatusBar/Size")) );
 		font->SetColor( SKIN("Skin/HUD/StatusBar/Color") );
 	}
 }
@@ -249,9 +248,8 @@ void StatusBar::SetName( string n )
  * \brief Heads-Up-Display. */
 
 void Hud::Init( void ) {
-	AlertFont = new Font( SKIN("Skin/HUD/Alert/Font") );
+	AlertFont = new Font( SKIN("Skin/HUD/Alert/Font"), convertTo<int>( SKIN("Skin/HUD/Alert/Size") ) );
 	AlertColor = Color( SKIN("Skin/HUD/Alert/Color") );
-	AlertFont->SetSize( convertTo<int>( SKIN("Skin/HUD/Alert/Size") ) );
 }
 
 void Hud::Close( void ) {

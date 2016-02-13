@@ -61,9 +61,8 @@ NavMap::NavMap( int x, int y, int w, int h, Coordinate center, Scenario* scenari
 	}
 
 	if( NavMapFont == NULL ) {
-		NavMapFont = new Font( SKIN("Skin/HUD/Map/Font") );
+		NavMapFont = new Font( SKIN("Skin/HUD/Map/Font"), convertTo<int>( SKIN("Skin/HUD/Map/Size") ));
 		NavMapFont->SetColor( Color( SKIN("Skin/HUD/Map/Color") ) );
-		NavMapFont->SetSize( convertTo<int>( SKIN("Skin/HUD/Map/Size") ) );
 	}
 
 	zoomable = true;

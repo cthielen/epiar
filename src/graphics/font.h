@@ -1,7 +1,7 @@
 /**\file			font.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Sunday, January 3, 2016
+ * \date			Modified: Saturday, February 13, 2016
  * \brief
  * \details
  */
@@ -27,14 +27,13 @@ class Font : public Resource {
 			};
 
 			Font();
-			Font( string filename );
+			Font( string filename, unsigned int size );
 			~Font();
 
-			static Font* Get(string filename);
+			static Font* Get(string filename, unsigned int size);
 
-			bool Load( string filename );
+			bool Load( string filename, unsigned int size );
 
-			void SetSize( int size=12 );
 			unsigned int GetSize( void );
 			void SetColor( Color c, float a=1.0f );
 			void SetColor( float r, float g, float b, float a=1.0f );
@@ -52,6 +51,7 @@ class Font : public Resource {
 			string fontname; // filename of the loaded font
 			float r, g, b, a; // color of text
 			int height, width, base;
+			unsigned int size;
 
 			TTF_Font* font;
 			SDL_Texture* lastRenderedTexture; // cache of last rendered texture

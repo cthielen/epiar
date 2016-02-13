@@ -61,14 +61,11 @@ bool UI::Initialize( string screenName ) {
 	currentScreen = NewScreen( screenName );
 
 	// This is the Default UI Font
-	font = new Font( SKIN( "Skin/UI/Default/Font" ) );
+	font = new Font( SKIN( "Skin/UI/Default/Font" ), convertTo<int>( SKIN("Skin/UI/Default/Size") ));
 	font->SetColor( Color( SKIN( "Skin/UI/Default/Color" ) ) );
-	font->SetSize( convertTo<int>( SKIN("Skin/UI/Default/Size") ) );
 
-	boldFont = new Font( SKIN( "Skin/UI/Default/BoldFont" ) );
+	boldFont = new Font( SKIN( "Skin/UI/Default/BoldFont" ), convertTo<int>( SKIN("Skin/UI/Default/Size") ) );
 	boldFont->SetColor( Color( SKIN( "Skin/UI/Default/Color" ) ) );
-	boldFont->SetSize( convertTo<int>( SKIN("Skin/UI/Default/Size") ) );
-
  
 	beep = Sound::Get( "data/audio/interface/28853__junggle__btn043.ogg" );
 	hover = Sound::Get( "data/audio/interface/28820__junggle__btn010.ogg" );
