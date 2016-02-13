@@ -387,9 +387,7 @@ int Video::GetHalfHeight( void ) {
 void Video::SetCropRect( int x, int y, int w, int h ){
 	int xn, yn, wn, hn;
 
-	/*if (cropRects.empty()) {
-		glEnable(GL_SCISSOR_TEST);
-
+	if (cropRects.empty()) {
 		xn = x;
 		yn = y;
 		wn = w;
@@ -416,25 +414,35 @@ void Video::SetCropRect( int x, int y, int w, int h ){
 	cropRects.push(Rect( xn, yn, wn, hn ));
 
 	// Need to convert top down y-axis
-	glScissor( xn, Video::h - (yn + hn), wn, hn );*/
+	SDL_Rect rect;
+	rect.x = xn;
+	rect.y = yn; //Video::h - (yn + hn);
+	rect.w = wn;
+	rect.h = hn;
+	SDL_RenderSetClipRect( renderer, &rect );
 }
 
 /**\brief Unset the previous crop rectangle after use.
  */
 void Video::UnsetCropRect( void ) {
-	/*if (!cropRects.empty()) // Shouldn't be empty
+	if (!cropRects.empty()) // Shouldn't be empty
 		cropRects.pop();
 	else
 		LogMsg(WARN,"You unset the crop rect too many times.");
 
 	if ( cropRects.empty() ) {
-		glDisable(GL_SCISSOR_TEST);
+		SDL_RenderSetClipRect( renderer, NULL );
 	} else {
 		// Set's the previous crop rectangle.
 		Rect prevrect = cropRects.top();
+		SDL_Rect rect;
 
-		glScissor( TO_INT(prevrect.x), Video::h - (TO_INT(prevrect.y) + TO_INT(prevrect.h)), TO_INT(prevrect.w), TO_INT(prevrect.h) );
-	}*/
+		rect.x = TO_INT(prevrect.x);
+		rect.y = TO_INT(prevrect.y); // Video::h - (TO_INT(prevrect.y) + TO_INT(prevrect.h));
+		rect.w = TO_INT(prevrect.w);
+		rect.h = TO_INT(prevrect.h);
+		SDL_RenderSetClipRect( renderer, &rect );
+	}
 }
 
 /**\brief Takes a screenshot of the game and saves it to an Image.
