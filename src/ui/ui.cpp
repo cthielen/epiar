@@ -293,7 +293,6 @@ void UI::HandleInput( list<InputEvent> & events ) {
 	Widget* topContainer = UI::currentScreen->ChildFromTop(0, WIDGET_CONTAINER);
 	if( topContainer != NULL ) {
 		if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_ESCAPE ) ) ) {
-			LogMsg(WARN, "User closed the %s '%s' by pressing escape.", topContainer->GetType().c_str(), topContainer->GetName().c_str() );
 			UI::Close( topContainer );
 		}
 	}
