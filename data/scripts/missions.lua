@@ -82,10 +82,12 @@ ReturnAmbassador = {
 		--for i=1,#descriptions do print(descriptions[i]) end
 		-- Save the mission information into a table
 		local missionTable = defaultMissionTable( Name, choose(descriptions) )
+
 		missionTable.planet = p:GetName()
 		missionTable.reward = Reward
 		missionTable.alliance = alliance
 		missionTable.profession = profession
+
 		return missionTable
 	end,
 	Accept = function( missionTable )
@@ -148,6 +150,7 @@ DestroyPirate = {
 	Difficulty = "MEDIUM",
 	Create = function()
 		local missionTable = {}
+
 		missionTable.piratename = choose(names).." The ".. choose(pirateTitles)
 		missionTable.Name = string.format("Destroy %s", missionTable.piratename)
 		missionTable.reward = 1000 * ( math.random(10) + 20)
@@ -161,6 +164,7 @@ DestroyPirate = {
 				missionTable.reward)
 		missionTable.ship = nil
 		missionTable.alliance = choose( Epiar.alliances() )
+
 		return missionTable
 	end,
 	Accept = function( missionTable )

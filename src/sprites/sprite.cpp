@@ -55,7 +55,6 @@ Sprite::Sprite() {
 	id = sprite_ids++;
 
 	// Momentum caps
-
 	angle = 0.;
 
 	image = NULL;

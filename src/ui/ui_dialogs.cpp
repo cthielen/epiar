@@ -131,16 +131,14 @@ void ResetOptions() { Options::RestoreDefaults(); CloseOptions(); Dialogs::Optio
 
 /**\brief Create a Presents a message with a single "Ok" button.
  */
-void Dialogs::OptionsWindow()
-{
+void Dialogs::OptionsWindow() {
 	int yoff;
 	int width = 300;
 	int height = 400;
 	int tabwidth = width - 20;
 	int tabheight = height - 100;
 
-	if( UI::Search("/Window'Options'/") )
-	{
+	if( UI::Search("/Window'Options'/") ) {
 		LogMsg(INFO, "Options Window already open. Closing it.");
 		UI::Close( UI::Search("/Window'Options'/") );
 		return;

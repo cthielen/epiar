@@ -142,9 +142,9 @@ function coordinateToQuadrant(x,y)
 end
 
 --- Convert quadrant to coordinate 
-function QuadrantToCoordinate(x,y)
-	qwidth = 4096*2
-	return x*qwidth, y*qwidth
+function QuadrantToCoordinate(x, y)
+	qwidth = 4096 * 2
+	return x * qwidth, y * qwidth
 end
 
 --- Pick a random value from a table

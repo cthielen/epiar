@@ -1,7 +1,7 @@
 /**\file			planets_lua.h
  * \author			Matt Zweig (thezweig@gmail.com)
  * \date			Created: Saturday, June 4 2011
- * \date			Modified: Saturday, June 4 2011
+ * \date			Modified: Monday, February 15, 2016
  * \brief
  * \details
  */
@@ -27,10 +27,8 @@ extern "C" {
 class Planets_Lua {
 	public:
 		static void RegisterPlanets(lua_State *L);
-		//static Planet **pushPlanet(lua_State *L);
 		static Planet *checkPlanet(lua_State *L, int index);
 		static int Get(lua_State* L);
-		//static int NewPlanet(lua_State* L);
 
 		static int GetName(lua_State* L);
 		static int GetType(lua_State* L);
@@ -51,7 +49,6 @@ class Planets_Lua {
 		// Editor Features
 		static int SetPosition(lua_State* L);
 		static int SetRadarColor(lua_State* L);
-	private:
 };
 
 #endif // __h_lua_planets__

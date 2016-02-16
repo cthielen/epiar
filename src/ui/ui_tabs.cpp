@@ -156,8 +156,8 @@ void Tabs::Draw( int relx, int rely ){
 	int y = GetY() + rely;
 
 	// Draw the Background and Edge
-	Video::DrawRect( x, y+TAB_HEADER, w, h-TAB_HEADER, background );
-	Video::DrawBox( x, y+TAB_HEADER, w, h-TAB_HEADER, edge );
+	Video::DrawRect( x, y + TAB_HEADER, w, h - TAB_HEADER, background );
+	Video::DrawBox( x, y + TAB_HEADER, w, h - TAB_HEADER, edge );
 
 	int xo = x;
 	list<Widget *>::iterator i;
@@ -175,11 +175,11 @@ void Tabs::Draw( int relx, int rely ){
 		xo += currtab->GetHandleWidth( currtab == activetab );
 	}
 
-	if (activetab){
+	if (activetab) {
 		activetab->Draw( x, y );
 	}
 
-	Widget::Draw(relx,rely);
+	Widget::Draw(relx, rely);
 }
 
 /**\brief First check if clicked on one of the Tab, if not, pass it on.

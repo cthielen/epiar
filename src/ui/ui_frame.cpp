@@ -22,9 +22,7 @@
 
 /**\brief Creates a new frame with specified parameters.
  */
-Frame::Frame( int x, int y, int w, int h )
-{
-
+Frame::Frame( int x, int y, int w, int h ) {
 	this->x = x;
 	this->y = y;
 	this->w = w;
@@ -57,9 +55,10 @@ Frame::Frame( int x, int y, int w, int h )
 
 /**\brief Adds a widget to the current Frame.
  */
-Frame *Frame::AddChild( Widget *widget ){
+Frame *Frame::AddChild( Widget *widget ) {
 	assert( widget != NULL );
 	Container::AddChild( widget );
+
 	return this;
 }
 

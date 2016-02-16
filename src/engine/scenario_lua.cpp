@@ -160,12 +160,14 @@ void Scenario_Lua::StoreScenario(lua_State *L, Scenario *sim) {
  *  \see Scenario_Lua::GetScenario
  */
 Scenario *Scenario_Lua::GetScenario(lua_State *L) {
-	Scenario* sim;
+	Scenario* sim = NULL;
+
 	// A pointer to the scenario is stored in the LUA_REGISTRYINDEX table.
-	lua_pushstring(L,"EPIAR_SCENARIO"); // Key
-	lua_gettable(L,LUA_REGISTRYINDEX);
-	sim = (Scenario*)lua_topointer(L,-1);
-	lua_pop(L,1);
+	lua_pushstring(L, "EPIAR_SCENARIO"); // Key
+	lua_gettable(L, LUA_REGISTRYINDEX);
+	sim = (Scenario*)lua_topointer(L, -1);
+	lua_pop(L, 1);
+
 	return sim;
 }
 
@@ -496,7 +498,9 @@ int Scenario_Lua::GetTechnologyNames(lua_State *L){
  */
 int Scenario_Lua::GetPlanetNames(lua_State *L){
 	list<string> *names = GetScenario(L)->GetPlanets()->GetNames();
+
 	Lua::pushStringList(L,names);
+
 	return 1;
 }
 
@@ -505,8 +509,10 @@ int Scenario_Lua::GetPlanetNames(lua_State *L){
  */
 void Scenario_Lua::PushSprite(lua_State *L,Sprite* s){
 	int* id = (int*)lua_newuserdata(L, sizeof(int*));
+
 	*id = s->GetID();
-	switch(s->GetDrawOrder()){
+
+	switch(s->GetDrawOrder()) {
 	case DRAW_ORDER_SHIP:
 	case DRAW_ORDER_PLAYER:
 		luaL_getmetatable(L, EPIAR_SHIP);
@@ -630,25 +636,28 @@ int Scenario_Lua::GetMSRP(lua_State *L) {
  * \see Scenario_Lua::GetSprites
  * \returns list of Ship References
  */
-int Scenario_Lua::GetShips(lua_State *L){
+int Scenario_Lua::GetShips(lua_State *L) {
 	return Scenario_Lua::GetSprites(L,DRAW_ORDER_SHIP);
 }
 
 /** Get Lua references to All Planets
  * \returns list of Planet References
  */
-int Scenario_Lua::GetPlanets(lua_State *L){
+int Scenario_Lua::GetPlanets(lua_State *L) {
 	Planets *planets = GetScenario(L)->GetPlanets();
 	list<string>* planetNames = planets->GetNames();
 
 	lua_createtable(L, planetNames->size(), 0);
+
 	int newTable = lua_gettop(L);
 	int index = 1;
-	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname){
-		PushSprite(L,planets->GetPlanet(*pname));
+
+	for( list<string>::iterator pname = planetNames->begin(); pname != planetNames->end(); ++pname) {
+		PushSprite(L, planets->GetPlanet(*pname));
 		lua_rawseti(L, newTable, index);
 		++index;
 	}
+
 	return 1;
 }
 
@@ -660,9 +669,9 @@ int Scenario_Lua::GetPlanets(lua_State *L){
 *  - A Range: the max distance from the sprite.
  * \returns The nearest Sprite
  */
-int Scenario_Lua::GetNearestSprite(lua_State *L,int kind) {
+int Scenario_Lua::GetNearestSprite(lua_State *L, int kind) {
 	int n = lua_gettop(L);  // Number of arguments
-	if( n<1 || n>3 ){
+	if( n < 1 || n > 3 ) {
 		return luaL_error(L, "Got %d arguments expected 1,2 ( ship, [range] ) or 2,3 (x,y,[range])", n);
 	}
 
@@ -856,25 +865,34 @@ int Scenario_Lua::GetModelInfo(lua_State *L) {
  */
 int Scenario_Lua::GetPlanetInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
-	if( n!=1 )
+
+	if( n != 1 ) {
 		return luaL_error(L, "Got %d arguments expected 1 (planetID)", n);
+	}
 
 	// Figure out which planet we're fetching
 	Planet* p = NULL;
-	if( lua_isnumber(L,1)){
-		int id = luaL_checkinteger(L,1);
+
+	if( lua_isnumber(L, 1)) {
+		int id = luaL_checkinteger(L, 1);
+
 		Sprite* sprite = GetScenario(L)->GetSpriteManager()->GetSpriteByID(id);
-		if( sprite->GetDrawOrder() != DRAW_ORDER_PLANET)
+
+		if( sprite->GetDrawOrder() != DRAW_ORDER_PLANET) {
 			return luaL_error(L, "ID #%d does not point to a Planet", id);
+		}
+
 		p = (Planet*)(sprite);
-	} else if( lua_isstring(L,1)){
+	} else if( lua_isstring(L, 1)) {
 		string name = luaL_checkstring(L,1);
 		p = GetScenario(L)->GetPlanets()->GetPlanet(name);
 	}
-	if(p==NULL){ p = new Planet(); }
+
+	if(p == NULL) { p = new Planet(); }
 
 	// Populate the Info Table.
 	lua_newtable(L);
+
 	Lua::setField("Name", p->GetName().c_str());
 	Lua::setField("X", static_cast<float>(p->GetWorldPosition().GetX()));
 	Lua::setField("Y", static_cast<float>(p->GetWorldPosition().GetY()));
@@ -890,9 +908,11 @@ int Scenario_Lua::GetPlanetInfo(lua_State *L) {
 	                : "" );
 	Lua::setField("Summary", p->GetSummary().c_str());
 	lua_pushstring(L, "Technologies");
+
 	list<Technology*> techs =  p->GetTechnologies();
 	PushComponents(L,  (list<Component*>*)&techs );
 	lua_settable(L, -3);
+
 	return 1;
 }
 
