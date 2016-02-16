@@ -236,7 +236,7 @@ void Video::DrawRect( int x, int y, int w, int h, float r, float g, float b, flo
 	rect.w = w;
 	rect.h = h;
  
-	SDL_SetRenderDrawColor( renderer, r, g, b, a );
+	SDL_SetRenderDrawColor( renderer, r * 255., g * 255., b * 255., a * 255. );
   
 	SDL_RenderFillRect( renderer, &rect );
 }
@@ -256,17 +256,18 @@ void Video::DrawBox( int x, int y, int w, int h, Color c, float a ) {
 /**\brief Draws an unfilled rectangle
  */
 void Video::DrawBox( int x, int y, int w, int h, float r, float g, float b, float a ) {
-	//glDisable(GL_TEXTURE_2D);
-	//glEnable(GL_BLEND);
-	//glColor4f( r, g, b, a );
-	//glBegin(GL_LINE_STRIP);
-	//glVertex2d(x,y);
-	//glVertex2d(x+w,y);
-	//glVertex2d(x+w,y+h);
-	//glVertex2d(x,y+h);
-	//glVertex2d(x,y);
-	//glEnd();
+	SDL_Rect rect;
 
+	a = 0.5;
+
+	SDL_SetRenderDrawColor( renderer, r * 255., g * 255., b * 255., a * 255. );
+
+	rect.x = x;
+	rect.y = y;
+	rect.w = w;
+	rect.h = h;
+
+	SDL_RenderDrawRect( renderer, &rect );
 }
 
 /**\brief Draws a circle.
@@ -334,28 +335,23 @@ void Video::DrawTarget( int x, int y, int w, int h, int d, float r, float g, flo
 	float w2 = w / 2.;
 	float h2 = h / 2.;
 
-	/*// d is for 'depth' and is the number of crosshair pixels
-	glColor4f(r, g, b, a);
+	SDL_SetRenderDrawColor( renderer, r * 255., g * 255., b * 255., a * 255. );
 
-	glBegin(GL_LINES);
+	// Upper Left Corner
+	SDL_RenderDrawLine(renderer, x - w2, y - h2, x - w2, y - h2 + d);
+	SDL_RenderDrawLine(renderer, x - w2, y - h2, x - w2 + d, y - h2);
 
-		// Upper Left Corner
-		glVertex2d(x - w2, y - h2); glVertex2d(x - w2, y - h2 + d);
-		glVertex2d(x - w2, y - h2); glVertex2d(x - w2 + d, y - h2);
+	// Upper Right Corner
+	SDL_RenderDrawLine(renderer, x + w2, y - h2, x + w2, y - h2 + d);
+	SDL_RenderDrawLine(renderer, x + w2, y - h2, x + w2 - d, y - h2);
 
-		// Upper Right Corner
-		glVertex2d(x + w2, y - h2); glVertex2d(x + w2, y - h2 + d);
-		glVertex2d(x + w2, y - h2); glVertex2d(x + w2 - d, y - h2);
+	// Lower Left Corner
+	SDL_RenderDrawLine(renderer, x - w2, y + h2, x - w2, y + h2 - d);
+	SDL_RenderDrawLine(renderer, x - w2, y + h2, x - w2 + d, y + h2);
 
-		// Lower Left Corner
-		glVertex2d(x - w2, y + h2); glVertex2d(x - w2, y + h2 - d);
-		glVertex2d(x - w2, y + h2); glVertex2d(x - w2 + d, y + h2);
-
-		// Lower Right Corner
-		glVertex2d(x + w2, y + h2); glVertex2d(x + w2, y + h2 - d);
-		glVertex2d(x + w2, y + h2); glVertex2d(x + w2 - d, y + h2);
-
-	glEnd();*/
+	// Lower Right Corner
+	SDL_RenderDrawLine(renderer, x + w2, y + h2, x + w2, y + h2 - d);
+	SDL_RenderDrawLine(renderer, x + w2, y + h2, x + w2 - d, y + h2);
 }
 
 /**\brief Enables the mouse
