@@ -75,6 +75,7 @@ class Planets : public Components {
 	public:
 		static Planets *Instance();
 		Planet *GetPlanet( string& PlanetName ) { return (Planet*) this->Get(PlanetName); }
+		Planet *GetPlanetByID( int spriteID );
 		Component* newComponent() { return new Planet(); }
 		
 	protected:

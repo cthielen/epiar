@@ -64,7 +64,7 @@ Planet& Planet::operator=(const Planet& other) {
 	pos.SetY(other.GetWorldPosition().GetY());
 	SetWorldPosition( pos );
 	SetImage( other.GetImage() );
-	Image::Store(name,GetImage());
+	Image::Store(name, GetImage());
 
 	return *this;
 }
@@ -98,7 +98,7 @@ Planet::Planet(
 	SetWorldPosition( pos );
 	SetName(_name);
 	SetImage(_image);
-	Image::Store(name,GetImage());
+	Image::Store(name, GetImage());
 	SetRadarColor(Color(48, 160, 255));
 }
 
@@ -306,7 +306,20 @@ Planets *Planets::Instance( void ) {
 		pInstance->rootName = "planets";
 		pInstance->componentName = "planet";
 	}
+
 	return( pInstance );
+}
+
+Planet *Planets::GetPlanetByID( int spriteID ) {
+	map<string,Component*>::iterator i;
+
+	for(i = components.begin(); i != components.end(); i++) {
+		Planet *p = (Planet *)((*i).second);
+
+		if(p->GetID() == spriteID) return p;
+	}
+
+	return NULL;
 }
 
 /** @} */
