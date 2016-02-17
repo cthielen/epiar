@@ -385,7 +385,7 @@ int Video::GetHalfHeight( void ) {
 
 /**\brief Set crop rectangle.
  */
-void Video::SetCropRect( int x, int y, int w, int h ){
+void Video::SetCropRect( int x, int y, int w, int h ) {
 	int xn, yn, wn, hn;
 
 	if (cropRects.empty()) {
@@ -406,32 +406,36 @@ void Video::SetCropRect( int x, int y, int w, int h ){
 		xn = prevrect.x > x ? TO_INT(prevrect.x) : x;	       // Left
 		yn = prevrect.y > y ? TO_INT(prevrect.y) : y;	       // Top
 		wn = rightprev > right ? right - xn : rightprev - xn;  // Right
-		hn = botprev > bot ? bot - yn : botprev - yn;		   // Bottom
+		hn = botprev > bot ? bot - yn : botprev - yn;          // Bottom
 
-		if(wn < 0) wn = 0; // crops don't overlap. we still record this as they're going to call unsetcrop, unaware of the issue
+		if(wn < 0) wn = 0; // crops don't overlap. we still record this as they're going to call unsetcrop
 		if(hn < 0) hn = 0; // same reason as line above
 	}
 
 	cropRects.push(Rect( xn, yn, wn, hn ));
 
-	// Need to convert top down y-axis
 	SDL_Rect rect;
+
 	rect.x = xn;
-	rect.y = yn; //Video::h - (yn + hn);
+	rect.y = yn;
 	rect.w = wn;
 	rect.h = hn;
-	SDL_RenderSetClipRect( renderer, &rect );
+
+	if( (wn > 0) && (hn > 0) ) {
+		SDL_RenderSetClipRect( renderer, &rect );
+	}
 }
 
 /**\brief Unset the previous crop rectangle after use.
  */
 void Video::UnsetCropRect( void ) {
-	if (!cropRects.empty()) // Shouldn't be empty
+	if(!cropRects.empty()) { // Shouldn't be empty
 		cropRects.pop();
-	else
-		LogMsg(WARN,"You unset the crop rect too many times.");
+	} else {
+		LogMsg(WARN, "You unset the crop rect too many times.");
+	}
 
-	if ( cropRects.empty() ) {
+	if( cropRects.empty() ) {
 		SDL_RenderSetClipRect( renderer, NULL );
 	} else {
 		// Set's the previous crop rectangle.
@@ -439,10 +443,13 @@ void Video::UnsetCropRect( void ) {
 		SDL_Rect rect;
 
 		rect.x = TO_INT(prevrect.x);
-		rect.y = TO_INT(prevrect.y); // Video::h - (TO_INT(prevrect.y) + TO_INT(prevrect.h));
+		rect.y = TO_INT(prevrect.y);
 		rect.w = TO_INT(prevrect.w);
 		rect.h = TO_INT(prevrect.h);
-		SDL_RenderSetClipRect( renderer, &rect );
+
+		if( (rect.w > 0) && (rect.h > 0) ) {
+			SDL_RenderSetClipRect( renderer, &rect );
+		}
 	}
 }
 
