@@ -103,13 +103,6 @@ case "$target" in
 		LIBS="$LIBS $SDL2_LIBS"
 esac
 
-dnl Set up OpenGL for OS X
-dnl case "$target" in
-dnl 	*-apple-darwin*)
-dnl 	CFLAGS="$CFLAGS -I/System/Library/Frameworks/OpenGL.framework/Headers"
-dnl 	LIBS="$LIBS -framework OpenGL"
-dnl esac
-
 dnl Check for SDL_image
 case "$target" in
 	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd* | *-apple-darwin*)
@@ -141,18 +134,11 @@ case "$target" in
 		;;
 esac
 
-dnl Set MinGW-specific options
-case "$target" in
-	*-*-mingw32*)
-		LIBS="$LIBS -lopengl32"
-		;;
-esac
-
 dnl Set Unix specific options
 case "$target" in
 	*-*-linux* | *-*-freebsd*)
-		CFLAGS="$CFLAGS -DUNIX -I/usr/include/GL"
-		LIBS="$LIBS -lGL -lGLU -lz"
+		CFLAGS="$CFLAGS -DUNIX"
+		LIBS="$LIBS -lz"
 		;;
 esac
 
