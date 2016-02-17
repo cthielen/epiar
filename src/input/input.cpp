@@ -77,6 +77,7 @@ std::map<SDL_Keycode, bool> Input::heldKeys;
 Uint32 Input::lastMouseMove = 0;
 list<InputEvent> Input::events;
 map<InputEvent,string> Input::eventMappings;
+Sint32 Input::mouseX, Input::mouseY;
 
 /**\brief Polls the event queue and sends the list of events to subsystems.
  */
@@ -89,31 +90,25 @@ list<InputEvent> Input::Update() {
 		switch( event.type ) {
 			case SDL_QUIT:
 				exit(1);
+				break;
 			case SDL_KEYDOWN:
-			{
 				_UpdateHandleKeyDown( &event );
 				break;
-			}
 			case SDL_KEYUP:
-			{
 				_UpdateHandleKeyUp( &event );
 				break;
-			}
 			case SDL_MOUSEMOTION:
-			{
 				_UpdateHandleMouseMotion( &event );
 				break;
-			}
 			case SDL_MOUSEBUTTONUP:
-			{
 				_UpdateHandleMouseUp( &event );
 				break;
-			}
 			case SDL_MOUSEBUTTONDOWN:
-			{
 				_UpdateHandleMouseDown( &event );
 				break;
-			}
+			case SDL_MOUSEWHEEL:
+				_UpdateHandleMouseWheel( &event );
+				break;
 			default:
 				break;
 		}
@@ -151,6 +146,7 @@ void Input::RegisterLuaVariables( void ) {
 	lua_State* L = Lua::CurrentState();
 	
 	lua_newtable(L);
+
 	l_pushtableinteger(L, "left", SDLK_LEFT);
 	l_pushtableinteger(L, "right", SDLK_RIGHT);
 	l_pushtableinteger(L, "up", SDLK_UP);
@@ -174,25 +170,28 @@ void Input::RegisterLuaVariables( void ) {
 	lua_setglobal(L, "SDLKeys" );
 }
 
-/*Key = {
-	rctrl=305, lctrl=306, ralt=307, lalt=308, rmeta=309, lmeta=310, lsuper=311, rsuper=312,
-}*/
-
 /**\brief Converts SDL_MouseButtonEvent to Epiar's Input model.
  */
-mouseState Input::_CheckMouseState( Uint8 button, bool up ) {
-	switch (button) {
-		case SDL_BUTTON_LEFT:
-			return (up? MOUSELUP : MOUSELDOWN);
-		case SDL_BUTTON_MIDDLE:
-			return (up? MOUSEMUP : MOUSEMDOWN);
-		case SDL_BUTTON_RIGHT:
-			return (up? MOUSERUP : MOUSERDOWN);
-		// We'll only handle one event, return unhandled on down events.
-		//case SDL_BUTTON_WHEELUP:
-			//return (up? MOUSEWUP : UNHANDLED);
-		//case SDL_BUTTON_WHEELDOWN:
-			//return (up? MOUSEWDOWN : UNHANDLED);
+mouseState Input::_CheckMouseState( SDL_Event *event, bool up ) {
+	assert(event != NULL);
+
+	if((event->type == SDL_MOUSEBUTTONDOWN) || (event->type == SDL_MOUSEBUTTONUP)) {
+		Uint8 button = event->button.button;
+
+		switch(button) {
+			case SDL_BUTTON_LEFT:
+				return (up ? MOUSELUP : MOUSELDOWN);
+			case SDL_BUTTON_MIDDLE:
+				return (up ? MOUSEMUP : MOUSEMDOWN);
+			case SDL_BUTTON_RIGHT:
+				return (up ? MOUSERUP : MOUSERDOWN);
+		}
+	} else if(event->type == SDL_MOUSEWHEEL) {
+		if(event->wheel.y > 0) {
+			return MOUSEWUP;
+		} else {
+			return MOUSEWDOWN;
+		}
 	}
 
 	return UNHANDLED;
@@ -203,14 +202,13 @@ mouseState Input::_CheckMouseState( Uint8 button, bool up ) {
 void Input::_UpdateHandleMouseMotion( SDL_Event *event ) {
 	assert( event );
 
-	Uint16 x, y;
+	mouseX = event->motion.x;
+	mouseY = event->motion.y;
 
-	// translate so (0,0) is lower-left of screen
-	x = event->motion.x;
-	y = event->motion.y;
+	events.push_back( InputEvent( MOUSE, MOUSEMOTION, mouseX, mouseY ) );
 
-	events.push_back( InputEvent( MOUSE, MOUSEMOTION, x, y ) );
 	Video::EnableMouse();
+
 	lastMouseMove = Timer::GetTicks();
 }
 
@@ -219,15 +217,11 @@ void Input::_UpdateHandleMouseMotion( SDL_Event *event ) {
 void Input::_UpdateHandleMouseDown( SDL_Event *event ) {
 	assert( event );
 
-	Uint16 x, y;
-	mouseState state=_CheckMouseState(event->button.button,false);
-	// translate so (0,0) is lower-left of screen
-	x = event->button.x;
-	y = event->button.y;
+	mouseState state = _CheckMouseState(event, false);
 
-
-	if (state)
-		events.push_back( InputEvent( MOUSE, state, x, y ) );
+	if(state) {
+		events.push_back( InputEvent( MOUSE, state, mouseX, mouseY ) );
+	}
 }
 
 /**\brief Translates mouse up events to Epiar events.
@@ -235,14 +229,22 @@ void Input::_UpdateHandleMouseDown( SDL_Event *event ) {
 void Input::_UpdateHandleMouseUp( SDL_Event *event ) {
 	assert( event );
 
-	Uint16 x, y;
-	mouseState state=_CheckMouseState(event->button.button,true);
-	// translate so (0,0) is lower-left of screen
-	x = event->button.x;
-	y = event->button.y;
+	mouseState state = _CheckMouseState(event, true);
 
 	if (state) {
-		events.push_back( InputEvent( MOUSE, state, x, y ) );
+		events.push_back( InputEvent( MOUSE, state, mouseX, mouseY ) );
+	}
+}
+
+/**\brief Translates mouse up events to Epiar events.
+ */
+void Input::_UpdateHandleMouseWheel( SDL_Event *event ) {
+	assert( event );
+
+	mouseState state = _CheckMouseState(event, false);
+
+	if (state) {
+		events.push_back( InputEvent( MOUSE, state, mouseX, mouseY ) );
 	}
 }
 
@@ -361,6 +363,7 @@ bool Input::SearchSpecificEvent( list<InputEvent> & events, InputEvent trigger )
 		if( (*i) == trigger ) {
 			return true;
 		}
+
 		i++;
 	}
 

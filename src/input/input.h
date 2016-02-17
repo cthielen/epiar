@@ -104,13 +104,14 @@ class Input {
 		static bool keyIsHeld(SDL_Keycode key);
 
 	private:
-		static mouseState _CheckMouseState( Uint8 button, bool up );
+		static mouseState _CheckMouseState( SDL_Event *event, bool up );
 		static void _UpdateHandleSignal( SDL_Event *event );
 		static void _UpdateHandleKeyDown( SDL_Event *event );
 		static void _UpdateHandleKeyUp( SDL_Event *event );
 		static void _UpdateHandleMouseDown( SDL_Event *event );
 		static void _UpdateHandleMouseUp( SDL_Event *event );
 		static void _UpdateHandleMouseMotion( SDL_Event *event );
+		static void _UpdateHandleMouseWheel( SDL_Event *event );
 
 		static void PushTypeEvent( list<InputEvent> & events, SDL_Keycode key );
 
@@ -118,6 +119,7 @@ class Input {
 		static list<InputEvent> events; // all the events for the loop. we pass this list to various sub-systems
 		static map<InputEvent,string> eventMappings; // Lua callbacks mapped to a key
 		static Uint32 lastMouseMove;
+		static Sint32 mouseX, mouseY;
 };
 
 #endif // __h_input__
