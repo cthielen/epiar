@@ -281,20 +281,29 @@ void Video::DrawCircle( Coordinate c, int radius, float line_width, Color col, f
 /**\brief Draws a circle
  */
 void Video::DrawCircle( int x, int y, int radius, float line_width, float r, float g, float b, float a) {
-	/*glDisable(GL_TEXTURE_2D);
-	glColor4f( r, g, b, a );
-	glLineWidth(line_width);
-	glBegin(GL_LINE_STRIP);
+	double prev_x, prev_y, cur_x, cur_y;
+
+	SDL_SetRenderDrawColor( renderer, r * 255., g * 255., b * 255., a * 255. );
+
 	Trig* t = Trig::Instance();
-	for(int angle = 0; angle < 360; angle += 5)
-	{
-		glVertex2d(radius * t->GetCos(angle) + x, radius * t->GetSin(angle) + y);
+
+	prev_x = radius * t->GetCos(0) + x;
+	prev_y = radius * t->GetSin(0) + y;
+
+	for(int angle = 5; angle < 360; angle += 5) {
+		cur_x = radius * t->GetCos(angle) + x;
+		cur_y = radius * t->GetSin(angle) + y;
+
+		SDL_RenderDrawLine(renderer, prev_x, prev_y, cur_x, cur_y);
+
+		prev_x = cur_x;
+		prev_y = cur_y;
 	}
-	// One more point to finish the circle. (ang=0)
-	glVertex2d(radius + x, y);
-	glEnd();
-	// Reset Line Width
-	glLineWidth(1);*/
+
+	cur_x = radius * t->GetCos(0) + x;
+	cur_y = radius * t->GetSin(0) + y;
+
+	SDL_RenderDrawLine(renderer, prev_x, prev_y, cur_x, cur_y);
 }
 
 void Video::DrawFilledCircle( Coordinate p, int radius, Color c, float a) {
