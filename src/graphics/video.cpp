@@ -217,14 +217,10 @@ void Video::DrawLine( int x1, int y1, int x2, int y2, Color c, float a ) {
 /**\brief Draw a Line.
  */
 void Video::DrawLine( int x1, int y1, int x2, int y2, float r, float g, float b, float a ) {
-	//glColor4f( r, g, b, a );
-	//glBegin(GL_LINES);
-	//glVertex2d(x1,y1);
-	//glVertex2d(x2,y2);
-	//glEnd();
+	SDL_SetRenderDrawColor( renderer, r * 255., g * 255., b * 255., a * 255. );
+  
+	SDL_RenderDrawLine( renderer, x1, y1, x2, y2 );
 }
-
-
 
 /**\brief Draws a filled rectangle
  */
