@@ -258,8 +258,7 @@ bool NavMap::MouseDrag( int xi, int yi ) {
 
 /** \brief Zoom the map in
  */
-bool NavMap::MouseWUp( int xi, int yi )
-{
+bool NavMap::MouseWUp( int xi, int yi ) {
 	if( zoomable ) {
 		scale *= MAP_ZOOM_RATIO;
 	}
