@@ -57,7 +57,9 @@ Tab::~Tab() {
  */
 Tab *Tab::AddChild( Widget *widget ) {
 	assert( widget != NULL );
+
 	Container::AddChild( widget );
+
 	return this;
 }
 
@@ -104,18 +106,21 @@ Tabs::Tabs( int x, int y, int _w, int _h, const string& name ):
  */
 Tabs *Tabs::AddChild( Widget *widget ){
 	assert( widget != NULL );
-	if ( widget->GetType() != "Tab" ){
+
+	if( widget->GetType() != "Tab" ) {
 		LogMsg(ERR,"Error attempted to add non-Tab widget to Tab container: %s",
 				widget->GetName().c_str());
 		return NULL;
 	}
+
 	Tab* tabwidget = static_cast<Tab*>( widget );
 
 	// Call generic to add the widget
 	Container::AddChild( widget );
 
-	if ( activetab == NULL)
+	if( activetab == NULL) {
 		this->activetab = tabwidget;
+	}
 
 	// Adjust Scrollbars to this container
 	tabwidget->SetW( GetW() );
@@ -130,7 +135,6 @@ Tabs *Tabs::AddChild( Widget *widget ){
 Widget *Tabs::DetermineMouseFocus( int relx, int rely ) {
 	return this->activetab;
 }
-
 
 /**\brief Goes to next Tab in the container.
  */
@@ -161,6 +165,7 @@ void Tabs::Draw( int relx, int rely ){
 
 	int xo = x;
 	list<Widget *>::iterator i;
+
 	for( i = Container::children.begin(); i != Container::children.end(); ++i ) {
 		Tab* currtab = static_cast<Tab*>(*i);
 
@@ -189,11 +194,14 @@ bool Tabs::MouseLDown( int x, int y ) {
 	int xr = x - GetX();
 	int yr = y - GetY();
 
-	if ( yr < TAB_HEADER ){
+	if( yr < TAB_HEADER ) {
 		activetab = this->CheckTabClicked( xr, yr );
+
 		Widget::MouseLDown( x, y );
+
 		return true;
 	}
+
 	return Container::MouseLDown( x, y );
 }
 
@@ -202,16 +210,20 @@ bool Tabs::MouseLDown( int x, int y ) {
 Tab* Tabs::CheckTabClicked( int xr, int yr ){
 	list<Widget *>::iterator i;
 	int xo = 0;
+
 	for( i = Container::children.begin(); i != Container::children.end(); ++i ) {
 		Tab* currtab = static_cast<Tab*>(*i);
-		if ( xr < xo + currtab->GetHandleWidth(currtab == activetab) )
+
+		if ( xr < xo + currtab->GetHandleWidth(currtab == activetab) ) {
 			return currtab;
+		}
+
 		xo += currtab->GetHandleWidth(currtab == activetab);
 	}
+
 	// Active Tab didn't change
 	return this->activetab;
 }
-
 
 /** \fn Tabs::GetType
  *  \brief For Tabs container, it is always "Tabs"

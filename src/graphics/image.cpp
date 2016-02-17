@@ -208,7 +208,7 @@ void Image::DrawTiled( int x, int y, int fill_w, int fill_h, float alpha ) {
 		return;
 	}
 
-	Video::SetCropRect(x, y, fill_w, fill_h); // don't need to invert y here
+	Video::SetCropRect(x, y, fill_w, fill_h);
 
 	for( int j = 0; j < fill_h; j += h) {
 		for( int i = 0; i < fill_w; i += w) {

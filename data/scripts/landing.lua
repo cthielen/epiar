@@ -127,12 +127,12 @@ function landingDialog(id)
 		end
 		availableMissions[i] = _G[missionType].Create()
 		availableMissions[i].Type = missionType
-		local fwidth = width-55
-		local description = UI.newParagraph( 10, 40, fwidth-130, 150, availableMissions[i].Description )
+		local fwidth = width - 55
+		local description = UI.newParagraph( 10, 40, fwidth - 130, 150, availableMissions[i].Description )
 		local fheight = description:GetH() + 70
 		missions:add(
 			UI.newFrame( 5, yoff, fwidth, fheight,
-				UI.newLabel( fwidth/2, 10, availableMissions[i].Name, 1 ),
+				UI.newLabel( fwidth / 2, 10, availableMissions[i].Name, 1 ),
 				description,
 				UI.newButton( fwidth -100 -20, fheight -20 -20, 100, 20, "Accept",  string.format("accept(%q, %d)", missionType, i) )
 			)

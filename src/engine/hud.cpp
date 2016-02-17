@@ -399,8 +399,11 @@ void Hud::DrawShieldIntegrity() {
  */
 void Hud::DrawRadarNav( Camera* camera, SpriteManager* sprites ) {
 	Image::Get( "data/skin/hud_radarnav.png" )->Draw( Video::GetWidth() - 129, 5 );
-	Video::SetCropRect( Video::GetWidth() - 125, 9, RADAR_WIDTH-8, RADAR_HEIGHT-8 );
+
+	Video::SetCropRect( Video::GetWidth() - 125, 9, RADAR_WIDTH - 8, RADAR_HEIGHT - 8 );
+
 	Radar::Draw( camera, sprites );
+
 	Video::UnsetCropRect();
 }
 

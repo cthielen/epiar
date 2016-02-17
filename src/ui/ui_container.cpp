@@ -623,14 +623,15 @@ void Container::Draw( int relx, int rely ) {
 
 	for( i = children.begin(); i != children.end(); ++i ) {
 		// Skip scrollbars
-		if ( (*i) == this->vscrollbar ){
+		if( (*i) == this->vscrollbar ) {
 			(*i)->Draw( x, y );
 			continue;
 		}
 
 		int yscroll = 0;
-		if ( this->vscrollbar )
+		if( this->vscrollbar ) {
 			yscroll = vscrollbar->GetPos();
+		}
 
 		(*i)->Draw( x, y - yscroll );
 	}
