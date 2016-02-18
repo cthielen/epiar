@@ -354,7 +354,7 @@ void Scenario::Run() {
 	Hud::Alert("Epiar is an unfinished product. Please report all bugs at epiar.net.");
 
 	// Generate a starfield
-	Starfield starfield( 1000 );
+	Starfield starfield( 800 );
 
 	// Load sample game music
 	if(bgmusic && OPTION(int, "options/sound/background")) {
@@ -363,10 +363,18 @@ void Scenario::Run() {
 
 	// main game loop
 	bool lowFps = false;
+	bool firstLoop = true;
 	int lowFpsFrameCount = 0;
 
 	while( !quit ) {
 		int logicLoops = Timer::Update();
+
+		if(firstLoop) {
+			// We need at least one logic loop to ensure initial positions
+			// are set correctly.
+			if(logicLoops == 0) logicLoops = 1;
+			firstLoop = false;
+		}
 
 		if( !paused ) {
       			// Logical update cycle
