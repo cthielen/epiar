@@ -87,12 +87,12 @@ void Sprite::Update( lua_State *L ) {
 }
 
 void Sprite::UpdateScreenCoordinates( void ) {
-  Camera *camera = Camera::Instance();
+	Camera *camera = Camera::Instance();
 
-  oldScreenPosition = screenPosition;
-  camera->TranslateWorldToScreen( worldPosition, screenPosition );
+	oldScreenPosition = screenPosition;
+	camera->TranslateWorldToScreen( worldPosition, screenPosition );
 
-  if(interpolationUpdateCheck < 2) interpolationUpdateCheck++;
+	if(interpolationUpdateCheck < 2) interpolationUpdateCheck++;
 }
 
 /**\brief Draw
@@ -102,19 +102,19 @@ void Sprite::UpdateScreenCoordinates( void ) {
  * \sa SpriteManager::Draw
  */
 void Sprite::Draw( void ) {
-  double fframe = Timer::GetFFrame();
+	double fframe = Timer::GetFFrame();
 
 	if( image ) {
-    if(interpolateOn && (interpolationUpdateCheck >= 2)) {
-      Coordinate interpolatedScreenPosition;
+		if(interpolateOn && (interpolationUpdateCheck >= 2)) {
+			Coordinate interpolatedScreenPosition;
 
-      interpolatedScreenPosition.SetX(oldScreenPosition.GetX() * (1.0f - fframe) + screenPosition.GetX() * fframe);
-      interpolatedScreenPosition.SetY(oldScreenPosition.GetY() * (1.0f - fframe) + screenPosition.GetY() * fframe);
+			interpolatedScreenPosition.SetX(oldScreenPosition.GetX() * (1.0f - fframe) + screenPosition.GetX() * fframe);
+			interpolatedScreenPosition.SetY(oldScreenPosition.GetY() * (1.0f - fframe) + screenPosition.GetY() * fframe);
 
-      image->DrawCentered( interpolatedScreenPosition.GetX(), interpolatedScreenPosition.GetY(), angle );
-    } else {
-      image->DrawCentered( screenPosition.GetX(), screenPosition.GetY(), angle );
-    }
+			image->DrawCentered( interpolatedScreenPosition.GetX(), interpolatedScreenPosition.GetY(), angle );
+		} else {
+			image->DrawCentered( screenPosition.GetX(), screenPosition.GetY(), angle );
+		}
 	} else {
 		LogMsg(WARN, "Attempt to draw a sprite before an image was assigned." );
 	}

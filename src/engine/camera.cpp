@@ -41,6 +41,7 @@ Camera *Camera::Instance( void ) {
 	if( pInstance == 0 ) { // is this the first call?
 		pInstance = new Camera; // create the solid instance
 	}
+
 	return( pInstance );
 }
 
@@ -139,7 +140,6 @@ void Camera::TranslateScreenToWorld( Coordinate &screen, Coordinate &world ) {
  */
 void Camera::GetDelta( double *dx, double *dy ) {
 	if( !dx || !dy ) {
-
 		LogMsg(WARN, "dx/dy are NULL pointers!" );
 
 		return;
@@ -165,7 +165,7 @@ void Camera::Move( int dx, int dy ) {
 void Camera::Update( SpriteManager *sprites ) {
 	Sprite* focusSprite = NULL;
 
-  dx = 0;
+	dx = 0;
 	dy = 0;
 
 	focusSprite = sprites->GetSpriteByID( focusID );
@@ -183,6 +183,7 @@ void Camera::Update( SpriteManager *sprites ) {
 void Camera::Shake( Uint32 duration, int intensity, Coordinate* source ) {
 	Trig *trig = Trig::Instance();
 	float angle;
+
 	//Coordinate position = focusSprite->GetWorldPosition() - *source;
 	Coordinate position = *source;
 	angle = position.GetAngle();
@@ -215,8 +216,10 @@ void Camera::UpdateShake() {
 			cameraShakeXOffset += cameraShakeXDec;
 			cameraShakeYOffset += cameraShakeYDec;
 		}
+
 		cameraShakeXOffset *= -1;
 		cameraShakeYOffset *= -1;
 	}
+
 	cameraShakeDur--;
 }
