@@ -130,11 +130,11 @@ bool SpriteManager::Delete( Sprite *sprite ) {
 }
 
 void SpriteManager::UpdateScreenCoordinates( void ) {
-  list<Sprite *>::iterator i;
+	list<Sprite *>::iterator i;
 
-  for( i = spritelist->begin(); i != spritelist->end(); ++i ) {
-    (*i)->UpdateScreenCoordinates();
-  }
+	for( i = spritelist->begin(); i != spritelist->end(); ++i ) {
+		(*i)->UpdateScreenCoordinates();
+	}
 }
 
 /**\brief SpriteManager update function.
@@ -279,7 +279,7 @@ bool compareSpritePtrs(Sprite* a, Sprite* b){
  */
 void SpriteManager::Draw( Coordinate focus ) {
 	list<Sprite *>::iterator i;
-	list<Sprite*> *onscreen;
+	list<Sprite*> *onscreen = NULL;
 	float r = (Video::GetHalfHeight() < Video::GetHalfWidth() ? Video::GetHalfWidth() : Video::GetHalfHeight()) * V_SQRT2;
 	onscreen = GetSpritesNear( focus, r, DRAW_ORDER_ALL);
 

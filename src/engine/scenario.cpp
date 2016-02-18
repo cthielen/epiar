@@ -202,7 +202,6 @@ bool Scenario::Initialize() {
 	       && Lua::Load("data/scripts/ai.lua")
 	       && Lua::Load("data/scripts/missions.lua")
 	       && Lua::Load("data/scripts/player.lua")
-	       //&& Lua::Load("data/scripts/autopilot.lua")
 	       && Lua::Load("data/scripts/fleet.lua");
 
 	if (!luaLoad) {
@@ -365,8 +364,10 @@ void Scenario::Run() {
 	// main game loop
 	bool lowFps = false;
 	int lowFpsFrameCount = 0;
+
 	while( !quit ) {
 		int logicLoops = Timer::Update();
+
 		if( !paused ) {
       			// Logical update cycle
 			while(logicLoops--) {

@@ -180,9 +180,10 @@ function changePower( shield, damage, engine)
 		return
 	end
 
-	newengine = math.floor(newengine * 1000 + 0.5)/1000
-	newshield = math.floor(newshield * 1000 + 0.5)/1000
-	newdamage = math.floor(newdamage * 1000 + 0.5)/1000
+	newengine = math.floor(newengine * 1000 + 0.5) / 1000
+	newshield = math.floor(newshield * 1000 + 0.5) / 1000
+	newdamage = math.floor(newdamage * 1000 + 0.5) / 1000
+
 	PLAYER:SetEngineBooster(newengine)
 	PLAYER:SetShieldBooster(newshield)
 	PLAYER:SetDamageBooster(newdamage)
@@ -859,12 +860,13 @@ function playerInformation()
 	infoWin:add( infoTabs )
 	infoWin:addCloseButton()
 
-    -- The Summary Tab
-    local summaryTab = UI.newTab( "Summary" )
+	-- The Summary Tab
+	local summaryTab = UI.newTab( "Summary" )
 	local name = PLAYER:GetName()
 	local model = PLAYER:GetModelName()
 	local engine = PLAYER:GetEngine()
 	local credits = PLAYER:GetCredits()
+
 	summaryTab:add( UI.newLabel(20, y, "Name:     ".. name) )
 	local y = y+20
 	summaryTab:add( UI.newLabel(20, y, "Model:    ".. model) )
@@ -961,11 +963,14 @@ function initHiredEscort(playerID, playerX, playerY, escortType, escortPay)
 	local name = ("escort " .. escortType)
 	local escort = Ship.new(name, playerX - 75 + math.random(150), playerY - 150 + math.random(75), escortType, "Ion Engines", "Escort", "Independent")
 	local eid = escort:GetID()
+
 	AIData[eid] = {
 		accompany = playerID,
 		pay = escortPay,
 	}
+
 	Fleets:join(playerID, eid)
+
 	return escort:GetID()
 end
 
