@@ -1,3 +1,8 @@
+Wednesday, February 17, 2016
+	Christopher Thielen:
+		* Merged SDL2 port. SDL2, SDL2_image, SDL2_ttf seem to work
+		well.
+
 Sunday, January 3, 2016
 	Christopher Thielen:
 		* Main menu and non-textual UI now render correctly.
