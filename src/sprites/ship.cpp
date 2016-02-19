@@ -133,7 +133,7 @@ Ship::Ship() {
 Ship::~Ship() {
 	if(flareAnimation) {
 		delete flareAnimation;
-		flareAnimation=NULL;
+		flareAnimation = NULL;
 	}
 }
 

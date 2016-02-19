@@ -1,16 +1,17 @@
 /**\file			technologies.cpp
  * \author			Matt Zweig (thezweig@gmail.com)
  * \date			Created: Saturday, February 13, 2010
- * \date			Modified: Saturday, February 13, 2010
+ * \date			Modified: Thursday, February 18, 2016
  * \brief
  * \details
  */
 
-#include "includes.h"
 #include "engine/technologies.h"
 #include "engine/models.h"
 #include "engine/engines.h"
 #include "engine/weapons.h"
+#include "includes.h"
+#include "menu.h"
 #include "utilities/components.h"
 
 /**\class Technology
@@ -23,13 +24,13 @@ Technology::Technology(){}
 
 /**\brief Assignment operator (copy fields)
  */
-Technology& Technology::operator= (const Technology& other)
-{
+Technology& Technology::operator= (const Technology& other) {
 	name = other.name;
 	models = other.models;
 	engines = other.engines;
 	weapons = other.weapons;
 	outfits = other.outfits;
+
 	return *this;
 }
 
@@ -56,39 +57,38 @@ Technology::Technology( string _name,
 /**\brief Parses the XML file for Technology fields
  */
 bool Technology::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
-	xmlNodePtr  tech;
+	xmlNodePtr tech;
 	string value;
 
-	for( tech=node->xmlChildrenNode; tech!=NULL; tech = tech->next )
-	{
+	for( tech = node->xmlChildrenNode; tech != NULL; tech = tech->next ) {
 		if( NodeNameIs( tech, "model" )) {
-			value = NodeToString(doc,tech);
+			value = NodeToString(doc, tech);
 			Model* model = Models::Instance()->GetModel( value );
-			if(model==NULL) {
+			if(model == NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {
 				models.push_back( model );
 			}
 		} else if( NodeNameIs( tech, "engine" )) {
-			value = NodeToString(doc,tech);
-			Engine* engine = Engines::Instance()->GetEngine( value );
-			if(engine==NULL) {
+			value = NodeToString(doc, tech);
+			Engine* engine = Menu::GetCurrentScenario()->GetEngines()->GetEngine( value );
+			if(engine == NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {
 				engines.push_back( engine );
 			}
 		} else if( NodeNameIs( tech, "weapon" )) {
-			value = NodeToString(doc,tech);
+			value = NodeToString(doc, tech);
 			Weapon* weapon = Weapons::Instance()->GetWeapon( value );
-			if(weapon==NULL) {
+			if(weapon == NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {
 				weapons.push_back( weapon );
 			}
 		} else if( NodeNameIs( tech, "outfit" )) {
-			value = NodeToString(doc,tech);
+			value = NodeToString(doc, tech);
 			Outfit* outfit = Outfits::Instance()->GetOutfit( value );
-			if(outfit==NULL) {
+			if(outfit == NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {
 				outfits.push_back( outfit );

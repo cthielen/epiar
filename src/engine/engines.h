@@ -38,17 +38,9 @@ class Engine : public Outfit {
 // Class that holds list of all planets; manages them
 class Engines : public Components {
 	public:
-		static Engines *Instance();
+		Engines();
 		Engine* GetEngine(string name) { return (Engine*) this->Get(name); }
 		Component* newComponent() { return new Engine(); }
-
-	protected:
-		Engines() {};
-		Engines( const Engines & );
-		Engines& operator= (const Engines&);
-		
-	private:
-		static Engines *pInstance;
 };
 
 #endif // __h_planets__

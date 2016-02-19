@@ -158,20 +158,19 @@ Component* Components::Get(string name) {
  *
  */
 
-bool Components::ParseXMLNode( xmlDocPtr doc, xmlNodePtr node )
-{
+bool Components::ParseXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	xmlNodePtr  attr;
 	Component* component = newComponent();
 
 	// All Compoents must have names!
-	if( (attr = FirstChildNamed(node,"name")) ){
-		component->SetName(NodeToString(doc,attr));
+	if( (attr = FirstChildNamed(node,"name")) ) {
+		component->SetName(NodeToString(doc, attr));
 	} else {
-		LogMsg(ERR, "Failed to find a name attribute for the %s node at line %ld.\n", NodeToString(doc,attr).c_str(), xmlGetLineNo(node) );
+		LogMsg(ERR, "Failed to find a name attribute for the %s node at line %ld.\n", NodeToString(doc, attr).c_str(), xmlGetLineNo(node) );
 		return false;
 	}
 
-	if( component->FromXMLNode(doc, node) ){
+	if( component->FromXMLNode(doc, node) ) {
 		Add( component );
 		return true;
 	} else {
@@ -217,7 +216,7 @@ bool Components::Load(string filename, bool fileoptional, bool skipcorrupt) {
 	}
 	
 	if( xmlStrcmp( cur->name, (const xmlChar *)rootName.c_str() ) ) {
-		LogMsg(ERR, "'%s' appears to be invalid. Root element was %s.", filename.c_str(), (char *)cur->name );
+		LogMsg(ERR, "'%s' appears to be invalid. Root element was %s. Expecting %s.", filename.c_str(), (char *)cur->name, rootName.c_str() );
 		xmlFreeDoc( doc );
 		return false;
 	} else {

@@ -79,7 +79,7 @@ class Scenario : public XMLFile {
 		void SetQuit( bool val ) { quit = val; }
 
 	private:
-		bool Parse( void );
+		bool ParseXML( void );
 		void CreateNavMap( void );
 
 		// Pointers to Singletons

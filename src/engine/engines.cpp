@@ -140,18 +140,9 @@ xmlNodePtr Engine::ToXMLNode(string componentName) {
 /**\class Engines
  * \brief Handles ship engines. */
 
-Engines *Engines::pInstance = 0; // initialize pointer
-
-/**\brief Initializes the instance or gets a pointer to it.
- * \return Pointer to an Engine object
- */
-Engines *Engines::Instance( void ) {
-	if( pInstance == 0 ) { // is this the first call?
-		pInstance = new Engines; // create the solid instance
-		pInstance->rootName = "engines";
-		pInstance->componentName = "engine";
-	}
-	return( pInstance );
+Engines::Engines() {
+	rootName = "engines";
+	componentName = "engine";
 }
 
 /**\fn Engines::GetEngine(string name)
@@ -160,14 +151,5 @@ Engines *Engines::Instance( void ) {
 
 /**\fn Engines::newComponent()
  * \brief Creates a new Engine object.
- */
-
-// Projected members
-/**\fn Engines::Engines( const Engines & )
- * \brief Creates a new Engines object
- */
-
-/**\fn Engines::operator= (const Engines &)
- * \brief Assignment operator (empty)
  */
 

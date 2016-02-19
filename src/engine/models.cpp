@@ -1,14 +1,15 @@
 /**\file			models.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Saturday, January 5, 2008
+ * \date			Modified: Thursday, February 18, 2016
  * \brief
  * \details
  */
 
-#include "includes.h"
-#include "utilities/components.h"
 #include "engine/models.h"
+#include "includes.h"
+#include "menu.h"
+#include "utilities/components.h"
 
 /** \class Model
  *  \brief Common ship attributes shared between a style of ship.
@@ -121,7 +122,7 @@ Model::Model(
 /**\brief For parsing XML file into fields.
  */
 bool Model::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
-	xmlNodePtr  attr;
+	xmlNodePtr attr;
 	string value;
 
 	if( (attr = FirstChildNamed(node,"image")) ){
@@ -138,7 +139,7 @@ bool Model::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	}
 
 	if( (attr = FirstChildNamed(node,"engine")) ){
-		defaultEngine = Engines::Instance()->GetEngine( NodeToString(doc,attr) );
+		defaultEngine = Menu::GetCurrentScenario()->GetEngines()->GetEngine( NodeToString(doc,attr) );
 	} else return false;
 
 	if( (attr = FirstChildNamed(node,"mass")) ){

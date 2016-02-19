@@ -62,11 +62,11 @@ Sprite::Sprite() {
 	radarSize = 1;
 	radarColor = WHITE * 0.7f;
 
-  interpolationUpdateCheck = 0;
+	interpolationUpdateCheck = 0;
 }
 
 Coordinate Sprite::GetWorldPosition( void ) const {
-  return worldPosition;
+	return worldPosition;
 }
 
 void Sprite::SetWorldPosition( Coordinate coord ) {

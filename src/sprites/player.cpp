@@ -1,21 +1,21 @@
 /**\file			player.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Wednesday, July 5, 2006
- * \date			Modified: Thursday, December 3, 2015
+ * \date			Modified: Thursday, February 18, 2016
  * \brief			Main player-specific functions and handle
  * \details
  */
 
-#include "includes.h"
 #include "common.h"
+#include "engine/scenario_lua.h"
 #include "menu.h"
+#include "includes.h"
 #include "sprites/player.h"
 #include "sprites/planets.h"
 #include "sprites/spritemanager.h"
 #include "utilities/components.h"
 #include "utilities/file.h"
 #include "utilities/filesystem.h"
-#include "engine/scenario_lua.h"
 
 /** \addtogroup Sprites
  * @{
@@ -283,7 +283,7 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 
 	if( (attr = FirstChildNamed(node,"engine")) ) {
 		value = NodeToString(doc,attr);
-		Engine* engine = Engines::Instance()->GetEngine( value );
+		Engine* engine = Menu::GetCurrentScenario()->GetEngines()->GetEngine( value );
 		if( NULL != engine) {
 			SetEngine( engine );
 		} else {

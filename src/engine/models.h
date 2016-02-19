@@ -16,7 +16,6 @@
 #include "utilities/log.h"
 #include "utilities/components.h"
 
-
 typedef struct WeaponSlot {
 	string name;            ///< name of the slot
 	int x,y;             ///< The relative X and Y offsets of this weapon.

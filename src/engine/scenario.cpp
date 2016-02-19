@@ -45,11 +45,11 @@ Scenario::Scenario( void ) {
 	// Register these functions to their own lua namespaces
 	Lua::Init();
 	L = Lua::CurrentState();
-	Scenario_Lua::StoreScenario(L,this);
+	Scenario_Lua::StoreScenario(L, this);
 
 	sprites = new SpriteManager();
 	commodities = Commodities::Instance();
-	engines = Engines::Instance();
+	engines = new Engines();
 	planets = Planets::Instance();
 	models = Models::Instance();
 	weapons = Weapons::Instance();
@@ -132,7 +132,7 @@ bool Scenario::Load( string simName ) {
 		return false;
 	}
 
-	loaded = Parse();
+	loaded = ParseXML();
 
 	return loaded;
 }
@@ -275,7 +275,7 @@ Scenario::~Scenario() {
 	// TODO: Shouldn't we be unloading these?
 	commodities = NULL;
 	planets = NULL;
-	engines = NULL;
+	delete engines; engines = NULL;
 	models = NULL;
 	weapons = NULL;
 	alliances = NULL;
@@ -500,10 +500,10 @@ void Scenario::LuaRegisters(lua_State *L) {
 	Video::RegisterVideo(L);
 }
 
-/**\brief Parses an XML scenario file
+/**\brief Parses the scenario XML file
  * \return true if successful
  */
-bool Scenario::Parse( void ) {
+bool Scenario::ParseXML( void ) {
 	LogMsg(INFO, "Scenario version %s.%s.%s.", Get("version-major").c_str(), Get("version-minor").c_str(),  Get("version-macro").c_str());
 
 	// Now load the various subsystems
