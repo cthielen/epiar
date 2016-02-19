@@ -305,7 +305,7 @@ void Ship::Accelerate( void ) {
 	if( engine->GetSound() != NULL)
 	{
 		float engvol = OPTION(float,"options/sound/engines");
-		Coordinate offset = GetWorldPosition() - Camera::Instance()->GetFocusCoordinate();
+		Coordinate offset = GetWorldPosition() - Menu::GetCurrentScenario()->GetCamera()->GetFocusCoordinate();
 		if ( this->GetDrawOrder() == DRAW_ORDER_SHIP )
 			engvol = engvol * NON_PLAYER_SOUND_RATIO ;
 		this->engine->GetSound()->SetVolume( engvol );
@@ -594,7 +594,7 @@ FireStatus Ship::FireSlot( int slot, int target )
 			weapvol *= NON_PLAYER_SOUND_RATIO;
 		}
 		currentWeapon->GetSound()->SetVolume( weapvol );
-		currentWeapon->GetSound()->Play( GetWorldPosition() - Camera::Instance()->GetFocusCoordinate() );
+		currentWeapon->GetSound()->Play( GetWorldPosition() - Menu::GetCurrentScenario()->GetCamera()->GetFocusCoordinate() );
 	}
 
 	// Find the world position of this slot

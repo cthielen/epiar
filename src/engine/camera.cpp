@@ -19,8 +19,6 @@
  * \brief The Camera designates where the user is currently looking.
  */
 
-Camera *Camera::pInstance = 0; // initialize pointer
-
 /**\fn GetFocus
  * \brief Get the sprite that is currently being watched by the camera.
  *
@@ -33,17 +31,6 @@ Camera *Camera::pInstance = 0; // initialize pointer
  * \todo Zooming is not currently enabled.
  *
  */
-
-
-/**\brief Fetch the current camera Instance
- */
-Camera *Camera::Instance( void ) {
-	if( pInstance == 0 ) { // is this the first call?
-		pInstance = new Camera; // create the solid instance
-	}
-
-	return( pInstance );
-}
 
 /**\brief Camera default constructor
  */

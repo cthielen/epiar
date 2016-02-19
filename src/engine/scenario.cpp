@@ -41,12 +41,6 @@
 /**\brief Loads an empty Scenario.
  */
 Scenario::Scenario( void ) {
-	// Start the Lua Universe
-	// Register these functions to their own lua namespaces
-	Lua::Init();
-	luaState = Lua::CurrentState();
-	Scenario_Lua::StoreScenario(luaState, this);
-
 	sprites = new SpriteManager();
 	commodities = new Commodities();
 	engines = new Engines();
@@ -60,9 +54,8 @@ Scenario::Scenario( void ) {
 	playerList = PlayerList::Instance();
 	player = NULL;
 
-	camera = Camera::Instance();
+	camera = new Camera();
 	calendar = new Calendar();
-	console = new Console( luaState );
 
 	folderpath = "";
 
@@ -187,6 +180,13 @@ bool Scenario::Initialize() {
 
 	LogMsg(INFO, "Scenario setup started ...");
 
+	// Start the Lua Universe
+	// Register these functions to their own lua namespaces
+	Lua::Init();
+	luaState = Lua::CurrentState();
+	Scenario_Lua::StoreScenario(luaState, this);
+	console = new Console( luaState );
+
 	// Load default Lua registers
 	LuaRegisters( luaState );
 
@@ -267,8 +267,8 @@ bool Scenario::Setup() {
 
 
 Scenario::~Scenario() {
-	assert(luaState != NULL);
-	free(luaState); luaState = NULL;
+	Lua::Close();
+	luaState = NULL;
 
 	delete sprites; sprites = NULL;
 
@@ -283,7 +283,7 @@ Scenario::~Scenario() {
 	delete sectors; sectors = NULL;
 	playerList = NULL;
 	delete player; player = NULL;
-	camera = NULL;
+	delete camera; camera = NULL;
 	delete calendar; calendar = NULL;
 
 	bgmusic = NULL;

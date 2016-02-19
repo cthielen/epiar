@@ -59,7 +59,6 @@ bool Lua::Load( const string& filename ) {
  */
 int Lua::Run( string line, bool allowReturns ) {
 	int stack_before, stack_after;
-	//LogMsg(INFO,"Running '%s'", (char *)line.c_str() );
 
 	if( ! luaInitialized ) {
 		if( Init() == false ) {
@@ -201,6 +200,8 @@ bool Lua::Init() {
 bool Lua::Close() {
 	if( luaInitialized ) {
 		lua_close( L );
+		L = NULL;
+		luaInitialized = false;
 	} else {
 		LogMsg(WARN, "Cannot deinitialize Lua. It is either not initialized or a script is still loaded." );
 		return( false );

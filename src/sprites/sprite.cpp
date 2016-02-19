@@ -6,6 +6,7 @@
  * \details
  */
 
+#include "menu.h"
 #include "includes.h"
 #include "common.h"
 #include "engine/camera.h"
@@ -87,7 +88,7 @@ void Sprite::Update( lua_State *L ) {
 }
 
 void Sprite::UpdateScreenCoordinates( void ) {
-	Camera *camera = Camera::Instance();
+	Camera *camera = Menu::GetCurrentScenario()->GetCamera();
 
 	oldScreenPosition = screenPosition;
 	camera->TranslateWorldToScreen( worldPosition, screenPosition );

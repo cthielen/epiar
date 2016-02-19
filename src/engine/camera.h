@@ -16,7 +16,7 @@
 
 class Camera {
 	public:
-		static Camera *Instance();
+		Camera();
 
 		void Focus( double x, double y );
 		void Focus( Sprite *sprite );
@@ -44,13 +44,7 @@ class Camera {
 		(source is the coordinate of the object that hit the ship)  */
 		void Shake( Uint32 duration, int intensity, Coordinate* source );
 
-	protected:
-		Camera();
-		Camera( const Camera & ); ///< Protected Copy Constructor
-		Camera& operator= (const Camera&); ///< Protected Copy constructor
-
 	private:
-		static Camera *pInstance;
 		int cameraShakeDur;
 		int cameraShakeXOffset;
 		int cameraShakeYOffset;
