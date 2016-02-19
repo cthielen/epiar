@@ -73,18 +73,10 @@ class Planet : public Sprite, public Component {
 // Class that holds list of all planets; manages them
 class Planets : public Components {
 	public:
-		static Planets *Instance();
+		Planets();
 		Planet *GetPlanet( string& PlanetName ) { return (Planet*) this->Get(PlanetName); }
 		Planet *GetPlanetByID( int spriteID );
 		Component* newComponent() { return new Planet(); }
-		
-	protected:
-		Planets() {};
-		Planets( const Planets & );
-		Planets& operator= (const Planets&);
-
-	private:
-		static Planets *pInstance;
 };
 
 

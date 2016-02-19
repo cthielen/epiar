@@ -27,19 +27,11 @@ class Commodity : public Component {
 		int msrp;
 };
 
-class Commodities : public Components{
+class Commodities : public Components {
 	public:
-		static Commodities *Instance();
+		Commodities();
 		Commodity* GetCommodity(string name) { return (Commodity*) this->Get(name); }
 		Component* newComponent() { return new Commodity(); }
-
-	protected:
-		Commodities() {};
-		Commodities( const Commodities & );
-		Commodities& operator= (const Commodities&);
-
-	private:
-		static Commodities *pInstance;
 };
 
 #endif // __h_commodities__

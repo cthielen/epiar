@@ -653,7 +653,7 @@ void Ship::AddToShipWeaponList(Weapon *w){
 void Ship::AddToShipWeaponList(string weaponName){
 	if(weaponName == "") return; // not a weapon
 
-	Weapons *weapons = Weapons::Instance();
+	Weapons *weapons = Menu::GetCurrentScenario()->GetWeapons();
 
 	if(weapons->GetWeapon(weaponName)){
 		AddToShipWeaponList(weapons->GetWeapon(weaponName));
@@ -683,7 +683,7 @@ int Ship::AddShipWeapon(Weapon *w){
  * \sa Weapon
  */
 int Ship::AddShipWeapon(string weaponName){
-	Weapons *weapons = Weapons::Instance();
+	Weapons *weapons = Menu::GetCurrentScenario()->GetWeapons();
 	if(weapons->GetWeapon(weaponName)){
 		if(AddShipWeapon(weapons->GetWeapon(weaponName)))
 			return 1;
@@ -718,7 +718,7 @@ void Ship::RemoveFromShipWeaponList(Weapon *i){
  * \param weaponName Name of the Weapon
  */
 void Ship::RemoveFromShipWeaponList(string weaponName){
-	Weapons *weapons = Weapons::Instance();
+	Weapons *weapons = Menu::GetCurrentScenario()->GetWeapons();
 	if(weapons->GetWeapon(weaponName)){
 		RemoveFromShipWeaponList(weapons->GetWeapon(weaponName));
 	} else {
@@ -750,7 +750,7 @@ void Ship::RemoveShipWeapon(Weapon *w){
  * \param weaponName Name of the Weapon
  */
 void Ship::RemoveShipWeapon(string weaponName){
-	Weapons *weapons = Weapons::Instance();
+	Weapons *weapons = Menu::GetCurrentScenario()->GetWeapons();
 	if(weapons->GetWeapon(weaponName)){
 		RemoveShipWeapon(weapons->GetWeapon(weaponName));
 	} else {
@@ -772,9 +772,9 @@ void Ship::AddOutfit(Outfit *outfit){
 	ComputeShipStats();
 }
 
-void Ship::AddOutfit(string outfitName){
-	if( Outfits::Instance()->GetOutfit(outfitName) ){
-		AddOutfit( Outfits::Instance()->GetOutfit(outfitName) );
+void Ship::AddOutfit(string outfitName) {
+	if( Menu::GetCurrentScenario()->GetOutfits()->GetOutfit(outfitName) ) {
+		AddOutfit( Menu::GetCurrentScenario()->GetOutfits()->GetOutfit(outfitName) );
 	} else {
 		LogMsg(INFO, "Failed to Attach outfit '%s', it doesn't exist.", outfitName.c_str());
 	}
@@ -801,9 +801,9 @@ void Ship::RemoveOutfit(Outfit *i){
 /**\brief Removes an outfit from the ship
  * \param outfitName Name of the Outfit
  */
-void Ship::RemoveOutfit(string outfitName){
-	Outfits *o = Outfits::Instance();
-	if(o->GetOutfit(outfitName)){
+void Ship::RemoveOutfit(string outfitName) {
+	Outfits *o = Menu::GetCurrentScenario()->GetOutfits();
+	if(o->GetOutfit(outfitName)) {
 		RemoveOutfit(o->GetOutfit(outfitName));
 	} else {
 		LogMsg(INFO, "Failed to remove outfit '%s', it doesn't exist.", outfitName.c_str());
@@ -826,7 +826,7 @@ map<Commodity*,unsigned int> Ship::GetCargo() {
 /**\brief Store a number of tons of a commodity
  */
 int Ship::StoreCommodities(string commodity, unsigned int count) {
-	Commodity* com = Commodities::Instance()->GetCommodity(commodity);
+	Commodity* com = Menu::GetCurrentScenario()->GetCommodities()->GetCommodity(commodity);
 
 	LogMsg(INFO, "Storing %d tons of %s.", count, commodity.c_str());
 
@@ -852,7 +852,7 @@ int Ship::StoreCommodities(string commodity, unsigned int count) {
 /**\brief Discard a number of tons of a commodity
  */
 int Ship::DiscardCommodities(string commodity, unsigned int count) {
-	Commodity* com = Commodities::Instance()->GetCommodity(commodity);
+	Commodity* com = Menu::GetCurrentScenario()->GetCommodities()->GetCommodity(commodity);
 
 	LogMsg(INFO, "Discarding %d tons of %s.", count, commodity.c_str());
 
@@ -888,12 +888,10 @@ int Ship::DiscardCommodities(string commodity, unsigned int count) {
  */
 float Ship::GetDirectionTowards(Coordinate target){
 	float theta;
-	//Trig *trig = Trig::Instance();
 	Coordinate position = target - GetWorldPosition();
 
-	theta = position.GetAngle();//trig->RadToDeg(atan2( - position.GetY(), position.GetX()));
-	//LogMsg(INFO,"Angle towards target (%f,%f) is %f.",target.GetX(),target.GetY(),theta);
-	//LogMsg(INFO,"Current Angle %f",this->GetAngle());
+	theta = position.GetAngle();
+
 	return GetDirectionTowards(theta);
 }
 

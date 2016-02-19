@@ -1,11 +1,12 @@
 /**\file			planets.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Thursday, October 8, 2015
+ * \date			Modified: Thursday, February 18, 2016
  * \brief
  * \details
  */
 
+#include "menu.h"
 #include "includes.h"
 #include "sprites/planets.h"
 #include "utilities/log.h"
@@ -116,7 +117,7 @@ bool Planet::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 
 	if( (attr = FirstChildNamed(node, "alliance")) ){
 		value = NodeToString(doc,attr);
-		alliance = Alliances::Instance()->GetAlliance(value);
+		alliance = Menu::GetCurrentScenario()->GetAlliances()->GetAlliance(value);
 		if(alliance == NULL) {
 			LogMsg(ERR, "Could not create Planet '%s'. Unknown Alliance '%s'.", this->GetName().c_str(), value.c_str());
 			return false;
@@ -156,7 +157,7 @@ bool Planet::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 
 	for( attr = FirstChildNamed(node,"technology"); attr!=NULL; attr = NextSiblingNamed(attr,"technology") ){
 		value = NodeToString(doc,attr);
-		Technology *tech = Technologies::Instance()->GetTechnology( value );
+		Technology *tech = Menu::GetCurrentScenario()->GetTechnologies()->GetTechnology( value );
 		technologies.push_back(tech);
 	}
 	technologies.sort();
@@ -295,19 +296,9 @@ xmlNodePtr Planet::ToXMLNode(string componentName) {
  *\see Planets_Lua
  */
 
-Planets *Planets::pInstance = 0; // initialize pointer
-
-/**\brief Returns or creates the Planets instance.
- * \return Pointer to the Planets instance
- */
-Planets *Planets::Instance( void ) {
-	if( pInstance == 0 ) { // is this the first call?
-		pInstance = new Planets; // create the solid instance
-		pInstance->rootName = "planets";
-		pInstance->componentName = "planet";
-	}
-
-	return( pInstance );
+Planets::Planets() {
+	rootName = "planets";
+	componentName = "planet";
 }
 
 Planet *Planets::GetPlanetByID( int spriteID ) {

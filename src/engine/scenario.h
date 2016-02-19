@@ -83,7 +83,7 @@ class Scenario : public XMLFile {
 		void CreateNavMap( void );
 
 		// Pointers to Singletons
-		lua_State *L;
+		lua_State *luaState;
 		SpriteManager *sprites;
 
 		Commodities *commodities;

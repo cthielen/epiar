@@ -59,7 +59,6 @@ class Player : public Ship {
 		Player();
 		Player( const Player & );
 		Player& operator= (const Player&);
-		~Player();
 
 		bool ConfigureWeaponSlots(xmlDocPtr, xmlNodePtr);
 	private:

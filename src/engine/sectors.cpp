@@ -6,6 +6,7 @@
  * \details
  */
 
+#include "menu.h"
 #include "includes.h"
 #include "engine/sectors.h"
 #include "utilities/log.h"
@@ -87,7 +88,7 @@ bool Sector::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 
 	if( (attr = FirstChildNamed(node, "alliance")) ){
 		value = NodeToString(doc,attr);
-		alliance = Alliances::Instance()->GetAlliance(value);
+		alliance = Menu::GetCurrentScenario()->GetAlliances()->GetAlliance(value);
 		if(alliance == NULL) {
 			LogMsg(ERR, "Could not create Sector '%s'. Unknown Alliance '%s'.", this->GetName().c_str(), value.c_str());
 			return false;
@@ -186,18 +187,9 @@ ostream& operator<<(ostream &out, const Sector &s) {
  *\see Sector
  */
 
-Sectors *Sectors::pInstance = 0; // initialize pointer
-
-/**\brief Returns or creates the Sectors instance.
- * \return Pointer to the Sectors instance
- */
-Sectors *Sectors::Instance( void ) {
-	if( pInstance == 0 ) { // is this the first call?
-		pInstance = new Sectors; // create the solid instance
-		pInstance->rootName = "sectors";
-		pInstance->componentName = "sector";
-	}
-	return( pInstance );
+Sectors::Sectors() {
+	rootName = "sectors";
+	componentName = "sector";
 }
 
 Sector *Sectors::GetSectorByPlanet( string& PlanetName ) {

@@ -326,18 +326,10 @@ AmmoType Weapon::AmmoNameToType(string typeName ) {
  *
  * \see Weapon
  */
-Weapons *Weapons::pInstance = 0; // initialize pointer
 
-/**\brief Gets or returns Weapons instance
- * \return Pointer to a Weapons object
- */
-Weapons *Weapons::Instance( void ) {
-	if( pInstance == 0 ) { // is this the first call?
-		pInstance = new Weapons; // create the solid instance
-		pInstance->rootName = "weapons";
-		pInstance->componentName = "weapon";
-	}
-	return( pInstance );
+Weapons::Weapons() {
+	rootName = "weapons";
+	componentName = "weapon";
 }
 
 /**\fn Weapons::GetWeapon(string& weaponName)

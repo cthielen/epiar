@@ -296,7 +296,7 @@ bool Model::ConfigureWeaponSlots( xmlDocPtr doc, xmlNodePtr node ) {
 			else
 				value = ""; // slot is empty
 
-			newSlot.content = Weapons::Instance()->GetWeapon( value );
+			newSlot.content = Menu::GetCurrentScenario()->GetWeapons()->GetWeapon( value );
 		} else return false;
 
 		if( (attr = FirstChildNamed(slotPtr,"firingGroup")) ){
@@ -353,18 +353,9 @@ void Model::WSDebug(vector<WeaponSlot>& slots){
 /**\class Models
  * \brief Collection of Model objects
  */
-Models *Models::pInstance = 0; // initialize pointer
-
-/**\brief Returns or creates the Model instance.
- * \return Pointer to the Model instance
- */
-Models *Models::Instance( void ) {
-	if( pInstance == 0 ) { // is this the first call?
-		pInstance = new Models; // create the solid instance
-		pInstance->rootName = "models";
-		pInstance->componentName = "model";
-	}
-	return( pInstance );
+Models::Models() {
+	rootName = "models";
+	componentName = "model";
 }
 
 /**\fn Models::GetModel(string name)

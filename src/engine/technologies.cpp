@@ -63,7 +63,7 @@ bool Technology::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	for( tech = node->xmlChildrenNode; tech != NULL; tech = tech->next ) {
 		if( NodeNameIs( tech, "model" )) {
 			value = NodeToString(doc, tech);
-			Model* model = Models::Instance()->GetModel( value );
+			Model* model = Menu::GetCurrentScenario()->GetModels()->GetModel( value );
 			if(model == NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {
@@ -79,7 +79,7 @@ bool Technology::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 			}
 		} else if( NodeNameIs( tech, "weapon" )) {
 			value = NodeToString(doc, tech);
-			Weapon* weapon = Weapons::Instance()->GetWeapon( value );
+			Weapon* weapon = Menu::GetCurrentScenario()->GetWeapons()->GetWeapon( value );
 			if(weapon == NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {
@@ -87,7 +87,7 @@ bool Technology::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 			}
 		} else if( NodeNameIs( tech, "outfit" )) {
 			value = NodeToString(doc, tech);
-			Outfit* outfit = Outfits::Instance()->GetOutfit( value );
+			Outfit* outfit = Menu::GetCurrentScenario()->GetOutfits()->GetOutfit( value );
 			if(outfit == NULL) {
 				LogMsg(ERR, "Could Not find the technology '%s'.", value.c_str() );
 			} else {
@@ -143,17 +143,10 @@ xmlNodePtr Technology::ToXMLNode(string componentName) {
 /**\class Technologies
  * \brief Collection of Technology objects
  */
-Technologies *Technologies::pInstance = 0;
 
-/**\brief Creates or retrieves the current instance.
- */
-Technologies *Technologies::Instance( void ) {
-	if( pInstance == 0 ) { // is this the first call?
-		pInstance = new Technologies; // create the solid instance
-		pInstance->rootName = "technologies";
-		pInstance->componentName = "technology";
-	}
-	return( pInstance );
+Technologies::Technologies() {
+	rootName = "technologies";
+	componentName = "technology";
 }
 
 /**\fn Technologies::GetTechnology( string& TechnologyName )

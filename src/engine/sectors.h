@@ -58,21 +58,14 @@ class Sector : public Component {
 // Class that holds list of all sectors; manages them
 class Sectors : public Components {
 	public:
-		static Sectors *Instance();
+		Sectors();
 		Sector *GetSector( string& SectorName ) { return (Sector*)this->Get(SectorName); }
 		Sector *GetSectorByPlanet( string& PlanetName );
 		list<Sector*>* GetAllSectors();
 		Component* newComponent() { return new Sector(); }
 		void GetBoundaries(float *north, float *south, float *east, float *west);
 		bool SectorHasNeighbor(Sector *origin, Sector *possibleNeighbor);
-		
-	protected:
-		Sectors() {};
-		Sectors( const Sectors & );
-		Sectors& operator= (const Sectors&);
 
-	private:
-		static Sectors *pInstance;
 };
 
 

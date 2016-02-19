@@ -97,17 +97,9 @@ class Outfit : public Component {
 // Class that holds list of all models; manages them
 class Outfits : public Components {
 	public:
-		static Outfits *Instance();
+		Outfits();
 		Outfit* GetOutfit(string name) { return (Outfit*) this->Get(name); }
 		Component* newComponent() { return new Outfit(); }
-
-	protected:
-		Outfits() {};
-		Outfits( const Outfits & );
-		Outfits& operator= (const Outfits&);
-
-	private:
-		static Outfits *pInstance;
 };
 
 #endif // define __H_OUTFIT__

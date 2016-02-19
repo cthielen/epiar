@@ -44,25 +44,25 @@ Scenario::Scenario( void ) {
 	// Start the Lua Universe
 	// Register these functions to their own lua namespaces
 	Lua::Init();
-	L = Lua::CurrentState();
-	Scenario_Lua::StoreScenario(L, this);
+	luaState = Lua::CurrentState();
+	Scenario_Lua::StoreScenario(luaState, this);
 
 	sprites = new SpriteManager();
-	commodities = Commodities::Instance();
+	commodities = new Commodities();
 	engines = new Engines();
-	planets = Planets::Instance();
-	models = Models::Instance();
-	weapons = Weapons::Instance();
-	alliances = Alliances::Instance();
-	technologies = Technologies::Instance();
-	outfits = Outfits::Instance();
-	sectors = Sectors::Instance();
+	planets = new Planets();
+	models = new Models();
+	weapons = new Weapons();
+	alliances = new Alliances();
+	technologies = new Technologies();
+	outfits = new Outfits();
+	sectors = new Sectors();
 	playerList = PlayerList::Instance();
 	player = NULL;
 
 	camera = Camera::Instance();
 	calendar = new Calendar();
-	console = new Console( L );
+	console = new Console( luaState );
 
 	folderpath = "";
 
@@ -188,10 +188,10 @@ bool Scenario::Initialize() {
 	LogMsg(INFO, "Scenario setup started ...");
 
 	// Load default Lua registers
-	LuaRegisters(L);
+	LuaRegisters( luaState );
 
 	// Load ::Run()-specific Lua registers
-	AI_Lua::RegisterAI(L);
+	AI_Lua::RegisterAI( luaState );
 
 	Input::RegisterLuaVariables();
 
@@ -267,23 +267,22 @@ bool Scenario::Setup() {
 
 
 Scenario::~Scenario() {
-	assert(L != NULL);
-	L = NULL;
+	assert(luaState != NULL);
+	free(luaState); luaState = NULL;
 
 	delete sprites; sprites = NULL;
 
-	// TODO: Shouldn't we be unloading these?
-	commodities = NULL;
-	planets = NULL;
+	delete commodities; commodities = NULL;
+	delete planets; planets = NULL;
 	delete engines; engines = NULL;
-	models = NULL;
-	weapons = NULL;
-	alliances = NULL;
-	technologies = NULL;
-	outfits = NULL;
-	sectors = NULL;
+	delete models; models = NULL;
+	delete weapons; weapons = NULL;
+	delete alliances; alliances = NULL;
+	delete technologies; technologies = NULL;
+	delete outfits; outfits = NULL;
+	delete sectors; sectors = NULL;
 	playerList = NULL;
-	player = NULL;
+	delete player; player = NULL;
 	camera = NULL;
 	delete calendar; calendar = NULL;
 
@@ -385,7 +384,7 @@ void Scenario::Run() {
 					lowFpsFrameCount--;
         			}
 
-				sprites->Update( L, lowFps );
+				sprites->Update( luaState, lowFps );
         			camera->Update( sprites );
         			sprites->UpdateScreenCoordinates();
 				calendar->Update();
@@ -397,7 +396,7 @@ void Scenario::Run() {
       			HandleInput();
     		}
 
-		Hud::Update( L );
+		Hud::Update( luaState );
 
 		// Erase cycle
 		Video::Erase();

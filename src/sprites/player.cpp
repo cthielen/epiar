@@ -45,7 +45,7 @@ Player* Player::Load( string filename ) {
 
 	// We check the planet location at loadtime in case planet moved or lastPlanet changed.
 	// This happens with --random-universe. TODO: Does this matter? random-universe was removed.
-	Planet* p = Planets::Instance()->GetPlanet( newPlayer->lastPlanet );
+	Planet* p = Menu::GetCurrentScenario()->GetPlanets()->GetPlanet( newPlayer->lastPlanet );
 	if( p != NULL ) {
 		newPlayer->SetWorldPosition( p->GetWorldPosition() );
 	} else {
@@ -138,7 +138,7 @@ int Player::GetFavor(Alliance* alliance ) {
  * \param[in] deltaFavor The change in favor.  This can be positive or negative.
  */
 void Player::UpdateFavor( string allianceName, int deltaFavor ) {
-	Alliance *alliance = Alliances::Instance()->GetAlliance( allianceName );
+	Alliance *alliance = Menu::GetCurrentScenario()->GetAlliances()->GetAlliance( allianceName );
 
 	if( NULL == alliance ) {
 		LogMsg(ERR, "Failed to find the Alliance named %s.", allianceName.c_str() );
@@ -195,12 +195,6 @@ void Player::Land( lua_State *L, Planet* planet ){
 Player::Player() {
 	this -> playerCheck = true;
 	this->SetRadarColor( WHITE );
-}
-
-/**\brief Destructor
- */
-Player::~Player() {
-	LogMsg(INFO, "You have been destroyed..." );
 }
 
 /**\brief Run the Player Update
@@ -263,16 +257,16 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	if( (attr = FirstChildNamed(node, "planet"))) {
 		string temp;
 		xmlNodePtr name = FirstChildNamed(attr,"name");
-		lastPlanet = NodeToString(doc,name);
-		Planet* p = Planets::Instance()->GetPlanet( lastPlanet );
+		lastPlanet = NodeToString(doc, name);
+		Planet* p = Menu::GetCurrentScenario()->GetPlanets()->GetPlanet( lastPlanet );
 		if( p != NULL ) {
 			SetWorldPosition( p->GetWorldPosition() );
 		}
 	} else return false;
 
 	if( (attr = FirstChildNamed(node,"model")) ) {
-		value = NodeToString(doc,attr);
-		Model* model = Models::Instance()->GetModel( value );
+		value = NodeToString(doc, attr);
+		Model* model = Menu::GetCurrentScenario()->GetModels()->GetModel( value );
 		if( NULL != model) {
 			SetModel( model );
 		} else {
@@ -419,7 +413,7 @@ bool Player::ConfigureWeaponSlots( xmlDocPtr doc, xmlNodePtr node ) {
 			else
 				value = ""; // slot is empty
 
-			Weapon* weapon = Weapons::Instance()->GetWeapon( value );
+			Weapon* weapon = Menu::GetCurrentScenario()->GetWeapons()->GetWeapon( value );
 			existingSlot->content = weapon;
 		} else return false;
 

@@ -37,17 +37,9 @@ class Alliance : public Component {
 // Class that holds list of all planets; manages them
 class Alliances : public Components {
 	public:
-		static Alliances *Instance();
+		Alliances();
 		Alliance* GetAlliance(string name) { return (Alliance*) this->Get(name); }
 		Component* newComponent() { return new Alliance(); }
-
-	protected:
-		Alliances() {};
-		Alliances( const Alliances & );
-		Alliances& operator= (const Alliances&);
-
-	private:
-		static Alliances *pInstance;
 };
 
 #endif // __h_alliances__
