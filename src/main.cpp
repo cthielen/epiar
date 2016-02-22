@@ -209,9 +209,9 @@ void Main_Load_Settings() {
  *  \warn This may exit early on Errors
  */
 void Main_Init_Singletons() {
-	Audio::Instance().Initialize();
-	Audio::Instance().SetMusicVol ( OPTION(float,"options/sound/musicvolume") );
-	Audio::Instance().SetSoundVol ( OPTION(float,"options/sound/soundvolume") );
+	Audio::Instance()->Initialize();
+	Audio::Instance()->SetMusicVol ( OPTION(float,"options/sound/musicvolume") );
+	Audio::Instance()->SetSoundVol ( OPTION(float,"options/sound/soundvolume") );
 
 	Timer::Initialize();
 	Video::Initialize();
@@ -241,7 +241,7 @@ void Main_Close_Singletons( void ) {
 	delete Mono;
 
 	Video::Shutdown();
-	Audio::Instance().Shutdown();
+	Audio::Instance()->Shutdown();
 
 	// free the configuration file data
 	delete skinfile;

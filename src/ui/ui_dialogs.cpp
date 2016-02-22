@@ -113,14 +113,12 @@ Slider* OptionSlider( const char* option, string name, int x, int y )
 	return slider;
 }
 
-void SetSoundVolume( void* slider )
-{
-	Audio::Instance().SetSoundVol( ((Slider*)slider)->GetVal() );
+void SetSoundVolume( void* slider ) {
+	Audio::Instance()->SetSoundVol( ((Slider*)slider)->GetVal() );
 }
 
-void SetMusicVolume( void* slider )
-{
-	Audio::Instance().SetMusicVol( ((Slider*)slider)->GetVal() );
+void SetMusicVolume( void* slider ) {
+	Audio::Instance()->SetMusicVol( ((Slider*)slider)->GetVal() );
 }
 
 void CloseOptions() { UI::Close( UI::Search("/Window'Options'/") ); }

@@ -41,9 +41,11 @@ class Trig {
 };
 
 // Turns an arbitrary angle into the smallest equivalent angle
-inline float normalizeAngle(float angle){
+inline float normalizeAngle(float angle) {
 	angle -= floor(angle / 360.0f) * 360.0f; // Normalize to 0 to 360
-	if(angle>180.0f) return angle -360.0f; // Normalize to -180 to 180
+
+	if(angle > 180.0f) return angle -360.0f; // Normalize to -180 to 180
+
 	return angle;
 }
 

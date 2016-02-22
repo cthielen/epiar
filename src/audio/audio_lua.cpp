@@ -41,45 +41,55 @@ void Audio_Lua::RegisterAudio(lua_State *L){
 	lua_pop(L,2);
 }
 
-int Audio_Lua::setSoundVolume(lua_State *L){
+int Audio_Lua::setSoundVolume(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
-	if (n != 1 )
+
+	if (n != 1 ) {
 		return luaL_error(L, "Got %d arguments expected 1", n);
+	}
 
 	float x = TO_FLOAT(luaL_checknumber (L, 1));
 
-	Audio::Instance().SetSoundVol( x );
+	Audio::Instance()->SetSoundVol( x );
+
 	SETOPTION("options/sound/soundvolume", x);
+
 	return 0;
 }
 
-int Audio_Lua::setMusicVolume(lua_State *L){
+int Audio_Lua::setMusicVolume(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
-	if (n != 1 )
+
+	if (n != 1 ) {
 		return luaL_error(L, "Got %d arguments expected 1", n);
+	}
 
 	float x = TO_FLOAT(luaL_checknumber (L, 1));
 
-	Audio::Instance().SetMusicVol( x );
+	Audio::Instance()->SetMusicVol( x );
+
 	SETOPTION("options/sound/musicvolume", x);
+
 	return 0;
 }
 
-int Audio_Lua::getSoundVolume(lua_State *L){
-	lua_pushnumber(L, Audio::Instance().GetSoundVol() );
+int Audio_Lua::getSoundVolume(lua_State *L) {
+	lua_pushnumber(L, Audio::Instance()->GetSoundVol() );
 	return 1;
 }
 
-int Audio_Lua::getMusicVolume(lua_State *L){
-	lua_pushnumber(L, Audio::Instance().GetMusicVol() );
+int Audio_Lua::getMusicVolume(lua_State *L) {
+	lua_pushnumber(L, Audio::Instance()->GetMusicVol() );
 	return 1;
 }
 
-int Audio_Lua::playSound(lua_State *L){
+int Audio_Lua::playSound(lua_State *L) {
 	string soundname = luaL_checkstring(L, 1);
 	Sound* sound = Sound::Get( soundname );
+
 	if( sound != NULL ) {
 		sound->Play();
 	}
+
 	return 0;
 }
