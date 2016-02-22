@@ -11,6 +11,7 @@
 #include "includes.h"
 #include "audio/audio.h"
 #include "utilities/log.h"
+#include "utilities/options.h"
 
 /**\class Audio
  * \brief This class is responsible for overall Audio system configuration.
@@ -37,6 +38,10 @@ Audio *Audio::Instance( void ) {
 bool Audio::Initialize( void ) {
 	if( initialized ) {
 		return false;
+	}
+
+	if(OPTION(bool, "options/sound/disable-audio")) {
+		return true; // audio is disabled
 	}
 
 	if(SDL_Init(SDL_INIT_AUDIO) < 0) {
@@ -67,12 +72,17 @@ bool Audio::Initialize( void ) {
 /**\brief Audio system shutdown.
  */
 bool Audio::Shutdown( void ) {
-	/* This is the cleaning up part */
-	this->HaltAll();
+	if(OPTION(bool, "options/sound/disable-audio")) {
+		return true; // audio is disabled
+	}
+
+	/* Halt all currently playing sounds */
+	Mix_HaltChannel( -1 );
 
 	// Free every library loaded
-	while(Mix_Init(0))
+	while(Mix_Init(0)) {
 		Mix_Quit();
+	}
 
 	// Query number of times audio device was opened (should be 1)
 	int freq, chan, ntimes;
@@ -93,13 +103,7 @@ bool Audio::Shutdown( void ) {
 	return true;
 }
 
-/**\brief Halts all currently playing sounds.
- */
-void Audio::HaltAll( void ) {
-	Mix_HaltChannel( -1 );
-}
-
-/**\brief Sets the music volume (Range from 0-1 ).
+/**\brief Sets the music volume (Range 0-1)
  */
 bool Audio::SetMusicVol( float volume ) {
 	bool exceed_bounds = false;
@@ -114,19 +118,21 @@ bool Audio::SetMusicVol( float volume ) {
 		exceed_bounds = true;
 	}
 
-	int volumeset;
-	int volumeint = static_cast<int>(volume * AUDIO_MAX_VOL);
+	if(OPTION(bool, "options/sound/disable-audio") == false) {
+		int volumeset;
+		int volumeint = static_cast<int>(volume * AUDIO_MAX_VOL);
 
-	Mix_VolumeMusic( volumeint );
-	volumeset = Mix_VolumeMusic( -1 );
+		Mix_VolumeMusic( volumeint );
+		volumeset = Mix_VolumeMusic( -1 );
 
-	if( volumeset != volumeint ) {
-		LogMsg(ERR,"There was an error setting the volume.");
-		return false;
-	}
+		if( volumeset != volumeint ) {
+			LogMsg(ERR, "There was an error setting the volume.");
+			return false;
+		}
 
-	if( exceed_bounds ) {
-		return false;
+		if( exceed_bounds ) {
+			return false;
+		}
 	}
 
 	this->music_vol = volume;
@@ -134,7 +140,7 @@ bool Audio::SetMusicVol( float volume ) {
 	return true;
 }
 
-/**\brief Sets sound volume (Range from 0 - 1).
+/**\brief Sets sound volume (Range 0-1)
  */
 bool Audio::SetSoundVol( float volume ) {
 	if( volume < 0 ) {
@@ -143,7 +149,7 @@ bool Audio::SetSoundVol( float volume ) {
 		this->sound_vol = 0;
 
 		return false;
-	} else if ( volume > 1 ) {
+	} else if( volume > 1 ) {
 		LogMsg(WARN,"Volume (%f) must be <= 1.", volume);
 
 		this->sound_vol = 1;
@@ -178,6 +184,10 @@ int Audio::GetFreeChannel( void ) {
 /**\brief Retrieves total number of mixing channels.
  */
 int Audio::GetTotalChannels( void ) {
+	if(OPTION(bool, "options/sound/disable-audio")) {
+		return 0; // audio is disabled
+	}
+
 	return Mix_AllocateChannels( -1 );
 }
 

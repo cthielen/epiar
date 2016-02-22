@@ -19,43 +19,44 @@
  * \param filename Song file
  */
 Song *Song::Get( const string& filename ){
-	Song* value;
+	Song* value = NULL;
 	value = (Song*) Resource::Get( filename );
-	if( (value == NULL) && filename != "" ){
+
+	if( (value == NULL) && filename != "" ) {
 		value = new Song( filename );
-		//if( value->song != NULL ){
-			Resource::Store( filename, (Resource*) value );
-		//} else {
-		//	return NULL;
-		//}
+		Resource::Store( filename, (Resource*) value );
 	}
+
 	return value;
 }
 
 /**\brief Loads the song based on filename
  * \param filename Song file
  */
-Song::Song( const string& filename ){
+Song::Song( const string& filename ) {
 	this->song = NULL;
 	this->song = Mix_LoadMUS( filename.c_str() );
-	if ( this->song == NULL )
+
+	if( this->song == NULL ) {
 		LogMsg(ERR, "Could not load song file: %s, Mixer error: %s",
 			filename.c_str(), Mix_GetError());
+	}
 }
 
 /**\brief Destructor to free the music file
  */
-Song::~Song(){
-	if(this->song) Mix_FreeMusic( this->song );
+Song::~Song() {
+	if(this->song) { Mix_FreeMusic( this->song ); }
 }
 
 /**\brief Plays the current song.
  */
-bool Song::Play( bool loop ){
-	if ( (this == NULL) || (this->song == NULL) )
+bool Song::Play( bool loop ) {
+	if( (this == NULL) || (this->song == NULL) ) {
 		return false;
+	}
 
-	if ( loop ) {
+	if( loop ) {
 		Mix_PlayMusic( this->song, 1 );
 	} else {
 		Mix_PlayMusic( this->song, 0 );

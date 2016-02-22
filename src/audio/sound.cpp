@@ -10,6 +10,7 @@
 #include "audio/audio.h"
 #include "audio/sound.h"
 #include "utilities/log.h"
+#include "utilities/options.h"
 #include "utilities/resource.h"
 
 /**\class Sound
@@ -40,8 +41,12 @@ Sound::Sound( const string& filename ):
 	channel( -1 ),
 	fadefactor( 0.03 ),
 	panfactor( 0.1f ),
-	volume( 128 )
-{
+	volume( 128 ) {
+
+	if(OPTION(bool, "options/sound/disable-audio")) {
+		return; // audio is disabled
+	}
+
 	if( pathName.OpenRead( filename ) == false ) {
 		LogMsg(ERR, "Could not load sound file: '%s'", filename.c_str() );
 		sound = NULL;
@@ -72,6 +77,10 @@ Sound::~Sound() {
 /**\brief Plays the sound.
  */
 bool Sound::Play( void ) {
+	if(OPTION(bool, "options/sound/disable-audio")) {
+		return true; // audio is disabled
+	}
+
 	if ( this->sound == NULL ) {
 		return false;
 	}
@@ -95,6 +104,10 @@ bool Sound::Play( void ) {
 /**\brief Plays the sound at a specified coordinate from origin.
  */
 bool Sound::Play( Coordinate offset ) {
+	if(OPTION(bool, "options/sound/disable-audio")) {
+		return true; // audio is disabled
+	}
+
 	if ( this->sound == NULL ) {
 		return false;
 	}
@@ -147,6 +160,10 @@ bool Sound::Play( Coordinate offset ) {
  * This is sort of a roundabout way to implement engine sounds.
  */
 bool Sound::PlayNoRestart( Coordinate offset ) {
+	if(OPTION(bool, "options/sound/disable-audio")) {
+		return true; // audio is disabled
+	}
+
 	if( this->sound == NULL ) {
 		return false;
 	}

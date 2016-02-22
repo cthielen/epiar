@@ -18,6 +18,7 @@ class Song {
 		Song( const string& filename );
 		~Song( void );
 		bool Play( bool loop=true );
+
 	private:
 		Mix_Music *song;
 };
@@ -35,9 +36,10 @@ class Music {
 
 	private:
 		Music();
-		Music(Music const&);				// Copy constructor
-		Music& operator=(Music const&);		// Assignment constructor
+		Music(Music const&); // Copy constructor
+		Music& operator=(Music const&);	// Assignment constructor
 		~Music();
+
 		list<string> playlist;
 };
 

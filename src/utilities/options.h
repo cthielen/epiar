@@ -16,8 +16,7 @@
 #define OPTION(T, path) ( convertTo<T>( Options::Get(path) ))
 #define SETOPTION(path, value) (Options::Set((path),(value)) )
 
-class Options
-{
+class Options {
 	public:
 		static void Initialize( const string& path );
 

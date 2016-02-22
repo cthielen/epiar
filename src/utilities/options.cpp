@@ -19,105 +19,89 @@ XMLFile *Options::defaults = NULL; ///< Static instance of the default option va
  *
  */
 
-void Options::Initialize( const string& path )
-{
+void Options::Initialize( const string& path ) {
 	optionsfile = new XMLFile();
-	if( !optionsfile->Open( path ) )
-	{
+	if( !optionsfile->Open( path ) ) {
 		// Create the default Options file
 		optionsfile->New( path, "options" );
 	}
+
 	defaults = new XMLFile();
 	defaults->New( path + ".bac", "options" );
 }
 
-void Options::Unlock()
-{
+void Options::Unlock() {
 	locked = false;
 }
 
-bool Options::IsLoaded()
-{
+bool Options::IsLoaded() {
 	return (!locked) && (optionsfile != NULL);
 }
 
-bool Options::Save( const string& path )
-{
+bool Options::Save( const string& path ) {
 	assert( optionsfile );
-	if( path == "" )
-	{
+
+	if( path == "" ) {
 		return optionsfile->Save();
-	}
-	else
-	{
+	} else {
 		return optionsfile->Save( path );
 	}
 }
 
-void Options::AddDefault( const string& path, const string& value )
-{
+void Options::AddDefault( const string& path, const string& value ) {
 	assert( defaults );
 	assert( optionsfile );
 
 	defaults->Set( path, value );
-	if( false == optionsfile->Has(path) )
-	{
+
+	if( optionsfile->Has(path) == false ) {
 		optionsfile->Set(path,value);
 		assert( value == Get(path) );
 	}
 }
 
-void Options::AddDefault( const string& path, const float value )
-{
+void Options::AddDefault( const string& path, const float value ) {
 	assert( defaults );
 	assert( optionsfile );
 
 	defaults->Set( path, value );
-	if( false == optionsfile->Has(path) )
-	{
+	if( optionsfile->Has(path) == false ) {
 		optionsfile->Set(path,value);
 		assert( value == convertTo<float>(Get(path)) );
 	}
 }
 
-void Options::AddDefault( const string& path, const int value )
-{
+void Options::AddDefault( const string& path, const int value ) {
 	assert( defaults );
 	assert( optionsfile );
 
 	defaults->Set( path, value );
-	if( false == optionsfile->Has(path) )
-	{
+	if( optionsfile->Has(path) == false ) {
 		optionsfile->Set(path,value);
 		assert( value == convertTo<int>(Get(path)) );
 	}
 }
 
-void Options::RestoreDefaults()
-{
+void Options::RestoreDefaults() {
 	optionsfile->Copy( defaults );
 }
 
-string Options::Get( const string& path )
-{
+string Options::Get( const string& path ) {
 	assert( optionsfile );
 	return optionsfile->Get( path );
 }
 
-void Options::Set( const string& path, const string& value )
-{
+void Options::Set( const string& path, const string& value ) {
 	assert( optionsfile );
 	optionsfile->Set( path, value );
 }
 
-void Options::Set( const string& path, const float value )
-{
+void Options::Set( const string& path, const float value ) {
 	assert( optionsfile );
 	optionsfile->Set( path, value );
 }
 
-void Options::Set( const string& path, const int value )
-{
+void Options::Set( const string& path, const int value ) {
 	assert( optionsfile );
 	optionsfile->Set( path, value );
 }

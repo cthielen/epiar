@@ -323,11 +323,12 @@ void Main_Parse_Args( int argc, char **argv ) {
 
 	// Following are cumulative options (I.E. you can have multiple of them)
 	if ( argparser->HaveOpt("disable-audio") ) {
-			SETOPTION("options/sound/background", 0);
-			SETOPTION("options/sound/weapons", 0);
-			SETOPTION("options/sound/engines", 0);
-			SETOPTION("options/sound/explosions", 0);
-			SETOPTION("options/sound/buttons", 0);
+		SETOPTION("options/sound/disable-audio", true);
+		//SETOPTION("options/sound/background", 0);
+		//SETOPTION("options/sound/weapons", 0);
+		//SETOPTION("options/sound/engines", 0);
+		//SETOPTION("options/sound/explosions", 0);
+		//SETOPTION("options/sound/buttons", 0);
 	}
 
 	if      ( argparser->HaveOpt("log-xml") ) 	{ SETOPTION("options/log/xml", 1);}

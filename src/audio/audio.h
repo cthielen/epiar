@@ -22,7 +22,6 @@ class Audio {
 
 		bool Initialize( void );
 		bool Shutdown( void );
-		void HaltAll( void );
 
 		bool SetMusicVol ( float volume );
 		bool SetSoundVol ( float volume );

@@ -28,10 +28,10 @@ class Sound : public Resource {
 	private:
 		Mix_Chunk *sound;
 		File pathName;
-		int channel;		/* Last channel the sound is playing on. */
+		int channel;		// Last channel the sound is playing on.
 		double fadefactor;	// Scale factor to fade by as distance drops off
 		float panfactor;	// Scale factor to pan by, higher = more sensitive
-		int volume;			// Volume for this sound
+		int volume;		// Volume for this sound
 };
 
 
