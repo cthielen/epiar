@@ -367,3 +367,75 @@ Tue, July 25, 2006
 	Chris:
 		* sprite.h: Fixed compile warnings about virtual destructors
 		* image.cpp: Fixed incorrect dimension resizing
+
+(Copied from older releases)
+
+Mon Feb 04 2002 0.08
+	* intro.c - lessned time for title screen (8 secs to 4 secs)
+	* cleaned up files a little (cleaner gcc output)
+	* updated INSTALL and README
+	* moved source code into src directory
+
+Sun Feb 03 2002
+	* game.c - added keys a and d as alternative left and right
+	* menu.c - added keys w and s as alternative up and down
+	* game.c - added mouse input for firing (button 0)
+
+Thu Jan 31 2002
+	* game.c       - Removed redundant surface declares
+	* game.c       - Removed update variable (now that screen must always update)
+	* background.c - implemented early animate_background() (slow) 
+	* game.c       - first laser disappears if hit enemy, if not, keeps going
+	* epiar.h      - changed NUM_LASER to 1 to test above change
+
+Wed Jan 30 2002 0.08-pre1
+	* game.c - implemented cheap, buggy formula for finding enemy x values
+	* game.c - made enemy default 10
+	* game.c - added laser detection w/ enemies (you can shoot them now)
+	* game.c - made main game loop fall back to menu when all enemies gone
+	* game.c - made enemies move back and forth (like space invaders)
+	* menu.c - made the 'q' key the way to quit, not esc (would exit too fast if you held esc down from main game loop)
+
+Mon Jan 28 2002 0.07
+	* game.c  - added a simple laser (press f to fire)
+	*           added another sprite (control w/ a & d) to later be enemy
+	*           made laser button spacebar instead of the f key
+	*           created structures for laser and enemies (#define for #s)
+	* intro.c - added /images/intro.bmp picture w/ 8 second delay (intro)
+
+Sat Jan 26 2002 0.06
+	* background.c - draw_background() now supports specific areas (faster)
+	* Rewrote code (again) and seperated it into small files
+	* Made Makefile a little smarter
+
+Sat Jan 19 2002 0.05
+	* started fresh (easier than removing all merged example references)
+
+Tue Jan 15 2002 0.04
+	* Changed project name from sdl-anim-keys to epiar
+	* Changed some internal variables from penguin to starship
+	* Added movement boundaries so starship doesn't fly off screen
+	* Merged SDL audio examples into game (press c to play cannon.wav)
+		- NOTE: SDL audio code is temporary; OpenAL will be used later
+	* Cleaned up directory structure (added images/ and sounds/)
+	* Cleaned out dead code
+	* Added window manager caption with SDL_WM_SetCaption();
+	* Added two command line options, --fullscreen and --windowed
+
+Mon Jan 14 2002 0.03
+	* Changed video mode from 640x480 windowed to 640x480 fullscreen
+	* Removed move_penguins()
+	* Cleaned up build (removed unused variables)
+	* Changed main loop from a case to a while
+	* Changed bitmap from Tux to a cheap starship
+	* Implemented different SDL functions for input (smoother)
+
+Sun Jan 13 2002 0.02
+	* Added initial frame so you don't have to input to see
+	* Added functionality to allow Tux to move with w, a, s, d keys
+	* Changed initial position of Tux to the bottom-center
+	* Stopped using move_penguins()
+	* Updated README
+
+Sat Jan 12 2002 0.01
+	* Initial posting
