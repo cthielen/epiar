@@ -51,7 +51,7 @@ class Log {
 		void Start( const string& _filter="", const string& _funfilter="" );
 		bool SetLevel( const string& _loglvl );
 		bool SetLevel( LogLevel _loglvl );
-		void SetFunFilter( const string& _funfilter );
+		void SetFuncFilter( const string& _funcfilter );
 		void SetMsgFilter( const string& msgfilter );
 		void Close( void );
 		static string GetTimestamp( void );
@@ -80,7 +80,7 @@ class Log {
 #endif
 		
 		string filter;				/**< Message filter.*/
-		string funfilter;			/**< Function filter.*/
+		string funcfilter;			/**< Function filter.*/
 
 		char *timestamp;
 		string logFilename;

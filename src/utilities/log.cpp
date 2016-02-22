@@ -15,17 +15,17 @@
  * \brief Main logging facilities for the code base. */
 
 /**\brief Empty destructor.*/
-Log::~Log(){
+Log::~Log() {
 }
 
 /**\brief Retrieves the current instance of the log class.*/
-Log& Log::Instance( void ){
+Log& Log::Instance( void ) {
 	static Log _instance;
 	return _instance;
 }
 
 /**\brief Allows changing of the log level dynamically (string version).*/
-bool Log::SetLevel( const string& _loglvl ){
+bool Log::SetLevel( const string& _loglvl ) {
 	// Check logging level
 	this->loglvl = this->ReverseLookUp( _loglvl );
 
@@ -51,12 +51,13 @@ bool Log::SetLevel( LogLevel _loglvl ){
 }
 
 /**\brief Changes the function filter.*/
-void Log::SetFunFilter( const string& _funfilter ){
-	this->funfilter.clear();
+void Log::SetFuncFilter( const string& _funcfilter ) {
+	this->funcfilter.clear();
+
 	// Check function filter
-	if( !_funfilter.empty() ){
-		LogMsg(DEBUG, "Filtering log by function named: %s.", _funfilter.c_str());
-		this->funfilter = _funfilter;
+	if( _funcfilter.empty() == false ) {
+		LogMsg(DEBUG, "Filtering log by function named: %s.", _funcfilter.c_str());
+		this->funcfilter = _funcfilter;
 	}
 }
 
@@ -105,9 +106,10 @@ void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) 
 	}
 
 	// Check function filter
-	if( !this->funfilter.empty() ){
-		if( !func.find(this->funfilter) )
+	if( !this->funcfilter.empty() ){
+		if( func.find(this->funcfilter) == false ) {
 			return;
+		}
 	}
 
 	// Check message filter

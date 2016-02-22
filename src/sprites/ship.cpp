@@ -304,10 +304,11 @@ void Ship::Accelerate( void ) {
 	// Play engine sound
 	if( engine->GetSound() != NULL)
 	{
-		float engvol = OPTION(float,"options/sound/engines");
+		float engvol = OPTION(float, "options/sound/engines");
 		Coordinate offset = GetWorldPosition() - Menu::GetCurrentScenario()->GetCamera()->GetFocusCoordinate();
-		if ( this->GetDrawOrder() == DRAW_ORDER_SHIP )
-			engvol = engvol * NON_PLAYER_SOUND_RATIO ;
+		if ( this->GetDrawOrder() == DRAW_ORDER_SHIP ) {
+			engvol = engvol * NON_PLAYER_SOUND_RATIO;
+		}
 		this->engine->GetSound()->SetVolume( engvol );
 		this->engine->GetSound()->PlayNoRestart( offset );
 	}
@@ -589,7 +590,7 @@ FireStatus Ship::FireSlot( int slot, int target )
 
 	// Play weapon sound
 	if( currentWeapon->GetSound() != NULL ) {
-		float weapvol = OPTION(float,"options/sound/weapons");
+		float weapvol = OPTION(float, "options/sound/weapons");
 		if ( this->GetDrawOrder() == DRAW_ORDER_SHIP ) {
 			weapvol *= NON_PLAYER_SOUND_RATIO;
 		}

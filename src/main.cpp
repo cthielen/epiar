@@ -276,7 +276,7 @@ void Main_Parse_Args( int argc, char **argv ) {
 	argparser->SetOpt(LONGOPT, "nolog-out",      "Disable logging messages to console.");
 	argparser->SetOpt(VALUEOPT, "log-lvl",       "Logging level.(None,Fatal,Error,"
 	                                             "\n\t\t\t\tWarn,Info,Debug)");
-	argparser->SetOpt(VALUEOPT, "log-fun",       "Filter log messages by function name.");
+	argparser->SetOpt(VALUEOPT, "log-func",       "Filter log messages by function name.");
 	argparser->SetOpt(VALUEOPT, "log-msg",       "Filter log messages by string content.");
 
 	argparser->SetOpt(LONGOPT, "restore-defaults", "Restore options to default values.");
@@ -323,22 +323,23 @@ void Main_Parse_Args( int argc, char **argv ) {
 
 	// Following are cumulative options (I.E. you can have multiple of them)
 	if ( argparser->HaveOpt("disable-audio") ) {
-			SETOPTION("options/sound/background",0);
-			SETOPTION("options/sound/weapons",0);
-			SETOPTION("options/sound/engines",0);
-			SETOPTION("options/sound/explosions",0);
-			SETOPTION("options/sound/buttons",0);
+			SETOPTION("options/sound/background", 0);
+			SETOPTION("options/sound/weapons", 0);
+			SETOPTION("options/sound/engines", 0);
+			SETOPTION("options/sound/explosions", 0);
+			SETOPTION("options/sound/buttons", 0);
 	}
+
 	if      ( argparser->HaveOpt("log-xml") ) 	{ SETOPTION("options/log/xml", 1);}
 	else if ( argparser->HaveOpt("nolog-xml") ) 	{ SETOPTION("options/log/xml", 0);}
 	if      ( argparser->HaveOpt("log-out") ) 	{ SETOPTION("options/log/out", 1);}
 	else if ( argparser->HaveOpt("nolog-out") ) 	{ SETOPTION("options/log/out", 0);}
 
-	string funfilt = argparser->HaveValue("log-fun");
+	string funcfilt = argparser->HaveValue("log-func");
 	string msgfilt = argparser->HaveValue("log-msg");
 	string loglvl = argparser->HaveValue("log-lvl");
 
-	if("" != funfilt) Log::Instance().SetFunFilter(funfilt);
+	if("" != funcfilt) Log::Instance().SetFuncFilter(funcfilt);
 	if("" != msgfilt) Log::Instance().SetMsgFilter(msgfilt);
 	if("" != loglvl) {
 		if(Log::Instance().SetLevel( loglvl ) == false) {
