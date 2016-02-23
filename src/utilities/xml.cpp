@@ -2,7 +2,7 @@
  * \author		Christopher Thielen (chris@epiar.net)
  * \date		Created: Monday, April 21, 2008
  * \date		Modified: Saturday, November 21, 2009
- * \brief       Interface with XML files
+ * \brief		Interface with XML files
  * \details
  *
  */

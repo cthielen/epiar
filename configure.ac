@@ -23,6 +23,8 @@ AC_PROG_CC
 AC_PROG_RANLIB
 AC_LANG(C++)
 
+AX_CXX_COMPILE_STDCXX_11([ext], [mandatory])
+
 dnl Check for a C++ compiler
 if test "$ac_cv_prog_cxx_g" == no
 then
@@ -151,6 +153,6 @@ case "$target" in
 esac
 
 CFLAGS="$CFLAGS -Wall"
-CXXFLAGS="$CFLAGS"
+CXXFLAGS="$CFLAGS -std=gnu++11"
 
 AC_OUTPUT([Makefile])

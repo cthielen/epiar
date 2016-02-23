@@ -99,7 +99,6 @@ void Log::Close( void ) {
  * \todo The filtering is broken and should be refactored.
  */
 void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) {
-	//cout << "lvl requested: " << lvl << ", level set: " << this->loglvl << ", message: " << message << ", < test: " << (lvl < this->loglvl) << endl;
 	// Check log level
 	if( lvl < this->loglvl ) {
 		return;

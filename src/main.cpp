@@ -1,7 +1,8 @@
 /**\file		main.cpp
  * \author		Christopher Thielen (chris@epiar.net)
  * \author		and others.
- * \date		Created:	Sunday, June 4, 2006
+ * \date		Created: Sunday, June 4, 2006
+ * \date		Modified: Monday, February 22, 2016
  * \brief		Main entry point of Epiar codebase
  * \details
  *	This file performs two functions:
@@ -25,7 +26,7 @@
 #include "utilities/timer.h"
 
 #ifdef EPIAR_COMPILE_TESTS
-#include "Tests/tests.h"
+#include "tests/tests.h"
 #endif // EPIAR_COMPILE_TESTS
 
 // main configuration file, used through the tree (extern in common.h)
@@ -35,11 +36,10 @@ Font *SansSerif = NULL, *BitType = NULL, *Serif = NULL, *Mono = NULL;
 ArgParser *argparser = NULL;
 bool interpolateOn = true;
 
-void Main_OS                ( int argc, char **argv ); ///< Run OS Specific setup code
-void Main_Load_Settings     (); ///< Load the settings files
+void InitializeOS           ( int argc, char **argv ); ///< Run OS Specific setup code
+void Main_Load_Options      (); ///< Load the settings files
 void Main_Init_Singletons   (); ///< Initialize global Singletons
 void Main_Parse_Args        ( int argc, char **argv ); ///< Parse Command Line Arguments
-void Main_Log_Environment   ( void ); ///< Record Environment variables
 void Main_Close_Singletons  ( void ); ///< Close global Singletons
 
 /**Main
@@ -52,37 +52,45 @@ void Main_Close_Singletons  ( void ); ///< Close global Singletons
  *  - Calls any cleanup code
  */
 int main( int argc, char **argv ) {
-	// Basic Setup
-	Main_OS( argc, argv );
-	Main_Load_Settings();
+	// Basic setup
+	InitializeOS( argc, argv );
+	Main_Load_Options();
 
-	// Respond to Command Line Arguments
+	// Check for command line arguments
 	Main_Parse_Args( argc, argv );
-	Main_Log_Environment();
+	
+	LogMsg(INFO, "Epiar Version %s", EPIAR_VERSION_FULL );
+#ifdef COMP_MSVC
+	LogMsg(DEBUG, "Compiled with MSVC vers: _MSC_VER" );
+#endif
+#ifdef COMP_GCC
+	LogMsg(DEBUG, "Compiled with GCC vers: %d.%d.%d", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ );
+#endif
+	LogMsg(DEBUG, "Executable Path: %s", argparser->GetPath().c_str() );
 
-	// THE GAME
+	// Main game
 	Main_Init_Singletons();
 	Menu::Run();
 
-	LogMsg(INFO, "Epiar shutting down." );
+	LogMsg(DEBUG, "Epiar shutting down." );
 
-	// Close everything and Quit
+	// Close everything
 	Main_Close_Singletons();
 
 	return( 0 );
 }
 
 /** \details
- *  The OS Specific code here sets up OS specific environment variables and
+ *  The OS-specific code here sets up environment variables and
  *  paths that are vital for normal operation.
  *
- *  Since nothing has is loaded or initialized before this code, do not use any
- *  code that is epiar specific (OPTIONS, Log, Lua, etc).
+ *  As nothing has loaded nor been initialized yet, do not use any
+ *  code that is epiar specific (e.g. OPTIONS, Log, Lua, etc).
  *
  *  \param[in] argc standard c argc
  *  \param[in] argv standard c argv
  */
-void Main_OS( int argc, char **argv ) {
+void InitializeOS( int argc, char **argv ) {
 
 #ifdef __APPLE__
 	string path = argv[0];
@@ -117,52 +125,12 @@ void Main_OS( int argc, char **argv ) {
  *           The skin.xml file defines the non-png aspects of the User Interface.
  *  \todo If these files do not exist, reasonable defaults should be loaded instead.
  */
-void Main_Load_Settings() {
+void Main_Load_Options() {
 	Options::Initialize( "options.xml" );
 
-	// Logging
-	Options::AddDefault( "options/log/xml", 0 );
-	Options::AddDefault( "options/log/out", 0 );
-	Options::AddDefault( "options/log/alert", 0 );
-	Options::AddDefault( "options/log/ui", 0 );
-	Options::AddDefault( "options/log/sprites", 0 );
-
-	// Video
-	Options::AddDefault( "options/video/w", 1024 );
-	Options::AddDefault( "options/video/h", 768 );
-	Options::AddDefault( "options/video/bpp", 32 );
-	Options::AddDefault( "options/video/fullscreen", 0 );
-	Options::AddDefault( "options/video/fps", 60 );
-
-	// Sound
-	Options::AddDefault( "options/sound/musicvolume", 0.5f );
-	Options::AddDefault( "options/sound/soundvolume", 0.5f );
-	Options::AddDefault( "options/sound/background", 1 );
-	Options::AddDefault( "options/sound/weapons", 1 );
-	Options::AddDefault( "options/sound/engines", 1 );
-	Options::AddDefault( "options/sound/explosions", 1 );
-	Options::AddDefault( "options/sound/buttons", 1 );
-
-	// Simultaion
-	Options::AddDefault( "options/scenario/automatic-load", 0 );
-
-	// Timing
-	Options::AddDefault( "options/timing/screen-swap", 0 ); // FIXME, 0=disabled until the transition is better
-	Options::AddDefault( "options/timing/mouse-fade", 500 );
-	Options::AddDefault( "options/timing/target-zoom", 500 );
-	Options::AddDefault( "options/timing/alert-drop", 3500 );
-	Options::AddDefault( "options/timing/alert-fade", 2500 );
-
-	// Development
-	Options::AddDefault( "options/development/debug-ai", 0 );
-	Options::AddDefault( "options/development/debug-ui", 0 );
-
-	// Allow the Options to be used
-	Options::Unlock();
 
 	skinfile = new XMLFile();
-	if( !skinfile->Open("data/skin/skin.xml") )
-	{
+	if( !skinfile->Open("data/skin/skin.xml") ) {
 		// Create the default Skin file
 		skinfile->New("data/skin/skin.xml", "Skin");
 
@@ -223,7 +191,7 @@ void Main_Init_Singletons() {
 
 	UI::Initialize("Main Screen");
 
-	srand ( time(NULL) );
+	srand( time(NULL) );
 }
 
 /** \details
@@ -312,12 +280,13 @@ void Main_Parse_Args( int argc, char **argv ) {
 	}
 
 #ifdef EPIAR_COMPILE_TESTS
-	string testname = argparser->HaveValue("run-test");
-	if ( !(testname.empty()) ) {
-		Test testInst(testname);
-		exit( testInst.RunTest( argc, argv ) );
-	}
+       string testname = argparser->HaveValue("run-test");
+       if ( !(testname.empty()) ) {
+               Test testInst(testname);
+               exit( testInst.RunTest( argc, argv ) );
+       }
 #endif // EPIAR_COMPILE_TESTS
+
 
 	// Override OPTION values.
 
@@ -360,19 +329,3 @@ void Main_Parse_Args( int argc, char **argv ) {
 	}
 }
 
-/** \details
- *  This records basic Epiar information about the current Environment.
- */
-void Main_Log_Environment( void ) {
-	LogMsg(INFO, "Epiar Version %s", EPIAR_VERSION_FULL );
-
-#ifdef COMP_MSVC
-	LogMsg(DEBUG, "Compiled with MSVC vers: _MSC_VER" );
-#endif // COMP_MSVC
-
-#ifdef COMP_GCC
-	LogMsg(DEBUG, "Compiled with GCC vers: %d.%d.%d", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ );
-#endif // COMP_GCC
-
-	LogMsg(DEBUG, "Executable Path: %s", argparser->GetPath().c_str() );
-}

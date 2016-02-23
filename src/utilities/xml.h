@@ -19,6 +19,7 @@ class XMLFile {
 		XMLFile();
 		XMLFile( const string& filename );
 		~XMLFile();
+
 		bool New( const string& filename, const string& rootName );
 		bool Open( const string& filename );
 		bool Save( void );
@@ -28,10 +29,10 @@ class XMLFile {
 		void SetFileName( const string& _filename ) { filename = _filename; }
 		string GetFileName( ) { return filename; }
 
-		string Get( const string& path ); // cast/convert this to whatever return value you need
-		void Set( const string& path, const string& value ); // cast/convert this to whatever return value you need
-		void Set( const string& path, const float value ); // cast/convert this to whatever return value you need
-		void Set( const string& path, const int value ); // cast/convert this to whatever return value you need
+		string Get( const string& path ); // cast/convert to return value is needed
+		void Set( const string& path, const string& value ); // cast/convert to return value needed
+		void Set( const string& path, const float value ); // cast/convert to return value needed
+		void Set( const string& path, const int value ); // cast/convert to return value needed
 
 		bool Has( const string& path );
 
@@ -45,7 +46,7 @@ class XMLFile {
 		map<string,xmlNodePtr> values;
 		
 		void Forget();
-		xmlNodePtr FindNode( const string& path, bool createIfMissing=false );
+		xmlNodePtr FindNode( const string& path, bool createIfMissing = false );
 };
 
 vector<string> TokenizedString(const string& path, const string& tokens);

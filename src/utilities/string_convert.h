@@ -21,7 +21,7 @@ template<typename T> inline void convert(const std::string& s, T& x, bool failIf
 	char c;
 
 	if( !( i >> x ) || ( failIfLeftoverChars && i.get( c ) ) ) {
-		std::cout << "ERROR Could not convert the value: '" << s << "'"<<std::endl;
+		std::cout << "ERROR Could not convert the value: '" << s << "'" << std::endl;
 		assert(0);
 	}
 }

@@ -21,6 +21,7 @@ config.h.in~
 po
 m4
 compile
+.Tpo
 
 ### KDE development files
 Doxyfile
