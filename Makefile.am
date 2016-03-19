@@ -26,7 +26,7 @@ epiar_SOURCES = src/main.cpp \
                 src/engine/technologies.cpp \
                 src/engine/weapons.cpp \
                 src/graphics/animation.cpp \
-				src/graphics/color.cpp \
+		src/graphics/color.cpp \
                 src/graphics/font.cpp \
                 src/graphics/image.cpp \
                 src/graphics/video.cpp \
@@ -74,7 +74,7 @@ epiar_SOURCES = src/main.cpp \
                 src/utilities/resource.cpp \
                 src/utilities/timer.cpp \
                 src/utilities/trig.cpp \
-                src/utilities/xml.cpp
+                src/utilities/xmlfile.cpp
 
 epiar_LDADD = src/lua/src/liblua.a
 

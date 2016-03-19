@@ -22,7 +22,7 @@
 #include "utilities/filesystem.h"
 #include "utilities/log.h"
 #include "utilities/lua.h"
-#include "utilities/xml.h"
+#include "utilities/xmlfile.h"
 #include "utilities/timer.h"
 
 #ifdef EPIAR_COMPILE_TESTS
@@ -128,11 +128,11 @@ void InitializeOS( int argc, char **argv ) {
 void Main_Load_Options() {
 	Options::Initialize( "options.xml" );
 
-
 	skinfile = new XMLFile();
 	if( !skinfile->Open("data/skin/skin.xml") ) {
 		// Create the default Skin file
-		skinfile->New("data/skin/skin.xml", "Skin");
+		//skinfile->New("data/skin/skin.xml", "Skin");
+		skinfile->New("Skin");
 
 		// UI - Default
 		skinfile->Set( "Skin/UI/Default/Font", "data/fonts/FreeSans.ttf");

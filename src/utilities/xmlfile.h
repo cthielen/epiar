@@ -1,8 +1,8 @@
-/**\file		xml.h
+/**\file		xmlfile.h
  * \author		Christopher Thielen (chris@epiar.net)
  * \date		Created: Monday, April 21, 2008
- * \date		Modified: Saturday, November 21, 2009
- * \brief       Interface with XML files
+ * \date		Modified: Saturday, March 19, 2016
+ * \brief		Interface with XML files
  * \details
  *
  */
@@ -17,10 +17,9 @@
 class XMLFile {
 	public:
 		XMLFile();
-		XMLFile( const string& filename );
 		~XMLFile();
 
-		bool New( const string& filename, const string& rootName );
+		bool New( const string& rootName );
 		bool Open( const string& filename );
 		bool Save( void );
 		bool Save( const string& filename );
@@ -30,9 +29,9 @@ class XMLFile {
 		string GetFileName( ) { return filename; }
 
 		string Get( const string& path ); // cast/convert to return value is needed
-		void Set( const string& path, const string& value ); // cast/convert to return value needed
-		void Set( const string& path, const float value ); // cast/convert to return value needed
-		void Set( const string& path, const int value ); // cast/convert to return value needed
+		void Set( const string& path, const string& value );
+		void Set( const string& path, const float value );
+		void Set( const string& path, const int value );
 
 		bool Has( const string& path );
 

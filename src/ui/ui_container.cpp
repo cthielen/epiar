@@ -7,7 +7,7 @@
 
 #include "includes.h"
 #include "common.h"
-#include "utilities/xml.h"
+#include "utilities/xmlfile.h"
 #include "utilities/log.h"
 #include "ui/ui.h"
 #include "ui/ui_container.h"

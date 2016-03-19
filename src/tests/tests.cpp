@@ -22,7 +22,7 @@
 #include "input/input.h"
 #include "ui/ui.h"
 #include "utilities/timer.h"
-#include "utilities/xml.h"
+#include "utilities/xmlfile.h"
 
 // main configuration file, used through the tree (extern in common.h)
 extern XMLFile *optionsfile;

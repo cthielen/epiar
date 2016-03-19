@@ -1,7 +1,7 @@
-/**\file		xml.cpp
+/**\file		xmlfile.cpp
  * \author		Christopher Thielen (chris@epiar.net)
  * \date		Created: Monday, April 21, 2008
- * \date		Modified: Saturday, November 21, 2009
+ * \date		Modified: Saturday, March 19, 2016
  * \brief		Interface with XML files
  * \details
  *
@@ -10,7 +10,7 @@
 #include "includes.h"
 #include "utilities/file.h"
 #include "utilities/log.h"
-#include "utilities/xml.h"
+#include "utilities/xmlfile.h"
 #include "utilities/components.h"
 
 /**\class XMLFile
@@ -21,17 +21,14 @@ XMLFile::XMLFile() {
 	xmlPtr = NULL;
 }
 
-XMLFile::XMLFile( const string& filename ) {
-	xmlPtr = NULL;
-	Open( filename );
-}
-
-bool XMLFile::New( const string& _filename, const string& rootName ) {
+bool XMLFile::New( const string& rootName ) {
 	char buff[96] = {0};
-	assert( xmlPtr == NULL );
-	filename = _filename;
 
-	LogMsg(INFO, "New XML File: %s", filename.c_str());
+	assert( xmlPtr == NULL );
+
+	//filename = _filename;
+
+	//LogMsg(INFO, "New XML File: %s", filename.c_str());
 
 	xmlPtr = xmlNewDoc( BAD_CAST "1.0" );
 
@@ -124,7 +121,7 @@ string XMLFile::Get( const string& path ) {
 	// Look for the Node
 	cur = FindNode( path );
 	if( cur ) { // Found the path
-		return NodeToString(xmlPtr,cur);;
+		return NodeToString(xmlPtr, cur);
 	} else {
 		// FIXME: when optionsfile is being created, this line causes a race condition
 		//LogMsg(WARN, "Could not find XML path '%s'.", path.c_str() );
@@ -135,7 +132,7 @@ string XMLFile::Get( const string& path ) {
 void XMLFile::Set( const string& path, const string& value ) {
 	LogMsg(DEBUG, "Replacing Option['%s'] from '%s' to '%s'", path.c_str(), Get(path).c_str(), value.c_str());
 
-	xmlNodePtr p =  FindNode(path,true);
+	xmlNodePtr p =  FindNode(path, true);
 	xmlNodeSetContent(p, BAD_CAST value.c_str() );
 
 	assert( value == Get(path));
@@ -152,10 +149,14 @@ void XMLFile::Set( const string& path, const float value ) {
 	// Convert the float to a string before saving it.
 	string stringvalue;
 	stringstream val_ss;
+
 	val_ss << value;
 	val_ss >> stringvalue;
+
 	LogMsg(DEBUG, "Replacing Option['%s'] from '%s' to '%s'",path.c_str(),Get(path).c_str(),stringvalue.c_str());
+
 	xmlNodeSetContent(FindNode(path,true), BAD_CAST stringvalue.c_str() );
+
 	assert( stringvalue == Get(path));
 }
 
@@ -163,11 +164,15 @@ void XMLFile::Set( const string& path, const int value ) {
 	// Convert the int to a string before saving it.
 	string stringvalue;
 	stringstream val_ss;
+
 	val_ss << value;
 	val_ss >> stringvalue;
+
 	LogMsg(DEBUG, "Replacing Option['%s'] from '%s' to '%s'",path.c_str(),Get(path).c_str(),stringvalue.c_str());
-	xmlNodePtr p =  FindNode(path,true);
+
+	xmlNodePtr p =  FindNode(path, true);
 	xmlNodeSetContent(p, BAD_CAST stringvalue.c_str() );
+
 	assert( stringvalue == Get(path));
 }
 
@@ -200,7 +205,7 @@ vector<string> TokenizedString( const string& path, const string& tokens ) {
 		len = (pos==string::npos)?pos:pos-prevpos;
 		partialString = path.substr(prevpos, len); // Get the substring until the next token.
 		tokenized.push_back( partialString ); // Record the substring
-		if( pos!=string::npos ) {
+		if( pos != string::npos ) {
 			tokenized.push_back( path.substr(pos, 1) ); // Record the substring
 		}
 		prevpos = pos+1; // record where to start next time.
@@ -214,7 +219,7 @@ void XMLFile::Forget() {
 }
 
 xmlNodePtr XMLFile::FindNode( const string& path, bool createIfMissing ) {
-	xmlNodePtr cur,parent;
+	xmlNodePtr cur, parent;
 	string tokens = "/";
 	vector<string> tokenized;
 	vector<string>::iterator iter;
@@ -285,19 +290,20 @@ xmlNodePtr XMLFile::FindNode( const string& path, bool createIfMissing ) {
  * \endcode
  */
 
-xmlNodePtr FirstChildNamed( xmlNodePtr node, const char* text )
-{
+xmlNodePtr FirstChildNamed( xmlNodePtr node, const char* text ) {
 	assert( node != NULL );
 	assert( text != NULL );
+
 	xmlNodePtr child = node->xmlChildrenNode;
-	while( child != NULL )
-	{
-		if( !xmlStrcmp( child->name, (const xmlChar *)text ) )
-		{
+
+	while( child != NULL ) {
+		if( !xmlStrcmp( child->name, (const xmlChar *)text ) ) {
 			return child;
 		}
+
 		child = child->next;
 	}
+
 	return (xmlNodePtr )NULL;
 }
 
@@ -306,17 +312,17 @@ xmlNodePtr FirstChildNamed( xmlNodePtr node, const char* text )
  * \param text The text name that we are searching for.
  * \sa FirstChildNamed
  */
-xmlNodePtr NextSiblingNamed( xmlNodePtr child, const char* text )
-{
+xmlNodePtr NextSiblingNamed( xmlNodePtr child, const char* text ) {
 	assert( child != NULL );
 	assert( text != NULL );
+
 	child = child->next;
-	while( child != NULL )
-	{
-		if( NodeNameIs(child,text) )
-		{
+
+	while( child != NULL ) {
+		if( NodeNameIs(child,text) ) {
 			return child;
 		}
+
 		child = child->next;
 	}
 
@@ -331,19 +337,22 @@ xmlNodePtr NextSiblingNamed( xmlNodePtr child, const char* text )
  *
  * \sa NodeToInt, NodeToFloat
  */
-string NodeToString( xmlDocPtr doc, xmlNodePtr node )
-{
+string NodeToString( xmlDocPtr doc, xmlNodePtr node ) {
 	assert( doc != NULL );
 	assert( node != NULL );
+
 	string value;
 	xmlChar *xmlString;
 	xmlString = xmlNodeGetContent( node->xmlChildrenNode );
+
 	if( xmlString ) {
 		value = (const char *)xmlString;
 	} else {
 		value = "";
 	}
+
 	xmlFree( xmlString );
+
 	return value;
 }
 
@@ -352,19 +361,22 @@ string NodeToString( xmlDocPtr doc, xmlNodePtr node )
  * \param node The node itself
  * \sa NodeToString, NodeToFloat
  */
-int NodeToInt( xmlDocPtr doc, xmlNodePtr node )
-{
+int NodeToInt( xmlDocPtr doc, xmlNodePtr node ) {
 	assert( doc != NULL );
 	assert( node != NULL );
+
 	int value;
 	xmlChar *xmlString;
 	xmlString = xmlNodeGetContent( node->xmlChildrenNode );
+
 	if( xmlString ) {
 		value = atoi( (const char *)xmlString );
 	} else {
 		value = 0;
 	}
+
 	xmlFree( xmlString );
+
 	return value;
 }
 
@@ -373,18 +385,21 @@ int NodeToInt( xmlDocPtr doc, xmlNodePtr node )
  * \param node The node itself
  * \sa NodeToString, NodeToInt
  */
-float NodeToFloat( xmlDocPtr doc, xmlNodePtr node )
-{
+float NodeToFloat( xmlDocPtr doc, xmlNodePtr node ) {
 	assert( doc != NULL );
 	assert( node != NULL );
+
 	float value;
 	xmlChar *xmlString;
 	xmlString = xmlNodeGetContent( node->xmlChildrenNode );
+
 	if( xmlString ) {
 		value = atof( (const char *)xmlString );
 	} else {
 		value = 0.0f;
 	}
+
 	xmlFree( xmlString );
+
 	return value;
 }

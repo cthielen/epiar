@@ -15,7 +15,7 @@
 #include "utilities/timer.h"
 #include "utilities/trig.h"
 #include "sprites/spritemanager.h"
-#include "utilities/xml.h"
+#include "utilities/xmlfile.h"
 #include "sprites/effects.h"
 #include "audio/sound.h"
 #include "engine/hud.h"

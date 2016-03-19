@@ -74,7 +74,8 @@ bool Scenario::New( string newname ) {
 
 	folderpath = "data/scenario/" + newname + "/";
 
-	XMLFile::New( folderpath + string("scenario.xml"), "scenario" );
+	//XMLFile::New( folderpath + string("scenario.xml"), "scenario" );
+	XMLFile::New( "scenario" );
 
 	Set("scenario/name", newname );
 	Set("scenario/description", "" );

@@ -24,11 +24,11 @@ void Options::Initialize( const string& path ) {
 
 	if( !optionsfile->Open( path ) ) {
 		// Create the default Options file
-		optionsfile->New( path, "options" );
+		optionsfile->New( "options" );
 	}
 
 	assert( false );
-	// TODO: Need to set the defaults below, then copy in anything in 'options'. Need to support saving as well, which involves creating a XMLFile based on these defaults
+	// TODO: Need to set the defaults below, then copy in anything in 'optionsfile', if it exists.
 
 	// Logging
 	values.insert( std::pair<string,string>("options/log/xml", "0") );
