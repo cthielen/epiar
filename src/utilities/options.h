@@ -33,6 +33,9 @@ class Options {
 		static void Set( const string& path, const int value );
 
 	private:
+		static void SetDefaults( void );
+
+		static std::map<string,string> defaults;
 		static std::map<string,string> values;
 
 		static XMLFile *optionsfile;

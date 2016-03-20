@@ -13,6 +13,7 @@
 XMLFile *Options::optionsfile = NULL; ///< Static instance of the optionsfile.
 list<string> Options::nonPersistentOptions;
 std::map<string,string> Options::values;
+std::map<string,string> Options::defaults;
 
 /**\class Options
  * \brief Container and accessor of Game options
@@ -20,52 +21,65 @@ std::map<string,string> Options::values;
  */
 
 void Options::Initialize( const string& path ) {
+	SetDefaults();
+
+	values = defaults;
+
+	// Load existing options, if file exists
 	optionsfile = new XMLFile();
 
-	if( !optionsfile->Open( path ) ) {
-		// Create the default Options file
-		optionsfile->New( "options" );
+	if( optionsfile->Open( path ) ) {
+		// Existing options are stored. Use them to override defaults.
+
+		for(std::map<string,string>::iterator iter = defaults.begin(); iter != defaults.end(); ++iter) {
+			string key = iter->first;
+			string file_value = optionsfile->Get(key);
+
+			if( file_value.empty() == false ) {
+				values[key] = file_value;
+			}
+		}
+
 	}
+}
 
-	assert( false );
-	// TODO: Need to set the defaults below, then copy in anything in 'optionsfile', if it exists.
-
+void Options::SetDefaults( void ) {
 	// Logging
-	values.insert( std::pair<string,string>("options/log/xml", "0") );
-	values.insert( std::pair<string,string>("options/log/out", "0") );
-	values.insert( std::pair<string,string>("options/log/alert", "0") );
-	values.insert( std::pair<string,string>("options/log/ui", "0") );
-	values.insert( std::pair<string,string>("options/log/sprites", "0") );
+	defaults.insert( std::pair<string,string>("options/log/xml", "0") );
+	defaults.insert( std::pair<string,string>("options/log/out", "0") );
+	defaults.insert( std::pair<string,string>("options/log/alert", "0") );
+	defaults.insert( std::pair<string,string>("options/log/ui", "0") );
+	defaults.insert( std::pair<string,string>("options/log/sprites", "0") );
 
 	// Video
-	values.insert( std::pair<string,string>("options/video/w", "1024") );
-	values.insert( std::pair<string,string>("options/video/h", "768") );
-	values.insert( std::pair<string,string>("options/video/bpp", "32") );
-	values.insert( std::pair<string,string>("options/video/fullscreen", "0") );
-	values.insert( std::pair<string,string>("options/video/fps", "60") );
+	defaults.insert( std::pair<string,string>("options/video/w", "1024") );
+	defaults.insert( std::pair<string,string>("options/video/h", "768") );
+	defaults.insert( std::pair<string,string>("options/video/bpp", "32") );
+	defaults.insert( std::pair<string,string>("options/video/fullscreen", "0") );
+	defaults.insert( std::pair<string,string>("options/video/fps", "60") );
 
 	// Sound
-	values.insert( std::pair<string,string>("options/sound/disable-audio", "0") );
-	values.insert( std::pair<string,string>("options/sound/musicvolume", "0.50") );
-	values.insert( std::pair<string,string>("options/sound/soundvolume", "0.50") );
-	values.insert( std::pair<string,string>("options/sound/background", "1") );
-	values.insert( std::pair<string,string>("options/sound/weapons", "1") );
-	values.insert( std::pair<string,string>("options/sound/engine", "1") );
-	values.insert( std::pair<string,string>("options/sound/explosions", "1") );
-	values.insert( std::pair<string,string>("options/sound/buttons", "1") );
+	defaults.insert( std::pair<string,string>("options/sound/disable-audio", "0") );
+	defaults.insert( std::pair<string,string>("options/sound/musicvolume", "0.50") );
+	defaults.insert( std::pair<string,string>("options/sound/soundvolume", "0.50") );
+	defaults.insert( std::pair<string,string>("options/sound/background", "1") );
+	defaults.insert( std::pair<string,string>("options/sound/weapons", "1") );
+	defaults.insert( std::pair<string,string>("options/sound/engine", "1") );
+	defaults.insert( std::pair<string,string>("options/sound/explosions", "1") );
+	defaults.insert( std::pair<string,string>("options/sound/buttons", "1") );
 
 	// Simultaion
-	values.insert( std::pair<string,string>("options/scenario/automatic-load", "0") );
+	defaults.insert( std::pair<string,string>("options/scenario/automatic-load", "0") );
 
 	// Timing
-	values.insert( std::pair<string,string>("options/timing/mouse-fade", "500") );
-	values.insert( std::pair<string,string>("options/timing/target-zoom", "500") );
-	values.insert( std::pair<string,string>("options/timing/alert-drop", "3500") );
-	values.insert( std::pair<string,string>("options/timing/alert-fade", "2500") );
+	defaults.insert( std::pair<string,string>("options/timing/mouse-fade", "500") );
+	defaults.insert( std::pair<string,string>("options/timing/target-zoom", "500") );
+	defaults.insert( std::pair<string,string>("options/timing/alert-drop", "3500") );
+	defaults.insert( std::pair<string,string>("options/timing/alert-fade", "2500") );
 
 	// Development
-	values.insert( std::pair<string,string>("options/development/debug-ai", "0") );
-	values.insert( std::pair<string,string>("options/development/debug-ui", "0") );
+	defaults.insert( std::pair<string,string>("options/development/debug-ai", "0") );
+	defaults.insert( std::pair<string,string>("options/development/debug-ui", "0") );
 }
 
 bool Options::IsLoaded() {
@@ -73,15 +87,16 @@ bool Options::IsLoaded() {
 }
 
 bool Options::Save( const string& path ) {
-	assert( optionsfile );
+	// TODO: Save only if values differ from defaults or optionsfile already exists.
+	LogMsg(WARN, "Cannot save options - unimplemented.." );
 
-	assert( false ); // we need to copy 'values' to 'optionsfile'
+	return false;
 
-	if( path == "" ) {
-		return optionsfile->Save();
-	} else {
-		return optionsfile->Save( path );
-	}
+	//if( path == "" ) {
+	//	return optionsfile->Save();
+	//} else {
+	//	return optionsfile->Save( path );
+	//}
 }
 
 void Options::RestoreDefaults() {

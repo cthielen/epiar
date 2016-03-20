@@ -114,17 +114,19 @@ bool XMLFile::Close() {
 
 string XMLFile::Get( const string& path ) {
 	xmlNodePtr cur;
+
 	if( xmlPtr == NULL ) {
 		return "";
 	}
 
 	// Look for the Node
 	cur = FindNode( path );
-	if( cur ) { // Found the path
+
+	if( cur ) {
+		// Found the path
 		return NodeToString(xmlPtr, cur);
 	} else {
-		// FIXME: when optionsfile is being created, this line causes a race condition
-		//LogMsg(WARN, "Could not find XML path '%s'.", path.c_str() );
+		LogMsg(WARN, "Could not find XML path '%s'.", path.c_str() );
 		return "";
 	}
 }
