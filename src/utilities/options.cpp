@@ -1,7 +1,7 @@
 /**\file			options.cpp
  * \author			Matt Zweig
  * \date			Created:  Sunday, May 29, 2011
- * \date			Modified: Monday, February 22, 2016
+ * \date			Modified: Sunday, March 20, 2016
  * \brief			Global Options
  * \details
  */
@@ -10,8 +10,6 @@
 #include "utilities/log.h"
 #include "utilities/options.h"
 
-XMLFile *Options::optionsfile = NULL; ///< Static instance of the optionsfile.
-list<string> Options::nonPersistentOptions;
 std::map<string,string> Options::values;
 std::map<string,string> Options::defaults;
 
@@ -20,30 +18,29 @@ std::map<string,string> Options::defaults;
  *
  */
 
-void Options::Initialize( const string& path ) {
-	SetDefaults();
-
-	values = defaults;
-
+void Options::Restore( const string& path ) {
 	// Load existing options, if file exists
-	optionsfile = new XMLFile();
+	XMLFile *optionsfile = new XMLFile();
 
 	if( optionsfile->Open( path ) ) {
 		// Existing options are stored. Use them to override defaults.
+		LogMsg(DEBUG, "Found options stored on disk. Overriding defaults ...");
 
 		for(std::map<string,string>::iterator iter = defaults.begin(); iter != defaults.end(); ++iter) {
 			string key = iter->first;
 			string file_value = optionsfile->Get(key);
 
 			if( file_value.empty() == false ) {
+				LogMsg(DEBUG, "Overriding default option with value from file: %s %s -> %s", key.c_str(), defaults[key].c_str(), file_value.c_str());
 				values[key] = file_value;
 			}
 		}
-
 	}
+
+	delete optionsfile;
 }
 
-void Options::SetDefaults( void ) {
+void Options::Initialize( void ) {
 	// Logging
 	defaults.insert( std::pair<string,string>("options/log/xml", "0") );
 	defaults.insert( std::pair<string,string>("options/log/out", "0") );
@@ -80,13 +77,18 @@ void Options::SetDefaults( void ) {
 	// Development
 	defaults.insert( std::pair<string,string>("options/development/debug-ai", "0") );
 	defaults.insert( std::pair<string,string>("options/development/debug-ui", "0") );
-}
 
-bool Options::IsLoaded() {
-	return( optionsfile != NULL );
+	values = defaults;
 }
 
 bool Options::Save( const string& path ) {
+	if( defaults == values ) return true; // nothing to save
+
+	for(std::map<string,string>::iterator iter = values.begin(); iter != values.end(); ++iter) {
+		string key = iter->first;
+		
+	}
+	
 	// TODO: Save only if values differ from defaults or optionsfile already exists.
 	LogMsg(WARN, "Cannot save options - unimplemented.." );
 
@@ -100,18 +102,19 @@ bool Options::Save( const string& path ) {
 }
 
 void Options::RestoreDefaults() {
-	assert( false ); // not implemented
-	//optionsfile->Copy( defaults );
+	values = defaults;
 }
 
 string Options::Get( const string& path ) {
 	std::map<string,string>::iterator it;
+
 	it = values.find(path);
+
 	if(it == values.end()) {
 		cout << "Could not Options::Get() for path '" << path << "'" << endl;
 	}
 
-	return (it->second);
+	return it->second;
 }
 
 void Options::Set( const string& path, const string& value ) {

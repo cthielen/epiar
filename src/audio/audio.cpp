@@ -41,6 +41,7 @@ bool Audio::Initialize( void ) {
 	}
 
 	if(OPTION(bool, "options/sound/disable-audio")) {
+		LogMsg(INFO, "Not initializing audio as it is disabled.");
 		return true; // audio is disabled
 	}
 

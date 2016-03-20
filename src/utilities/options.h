@@ -18,9 +18,8 @@
 
 class Options {
 	public:
-		static void Initialize( const string& path );
-
-		static bool IsLoaded();
+		static void Restore( const string& path );
+		static void Initialize( void );
 
 		static bool Save( const string& path = "" );
 
@@ -33,13 +32,8 @@ class Options {
 		static void Set( const string& path, const int value );
 
 	private:
-		static void SetDefaults( void );
-
 		static std::map<string,string> defaults;
 		static std::map<string,string> values;
-
-		static XMLFile *optionsfile;
-		static list<string> nonPersistentOptions;
 };
 
 #endif // __H_OPTIONS

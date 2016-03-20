@@ -10,11 +10,11 @@
 #ifndef __H_STRING_CONVERT__
 #define __H_STRING_CONVERT__
 
- #include <iostream>
- #include <sstream>
- #include <string>
- #include <typeinfo>
- #include <stdexcept>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <typeinfo>
+#include <stdexcept>
 
 template<typename T> inline void convert(const std::string& s, T& x, bool failIfLeftoverChars = true) {
 	std::istringstream i( s );
@@ -26,7 +26,7 @@ template<typename T> inline void convert(const std::string& s, T& x, bool failIf
 	}
 }
 
-template<typename T> inline T convertTo(const std::string& s, bool failIfLeftoverChars = true){
+template<typename T> inline T convertTo(const std::string& s, bool failIfLeftoverChars = true) {
 	T x;
 
 	convert( s, x, failIfLeftoverChars );

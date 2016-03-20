@@ -111,12 +111,6 @@ void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) 
 		}
 	}
 
-	// Check message filter
-	//if( !this->filter.empty() ){
-		//if( !message.find( this->filter  ) )
-		//	return;
-	//}
-
 	va_list args;
 	time_t rawtime;
 	static char logBuffer[4096] = {0};
@@ -135,7 +129,7 @@ void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) 
 	if( logBuffer[ strlen(logBuffer) - 1 ] == '\n' ) logBuffer[ strlen(logBuffer) - 1 ] = 0;
 
 	// Print the message
-	if( Options::IsLoaded() ) {
+	if( true ) { // Options::IsLoaded() ) {
 		// We loop over a buffer as messages may be queued up from before Options::IsLoaded() == true
 		preOptionsBuffer.push( LogEntry(func, lvl, logBuffer) );
 
@@ -181,7 +175,7 @@ void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) 
 
 /**\brief Constructor, used to initialize variables.*/
 Log::Log()
-	:loglvldefault(WARN)
+	:loglvldefault(DEBUG)
 {
 	lvlStrings[NONE] = "None";
 	lvlStrings[FATAL] = "Fatal";
