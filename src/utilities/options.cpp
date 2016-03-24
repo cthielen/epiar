@@ -1,7 +1,7 @@
 /**\file			options.cpp
  * \author			Matt Zweig
  * \date			Created:  Sunday, May 29, 2011
- * \date			Modified: Sunday, March 20, 2016
+ * \date			Modified: Thursday, March 24, 2016
  * \brief			Global Options
  * \details
  */
@@ -61,7 +61,7 @@ void Options::Initialize( void ) {
 	defaults.insert( std::pair<string,string>("options/sound/soundvolume", "0.50") );
 	defaults.insert( std::pair<string,string>("options/sound/background", "1") );
 	defaults.insert( std::pair<string,string>("options/sound/weapons", "1") );
-	defaults.insert( std::pair<string,string>("options/sound/engine", "1") );
+	defaults.insert( std::pair<string,string>("options/sound/engines", "1") );
 	defaults.insert( std::pair<string,string>("options/sound/explosions", "1") );
 	defaults.insert( std::pair<string,string>("options/sound/buttons", "1") );
 
@@ -111,7 +111,14 @@ string Options::Get( const string& path ) {
 	it = values.find(path);
 
 	if(it == values.end()) {
-		cout << "Could not Options::Get() for path '" << path << "'" << endl;
+		LogMsg(DEBUG, "Could not Options::Get() for path '%s'", path.c_str());
+
+		//for(std::map<string,string>::iterator iter = values.begin(); iter != values.end(); ++iter) {
+		//	string key = iter->first;
+		//	cout << "Valid key: " << key << endl;
+		//}
+
+		return "";
 	}
 
 	return it->second;
