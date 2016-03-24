@@ -101,8 +101,11 @@ bool Video::Shutdown( void ) {
 bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	// Set the application icon (must be done before SDL_SetVideoMode)
 	SDL_Surface *icon = NULL;
+
 	File icon_file( "data/graphics/icon.bmp" ); // File is used to calculate path
+
 	icon = SDL_LoadBMP( icon_file.GetAbsolutePath().c_str() );
+
 	if(icon != NULL) {
 		SDL_SetWindowIcon(window, icon);
 		SDL_FreeSurface(icon); icon = NULL;
@@ -114,6 +117,12 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	if(window == NULL) {
 		LogMsg(ERR, "Could not create window: %s", SDL_GetError() );
 		return( false );
+	}
+
+	if(fullscreen) {
+		if( SDL_SetWindowFullscreen( window, SDL_WINDOW_FULLSCREEN ) < 0 ) {
+			LogMsg(ERR, "Window created but unable to set fullscreen: %s", SDL_GetError() );
+		}
 	}
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
