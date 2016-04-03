@@ -29,9 +29,8 @@
 Text::Text( Font* _font, string _text, int _maxwidth )
 	:font(_font)
 	,maxwidth(_maxwidth)
-	,width(0)
-	
-{
+	,width(0) {
+
 	assert( _font != NULL );
 	SetText( _text );
 }
@@ -146,11 +145,11 @@ string Text::GetText() {
  */
 void Text::Render( int x, int y, Font::XPos xpositioning, Font::YPos ypositioning ) {
 	vector<string>::iterator iter;
-	for(iter = lines.begin(); iter != lines.end() ; ++iter, y += UI::font->TightHeight() )
-	{
+
+	for(iter = lines.begin(); iter != lines.end() ; ++iter, y += (int)((float)UI::font->LineHeight() * 1.3) ) {
 		int len = iter->size();
 		if ( (*iter)[len-1] == '\n' ) {
-			font->Render( x, y, iter->substr(0,len-1), xpositioning, ypositioning );
+			font->Render( x, y, iter->substr(0, len - 1), xpositioning, ypositioning );
 		} else {
 			font->Render( x, y, *iter, xpositioning, ypositioning );
 		}

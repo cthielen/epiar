@@ -2,7 +2,7 @@
  * \author		Christopher Thielen (chris@epiar.net)
  * \author		and others.
  * \date		Created: Tuesday, April 26, 2011
- * \date		Modified: Friday, January 1, 2016
+ * \date		Modified: Saturday, April 2, 2016
  * \brief		Runs the main menu
  * \details
  */
@@ -293,7 +293,7 @@ void Menu::StartGame( void *info ) {
 		scenario->LoadPlayer( playerName );
 	} else{
 		scenario->CreateDefaultPlayer( playerName );
-		Lua::Call("intro");
+		//Lua::Call("intro");
 	}
 
 	if( !scenario->Setup() ) {

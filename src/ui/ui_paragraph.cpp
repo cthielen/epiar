@@ -1,7 +1,7 @@
 /**\file			ui_paragraph.cpp
  * \author			Matt Zweig (thezweig@gmail.com)
  * \date			Created: Sunday, June 26, 2011
- * \date			Modified: Sunday, June 26, 2011
+ * \date			Modified: Saturday, April 2, 2016
  * \brief
  * \details
  */
@@ -25,12 +25,12 @@
 /**\brief Constructor
  */
 Paragraph::Paragraph( int x, int y, int maxw, int h, string text ) 
-	:lines(UI::font, text, maxw )
-{
-	this->x=x;
-	this->y=y;
+	:lines(UI::font, text, maxw ) {
 
-	centered=false;
+	this->x = x;
+	this->y = y;
+
+	centered = false;
 
 	SetW( lines.GetWidth() );
 	SetH( lines.GetHeight() );

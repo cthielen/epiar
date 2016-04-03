@@ -37,7 +37,7 @@ function landingDialog(id)
 	local surface = UI.newPicture( (width / 2) - 215, 15, 375, 281, surface_str, 0, 0, 0, 1)
 	summary_frame:add( surface )
 
-	summary_frame:add( UI.newParagraph(50, 315, 375, 281, planet:GetSummary() ) )
+	summary_frame:add( UI.newParagraph( (width / 2) - 215, 315, 375, 281, planet:GetSummary() ) )
 
 	summary:add( summary_frame )
 
