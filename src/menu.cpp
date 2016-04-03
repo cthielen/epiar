@@ -174,11 +174,9 @@ void Menu::SetupUI() {
 	                      Image::Get( "data/graphics/txt_new_game_inactive.png") );
 
 	// Load Button
-	if( (PlayerList::Instance()->Size() > 0) ) {
-		load = PictureButton( button_x, button_y + 100, Menu::CreateLoadWindow,
-		                       Image::Get( "data/graphics/txt_load_game_active.png"),
-		                       Image::Get( "data/graphics/txt_load_game_inactive.png") );
-	}
+	load = PictureButton( button_x, button_y + 100, Menu::CreateLoadWindow,
+	                       Image::Get( "data/graphics/txt_load_game_active.png"),
+	                       Image::Get( "data/graphics/txt_load_game_inactive.png") );
 
 	// Options Button
 	options = PictureButton( button_x, button_y + 150, Dialogs::OptionsWindow,
@@ -200,11 +198,11 @@ void Menu::CreateNewWindow() {
 	UI::Add( win );
 
 	// Player Name
-	win->AddChild( (new Label(50, 40, "Name:")) )
-		->AddChild( (new Textbox(90, 43, 130, 1, "", "Player Name:")) );
+	win->AddChild( (new Label(50, 45, "Name:")) )
+		->AddChild( (new Textbox(90, 41, 130, 1, "", "Player Name:")) );
 
 	// Scenario Picker
-	win->AddChild( (new Label(25, 75, "Scenario:")) )
+	win->AddChild( (new Label(32, 80, "Scenario:")) )
 		->AddChild( (new Dropdown( 90, 75, 130, 25 ))
 			->AddOptions( Filesystem::Enumerate("data/scenario/") )
 	);
@@ -216,11 +214,15 @@ void Menu::CreateNewWindow() {
 /** This Window shows a list of potential Players.
  */
 void Menu::CreateLoadWindow() {
+	int infoRows = 0;
+
 	if( UI::Search("/Window'Load Game'/") != NULL ) return;
 
 	list<string> *names = PlayerList::Instance()->GetNames();
 
-	Window* win = new Window(450, 95 + (names->size() * 130), "Load Game");
+	infoRows = names->size() > 0 ? names->size() : 1;
+
+	Window* win = new Window(450, 95 + (infoRows * 130), "Load Game");
 	UI::Add( win );
 
 	PlayerInfo* last = PlayerList::Instance()->LastPlayer();
@@ -244,8 +246,14 @@ void Menu::CreateLoadWindow() {
 		}
 	}
 
+	if( names->size() == 0 ) {
+		win->AddChild( (new Frame( 25, 130 * p + 40, 400, 120 ))
+			->AddChild( (new Label(132, 42, "No saved games exist." )))
+		);
+	}
+
 	// Add the 'Cancel' button
-	win->AddChild( (new Button( 175, 130 * names->size() + 45, 100, 30, "Cancel", &UI::Close, win)) );
+	win->AddChild( (new Button( 175, 130 * infoRows + 45, 100, 30, "Cancel", &UI::Close, win)) );
 
 	UI::RegisterKeyboardFocus(win);
 }

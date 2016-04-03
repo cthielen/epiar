@@ -63,7 +63,7 @@ void Textbox::Draw( int relx, int rely ) {
 
 	// draw the text
 	Video::SetCropRect(x, y, this->w, this->h);
-	int tw = font->Render( x + rowPad + 3, y + rowPad - 3, text );
+	int tw = font->Render( x + rowPad + 3, y + rowPad, text );
 
 	// draw the cursor (if it has focus and we're on an even second (easy blink every second))
 	if( IsActive() && ((SDL_GetTicks() % 500) < 300) && !this->disabled ) {
@@ -80,37 +80,33 @@ bool Textbox::KeyPress( SDL_Keycode key ) {
 	string key_s;
 
 	switch(key) {
-	// Ignore Modifiers
-	case SDLK_LSHIFT:
-	case SDLK_RSHIFT:
-	//case SDLK_RMETA:
-	//case SDLK_LMETA:
-	case SDLK_RALT:
-	case SDLK_LALT:
-	case SDLK_RCTRL:
-	case SDLK_LCTRL:
-	//case SDLK_RSUPER:
-	//case SDLK_LSUPER:
-	// Special Non-Printable Keys
-	case SDLK_ESCAPE:
-	// TODO: add cursor movement support
-	case SDLK_LEFT:
-	case SDLK_RIGHT:
-	case SDLK_UP:
-	case SDLK_DOWN:
-		return false;
-	default:
-		break;
+		// Ignore certain modifiers
+		case SDLK_LSHIFT:
+		case SDLK_RSHIFT:
+		case SDLK_RALT:
+		case SDLK_LALT:
+		case SDLK_RCTRL:
+		case SDLK_LCTRL:
+		// Ignore special non-printable Keys
+		case SDLK_ESCAPE:
+		// TODO: Add cursor movement support here
+		case SDLK_LEFT:
+		case SDLK_RIGHT:
+		case SDLK_UP:
+		case SDLK_DOWN:
+			return false;
+		default:
+			break;
 	}
 
 	key_ss << (char)key;
 	key_ss >> key_s;
 
-	if(keyname == "backspace") {
+	if(key == SDLK_BACKSPACE) {
 		int len = text.length() - 1;
 		if(len < 0) len = 0;
 		text.erase( len );
-	} else if(keyname == "space") {
+	} else if(key == SDLK_SPACE) {
 		text.append( " " );
 	} else {
 		text.append( key_s );
