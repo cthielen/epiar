@@ -1,7 +1,7 @@
 /**\file			navigation.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created  : Sunday, October 18, 2015
- * \date			Modified: Sunday, October 18, 2015
+ * \date			Modified: Sunday, April 10, 2016
  * \brief			Handles the navigation route
  * \details
  */
@@ -24,6 +24,8 @@ class Navigation {
 		static bool RemoveNextSector( void );
 
 		static bool IsEnroute(Sector *a, Sector *b);
+
+		static void ClearRoute( void );
 
 	private:
 		static list<string> Route;

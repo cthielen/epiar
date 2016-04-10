@@ -1,7 +1,7 @@
 /**\file			navigation.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, October 18, 2015
- * \date			Modified: Sunday, October 18, 2015
+ * \date			Modified: Sunday, April 10, 2016
  * \brief			Handles the navigation route
  * \details
  */
@@ -105,5 +105,9 @@ void Navigation::PrintRoute() {
 	for(list<string>::iterator itr = Navigation::Route.begin(); itr != Navigation::Route.end(); itr++) {
 		cout << "\t" << *itr << endl;
 	}
+}
+
+void Navigation::ClearRoute( void ) {
+	Navigation::Route.clear();
 }
 

@@ -1,7 +1,7 @@
 /**\file			ui_navmap.h
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
- * \date			Modified: Monday, October 19, 2015
+ * \date			Modified: Sunday, April 10, 2016
  * \brief			
  * \details
  */
@@ -16,7 +16,7 @@
 #include "ui/ui.h"
 #include "utilities/coordinate.h"
 
-class NavMap: public Widget {
+class NavMap: public Container {
 	public:
 		NavMap( int x, int y, int w, int h, Coordinate center, Scenario *scenario );
 		~NavMap();
@@ -49,6 +49,7 @@ class NavMap: public Widget {
 
 	private:
 		bool SectorNearClick(Sector *sector, Coordinate click);
+		static void ClearRouteButtonCallback(void);
 
 		float alpha;
 		float scale;
@@ -62,6 +63,8 @@ class NavMap: public Widget {
 		Sector* selectedSector;
 
 		static Font* NavMapFont;
+
+		Button* clearRouteButton;
 };
 
 #endif // __H_UI_NAVMAP

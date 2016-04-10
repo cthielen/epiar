@@ -1,7 +1,7 @@
 /**\file			ui_navmap.cpp
  * \author			Matt Zweig
  * \date			Created:  Saturday, May 28, 2011
- * \date			Modified: Saturday, December 5, 2015
+ * \date			Modified: Sunday, April 10, 2016
  * \brief			Map Widget
  * \details
  */
@@ -47,7 +47,7 @@ NavMap::NavMap( int x, int y, int w, int h, Coordinate center, Scenario* scenari
 
 	float size = (h < w) ? h : w; // Max of Height and Width
 
-	// Initially strech the Map so that it covers all QuadTrees
+	// Set Map boundaries to cover all sectors
 	float north, south, east, west, edge;
 	Sectors* sectors = this->scenario->GetSectors();
 	if(sectors != NULL) {
@@ -67,16 +67,20 @@ NavMap::NavMap( int x, int y, int w, int h, Coordinate center, Scenario* scenari
 
 	zoomable = true;
 	pannable = true;
+
+	// Set up the 'Clear Route' button
+	clearRouteButton = new Button( 10, this->GetH() - 35, 85, 25, "Clear Route", NavMap::ClearRouteButtonCallback );
+	Container::AddChild( clearRouteButton );
 }
 
 /** \brief Map Destructor
  *
  */
-NavMap::~NavMap()
-{
+NavMap::~NavMap() {
 	scenario = NULL;
 	delete NavMapFont;
 	NavMapFont = NULL;
+	clearRouteButton = NULL; // Let the Container Destructor delete the button
 }
 
 /** \brief Draw Map
@@ -163,6 +167,8 @@ void NavMap::Draw( int relx, int rely ) {
 
 	delete sectors;
 	sectors = NULL;
+
+	Container::Draw(relx, rely);
 }
 
 /** \brief Convert click coordinates to World Coordinates
@@ -227,19 +233,22 @@ bool NavMap::MouseLUp( int x, int y ) {
 			cout << "Set selected sector to " << selectedSector->GetName() << endl;
 
 			// Is shift held down? If so, they are trying to plot a course ...
+
 			if(Input::keyIsHeld(SDLK_LSHIFT)) {
 				Navigation::AddSector(selectedSector->GetName());
 			}
+
+			return true;
 		}
 	}
 
-	return false;
+	return Container::MouseLUp( x, y );
 }
 
 bool NavMap::MouseLDown( int x, int y ) {
 	Widget::MouseLDown( x, y );
 
-	return false;
+	return Container::MouseLDown( x, y );
 }
 
 /** \brief Pan the Map
@@ -291,6 +300,11 @@ bool NavMap::SectorNearClick(Sector *sector, Coordinate click) {
 	if(distance < (SECTOR_CLICK_SELECTION_RADIUS * scale)) return true;	
 
 	return false;
+}
+
+void NavMap::ClearRouteButtonCallback(void) {
+	cout << "Clear route callback called." << endl;
+	Navigation::ClearRoute();
 }
 
 /** @} */
