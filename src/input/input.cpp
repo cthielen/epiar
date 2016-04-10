@@ -1,7 +1,7 @@
 /**\file			input.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 4, 2006
- * \date			Modified: Sunday, January 3, 2016
+ * \date			Modified: Sunday, April 10, 2016
  * \brief
  * \details
  */
@@ -266,20 +266,21 @@ void Input::_UpdateHandleKeyUp( SDL_Event *event ) {
 	assert( event );
 
 	events.push_back( InputEvent( KEY, KEYUP, event->key.keysym.sym ) );
+
 	heldKeys.erase( event->key.keysym.sym );
 }
 
 void Input::PushTypeEvent( list<InputEvent> & events, SDL_Keycode key ) {
-	int letter=key;
+	int letter = key;
 
 	// Convert lower to upper case characters
 	// TODO: This assumes that every Epiar user has an American keyboard.
 	//       I don't know how to do the keyboard independent character translations.
-	if(heldKeys[SDLK_LSHIFT] || heldKeys[SDLK_RSHIFT]) {
+	if(keyIsHeld(SDLK_LSHIFT) || keyIsHeld(SDLK_RSHIFT)) {
 		if(key >= SDLK_a && key <= SDLK_z) {
 			letter -= 32;
 		} else if(key >= SDLK_0 && key <= SDLK_9) {
-			letter = ")!@#$%^&*("[key-SDLK_0];
+			letter = ")!@#$%^&*("[key - SDLK_0];
 		} else {
 			switch(key){
 			case SDLK_QUOTE:
@@ -312,11 +313,8 @@ void Input::PushTypeEvent( list<InputEvent> & events, SDL_Keycode key ) {
 
 	// Keypresses that we want to accept, but turn into something different
 	if((key == SDLK_RETURN) || (key == SDLK_KP_ENTER)) {
-		letter='\n';
+		letter = '\n';
 	}
-
-	// DEBUG: Name = int = char -> emitted char
-	//cout<<SDL_GetKeyName(key)<<" = "<<key<<" = '"<<char(key)<<"' -> '"<<char(letter)<<"'"<<endl;
 
 	events.push_back( InputEvent( KEY, KEYTYPED, letter ) );
 }
@@ -385,15 +383,3 @@ bool Input::HandleSpecificEvent( list<InputEvent> & events, InputEvent trigger )
 	return found;
 }
 
-/**\brief Print out a list of events.
- * \warn This is ugly.  Not usable for production code.
- */
-void Input::PrintEvents( string title, list<InputEvent> & events ) {
-	list<InputEvent>::iterator i = events.begin();
-	if( events.size() == 0 ) return;
-	while( i != events.end() ) {
-		cout << *i << " ";
-		++i;
-	}
-	cout << endl;
-}

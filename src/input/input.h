@@ -1,7 +1,7 @@
 /**\file			input.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 4, 2006
- * \date			Modified: Thursday, December 24, 2015
+ * \date			Modified: Sunday, April 10, 2016
  * \brief
  * \details
  */
@@ -99,7 +99,6 @@ class Input {
 
 		static bool SearchSpecificEvent( list<InputEvent> & events, InputEvent key );
 		static bool HandleSpecificEvent( list<InputEvent> & events, InputEvent key );
-		static void PrintEvents( string title, list<InputEvent> & events );
 
 		static bool keyIsHeld(SDL_Keycode key);
 
