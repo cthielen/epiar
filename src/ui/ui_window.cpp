@@ -23,8 +23,7 @@
 /**\brief Creates a new window with specified parameters centered on screen.
  */
 Window::Window( int w, int h, string caption ):
-		draggable( true )
-{
+		draggable( true ) {
 
 	this->x = Video::GetHalfWidth() - (w / 2);
 	this->y = Video::GetHalfHeight() - (h / 2);
@@ -49,8 +48,7 @@ Window::Window( int w, int h, string caption ):
 /**\brief Creates a new window with specified parameters.
  */
 Window::Window( int x, int y, int w, int h, string caption ):
-		draggable( true )
-{
+		draggable( true ) {
 
 	this->x = x;
 	this->y = y;
@@ -87,9 +85,11 @@ Window::~Window() {
 
 /**\brief Adds a widget to the current Window.
  */
-Window *Window::AddChild( Widget *widget ){
+Window *Window::AddChild( Widget *widget ) {
 	assert( widget != NULL );
+
 	Container::AddChild( widget );
+
 	return this;
 }
 
@@ -127,10 +127,10 @@ void Window::Draw( int relx, int rely ) {
 	// Draw the window title
 	UI::boldFont->Render(x + (w / 2), y + bitmaps[1]->GetHalfHeight(), name, Font::CENTER, Font::MIDDLE);
 
-	Container::Draw(relx,rely);
+	Container::Draw(relx, rely);
 }
 
-bool Window::MouseDrag( int xi, int yi ){
+bool Window::MouseDrag( int xi, int yi ) {
 	// Only drag by titlebar
 	if ( dragY < bitmaps[1]->GetHeight() && draggable == true ) {
 		Widget::MouseDrag( xi, yi );
@@ -146,15 +146,14 @@ bool Window::MouseDrag( int xi, int yi ){
 
 /**\brief Toggle on or off the ability to drag this window by the top bar.
  */
-bool Window::SetDragability( bool _draggable ){
+bool Window::SetDragability( bool _draggable ) {
 	draggable = _draggable;
 	return true;
 }
 
 /**\brief Close the Window
  */
-void Window::CloseWindow( void* win)
-{
+void Window::CloseWindow( void* win) {
 	UI::Close((Window*)win);
 }
 

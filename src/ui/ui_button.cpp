@@ -27,10 +27,10 @@
 void Button::Initialize( int x, int y, int w, int h, string label ) {
 	// This is the main Button Constructor
 	// This cuts down on code duplication so it can be called by multiple constructors.
-	this->x=x;
-	this->y=y;
-	this->w=w;
-	this->h=h;
+	this->x = x;
+	this->y = y;
+	this->w = w;
+	this->h = h;
 	
 	this->name = label;
 	
@@ -109,7 +109,9 @@ bool Button::MouseLDown( int xi, int yi ) {
 /**\brief When left mouse is back up on the button.*/
 bool Button::MouseLUp( int xi, int yi ) {
 	bitmap_current = bitmap_mouseover;
+
 	Widget::MouseLUp( xi, yi );
+
 	return true;
 }
 

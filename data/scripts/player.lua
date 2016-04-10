@@ -19,12 +19,12 @@ playerCommands = {
 
 	-- Shooting
 	{'space', "Fire Primary Weapon", "playerFire(1)", KEYPRESSED},
-	{'rshift', "Fire Secondary Weapon 1", "playerFire(2)",KEYTYPED},
-	{'lshift', "Fire Secondary Weapon 2", "playerFire(2)",KEYTYPED},
+	{'rshift', "Fire Secondary Weapon 1", "playerFire(2)", KEYTYPED},
+	{'lshift', "Fire Secondary Weapon 2", "playerFire(2)", KEYTYPED},
 
 	-- Combat
 	{'tab', "Target Ship", "targetShip()", KEYTYPED},
-	{'t', "Target Closest Ship", "targetClosestShip()",KEYTYPED},
+	{'t', "Target Closest Ship", "targetClosestShip()", KEYTYPED},
 	{'w', "Watch Target", "Epiar.focusCamera(HUD.getTarget())", KEYDOWN},
 	{'w', "Release Watch", "Epiar.focusCamera(PLAYER:GetID())", KEYUP},
 	{'b', "Board", "boardShip()", KEYTYPED},
