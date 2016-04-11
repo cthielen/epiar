@@ -1,7 +1,7 @@
 /**\file			scenario.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Wednesday, December 23, 2015
+ * \date			Modified: Sunday, April 10, 2016
  * \brief			Contains the main game loop
  * \details
  */
@@ -10,15 +10,16 @@
 #include "common.h"
 #include "audio/music.h"
 #include "audio/audio_lua.h"
+#include "engine/alliances.h"
 #include "engine/calendar.h"
+#include "engine/commodities.h"
+#include "engine/console.h"
 #include "engine/hud.h"
+#include "engine/navigation.h"
 #include "engine/scenario.h"
 #include "engine/scenario_lua.h"
-#include "engine/commodities.h"
-#include "engine/alliances.h"
-#include "engine/technologies.h"
 #include "engine/starfield.h"
-#include "engine/console.h"
+#include "engine/technologies.h"
 #include "graphics/video.h"
 #include "input/input.h"
 #include "sprites/ai.h"
@@ -625,25 +626,32 @@ void Scenario::HandleInput() {
 		}
 	}
 
-	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, '?') ) ) {
+	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, '?' ))) {
 		Dialogs::OptionsWindow();
 	}
 
-	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, '/') ) ) {
+	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, '/' ))) {
 		Lua::Call("keyboardCommands");
 	}
 
-	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, 'j') ) ) {
-		list<string>* names = planets->GetNames();
+	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, 'j' ))) {
+		/*list<string>* names = planets->GetNames();
 		int i = 0;
 		int x = rand() % names->size();
 		list<string>::iterator pName = names->begin();
 		while( i++ < x ){ pName++; }
 		Planet* p = planets->GetPlanet(*pName);
-		player->Jump( p->GetWorldPosition() + GaussianCoordinate(), true );
+		player->Jump( p->GetWorldPosition() + GaussianCoordinate(), true );*/
+
+		if(Navigation::HasDestination()) {
+			float nextSectorAngle = Navigation::GetAngleOfNextSector();
+			cout << "need to rotate to: " << nextSectorAngle << endl;
+		} else {
+			cout << "Cannot jump: no destination set." << endl;
+		}
 	}
 
-	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_ESCAPE ) ) ) {
+	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, SDLK_ESCAPE ))) {
 		quit = true;
 	}
 }
