@@ -8,7 +8,6 @@
 
 #include "includes.h"
 #include "engine/navigation.h"
-#include "engine/sectors.h"
 #include "menu.h"
 
 list<string> Navigation::Route;
@@ -114,32 +113,5 @@ void Navigation::ClearRoute( void ) {
 // Returns true if a route of any length has been set, else false.
 bool Navigation::HasDestination( void ) {
 	return Navigation::Route.size() > 0;
-}
-
-// Returns the angle to the next destination if one exists, else 0.
-float Navigation::GetAngleOfNextSector( void ) {
-	if(Navigation::HasDestination()) {
-		string nextSectorName = Navigation::Route.front();
-		Scenario *currentScenario = Menu::GetCurrentScenario();
-
-		if(currentScenario == NULL) {
-			LogMsg(ERR, "Navigation cannot find next sector because no scenario is running.");
-			return 0.0;
-		}
-
-		Sector* currentSector = currentScenario->GetCurrentSector();
-
-		Sectors* sectorsHandle = currentScenario->GetSectors();
-		if(sectorsHandle == NULL) return 0.0;
-
-		Sector* nextSector = sectorsHandle->GetSector(nextSectorName);
-		if(nextSector == NULL) return 0.0;
-
-		// Calculate angle between currentSector and nextSector
-		Coordinate c = Coordinate(nextSector->GetX() - currentSector->GetX(), nextSector->GetY() - currentSector->GetY());
-		return c.GetAngle();
-	} else {
-		return 0.0;
-	}
 }
 

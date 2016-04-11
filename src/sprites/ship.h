@@ -1,7 +1,7 @@
 /**\file			ship.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Friday, November 14, 2009
+ * \date			Modified: Sunday, April 10, 2016
  * \brief
  * \details
  */
@@ -10,10 +10,11 @@
 #ifndef __H_SHIP__
 #define __H_SHIP__
 
-#include "engine/models.h"
-#include "sprites/sprite.h"
 #include "engine/commodities.h"
+#include "engine/models.h"
+#include "engine/sectors.h"
 #include "engine/weapons.h"
+#include "sprites/sprite.h"
 #include "sprites/projectile.h"
 #include <map>
 
@@ -27,10 +28,10 @@ class Ship : public Sprite {
 		void Draw( void );
 
 		// Movement Mechanics
-		void Rotate( float direction );
-		void Accelerate( void );
-		bool Jump( Coordinate position, bool jumpDrive );
-		bool JumpDrive( Coordinate position );
+		void Rotate( float direction, bool rotatingToJump );
+		bool RotateToAngle( float angle );
+		void Accelerate( bool acceleratingToJump );
+		bool Jump( Sector* destination );
 
 		// Combat Mechanics
 		FireStatus FirePrimary( int target = -1 );
@@ -87,10 +88,10 @@ class Ship : public Sprite {
 		float GetHullIntegrityPct();
 		float GetShieldIntegrityPct();
 		//Weapon* GetCurrentWeapon();
-		short int GetHullDamage(){ return status.hullDamage; }
-		void SetHullDamage(short int hd){ status.hullDamage = hd; }
-		short int GetShieldDamage(){ return status.shieldDamage; }
-		void SetShieldDamage(short int sd){ status.shieldDamage = sd; }
+		short int GetHullDamage() { return status.hullDamage; }
+		void SetHullDamage(short int hd) { status.hullDamage = hd; }
+		short int GetShieldDamage() { return status.shieldDamage; }
+		void SetShieldDamage(short int sd) { status.shieldDamage = sd; }
 
 		//int GetCurrentAmmo();
 		int GetAmmo(AmmoType type);
@@ -110,12 +111,12 @@ class Ship : public Sprite {
 			return( DRAW_ORDER_SHIP );
 		}
 		//Power Distirubution functions
-		float GetShieldBoost() {return status.shieldBooster;}
-		float GetEngineBoost() {return status.engineBooster;}
-		float GetDamageBoost() {return status.damageBooster;}
-		void SetShieldBoost(float shield) {status.shieldBooster = shield;}
-		void SetEngineBoost(float engine) {status.engineBooster = engine;}
-		void SetDamageBoost(float damage) {status.damageBooster = damage;}
+		float GetShieldBoost() { return status.shieldBooster; }
+		float GetEngineBoost() { return status.engineBooster; }
+		float GetDamageBoost() { return status.damageBooster; }
+		void SetShieldBoost(float shield) { status.shieldBooster = shield; }
+		void SetEngineBoost(float engine) { status.engineBooster = engine; }
+		void SetDamageBoost(float damage) { status.damageBooster = damage; }
 
 	protected:
 		vector<WeaponSlot> weaponSlots; ///< The weapon slot arrangement - accessed directly by Player for loading/saving
@@ -133,6 +134,7 @@ class Ship : public Sprite {
 		FireStatus FireSlot( int slot, int target = -1 );
 		void ComputeShipStats();
 		void Explode( lua_State *L );
+		void _Accelerate( void );
 
 		struct {
 			/* Related to ship's condition */
@@ -149,7 +151,8 @@ class Ship : public Sprite {
 			
 			/* Jump Information */
 			Uint32 jumpStartTime;
-			Coordinate jumpDestination;
+			float jumpAngle;
+			Sector* jumpDestination;
 			
 			/* Flags */
 			bool isAccelerating; ///< Cleared by update, set by accelerate (so it's always updated twice a loop)

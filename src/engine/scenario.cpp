@@ -635,17 +635,15 @@ void Scenario::HandleInput() {
 	}
 
 	if( Input::HandleSpecificEvent( events, InputEvent( KEY, KEYTYPED, 'j' ))) {
-		/*list<string>* names = planets->GetNames();
-		int i = 0;
-		int x = rand() % names->size();
-		list<string>::iterator pName = names->begin();
-		while( i++ < x ){ pName++; }
-		Planet* p = planets->GetPlanet(*pName);
-		player->Jump( p->GetWorldPosition() + GaussianCoordinate(), true );*/
-
 		if(Navigation::HasDestination()) {
-			float nextSectorAngle = Navigation::GetAngleOfNextSector();
-			cout << "need to rotate to: " << nextSectorAngle << endl;
+			string nextSectorName = Navigation::GetNextSector();
+
+			Sector* nextSector = sectors->GetSector(nextSectorName);
+			if(nextSector == NULL) {
+				LogMsg(ERR, "Unable to find destination sector for jumping: %s", nextSectorName.c_str());
+			} else {
+				player->Jump( nextSector );
+			}
 		} else {
 			cout << "Cannot jump: no destination set." << endl;
 		}

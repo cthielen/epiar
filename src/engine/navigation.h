@@ -28,7 +28,6 @@ class Navigation {
 		static void ClearRoute( void );
 
 		static bool HasDestination( void );
-		static float GetAngleOfNextSector( void );
 
 	private:
 		static list<string> Route;

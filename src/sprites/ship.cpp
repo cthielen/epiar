@@ -55,7 +55,6 @@
  *   Engines are equipped with "Jump Drives".  These Faster-Than-Light
  *   (FTL) Drives will move the ship nearly instantly to any point in the
  *   Universe.
- *   \see Ship::JumpDrive
  *   \see Ship::Jump
  *
  * \b Outfit:
@@ -227,8 +226,8 @@ string Ship::GetEngineName() {
  * \param direction Relative angle to rotate by
  * \sa Model::GetRotationsperSecond()
  */
-void Ship::Rotate( float direction ) {
-	float rotPerSecond, timerDelta, maxturning;
+void Ship::Rotate( float direction, bool rotatingToJump ) {
+	float rotPerSecond, timerDelta, maxTurning;
 	float angle = GetAngle();
 
 	if( model == NULL ) {
@@ -236,22 +235,22 @@ void Ship::Rotate( float direction ) {
 		return;
 	}
 
-	if( status.isJumping == true ) {
+	if(( status.isJumping == true ) && ( rotatingToJump == false )) {
 		return;
 	}
 
 	// Compute the maximum amount that the ship can turn
 	rotPerSecond = shipStats.GetRotationsPerSecond();
 	timerDelta = Timer::GetDelta();
-	maxturning = static_cast<float>((rotPerSecond * timerDelta) * 360.);
+	maxTurning = static_cast<float>((rotPerSecond * timerDelta) * 360.);
 
 	// Cap the ship rotation
-	if (fabs(direction) > maxturning) {
+	if (fabs(direction) > maxTurning) {
 		if (direction > 0 ) {
-			angle += maxturning;
+			angle += maxTurning;
 			status.isRotatingLeft = true;
 		} else {
-			angle -= maxturning;
+			angle -= maxTurning;
 			status.isRotatingRight = true;
 		}
 	} else {
@@ -277,11 +276,25 @@ void Ship::Rotate( float direction ) {
 	*/
 }
 
+/**\brief Rotates the ship to angle 'angle'.
+ *        Returns true when the ship is within 1/360th of the desired angle
+ */
+bool Ship::RotateToAngle( float angle ) {
+	cout << "RotateToAngle of: " << angle << endl;
+	cout << "GetDirectionTowards: " << GetDirectionTowards( angle ) << endl;
+
+	Rotate( GetDirectionTowards( angle ), true );
+
+	if( fabs(GetAngle() - angle) < 1.0 ) { return true; }
+
+	return false;
+}
+
 /**\brief Accelerates the ship.
  * \sa Model::GetAcceleration
  */
-void Ship::Accelerate( void ) {
-	if(  status.isJumping == true ) {
+void Ship::Accelerate( bool acceleratingToJump ) {
+	if(( status.isJumping == true ) && ( acceleratingToJump == false)) {
 		return;
 	}
 
@@ -295,20 +308,24 @@ void Ship::Accelerate( void ) {
 	momentum += Coordinate( trig->GetCos( angle ) * acceleration * Timer::GetDelta(),
 	                trig->GetSin( angle ) * acceleration * Timer::GetDelta() );
 
-	momentum.EnforceMagnitude(speed);
+	if( status.isJumping == false ) {
+		momentum.EnforceMagnitude(speed);
+	}
 
 	SetMomentum( momentum );
 
 	status.isAccelerating = true;
 
 	// Play engine sound
-	if( engine->GetSound() != NULL)
-	{
+	if( engine->GetSound() != NULL) {
 		float engvol = OPTION(float, "options/sound/engines");
+
 		Coordinate offset = GetWorldPosition() - Menu::GetCurrentScenario()->GetCamera()->GetFocusCoordinate();
+
 		if ( this->GetDrawOrder() == DRAW_ORDER_SHIP ) {
 			engvol = engvol * NON_PLAYER_SOUND_RATIO;
 		}
+
 		this->engine->GetSound()->SetVolume( engvol );
 		this->engine->GetSound()->PlayNoRestart( offset );
 	}
@@ -318,14 +335,15 @@ void Ship::Accelerate( void ) {
 /**\brief Adds damage to hull or shield
  */
 void Ship::Damage(short int damage) {
-	if(status.shieldDamage >= ((float)shipStats.GetShieldStrength()) * status.shieldBooster)
+	if(status.shieldDamage >= ((float)shipStats.GetShieldStrength()) * status.shieldBooster) {
 		status.hullDamage += damage;
-	else
+	} else {
 		status.shieldDamage += damage;
+	}
 
-	if( GetHullIntegrityPct() < .15 ) {
+	if( GetHullIntegrityPct() < 0.15 ) {
 		status.isDisabled = true;
-		SetMomentum( GetMomentum() * .75 );
+		SetMomentum( GetMomentum() * 0.75 );
 	}
 }
 
@@ -352,18 +370,17 @@ void Ship::Repair(short int damage) {
 
 /**\brief Begin a Jump
  */
-bool Ship::Jump( Coordinate position, bool jumpDrive ) {
-	if(  status.isJumping == true ) { // Already Jumping
-		// TODO Play a failure sound.
+bool Ship::Jump( Sector* destination ) {
+	if( status.isJumping == true ) { // Already Jumping
 		return false;
 	}
 
 	status.isJumping = true;
 	status.jumpStartTime = Timer::GetTicks();
-	status.jumpDestination = position;
+	//status.jumpDestination = position;
 
 	// TODO Start playing a sound
-	if (isPlayer()) {
+	/*if (isPlayer()) {
 		Sound *aSound;
 		if (jumpDrive) {
 			aSound = Sound::Get("data/audio/effects/128590__corsica-s__transport-edit.wav");
@@ -373,23 +390,26 @@ bool Ship::Jump( Coordinate position, bool jumpDrive ) {
 
 		aSound -> SetVolume(10);
  		aSound -> Play();
-	}
+	}*/
 
-	SetAngle( (position - GetWorldPosition()).GetAngle() );
+	Scenario *currentScenario = Menu::GetCurrentScenario();
 
-	return true;
-}
-
-/**\brief Begin a Jump using the Ships Engines
- */
-bool Ship::JumpDrive( Coordinate position ) {
-	// Can the ship's Engine Jump?
-	if( engine->GetFoldDrive() ) {
-		return Jump( position, true );
-	} else {
-		// TODO Play a failure sound.
+	if(currentScenario == NULL) {
+		LogMsg(ERR, "Cannot jump: unable to find next sector because no scenario is running.");
 		return false;
 	}
+
+	Sector* currentSector = currentScenario->GetCurrentSector();
+	Sectors* sectorsHandle = currentScenario->GetSectors();
+	if(sectorsHandle == NULL) return false;
+
+	// Calculate angle between currentSector and nextSector
+	Coordinate c = Coordinate(destination->GetX() - currentSector->GetX(), destination->GetY() - currentSector->GetY());
+	status.jumpAngle = c.GetAngle();
+
+	cout << "Jump angle set to: " << status.jumpAngle << endl;
+
+	return true;
 }
 
 /**\brief Update function on every frame.
@@ -403,24 +423,30 @@ void Ship::Update( lua_State *L ) {
 		&& status.isRotatingRight == false) {
 		flareAnimation->Reset();
 	}
+
 	flareAnimation->Update();
-	Coordinate momentum	= GetMomentum();
+	Coordinate momentum = GetMomentum();
 	momentum.EnforceMagnitude( shipStats.GetMaxSpeed() * status.engineBooster );
 
 	// Show the hits taken as part of the radar color
-	if(IsDisabled()) SetRadarColor( GREY );
-	else SetRadarColor( RED * GetHullIntegrityPct() );
+	if( IsDisabled() ) {
+		SetRadarColor( GREY );
+	} else {
+		SetRadarColor( RED * GetHullIntegrityPct() );
+	}
 
 	if( status.isJumping ) {
 		// When the Jump is complete
-		if( Timer::GetTicks() - status.jumpStartTime > 1000 ) {
-			status.isJumping = false;
-			SetWorldPosition( status.jumpDestination );
+		//if( Timer::GetTicks() - status.jumpStartTime > 1000 ) {
+			//status.isJumping = false;
+		//}
+		if(RotateToAngle( status.jumpAngle )) {
+			Accelerate( true );
 		}
 	}
 
 	// Ship has taken as much damage as possible...
-	if( status.hullDamage >=  (float)shipStats.GetHullStrength() ) {
+	if( status.hullDamage >= (float)shipStats.GetHullStrength() ) {
 		// It Explodes!
 		Explode( L );
 	}
@@ -443,11 +469,9 @@ void Ship::Draw( void ) {
 
 	if( status.isJumping ) {
 		// When the ship is jumping, move it to the screen edge
-		//glPushMatrix();
-		Coordinate jumpDir = (status.jumpDestination - position);
-		jumpDir.EnforceMagnitude( Video::GetHalfWidth() );
-		jumpDir *= ((float)Timer::GetRealTicks() - (float)status.jumpStartTime) / 1000.0;
-		//glTranslatef( jumpDir.GetX(), jumpDir.GetY(), 0.0);
+		//Coordinate jumpDir = (status.jumpDestination - position);
+		//jumpDir.EnforceMagnitude( Video::GetHalfWidth() );
+		//jumpDir *= ((float)Timer::GetRealTicks() - (float)status.jumpStartTime) / 1000.0;
 	}
 
 	Sprite::Draw();
@@ -485,10 +509,6 @@ void Ship::Draw( void ) {
 		status.isRotatingRight = false;
 	}
 #endif
-
-	if( status.isJumping ) {
-		//glPopMatrix();
-	}
 }
 
 /**\brief Fire's ship Primary weapons.
@@ -887,7 +907,7 @@ int Ship::DiscardCommodities(string commodity, unsigned int count) {
  * \return angle towards target
  * \sa directionTowards(float)
  */
-float Ship::GetDirectionTowards(Coordinate target){
+float Ship::GetDirectionTowards(Coordinate target) {
 	float theta;
 	Coordinate position = target - GetWorldPosition();
 
@@ -900,7 +920,12 @@ float Ship::GetDirectionTowards(Coordinate target){
  * \param angle Angle of target
  * \return angle towards target
  */
-float Ship::GetDirectionTowards(float angle){
+float Ship::GetDirectionTowards(float angle) {
+	cout << "current angle: " << this->GetAngle() << endl;
+	cout << "desired angle: " << angle << endl;
+	cout << "method one   : " << normalizeAngle( angle - this->GetAngle() ) << endl;
+	cout << "method two   : " << normalizeAngle( this->GetAngle() - angle ) << endl;
+
 	return normalizeAngle(angle - this->GetAngle());
 }
 

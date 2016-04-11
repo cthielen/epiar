@@ -206,14 +206,14 @@ int AI_Lua::newShip(lua_State *L){
 /**\brief Lua callable function to accelerate the ship.
  * \sa Ship::Accelerate()
  */
-int AI_Lua::ShipAccelerate(lua_State* L){
+int AI_Lua::ShipAccelerate(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
 		AI* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		luaL_argcheck(L, ai != NULL, 1, "`array' expected");
-		(ai)->Accelerate();
+		(ai)->Accelerate( false );
 	}
 	else
 		luaL_error(L, "Got %d arguments expected 2 (self, direction)", n);
@@ -224,14 +224,14 @@ int AI_Lua::ShipAccelerate(lua_State* L){
 /**\brief Lua callable function to rotate the ship.
  * \sa Ship::Rotate(float)
  */
-int AI_Lua::ShipRotate(lua_State* L){
+int AI_Lua::ShipRotate(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 2) {
 		AI* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		float dir = static_cast<float>( luaL_checknumber(L, 2) );
-		(ai)->Rotate(dir);
+		(ai)->Rotate(dir, false);
 	}
 	else
 		luaL_error(L, "Got %d arguments expected 2 (self, direction)", n);

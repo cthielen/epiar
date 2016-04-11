@@ -82,7 +82,7 @@ class Sprite {
 		float angle; ///< The current direction that this Sprite is pointing (not moving).
 		int radarSize; ///< A Rough appoximation of this Sprite's size.
 		Color radarColor; ///< The color of this Sprite.
-    int interpolationUpdateCheck; // we need two logical loops before interpolated coordinates can be used
+		int interpolationUpdateCheck; // we need two logical loops before interpolated coordinates can be used
 
     protected:
         bool playerCheck;              ///< Flag for player Sprite, true if the Sprite is an instance of Player class
