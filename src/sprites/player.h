@@ -28,7 +28,9 @@ class Player : public Ship {
 
 		void Update( lua_State *L );
 		void Land( lua_State *L, Planet * );
-		void Jumped( void );
+		void Jumped() { this->hasJumped = true; }
+		bool DidJump() { return this->hasJumped; }
+		void ResetJump() { this->hasJumped = false; }
 
 		// Generic Getters
 		string GetLastPlanet() { return lastPlanet; }

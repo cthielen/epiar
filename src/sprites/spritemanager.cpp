@@ -1,7 +1,7 @@
 /**\file			spritemanager.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Thursday, December 3, 2015
+ * \date			Modified: Tuesday, April 12, 2016
  * \brief
  * \details
  */
@@ -107,15 +107,31 @@ void SpriteManager::AddPlayer( Sprite *sprite ) {
 bool SpriteManager::DeleteSprite( Sprite *sprite ) {
 	if(sprite == player) LogMsg(WARN, "Deleting player sprite. Should we be doing this?");
 
-	spritelist->remove(sprite);
+	spritelist->remove( sprite );
 	spritelookup->erase( sprite->GetID() );
+
 	GetQuadrant( sprite->GetWorldPosition() )->Delete( sprite );
+
 	// Delete the sprite itself unless it is a Planet or Player.
 	// Planets and Players are special sprites since they are Components and get saved.
 	if( !(sprite->GetDrawOrder() & (DRAW_ORDER_PLAYER | DRAW_ORDER_PLANET )) ) {
 		delete sprite;
 	}
+
 	return true;
+}
+
+// Removes all sprites matching type 'type'
+void SpriteManager::DeleteByType( int type ) {
+	list<Sprite *>::iterator i;
+
+	for( i = spritelist->begin(); i != spritelist->end(); ++i ) {
+		Sprite *s = (*i);
+		if( s->GetDrawOrder() == type ) {
+			DeleteSprite( s );
+			i = spritelist->begin(); // TODO: spritelist->remove() is called which ... makes this necessary? Right?
+		}
+	}
 }
 
 /**\brief Deletes a sprite.
@@ -553,11 +569,14 @@ Coordinate SpriteManager::GetQuadrantCenter(Coordinate point){
 int SpriteManager::GetNumSprites() {
 	unsigned int total = 0;
 	map<Coordinate,QuadTree*>::iterator iter;
+
 	for ( iter = trees.begin(); iter != trees.end(); ++iter ) {
 		total += iter->second->Count();
 	}
+
 	assert( total == spritelist->size() );
 	assert( total == spritelookup->size() );
+
 	return total;
 }
 

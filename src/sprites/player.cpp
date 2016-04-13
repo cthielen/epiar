@@ -153,15 +153,6 @@ void Player::UpdateFavor( string allianceName, int deltaFavor ) {
 	favor[alliance] += deltaFavor;
 }
 
-/**\brief Called after the jumping animation is complete.
- *        Responsible for setting a flag which will switch
- *        to the next sector at the beginning of the scenario's
- *        next Update cycle.
- */
-void Player::Jumped( void ) {
-	this->hasJumped = true;
-}
-
 /**\brief set name of last planet visited
  */
 void Player::Land( lua_State *L, Planet* planet ){

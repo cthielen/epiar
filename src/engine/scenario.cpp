@@ -1,7 +1,7 @@
 /**\file			scenario.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Sunday, April 10, 2016
+ * \date			Modified: Tuesday, April 12, 2016
  * \brief			Contains the main game loop
  * \details
  */
@@ -35,6 +35,9 @@
 #include "utilities/log.h"
 #include "utilities/timer.h"
 #include "utilities/lua.h"
+
+// Distance from sector's center player should arrive at after jump completion
+#define JUMP_DISTANCE_FROM_CENTER 6.
 
 /**\class Scenario
  * \brief Handles main game loop. */
@@ -171,7 +174,6 @@ void Scenario::Save() {
  */
 void Scenario::unpause() {
 	LogMsg(INFO, "Unpausing.");
-	//Timer::Update();
 	paused = false;
 	interpolateOn = true;
 }
@@ -248,25 +250,34 @@ bool Scenario::Setup() {
 		assert(currentSector != NULL);
 	}
 
-	LogMsg(INFO, "Setting up '%s' current sector ...", currentSector->GetName().c_str());
+	ResetSector( currentSector );
+
+	return true;
+}
+
+// Unloads the current sector (if any) and loads sector 's'
+void Scenario::ResetSector( Sector *s ) {
+	assert( s != NULL );
+
+	LogMsg(INFO, "Setting up '%s' current sector ...", s->GetName().c_str());
+
+	sprites->DeleteByType( DRAW_ORDER_PLANET );
 
 	// Add planets based on the current sector
-	list<string> planetList = currentSector->GetPlanets();
+	list<string> planetList = s->GetPlanets();
 	for( list<string>::iterator i = planetList.begin(); i != planetList.end(); ++i ) {
 		Planet *p = (Planet *)planets->Get(*i);
-		if(p == NULL) {
-			LogMsg(ERR, "Could not find planet '%s' from current sector to scene.", (*i).c_str());
-			return false;
-		}
+		assert( p != NULL );
 
 		LogMsg(INFO, "\tAdding '%s' planet as it is in current sector ...", p->GetName().c_str());
 
 		sprites->Add( p );
 	}
 
-	return true;
-}
+	currentSector = s;
 
+	cout << "new sector has: " << planetList.size() << " planets" << endl;
+}
 
 Scenario::~Scenario() {
 	Lua::Close();
@@ -385,6 +396,25 @@ void Scenario::Run() {
 				if(lowFps) {
 					lowFpsFrameCount--;
         			}
+
+				if(player->DidJump()) {
+					player->ResetJump();
+
+					string sectorName = Navigation::GetNextSector();
+					Sector* newSector = sectors->GetSector(sectorName);
+					assert( newSector != NULL );
+
+					// Switch out ships, planets, etc. to new sector
+					ResetSector( newSector );
+
+					// Reset player's coordinates
+					Coordinate newCoordinate = Coordinate(JUMP_DISTANCE_FROM_CENTER, JUMP_DISTANCE_FROM_CENTER);
+					player->SetWorldPosition( newCoordinate * -1 * player->GetJumpAngle() );
+
+					Navigation::RemoveNextSector();
+
+					cout << "player position set to: " << player->GetWorldPosition() << endl;
+				}
 
 				sprites->Update( luaState, lowFps );
         			camera->Update( sprites );

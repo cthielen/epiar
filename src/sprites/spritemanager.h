@@ -21,6 +21,8 @@ class SpriteManager {
 		void AddPlayer( Sprite *sprite );
 		bool Delete( Sprite *sprite );
 
+		void DeleteByType( int type );
+
 		void Update( lua_State *L, bool lowFps);
 		void UpdateScreenCoordinates( void );
 		void Draw( Coordinate focus );

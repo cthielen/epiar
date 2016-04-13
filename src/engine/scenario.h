@@ -67,6 +67,8 @@ class Scenario : public XMLFile {
 
 		Sector* GetCurrentSector();
 
+		void ResetSector( Sector *s );
+
 		string GetName() { return Get("scenario/name"); }
 		string GetDescription() { return Get("scenario/description"); }
 

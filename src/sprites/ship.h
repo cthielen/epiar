@@ -32,6 +32,7 @@ class Ship : public Sprite {
 		bool RotateToAngle( float angle );
 		void Accelerate( bool acceleratingToJump );
 		bool Jump( Sector* destination );
+		float GetJumpAngle() { return status.jumpAngle; };
 
 		// Combat Mechanics
 		FireStatus FirePrimary( int target = -1 );
