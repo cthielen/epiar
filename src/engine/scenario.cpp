@@ -275,8 +275,6 @@ void Scenario::ResetSector( Sector *s ) {
 	}
 
 	currentSector = s;
-
-	cout << "new sector has: " << planetList.size() << " planets" << endl;
 }
 
 Scenario::~Scenario() {
@@ -412,8 +410,6 @@ void Scenario::Run() {
 					player->SetWorldPosition( newCoordinate * -1 * player->GetJumpAngle() );
 
 					Navigation::RemoveNextSector();
-
-					cout << "player position set to: " << player->GetWorldPosition() << endl;
 				}
 
 				sprites->Update( luaState, lowFps );
