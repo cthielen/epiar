@@ -26,6 +26,8 @@
 
 #define NON_PLAYER_SOUND_RATIO 0.4f ///< Ratio used to quiet NON-PLAYER Ship Sounds.
 
+#define JUMP_ACCELERATION_DURATION 8000 ///< milliseconds a ship should accelerate before the jump 'flash'
+
 /**\class Ship
  * \brief A Ship Sprite that moves, Fires Weapons, has cargo, and ultimately explodes.
  * \details
@@ -280,9 +282,6 @@ void Ship::Rotate( float direction, bool rotatingToJump ) {
  *        Returns true when the ship is within 1/360th of the desired angle
  */
 bool Ship::RotateToAngle( float angle ) {
-	cout << "RotateToAngle of: " << angle << endl;
-	cout << "GetDirectionTowards: " << GetDirectionTowards( angle ) << endl;
-
 	Rotate( GetDirectionTowards( angle ), true );
 
 	if( fabs(GetAngle() - angle) < 1.0 ) { return true; }
@@ -405,9 +404,8 @@ bool Ship::Jump( Sector* destination ) {
 
 	// Calculate angle between currentSector and nextSector
 	Coordinate c = Coordinate(destination->GetX() - currentSector->GetX(), destination->GetY() - currentSector->GetY());
+	c.SetY( c.GetY() * -1 ); // invert y axis
 	status.jumpAngle = c.GetAngle();
-
-	cout << "Jump angle set to: " << status.jumpAngle << endl;
 
 	return true;
 }
@@ -437,9 +435,10 @@ void Ship::Update( lua_State *L ) {
 
 	if( status.isJumping ) {
 		// When the Jump is complete
-		//if( Timer::GetTicks() - status.jumpStartTime > 1000 ) {
-			//status.isJumping = false;
-		//}
+		if( Timer::GetTicks() - status.jumpStartTime > JUMP_ACCELERATION_DURATION ) {
+			status.isJumping = false;
+			SetMomentum( Coordinate(0., 0.) );
+		}
 		if(RotateToAngle( status.jumpAngle )) {
 			Accelerate( true );
 		}
@@ -921,11 +920,6 @@ float Ship::GetDirectionTowards(Coordinate target) {
  * \return angle towards target
  */
 float Ship::GetDirectionTowards(float angle) {
-	cout << "current angle: " << this->GetAngle() << endl;
-	cout << "desired angle: " << angle << endl;
-	cout << "method one   : " << normalizeAngle( angle - this->GetAngle() ) << endl;
-	cout << "method two   : " << normalizeAngle( this->GetAngle() - angle ) << endl;
-
 	return normalizeAngle(angle - this->GetAngle());
 }
 
