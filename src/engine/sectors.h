@@ -65,8 +65,6 @@ class Sectors : public Components {
 		Component* newComponent() { return new Sector(); }
 		void GetBoundaries(float *north, float *south, float *east, float *west);
 		bool SectorHasNeighbor(Sector *origin, Sector *possibleNeighbor);
-
 };
-
 
 #endif // __h_sectors__

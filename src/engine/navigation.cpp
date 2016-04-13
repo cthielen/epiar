@@ -28,9 +28,15 @@ bool Navigation::AddSector( string sectorName ) {
 	Sectors *sectors = Menu::GetCurrentScenario()->GetSectors();
 	Sector *lastAdded = NULL;
 	Sector *attemptingToAdd = (Sector *)sectors->Get(sectorName);
+	Sector *currentSector = Menu::GetCurrentScenario()->GetCurrentSector();
 
-	if(Menu::GetCurrentScenario()->GetCurrentSector()->GetName() == sectorName) {
+	if(currentSector->GetName() == sectorName) {
 		LogMsg(WARN, "Trying to add sector to navigation map but it is the current sector '%s'", sectorName.c_str());
+		return false;
+	}
+
+	if(attemptingToAdd == NULL) {
+		LogMsg(WARN, "Trying to add sector to navigation map but cannot find new sector '%s'", sectorName.c_str());
 		return false;
 	}
 
@@ -41,10 +47,6 @@ bool Navigation::AddSector( string sectorName ) {
 			LogMsg(WARN, "Trying to add sector to navigation map but cannot find last sector, Navigation::Route.back() returned NULL." );
 			return false;
 		}
-		if(attemptingToAdd == NULL) {
-			LogMsg(WARN, "Trying to add sector to navigation map but cannot find new sector '%s'", sectorName.c_str());
-			return false;
-		}
 
 		if(std::find(Navigation::Route.begin(), Navigation::Route.end(), sectorName) != Navigation::Route.end()) {
 			LogMsg(WARN, "Trying to add sector to navigation map but navigation route already contains sector '%s'", sectorName.c_str());
@@ -52,7 +54,12 @@ bool Navigation::AddSector( string sectorName ) {
 		}
 
 		if(sectors->SectorHasNeighbor(lastAdded, attemptingToAdd) == false) {
-			LogMsg(WARN, "Trying to add sector to navigation map but new sector '%s' is not a neighbor of last sector '%s's'", lastAdded->GetName().c_str(), attemptingToAdd->GetName().c_str());
+			LogMsg(WARN, "Trying to add sector to navigation map but new sector '%s' is not a neighbor of last sector '%s'", attemptingToAdd->GetName().c_str(), lastAdded->GetName().c_str());
+			return false;
+		}
+	} else {
+		if(sectors->SectorHasNeighbor(currentSector, attemptingToAdd) == false) {
+			LogMsg(WARN, "Trying to add sector to navigation map but new sector '%s' is not a neighbor of current sector '%s' and it would have been the first route added.", attemptingToAdd->GetName().c_str(), currentSector->GetName().c_str());
 			return false;
 		}
 	}

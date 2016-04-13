@@ -135,7 +135,6 @@ list<string> Sector::GetPlanets() {
 		planets.push_back( *planetiter );
 	}
 
-	//planets.sort();
 	planets.unique();
 
 	return planets;
@@ -167,11 +166,6 @@ xmlNodePtr Sector::ToXMLNode(string componentName) {
 	xmlNewChild(section, NULL, BAD_CAST "y", BAD_CAST buff );
 	snprintf(buff, sizeof(buff), "%d", (int)GetTraffic() );
 	xmlNewChild(section, NULL, BAD_CAST "traffic", BAD_CAST buff );
-
-	//list<Technology*> techs = GetTechnologies();
-	//for( list<Technology*>::iterator it = techs.begin(); it!=techs.end(); ++it ){
-	//	xmlNewChild(section, NULL, BAD_CAST "technology", BAD_CAST (*it)->GetName().c_str() );
-	//}
 
 	return section;
 }
@@ -233,7 +227,26 @@ void Sectors::GetBoundaries(float *north, float *south, float *east, float *west
 bool Sectors::SectorHasNeighbor(Sector *origin, Sector *possibleNeighbor) {
 	list<string> neighbors = origin->GetNeighbors();
 
-	return (std::find(neighbors.begin(), neighbors.end(), possibleNeighbor->GetName()) != neighbors.end());
+	cout << endl;
+	cout << "Checking if " << origin->GetName() << " has neighbor " << possibleNeighbor->GetName() << " ..." << endl;
+
+	// Is 'possibleNeighbor' a neighbor of 'origin'?
+	if(std::find(neighbors.begin(), neighbors.end(), possibleNeighbor->GetName()) != neighbors.end()) {
+		cout << "yes1" << endl;
+		return true;
+	}
+
+	// If not, it's possible 'origin' is a neighbor of 'possibleNeighbor' ...
+	neighbors = possibleNeighbor->GetNeighbors();
+
+	// Is 'possibleNeighbor' a neighbor of 'origin'?
+	if(std::find(neighbors.begin(), neighbors.end(), origin->GetName()) != neighbors.end()) {
+		cout << "yes2" << endl;
+		return true;
+	}
+
+	cout << "nope" << endl;
+	return false;
 }
 
 /** @} */

@@ -230,8 +230,11 @@ bool NavMap::MouseLUp( int x, int y ) {
 		if(SectorNearClick(sector, click)) {
 			selectedSector = sector;
 
+			cout << "click detected near " << sector->GetName() << endl;
+
 			// Is shift held down? If so, they are trying to plot a course ...
 			if(Input::keyIsHeld(SDLK_LSHIFT)) {
+				cout << "shift down. attempting to add sector ..." << endl;
 				Navigation::AddSector(selectedSector->GetName());
 			}
 
