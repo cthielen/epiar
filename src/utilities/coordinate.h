@@ -86,27 +86,27 @@ class Coordinate {
 		}// end opterator*=
 	
 		Coordinate operator-(Coordinate a) {
-			return Coordinate(m_x-a.m_x,m_y-a.m_y);
+			return Coordinate(m_x - a.m_x, m_y - a.m_y);
 		}
 	
-		Coordinate operator+(Coordinate a){
-			return Coordinate(m_x+a.m_x,m_y+a.m_y);
+		Coordinate operator+(Coordinate a) {
+			return Coordinate(m_x + a.m_x, m_y + a.m_y);
 		}
 	
-		Coordinate operator*(double r){
-			return Coordinate(m_x*r,m_y*r);
+		Coordinate operator*(double r) {
+			return Coordinate(m_x * r,m_y * r);
 		}
-		Coordinate operator*=(double r){
-			m_x*=r;
-			m_y*=r;
+		Coordinate operator*=(double r) {
+			m_x *= r;
+			m_y *= r;
 			return *this;
 		}
-		Coordinate operator/(double r){
-			return Coordinate(m_x/r,m_y/r);
+		Coordinate operator/(double r) {
+			return Coordinate(m_x / r, m_y / r);
 		}
-		Coordinate operator/=(double r){
-			m_x/=r;
-			m_y/=r;
+		Coordinate operator/=(double r) {
+			m_x /= r;
+			m_y /= r;
 			return *this;
 		}
 	

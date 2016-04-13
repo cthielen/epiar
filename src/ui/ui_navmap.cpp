@@ -230,10 +230,7 @@ bool NavMap::MouseLUp( int x, int y ) {
 		if(SectorNearClick(sector, click)) {
 			selectedSector = sector;
 
-			cout << "Set selected sector to " << selectedSector->GetName() << endl;
-
 			// Is shift held down? If so, they are trying to plot a course ...
-
 			if(Input::keyIsHeld(SDLK_LSHIFT)) {
 				Navigation::AddSector(selectedSector->GetName());
 			}
@@ -303,7 +300,6 @@ bool NavMap::SectorNearClick(Sector *sector, Coordinate click) {
 }
 
 void NavMap::ClearRouteButtonCallback(void) {
-	cout << "Clear route callback called." << endl;
 	Navigation::ClearRoute();
 }
 

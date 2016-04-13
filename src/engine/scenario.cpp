@@ -382,7 +382,7 @@ void Scenario::Run() {
 			while(logicLoops--) {
         			HandleInput();
 
-				if (lowFps) {
+				if(lowFps) {
 					lowFpsFrameCount--;
         			}
 
@@ -409,6 +409,7 @@ void Scenario::Run() {
 		Hud::Draw( HUD_ALL, currentFPS, camera, sprites );
 		UI::Draw();
 		console->Draw();
+		camera->Draw();
 		Video::Update();
 
 		Timer::Delay();

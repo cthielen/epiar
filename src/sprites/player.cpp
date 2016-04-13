@@ -1,7 +1,7 @@
 /**\file			player.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Wednesday, July 5, 2006
- * \date			Modified: Thursday, February 18, 2016
+ * \date			Modified: Tuesday, April 12, 2016
  * \brief			Main player-specific functions and handle
  * \details
  */
@@ -153,6 +153,15 @@ void Player::UpdateFavor( string allianceName, int deltaFavor ) {
 	favor[alliance] += deltaFavor;
 }
 
+/**\brief Called after the jumping animation is complete.
+ *        Responsible for setting a flag which will switch
+ *        to the next sector at the beginning of the scenario's
+ *        next Update cycle.
+ */
+void Player::Jumped( void ) {
+	this->hasJumped = true;
+}
+
 /**\brief set name of last planet visited
  */
 void Player::Land( lua_State *L, Planet* planet ){
@@ -193,8 +202,9 @@ void Player::Land( lua_State *L, Planet* planet ){
 /**\brief Constructor
  */
 Player::Player() {
-	this -> playerCheck = true;
+	this->playerCheck = true;
 	this->SetRadarColor( WHITE );
+	this->hasJumped = false;
 }
 
 /**\brief Run the Player Update

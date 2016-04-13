@@ -26,7 +26,9 @@
 
 #define NON_PLAYER_SOUND_RATIO 0.4f ///< Ratio used to quiet NON-PLAYER Ship Sounds.
 
-#define JUMP_ACCELERATION_DURATION 8000 ///< milliseconds a ship should accelerate before the jump 'flash'
+#define JUMP_ACCELERATION_CONSTANT 22.
+#define JUMP_ACCELERATION_DURATION 5000 ///< milliseconds a ship should accelerate before the jump 'flash'
+#define JUMP_FLASH_DURATION 100 ///< milliseconds a ship should accelerate before the jump 'flash'
 
 /**\class Ship
  * \brief A Ship Sprite that moves, Fires Weapons, has cargo, and ultimately explodes.
@@ -303,6 +305,10 @@ void Ship::Accelerate( bool acceleratingToJump ) {
 	float speed = shipStats.GetMaxSpeed() * status.engineBooster;
 
 	float acceleration = (shipStats.GetForceOutput() * status.engineBooster ) / shipStats.GetMass();
+	if( status.isJumping ) {
+		// Jumping involves a different acceleration ...
+		acceleration = JUMP_ACCELERATION_CONSTANT;
+	}
 
 	momentum += Coordinate( trig->GetCos( angle ) * acceleration * Timer::GetDelta(),
 	                trig->GetSin( angle ) * acceleration * Timer::GetDelta() );
@@ -437,7 +443,23 @@ void Ship::Update( lua_State *L ) {
 		// When the Jump is complete
 		if( Timer::GetTicks() - status.jumpStartTime > JUMP_ACCELERATION_DURATION ) {
 			status.isJumping = false;
-			SetMomentum( Coordinate(0., 0.) );
+
+			// Set momentum to 50% max
+			Coordinate momentum = GetMomentum();
+			momentum.EnforceMagnitude( shipStats.GetMaxSpeed() * status.engineBooster );
+			momentum = momentum * 0.5;
+			SetMomentum( momentum );
+
+			if( this->isPlayer() ) {
+				// Flash the camera
+				Camera* camera = Scenario_Lua::GetScenario(L)->GetCamera();
+				assert( camera != NULL );
+				camera->Flash( JUMP_FLASH_DURATION );
+
+				// Switch sectors and remove first navigation route ...
+				Player *player = (Player *)this;
+				player->Jumped();
+			}
 		}
 		if(RotateToAngle( status.jumpAngle )) {
 			Accelerate( true );

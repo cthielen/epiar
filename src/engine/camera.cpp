@@ -1,7 +1,7 @@
 /**\file			camera.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Saturday, January 5, 2008
+ * \date			Modified: Tuesday, April 12, 2016
  * \brief
  * \details
  */
@@ -47,6 +47,7 @@ Camera::Camera( void ) {
 	cameraShakeYOffset = 0;
 	cameraShakeXDec = 0;
 	cameraShakeYDec = 0;
+	flashUntil = 0;
 }
 
 /**\brief Focus on a specific Location
@@ -58,16 +59,6 @@ void Camera::Focus( double x, double y ) {
 
 	this->x = x;
 	this->y = y;
-	// assign the new camera position
-	//if(hasZoomed){
-		//this->x = x;
-		//this->y = y;
-		//hasZoomed=true;
-	//} else {
-		//this->x = x;
-		//this->y = y;
-		//hasZoomed=false;
-	//}
 }
 
 /**\brief Focus the camera on a Sprite
@@ -128,7 +119,6 @@ void Camera::TranslateScreenToWorld( Coordinate &screen, Coordinate &world ) {
 void Camera::GetDelta( double *dx, double *dy ) {
 	if( !dx || !dy ) {
 		LogMsg(WARN, "dx/dy are NULL pointers!" );
-
 		return;
 	}
 
@@ -210,3 +200,14 @@ void Camera::UpdateShake() {
 
 	cameraShakeDur--;
 }
+
+void Camera::Draw( void ) {
+	if( Timer::GetTicks() < flashUntil ) {
+		Video::DrawRect( 0, 0, Video::GetWidth(), Video::GetHeight(), 1., 1., 1., 1. );
+	}
+}
+
+void Camera::Flash( short duration ) {
+	flashUntil = Timer::GetTicks() + duration;
+}
+

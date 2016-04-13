@@ -1,7 +1,7 @@
 /**\file			player.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Wednesday, July 5, 2006
- * \date			Modified: Saturday, January 5, 2008
+ * \date			Modified: Tuesday, April 12, 2016
  * \brief			Main player-specific functions and handle
  * \details
  */
@@ -28,6 +28,7 @@ class Player : public Ship {
 
 		void Update( lua_State *L );
 		void Land( lua_State *L, Planet * );
+		void Jumped( void );
 
 		// Generic Getters
 		string GetLastPlanet() { return lastPlanet; }
@@ -68,6 +69,7 @@ class Player : public Ship {
 		list<Mission*> missions;
 		map<Alliance*,int> favor;
 		string luaControlFunc;
+		bool hasJumped;
 
 		// This list of hired escorts is only needed for XML saving/loading and doesn't control the game itself.
 		// Escorts from missions should not be listed here.

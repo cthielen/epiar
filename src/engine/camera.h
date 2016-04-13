@@ -1,7 +1,7 @@
 /**\file			camera.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Saturday, January 5, 2008
+ * \date			Modified: Tuesday, April 12, 2016
  * \brief
  * \details
  */
@@ -21,6 +21,8 @@ class Camera {
 		void Focus( double x, double y );
 		void Focus( Sprite *sprite );
 
+		void Flash( short duration );
+
 		// takes world coordinates and translates them into drawing coords
 		void TranslateWorldToScreen( Coordinate &world, Coordinate &screen );
 		void TranslateScreenToWorld( Coordinate &world, Coordinate &screen );
@@ -29,6 +31,9 @@ class Camera {
 		Coordinate GetFocusCoordinate();
 
 		void Update( SpriteManager *sprites );
+
+		// Draw any effects the camera may be responsible for
+		void Draw( void );
 
 		// moves the camera given a delta. this is not the common method to
 		// move the camera, you should use Focus()
@@ -58,6 +63,9 @@ class Camera {
 		float zoom; // current zoom, zoom = 1. means no zooming
 		bool hasZoomed;
 		void UpdateShake();
+
+		// If timestamp < flashUntil, we draw a flash over the display (for the jump animation)
+		Uint32 flashUntil;
 };
 
 #endif // __h_camera__
