@@ -1,7 +1,7 @@
 /**\file			ui.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Sunday, November 22, 2009
+ * \date			Modified: Friday, April 15, 2016
  * \brief
  * \details
  */
@@ -263,14 +263,14 @@ void UI::SwapScreens(string newname) {
  * List of events is passed from main input handler.
  * We remove the events we handle and leave the rest
  * to be handled by the next input handler.
- * The order of input handlers is in input.cpp.
+ * The order of input handlers is in engine/scenario.cpp.
  */
 void UI::HandleInput( list<InputEvent> & events ) {
 	// Go through all input events to see if they apply to any top-level widget. top-level widgets
 	// (like windows) will then take the input and pass it to any children (like the ok button in the window)
 	// where appropriate
 	list<InputEvent>::iterator i = events.begin();
-	while( i != events.end() ){
+	while( i != events.end() ) {
 		bool eventWasHandled = false;
 	
 		switch( i->type ) {
