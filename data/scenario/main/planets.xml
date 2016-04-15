@@ -31,8 +31,8 @@
 	<planet>
 		<name>Bersia</name>
 		<alliance>United Earth Alliance</alliance>
-		<x>8669</x>
-		<y>-1531</y>
+		<x>2669</x>
+		<y>-731</y>
 		<landable>1</landable>
 		<image>data/graphics/planet6.png</image>
 		<surface-image>data/graphics/planet1s.png</surface-image>
