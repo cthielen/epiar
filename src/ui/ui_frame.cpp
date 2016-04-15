@@ -57,6 +57,7 @@ Frame::Frame( int x, int y, int w, int h ) {
  */
 Frame *Frame::AddChild( Widget *widget ) {
 	assert( widget != NULL );
+
 	Container::AddChild( widget );
 
 	return this;
@@ -87,7 +88,7 @@ void Frame::Draw( int relx, int rely ) {
 	bitmaps[6]->DrawTiled( x + bitmaps[5]->GetWidth(), y + h - bitmaps[6]->GetHeight(), w - bitmaps[5]->GetWidth() - bitmaps[7]->GetWidth(), bitmaps[6]->GetHeight() );
 	bitmaps[7]->Draw( x + w - bitmaps[7]->GetWidth(), y + h - bitmaps[7]->GetHeight() );
 
-	Container::Draw(relx,rely);
+	Container::Draw(relx, rely);
 }
 
 /** @} */

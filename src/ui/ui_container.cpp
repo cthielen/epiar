@@ -1,7 +1,7 @@
 /**\file			ui_container.cpp
  * \author			Maoserr
  * \date			Created: Saturday, March 27, 2010
- * \date			Modified: Saturday, March 27, 2010
+ * \date			Modified: Friday, April 15, 2016
  * \brief			Container object can contain other widgets.
  */
 
@@ -645,8 +645,8 @@ void Container::Draw( int relx, int rely ) {
  */
 bool Container::MouseMotion( int xi, int yi ) {
 	// Relative coordinate - to current widget
-	int xr = xi - this->x;
-	int yr = yi - this->y;
+	int xr = xi - this->x - InnerRect.left;
+	int yr = yi - this->y - InnerRect.top;
 	int yoffset = this->vscrollbar ? this->vscrollbar->GetPos() : 0;
 
 	Widget::MouseMotion(xi, yi);
@@ -691,8 +691,8 @@ bool Container::MouseMotion( int xi, int yi ) {
  */
 bool Container::MouseLUp( int xi, int yi ){
 	// Relative coordinate - to current widget
-	int xr = xi - this->x;
-	int yr = yi - this->y;
+	int xr = xi - this->x - InnerRect.left;
+	int yr = yi - this->y - InnerRect.top;
 	int yoffset = this->vscrollbar ? this->vscrollbar->GetPos() : 0;
 
 	Widget::MouseLUp( xi, yi );
@@ -720,8 +720,8 @@ bool Container::MouseLUp( int xi, int yi ){
  */
 bool Container::MouseLDown( int xi, int yi ) {
 	// Relative coordinate - to current widget
-	int xr = xi - this->x;
-	int yr = yi - this->y;
+	int xr = xi - this->x - InnerRect.left;
+	int yr = yi - this->y - InnerRect.top;
 	int yoffset = this->vscrollbar ? this->vscrollbar->GetPos() : 0;
 
 	Widget::MouseLDown( xi, yi );
@@ -777,8 +777,8 @@ bool Container::MouseLRelease( void ){
  */
 bool Container::MouseMUp( int xi, int yi ){
 	// Relative coordinate - to current widget
-	int xr = xi - this->x;
-	int yr = yi - this->y;
+	int xr = xi - this->x - InnerRect.left;
+	int yr = yi - this->y - InnerRect.top;
 	int yoffset = this->vscrollbar ? this->vscrollbar->GetPos() : 0;
 
 	Widget::MouseMUp( xi, yi );
@@ -803,18 +803,18 @@ bool Container::MouseMUp( int xi, int yi ){
  */
 bool Container::MouseMDown( int xi, int yi ){
 	// Relative coordinate - to current widget
-	int xr = xi - this->x;
-	int yr = yi - this->y;
+	int xr = xi - this->x - InnerRect.left;
+	int yr = yi - this->y - InnerRect.top;
 	int yoffset = this->vscrollbar ? this->vscrollbar->GetPos() : 0;
 
 	Widget::MouseMDown( xi, yi );
 
 	Widget *event_on = DetermineMouseFocus( xr, yr );
-	if( event_on ){
-		this->mmouseDown=event_on;
+	if( event_on ) {
+		this->mmouseDown = event_on;
 		return event_on->MouseMDown( xr, yr + yoffset );
 	}
-	//LogMsg(UIINPUT,"Mouse Middle down detect in %s.",this->name.c_str());
+
 	return this->mouseHandled;
 }
 
@@ -822,39 +822,40 @@ bool Container::MouseMDown( int xi, int yi ){
  * \details Unlike the MouseMUp function, this is called when the user releases
  * the mouse on a different widget.
  */
-bool Container::MouseMRelease( void ){
+bool Container::MouseMRelease( void ) {
 	Widget::MouseMRelease();
 
 	// Pass event onto children if needed
-	if( this->mmouseDown )
+	if( this->mmouseDown ) {
 		return this->mmouseDown->MouseMRelease();
-	//LogMsg(UIINPUT,"Middle Mouse released in %s",this->name.c_str());
+	}
+
 	return this->mouseHandled;
 }
 
 /**\brief Generic right mouse up function.
  */
-bool Container::MouseRUp( int xi, int yi ){
+bool Container::MouseRUp( int xi, int yi ) {
 	// Relative coordinate - to current widget
-	int xr = xi - this->x;
-	int yr = yi - this->y;
+	int xr = xi - this->x - InnerRect.left;
+	int yr = yi - this->y - InnerRect.top;
 	int yoffset = this->vscrollbar ? this->vscrollbar->GetPos() : 0;
 
 	Widget::MouseRUp( xi, yi );
 
 	Widget *event_on = DetermineMouseFocus( xr, yr );
-	if( this->rmouseDown ){
-		if ( this->rmouseDown == event_on ){
+	if( this->rmouseDown ) {
+		if( this->rmouseDown == event_on ) {
 			// Mouse up is on the same widget as mouse down, send event
 			this->rmouseDown = NULL;
 			return event_on->MouseRUp( xr, yr + yoffset);
-		}else{
+		} else {
 			// Mouse up is on a different widget, send release event to old
 			this->rmouseDown->MouseRRelease();
 			this->rmouseDown = NULL;
 		}
 	}
-	//LogMsg(UIINPUT,"Mouse Right up detect in %s.",this->name.c_str());
+
 	return this->mouseHandled;
 }
 
@@ -862,18 +863,18 @@ bool Container::MouseRUp( int xi, int yi ){
  */
 bool Container::MouseRDown( int xi, int yi ){
 	// Relative coordinate - to current widget
-	int xr = xi - this->x;
-	int yr = yi - this->y;
+	int xr = xi - this->x - InnerRect.left;
+	int yr = yi - this->y - InnerRect.top;
 	int yoffset = this->vscrollbar ? this->vscrollbar->GetPos() : 0;
 
 	Widget::MouseRDown( xi, yi );
 
 	Widget *event_on = DetermineMouseFocus( xr, yr );
-	if( event_on ){
-		this->rmouseDown=event_on;
+	if( event_on ) {
+		this->rmouseDown = event_on;
 		return event_on->MouseRDown( xr, yr + yoffset );
 	}
-	//LogMsg(UIINPUT,"Mouse Right down detect in %s.",this->name.c_str());
+
 	return this->mouseHandled;
 }
 
@@ -881,22 +882,23 @@ bool Container::MouseRDown( int xi, int yi ){
  * \details Unlike the MouseRUp function, this is called when the user releases
  * the mouse on a different widget.
  */
-bool Container::MouseRRelease( void ){
+bool Container::MouseRRelease( void ) {
 	Widget::MouseRRelease();
 
 	// Pass event onto children if needed
-	if( this->rmouseDown )
+	if( this->rmouseDown ) {
 		return this->rmouseDown->MouseRRelease();
-	//LogMsg(UIINPUT,"Right Mouse released in %s",this->name.c_str());
+	}
+
 	return this->mouseHandled;
 }
 
 /**\brief Generic mouse wheel up function.
  */
-bool Container::MouseWUp( int xi, int yi ){
+bool Container::MouseWUp( int xi, int yi ) {
 	// Relative coordinate - to current widget
-	int xr = xi - this->x;
-	int yr = yi - this->y;
+	int xr = xi - this->x - InnerRect.left;
+	int yr = yi - this->y - InnerRect.top;
 	int yoffset = this->vscrollbar ? this->vscrollbar->GetPos() : 0;
 
 	Widget::MouseWUp( xi, yi );
@@ -909,16 +911,16 @@ bool Container::MouseWUp( int xi, int yi ){
 		vscrollbar->ScrollUp();
 		return true;
 	}
-	//LogMsg(UIINPUT,"Mouse Wheel up detect in %s.",this->name.c_str());
+
 	return false;
 }
 
 /**\brief Generic mouse wheel down function.
  */
-bool Container::MouseWDown( int xi, int yi ){
+bool Container::MouseWDown( int xi, int yi ) {
 	// Relative coordinate - to current widget
-	int xr = xi - this->x;
-	int yr = yi - this->y;
+	int xr = xi - this->x - InnerRect.left;
+	int yr = yi - this->y - InnerRect.top;
 	int yoffset = this->vscrollbar ? this->vscrollbar->GetPos() : 0;
 
 	Widget::MouseWDown( xi, yi );
@@ -931,43 +933,48 @@ bool Container::MouseWDown( int xi, int yi ){
 		vscrollbar->ScrollDown();
 		return true;
 	}
-	//LogMsg(UIINPUT,"Mouse Wheel down detect in %s.",this->name.c_str());
+
 	return false;
 }
 
 /**\brief Generic keyboard focus function.
  */
-bool Container::KeyboardEnter( void ){
+bool Container::KeyboardEnter( void ) {
 	Widget::KeyboardEnter();
-	this->keyactivated=true;
-	if( this->keyboardFocus )
+
+	this->keyactivated = true;
+	if( this->keyboardFocus ) {
 		return this->keyboardFocus->KeyboardEnter();
-	//LogMsg(UIINPUT,"Keyboard enter detect in %s.",this->name.c_str());
+	}
+
 	return true;
 }
 
 /**\brief Generic keyboard unfocus function.
  */
-bool Container::KeyboardLeave( void ){
+bool Container::KeyboardLeave( void ) {
 	Widget::KeyboardLeave();
-	this->keyactivated=false;
-	if( this->keyboardFocus )
+
+	this->keyactivated = false;
+
+	if( this->keyboardFocus ) {
 		return this->keyboardFocus->KeyboardLeave();
-	//LogMsg(UIINPUT,"Keyboard leave detect in %s.",this->name.c_str());
+	}
+
 	return true;
 }
 
 /**\brief Generic keyboard key press function.
  */
 bool Container::KeyPress( SDL_Keycode key ) {
-	Widget *next;
-	if( keyboardFocus ) {
+	Widget *next = NULL;
 
+	if( keyboardFocus ) {
 		// If this key is a TAB and the keyboard is currently focused on a Textbox,
 		// then move to the next textbox
 		if( (key == SDLK_TAB) && ( keyboardFocus->GetMask() & (WIDGET_TEXTBOX) ) ) {
-
 			next = NextChild( keyboardFocus, WIDGET_TEXTBOX );
+
 			if( next == NULL ) {
 				// Wrap around to the top
 				next = ChildFromBottom( 0, WIDGET_TEXTBOX );
@@ -977,6 +984,7 @@ bool Container::KeyPress( SDL_Keycode key ) {
 				keyboardFocus = next;
 				keyboardFocus->KeyboardEnter();
 			}
+
 			return true;
 		}
 
@@ -991,7 +999,6 @@ bool Container::KeyPress( SDL_Keycode key ) {
 		formbutton->Activate(Action_MouseLUp, 0, 0);
 	}
 
-	//LogMsg(UIINPUT,"Key press detect in %s.",this->name.c_str());
 	return false;
 }
 
@@ -1000,7 +1007,6 @@ bool Container::KeyPress( SDL_Keycode key ) {
  * the container hasn't fundamentally changed.  This is so that the Scrollbars
  * are always the last Widgets in the Container.
  */
-
 void Container::ResetScrollBars() {
 	bool has_vscrollbar;
 	int widget_height, widget_width;
@@ -1019,12 +1025,14 @@ void Container::ResetScrollBars() {
 	}
 
 	// Find the Max edges
-	Widget* widget;
+	Widget* widget = NULL;
 	list<Widget *>::iterator i;
+
 	for( i = children.begin(); i != children.end(); ++i ) {
 		widget = *i;
 		widget_width  = widget->GetX() + widget->GetW();
 		widget_height = widget->GetY() + widget->GetH() + InnerRect.top + InnerRect.bottom;
+
 		if( widget_height > max_height) max_height = widget_height;
 		if( widget_width > max_width) max_width = widget_width;
 	}
@@ -1087,11 +1095,12 @@ xmlNodePtr Container::ToNode() {
 	xmlSetProp( thisNode, BAD_CAST "h", BAD_CAST buff );
 
 	list<Widget *>::iterator i;
+
 	for( i = children.begin(); i != children.end(); ++i ) {
 		xmlAddChild(thisNode, (*i)->ToNode()  );
 	}
-	return thisNode;
 
+	return thisNode;
 }
 
 /** @} */
