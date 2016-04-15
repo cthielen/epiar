@@ -643,43 +643,43 @@ void Container::Draw( int relx, int rely ) {
 
 /**\brief Mouse is currently moving over the widget, without button down.
  */
-bool Container::MouseMotion( int xi, int yi ){
+bool Container::MouseMotion( int xi, int yi ) {
 	// Relative coordinate - to current widget
 	int xr = xi - this->x;
 	int yr = yi - this->y;
 	int yoffset = this->vscrollbar ? this->vscrollbar->GetPos() : 0;
 
-	Widget::MouseMotion(xi,yi);
+	Widget::MouseMotion(xi, yi);
 
 	Widget *event_on = DetermineMouseFocus( xr, yr );
 
-	if ( this->lmouseDown ){
+	if ( this->lmouseDown ) {
 		// Mouse button is held down, send drag event
-		this->lmouseDown->MouseDrag(xr,yr);
+		this->lmouseDown->MouseDrag(xr, yr);
 	}
 
-	if( !event_on ){
+	if( !event_on ) {
 		// Not on a widget
-		if( this->mouseHover ){
+		if( this->mouseHover ) {
 			// We were on a widget, send leave event
 			this->mouseHover->MouseLeave();
-			this->mouseHover=NULL;
+			this->mouseHover = NULL;
 		}
 		return this->mouseHandled;
 	}
-	if( !this->mouseHover ){
+	if( !this->mouseHover ) {
 		// We're on a widget, but nothing was hovered on before
 		// send enter event only
-		event_on->MouseEnter( xr,yr + yoffset );
-		this->mouseHover=event_on;
+		event_on->MouseEnter( xr, yr + yoffset );
+		this->mouseHover = event_on;
 		return true;
 	}
-	if( this->mouseHover != event_on ){
+	if( this->mouseHover != event_on ) {
 		// We're on a widget, and leaving another widget
 		// send both enter and leave event
 		this->mouseHover->MouseLeave();
-		event_on->MouseEnter( xr,yr + yoffset );
-		this->mouseHover=event_on;
+		event_on->MouseEnter( xr, yr + yoffset );
+		this->mouseHover = event_on;
 	}
 
 	event_on->MouseMotion( xr, yr + yoffset );
