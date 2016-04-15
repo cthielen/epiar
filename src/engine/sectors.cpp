@@ -227,12 +227,8 @@ void Sectors::GetBoundaries(float *north, float *south, float *east, float *west
 bool Sectors::SectorHasNeighbor(Sector *origin, Sector *possibleNeighbor) {
 	list<string> neighbors = origin->GetNeighbors();
 
-	cout << endl;
-	cout << "Checking if " << origin->GetName() << " has neighbor " << possibleNeighbor->GetName() << " ..." << endl;
-
 	// Is 'possibleNeighbor' a neighbor of 'origin'?
 	if(std::find(neighbors.begin(), neighbors.end(), possibleNeighbor->GetName()) != neighbors.end()) {
-		cout << "yes1" << endl;
 		return true;
 	}
 
@@ -241,11 +237,9 @@ bool Sectors::SectorHasNeighbor(Sector *origin, Sector *possibleNeighbor) {
 
 	// Is 'possibleNeighbor' a neighbor of 'origin'?
 	if(std::find(neighbors.begin(), neighbors.end(), origin->GetName()) != neighbors.end()) {
-		cout << "yes2" << endl;
 		return true;
 	}
 
-	cout << "nope" << endl;
 	return false;
 }
 
