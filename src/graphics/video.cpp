@@ -324,23 +324,85 @@ void Video::DrawFilledCircle( int x, int y, int radius, Color c, float a) {
 }
 
 /**\brief Draw a filled circle.
+ *
+ *        Adapted from: SDL2_gfx (zlib licensed, aschiffler at ferzkopp dot net) http://www.ferzkopp.net/Software/SDL2_gfx/Docs/html/_s_d_l2__gfx_primitives_8c_source.html#l01457
  */
-void Video::DrawFilledCircle( int x, int y, int radius, float r, float g, float b, float a) {
-	/*glColor4f(r, g, b, a);
-	glEnable(GL_BLEND);
-	glBegin(GL_TRIANGLE_STRIP);
+void Video::DrawFilledCircle( int x, int y, int rad, float r, float g, float b, float a) {
+	Sint16 cx = 0;
+	Sint16 cy = rad;
+	Sint16 ocx = (Sint16) 0xffff;
+	Sint16 ocy = (Sint16) 0xffff;
+	Sint16 df = 1 - rad;
+	Sint16 d_e = 3;
+	Sint16 d_se = -2 * rad + 5;
+	Sint16 xpcx, xmcx, xpcy, xmcy;
+	Sint16 ypcy, ymcy, ypcx, ymcx;
 
-	Trig* t = Trig::Instance();
+	// Convert from 'float'
+	r *= 255.;
+	g *= 255.;
+	b *= 255.;
+	a *= 255.;
 
-	for(int angle = 0; angle < 360; angle += 5) {
-		glVertex2d(x, y);
-		glVertex2d(radius * t->GetCos(angle) + x, radius * t->GetSin(angle) + y);
+	// Sanity check radius 
+	if (rad <= 0) {
+		return;
 	}
 
-	// One more triangle to finish the circle. (ang=0)
-	glVertex2d(x, y);
-	glVertex2d(radius + x, y);
-	glEnd();*/
+	// Set color
+	SDL_SetRenderDrawBlendMode(renderer, (a == 255) ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+ 
+	// Draw 
+	do {
+		xpcx = x + cx;
+		xmcx = x - cx;
+		xpcy = x + cy;
+		xmcy = x - cy;
+		
+		if (ocy != cy) {
+			if (cy > 0) {
+				ypcy = y + cy;
+				ymcy = y - cy;
+
+				SDL_RenderDrawLine(renderer, xmcx, ypcy, xpcx, ypcy);
+				SDL_RenderDrawLine(renderer, xmcx, ymcy, xpcx, ymcy);
+			} else {
+				SDL_RenderDrawLine(renderer, xmcx, y, xpcx, y);
+			}
+
+			ocy = cy;
+		}
+		if (ocx != cx) {
+			if (cx != cy) {
+				if (cx > 0) {
+					ypcx = y + cx;
+					ymcx = y - cx;
+
+					SDL_RenderDrawLine(renderer, xmcy, ymcx, xpcy, ymcx);
+					SDL_RenderDrawLine(renderer, xmcy, ypcx, xpcy, ypcx);
+				} else {
+					SDL_RenderDrawLine(renderer, xmcy, y, xpcy, y);
+				}
+			}
+
+			ocx = cx;
+		}
+ 
+		// Update 
+		if (df < 0) {
+			df += d_e;
+			d_e += 2;
+			d_se += 2;
+		} else {
+			df += d_se;
+			d_e += 2;
+			d_se += 4;
+			cy--;
+		}
+
+		cx++;
+	} while (cx <= cy);
 }
 
 /**\brief Draws a targeting overlay.
