@@ -60,6 +60,7 @@
 		<y>-150</y>
 		<traffic>1</traffic>
 		<neighbor>Lacaille 8760</neighbor>
+		<neighbor>Regulus</neighbor>
 	</sector>
 	<sector>
 		<name>Lacaille 8760</name>
@@ -84,6 +85,57 @@
 		<alliance>United Earth Alliance</alliance>
 		<x>35</x>
 		<y>-500</y>
+		<traffic>3</traffic>
+	</sector>
+
+	<sector>
+		<name>Regulus</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>1280</x>
+		<y>-705</y>
+		<traffic>5</traffic>
+	</sector>
+
+	<sector>
+		<name>Capella</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>1986</x>
+		<y>-1539</y>
+		<traffic>10</traffic>
+	</sector>
+
+	<sector>
+		<name>Atria</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>-1865</x>
+		<y>1132</y>
+		<traffic>4</traffic>
+	</sector>
+
+	<sector>
+		<name>Deneb</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>-1713</x>
+		<y>-776</y>
+		<traffic>3</traffic>
+		<neighbor>Vega</neighbor>
+	</sector>
+
+	<sector>
+		<name>Vega</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>-913</x>
+		<y>-576</y>
+		<traffic>4</traffic>
+		<neighbor>Sirius</neighbor>
+		<neighbor>Rigel</neighbor>
+	</sector>
+
+	<sector>
+		<name>Canopus</name>
+		<alliance>United Earth Alliance</alliance>
+		<x>1243</x>
+		<y>479</y>
 		<traffic>4</traffic>
 	</sector>
 
