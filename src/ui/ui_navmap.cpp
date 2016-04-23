@@ -145,14 +145,14 @@ void NavMap::Draw( int relx, int rely ) {
 
 		field = sector->GetAlliance()->GetColor();
 
-		Video::DrawFilledCircle( pos, (45 * scale) / 3, BLACK, alpha );
+		Video::DrawFilledCircle( pos, (55 * scale) / 3, BLACK, alpha );
 		if(sector == currentSector) {
-			Video::DrawFilledCircle( pos, (27 * scale) / 3, LIGHTBLUE, alpha );
+			Video::DrawFilledCircle( pos, (55 * scale) / 3, LIGHTBLUE, alpha );
 		}
-		Video::DrawCircle( pos, (45 * scale) / 3, 1, col, alpha );
+		Video::DrawCircle( pos, (55 * scale) / 3, 1, col, alpha );
 
 		if(sector == selectedSector) {
-			Video::DrawTarget( pos.GetX(), pos.GetY(), (35 * scale), (35 * scale), 3, 1, 1, 1 );
+			Video::DrawTarget( pos.GetX(), pos.GetY(), (50 * scale), (50 * scale), 3, 0.8, 0.8, 0.8 );
 		}
 	}
 
