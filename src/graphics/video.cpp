@@ -290,7 +290,9 @@ void Video::DrawCircle( Coordinate c, int radius, float line_width, Color col, f
 /**\brief Draws a circle
  */
 void Video::DrawCircle( int x, int y, int radius, float line_width, float r, float g, float b, float a) {
-	double prev_x, prev_y, cur_x, cur_y;
+	DrawEllipse( x, y, radius, radius, r, g, b, a );
+
+	/*double prev_x, prev_y, cur_x, cur_y;
 
 	SDL_SetRenderDrawColor( renderer, r * 255., g * 255., b * 255., a * 255. );
 
@@ -312,7 +314,7 @@ void Video::DrawCircle( int x, int y, int radius, float line_width, float r, flo
 	cur_x = radius * t->GetCos(0) + x;
 	cur_y = radius * t->GetSin(0) + y;
 
-	SDL_RenderDrawLine(renderer, prev_x, prev_y, cur_x, cur_y);
+	SDL_RenderDrawLine(renderer, prev_x, prev_y, cur_x, cur_y);*/
 }
 
 void Video::DrawFilledCircle( Coordinate p, int radius, Color c, float a) {
@@ -403,6 +405,131 @@ void Video::DrawFilledCircle( int x, int y, int rad, float r, float g, float b, 
 
 		cx++;
 	} while (cx <= cy);
+}
+
+/**\brief Draw an ellipse.
+ *
+ *        Adapted from: SDL2_gfx (zlib licensed, aschiffler at ferzkopp dot net) http://www.ferzkopp.net/Software/SDL2_gfx/Docs/html/_s_d_l2__gfx_primitives_8c_source.html#l01598
+ */
+void Video::DrawEllipse( int x, int y, int rx, int ry, float r, float g, float b, float a) {
+	int ix, iy;
+	int h, i, j, k;
+	int oh, oi, oj, ok;
+	int xmh, xph, ypk, ymk;
+	int xmi, xpi, ymj, ypj;
+	int xmj, xpj, ymi, ypi;
+	int xmk, xpk, ymh, yph;
+
+	// Convert from 'float'
+	r *= 255.;
+	g *= 255.;
+	b *= 255.;
+	a *= 255.;
+ 
+         // Sanity check radii 
+         if ((rx <= 0) || (ry <= 0)) {
+                 return;
+         }
+ 
+         // Set color
+         SDL_SetRenderDrawBlendMode(renderer, (a == 255) ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND);
+         SDL_SetRenderDrawColor(renderer, r, g, b, a);
+ 
+         // Init vars 
+         oh = oi = oj = ok = 0xFFFF;
+ 
+         // Draw 
+         if (rx > ry) {
+                 ix = 0;
+                 iy = rx * 64;
+ 
+                 do {
+                         h = (ix + 32) >> 6;
+                         i = (iy + 32) >> 6;
+                         j = (h * ry) / rx;
+                         k = (i * ry) / rx;
+ 
+                         if (((ok != k) && (oj != k)) || ((oj != j) && (ok != j)) || (k != j)) {
+                                 xph = x + h;
+                                 xmh = x - h;
+                                 if (k > 0) {
+                                         ypk = y + k;
+                                         ymk = y - k;
+                                         SDL_RenderDrawPoint(renderer, xmh, ypk);
+                                         SDL_RenderDrawPoint(renderer, xph, ypk);
+                                         SDL_RenderDrawPoint(renderer, xmh, ymk);
+                                         SDL_RenderDrawPoint(renderer, xph, ymk);
+                                 } else {
+                                         SDL_RenderDrawPoint(renderer, xmh, y);
+                                         SDL_RenderDrawPoint(renderer, xph, y);
+                                 }
+                                 ok = k;
+                                 xpi = x + i;
+                                 xmi = x - i;
+                                 if (j > 0) {
+                                         ypj = y + j;
+                                         ymj = y - j;
+                                         SDL_RenderDrawPoint(renderer, xmi, ypj);
+                                         SDL_RenderDrawPoint(renderer, xpi, ypj);
+                                         SDL_RenderDrawPoint(renderer, xmi, ymj);
+                                         SDL_RenderDrawPoint(renderer, xpi, ymj);
+                                 } else {
+                                         SDL_RenderDrawPoint(renderer, xmi, y);
+                                         SDL_RenderDrawPoint(renderer, xpi, y);
+                                 }
+                                 oj = j;
+                         }
+ 
+                         ix = ix + iy / rx;
+                         iy = iy - ix / rx;
+ 
+                 } while (i > h);
+         } else {
+                 ix = 0;
+                 iy = ry * 64;
+ 
+                 do {
+                         h = (ix + 32) >> 6;
+                         i = (iy + 32) >> 6;
+                         j = (h * rx) / ry;
+                         k = (i * rx) / ry;
+ 
+                         if (((oi != i) && (oh != i)) || ((oh != h) && (oi != h) && (i != h))) {
+                                 xmj = x - j;
+                                 xpj = x + j;
+                                 if (i > 0) {
+                                         ypi = y + i;
+                                         ymi = y - i;
+                                         SDL_RenderDrawPoint(renderer, xmj, ypi);
+                                         SDL_RenderDrawPoint(renderer, xpj, ypi);
+                                         SDL_RenderDrawPoint(renderer, xmj, ymi);
+                                         SDL_RenderDrawPoint(renderer, xpj, ymi);
+                                 } else {
+                                         SDL_RenderDrawPoint(renderer, xmj, y);
+                                         SDL_RenderDrawPoint(renderer, xpj, y);
+                                 }
+                                 oi = i;
+                                 xmk = x - k;
+                                 xpk = x + k;
+                                 if (h > 0) {
+                                         yph = y + h;
+                                         ymh = y - h;
+                                         SDL_RenderDrawPoint(renderer, xmk, yph);
+                                         SDL_RenderDrawPoint(renderer, xpk, yph);
+                                         SDL_RenderDrawPoint(renderer, xmk, ymh);
+                                         SDL_RenderDrawPoint(renderer, xpk, ymh);
+                                 } else {
+                                         SDL_RenderDrawPoint(renderer, xmk, y);
+                                         SDL_RenderDrawPoint(renderer, xpk, y);
+                                 }
+                                 oh = h;
+                         }
+ 
+                         ix = ix + iy / ry;
+                         iy = iy - ix / ry;
+ 
+                 } while (i > h);
+         }
 }
 
 /**\brief Draws a targeting overlay.
