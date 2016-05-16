@@ -199,7 +199,7 @@ void Menu::CreateNewWindow() {
 
 	// Player Name
 	win->AddChild( (new Label(50, 45, "Name:")) )
-		->AddChild( (new Textbox(90, 41, 130, 1, "", "Player Name:")) );
+		->AddChild( (new Textbox(90, 41, 130, 1, "Avatar", "Player Name:")) );
 
 	// Scenario Picker
 	win->AddChild( (new Label(32, 80, "Scenario:")) )
