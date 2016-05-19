@@ -193,6 +193,7 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 	}
 	
 	//cout << "---" << endl;
+	//cout << "rendering: " << text << endl;
 
 	// Y coordinates are flipped
 	switch( ypos ) {
@@ -205,7 +206,9 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 			// Middle of text line will run through the given 'y'
 			//cout << "render middle (" << y << ")" << endl;
 			//cout << "descent is" << TO_INT(floor(TTF_FontDescent(this->font))) << endl;
-			yn = y - (h / 2) + TO_INT(floor(TTF_FontDescent(this->font)));
+			//cout << "ascent is" << TO_INT(floor(TTF_FontAscent(this->font))) << endl;
+			//yn = y - (h / 2) + TO_INT(floor(TTF_FontDescent(this->font)));
+			yn = y - TO_INT(floor(TTF_FontAscent(this->font) / 2)) + TO_INT(floor(TTF_FontDescent(this->font)));
 			break;
 		case BOTTOM:
 			// Bottom of text will touch the given 'y'
@@ -243,10 +246,10 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 
 		s = TTF_RenderUTF8_Blended(font, text.c_str(), fg);
 		if(s == NULL) {
-			cout << "Could not render '" << text << "'!" << endl;
+			LogMsg(ERR, "Could not render '%s'!", text);
 
 			if(text.length() == 0) {
-				cout << "Why is text null?" << endl;
+				LogMsg(ERR, "Text length should not be zero.");
 			}
 
 			return 0;
@@ -270,7 +273,6 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 		lastRenderedText = text;
 	}
 
-	//Video::DrawRect(x, y, rect.w, rect.h, 128, 128, 128, 1.0);
 	SDL_RenderCopy(Video::GetRenderer(), t, NULL, &rect);
 
 	//cout << "rendered '" << text << "' at " << xn << ", " << yn << " with color " << r << ", " << g << ", " << b << ", " << a << endl;
