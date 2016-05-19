@@ -212,8 +212,10 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 			break;
 		case BOTTOM:
 			// Bottom of text will touch the given 'y'
-			//cout << "render bottom" << endl;
-			yn = y - h + TO_INT(floor(TTF_FontDescent(this->font)));
+			//cout << "render bottom (" << y << "): " << text << endl;
+			//yn = y - h + TO_INT(floor(TTF_FontDescent(this->font)));
+			yn = y - TO_INT(floor(TTF_FontAscent(this->font))) + TO_INT(floor(TTF_FontDescent(this->font)));
+			//cout << "yn set to: " << yn << endl;
 			break;
 		default:
 			LogMsg(ERR, "Invalid ypos");

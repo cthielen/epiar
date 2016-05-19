@@ -75,9 +75,9 @@ void Slider::Draw( int relx, int rely ){
 	              y + background->GetHalfHeight() - handle->GetHalfHeight() );
 
 	// Render the value indicator
-	char value[20];
-	snprintf(value,20,"%.2f",this->val);
-	UI::font->Render( x + markerx_pix, y, value,Font::CENTER,Font::BOTTOM );
+	char value[20] = {0};
+	snprintf(value, 20, "%.2f", this->val);
+	UI::font->Render( x + markerx_pix, y - 3, value, Font::CENTER, Font::BOTTOM );
 
 	UI::font->RenderTight( x + GetW() + 5, y, name );
 
