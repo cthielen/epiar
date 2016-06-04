@@ -346,7 +346,7 @@ void Scenario::Run() {
 	quit = false;
 
 	if( player != NULL ) {
-		Hud::Alert("Loading %s.", player->GetName().c_str() );
+		//Hud::Alert("Loading %s.", player->GetName().c_str() );
 		Lua::Call("playerStart");
 	} else {
 		LogMsg(WARN, "No Player has been loaded!");
@@ -361,10 +361,10 @@ void Scenario::Run() {
 	Hud::Init();
 
 	// Message appear in reverse order, so this is upside down
-	Hud::Alert("Epiar is an unfinished product. Please report all bugs at epiar.net.");
+	Hud::Alert(false, "Epiar is in development. Please report all bugs at epiar.net.");
 
 	// Generate a starfield
-	Starfield starfield( 800 );
+	Starfield starfield( 700 );
 
 	// Load sample game music
 	if(bgmusic && OPTION(int, "options/sound/background")) {
@@ -672,7 +672,7 @@ void Scenario::HandleInput() {
 				player->Jump( nextSector );
 			}
 		} else {
-			cout << "Cannot jump: no destination set." << endl;
+			Hud::Alert(true, "No destination set.");
 		}
 	}
 

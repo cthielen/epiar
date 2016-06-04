@@ -1,7 +1,7 @@
 /**\file			hud.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created  : Sunday, July 23, 2006
- * \date			Modified: Sunday, November 22, 2009
+ * \date			Modified: Saturday, June 4, 2016
  * \brief			Handles the Heads-Up-Display
  * \details
  */
@@ -9,14 +9,15 @@
 #ifndef __h_hud__
 #define __h_hud__
 
+#include "audio/sound.h"
+#include "engine/camera.h"
 #include "includes.h"
-#include "graphics/image.h"
+#include "input/input.h"
 #include "graphics/font.h"
+#include "graphics/image.h"
+#include "sprites/spritemanager.h"
 #include "utilities/lua.h"
 #include "utilities/quadtree.h"
-#include "input/input.h"
-#include "engine/camera.h"
-#include "sprites/spritemanager.h"
 
 #define EPIAR_HUD_TABLE "Epiar.HUD"
 #define EPIAR_HUD "HUD"
@@ -35,16 +36,16 @@
 #define HUD_ALL         0xFFFF
 
 
-enum HudMap{
+enum HudMap {
 	NoMap, ///< Do not display any kind of Map.
 	QuadrantMap, ///< Draw a Map of the Sprites in this Quadrant.
 	UniverseMap, ///< Draw a Map of all the Sprite in the Universe.
-	};
+};
 
 class AlertMessage {
 	public:
 		AlertMessage( string message, Uint32 start );
-		bool operator ==(const AlertMessage& other) {return (start == other.start) && (message == other.message);}
+		bool operator ==(const AlertMessage& other) { return (start == other.start) && (message == other.message); }
 		string message;
 		Uint32 start;
 };
@@ -85,7 +86,7 @@ class Hud {
 
 		static void HandleInput( list<InputEvent> & events, Camera* camera, SpriteManager* sprites );
 		
-		static void Alert( const char *, ... );
+		static void Alert( bool audible, const char *, ... );
 		static void Target(int id);
 		static int GetTarget() {return targetID;}
 		
@@ -129,6 +130,7 @@ class Hud {
 		static Font *AlertFont;
 		static Font *MapFont;
 		static Color AlertColor;
+		static Sound *AlertBeep;
 };
 
 class Radar {

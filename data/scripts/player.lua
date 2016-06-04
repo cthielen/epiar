@@ -95,7 +95,7 @@ end
 function targetClosestShip()
 	local nextTarget = Epiar.nearestShip( PLAYER, 4096 )
 	if not nextTarget then return end
-	HUD.newAlert("Targeting "..nextTarget:GetModelName().." "..nextTarget:GetName())
+	HUD.newAlert(1, "Targeting "..nextTarget:GetModelName().." "..nextTarget:GetName())
 	HUD.setTarget(nextTarget:GetID())
 end
 
@@ -168,15 +168,15 @@ function changePower( shield, damage, engine)
 	newdamage, newshield, newengine = lowerBoundCheck(damage, shield, engine, newdamage, newshield, newengine)
 	newengine, newdamage, newshield = lowerBoundCheck(engine, damage, shield, newengine, newdamage, newshield)
 	if (math.floor( (newshield*33.333) + 0.5 )>99) then
-		HUD.newAlert("Shields at maximum capacity can not raise them any higher")
+		HUD.newAlert(1, "Shields at maximum capacity can not raise them any higher")
 		return
 	end
 	if(math.floor( (newdamage*33.333) + 0.5 )>99) then
-		HUD.newAlert("Power at maximum capacity can not raise them any higher")
+		HUD.newAlert(1, "Power at maximum capacity can not raise them any higher")
 		return
 	end
 	if(math.floor( (newengine*33.333) + 0.5 )>99) then
-		HUD.newAlert("Engines at maximum capacity can not raise them any higher")
+		HUD.newAlert(1, "Engines at maximum capacity can not raise them any higher")
 		return
 	end
 
@@ -197,7 +197,6 @@ function changePower( shield, damage, engine)
 	--newengine = math.floor(newengine * 333 + 0.5)/10
 	--newshield = math.floor(newshield * 333 + 0.5)/10
 	--newdamage = math.floor(newdamage * 333 + 0.5)/10
-	--HUD.newAlert("Power Distribution: shields " .. (newshield) .. "%% power " .. (newdamage) .. "%% engine " .. (newengine) .. "%%")
 end
 
 function lowerBoundCheck(a, b, c, newa, newb, newc) --lower bound check for power management function
@@ -229,7 +228,7 @@ function lowerBoundCheck(a, b, c, newa, newb, newc) --lower bound check for powe
 			newc = newc + (newa/2) -c
 			newb = newb + (newa/2) -b
 			newa = 0
-			HUD.newAlert("can not go any lower")
+			HUD.newAlert(1, "can not go any lower")
 		end
 	end
 	return newa, newb, newc
@@ -246,12 +245,12 @@ function playerFire( primary )
 
 	if result == 0 then -- FireSuccess
 	elseif result == 1 then -- FireNoWeapons
-		HUD.newAlert("No weapons to fire!")
+		HUD.newAlert(1, "No weapons to fire!")
 	elseif result == 2 then -- FireNotReady
 	elseif result == 3 then -- FireNoAmmo
-		HUD.newAlert("Out of Ammo!")
+		HUD.newAlert(1, "Out of Ammo!")
 	elseif result == 4 then -- FireEmptyGroup
-		HUD.newAlert("No weapons assigned to this firing group")
+		HUD.newAlert(1, "No weapons assigned to this firing group")
 	else
 		-- Some other error
 	end
@@ -265,7 +264,7 @@ function boardShip()
 	local targettedShip = Epiar.getSprite( HUD.getTarget() ) -- acquire target
 
 	if targettedShip == nil then
-		HUD.newAlert("Cannot board - no target.")
+		HUD.newAlert(1, "No target to board.")
 		return
 	end
 
@@ -273,7 +272,7 @@ function boardShip()
 	local dist = distfrom( x, y, targettedX, targettedY ) -- calculate distance to target
 
 	if (dist < 200) and (targettedShip:IsDisabled() == 1) then
-		HUD.newAlert("Boarding ship...")
+		HUD.newAlert(1, "Boarding ship...")
 		Epiar.pause()
 
 		-- show the boarding dialog
@@ -299,7 +298,7 @@ function boardShip()
 		boardingDialog:add( UI.newButton(300, 150, 100, 30, "End boarding", string.format("endBoarding()") ) )
 
 	else
-		HUD.newAlert("Cannot board target -- too far away")
+		HUD.newAlert(1, "Target too far away to board.")
 	end
 end
 
@@ -313,7 +312,7 @@ function hailSprite()
 	elseif spritetype == SPRITE_SHIP then
 		hailShip()
 	else
-		HUD.newAlert("No reply.")
+		HUD.newAlert(1, "No reply.")
 	end
 end
 
@@ -323,11 +322,11 @@ function hailPlanet()
 	local targettedPlanet = Epiar.getSprite( HUD.getTarget() )
 
 	if targettedPlanet == nil then
-		HUD.newAlert("Cannot hail - no target.")
+		HUD.newAlert(1, "No target to hail.")
 		return
 	end
 
-	HUD.newAlert("Hailing planet...")
+	HUD.newAlert(1, "Hailing planet...")
 	Epiar.pause()
 
 	-- show the dialog
@@ -348,14 +347,14 @@ function hailShip()
 	if UI.search("/Window'Communication channel'/") ~= nil then return end -- Abort if the hail dialog is already open
 
 	if PLAYER:GetName() == nil then
-		HUD.newAlert("You can't hail a ship when you're dead!")
+		HUD.newAlert(1, "You can't hail a ship when you're dead!")
 		return
 	end
 
 	local targettedShip = Epiar.getSprite( HUD.getTarget() )
 
 	if targettedShip == nil then
-		HUD.newAlert("Cannot hail - no target.")
+		HUD.newAlert(1, "Cannot hail - no target.")
 		return
 	end
 
@@ -364,7 +363,7 @@ function hailShip()
 	didBFM = false
 
 	if (targettedShip:IsDisabled() ~= 1) then
-		HUD.newAlert("Hailing ship...")
+		HUD.newAlert(1, "Hailing ship...")
 		Epiar.pause()
 
 		local planetNames = Epiar.planetNames()
@@ -423,7 +422,7 @@ function hailShip()
 		hailDialog:add( hailReplyLabel, hailOption1Label, hailOption2Label )
 
 	else
-		HUD.newAlert("No reply.")
+		HUD.newAlert(1, "No reply.")
 	end
 end
 
@@ -437,15 +436,15 @@ function doHailSay(said)
 		-- when an AI is in "hostile" mode, it will not abandon its target
 		AIData[ HUD.getTarget() ].target = PLAYER:GetID()
 		AIData[ HUD.getTarget() ].hostile = 1
-		HUD.newAlert( (string.format("%s: We'll see about that!", targettedSprite:GetModelName() ) ) )
+		HUD.newAlert( 1, (string.format("%s: We'll see about that!", targettedSprite:GetModelName() ) ) )
 		doHailEnd()
 		return
 	elseif said == "Goodbye" then
-		HUD.newAlert (string.format("%s: Goodbye, %s.", targettedSprite:GetModelName(), PLAYER:GetName() ) )
+		HUD.newAlert(1, string.format("%s: Goodbye, %s.", targettedSprite:GetModelName(), PLAYER:GetName() ) )
 		doHailEnd()
 		return
 	elseif reply == nil then
-		HUD.newAlert (string.format("%s: I think we're done here.", targettedSprite:GetModelName() ) )
+		HUD.newAlert(1, string.format("%s: I think we're done here.", targettedSprite:GetModelName() ) )
 		doHailEnd()
 		return
 	end
@@ -522,7 +521,7 @@ function doHailBFM()
 	local targettedShip = Epiar.getSprite( HUD.getTarget() )
 
 	if didBFM then
-		HUD.newAlert(string.format("The %s closed the channel.", targettedShip:GetModelName() ) )
+		HUD.newAlert(1, string.format("The %s closed the channel.", targettedShip:GetModelName() ) )
 		doHailEnd()
 		return
 	end
@@ -582,13 +581,13 @@ function doCapture(succ_max, destruct_max)
 	local r_selfdestruct = math.random( destruct_max )
 
 	if r_selfdestruct == 1 then
-		HUD.newAlert(string.format("Your boarding party set off the %s's self-destruct mechanism.", targettedShip:GetModelName() ) )
+		HUD.newAlert(1, string.format("Your boarding party set off the %s's self-destruct mechanism.", targettedShip:GetModelName() ) )
 		endBoarding()
 		targettedShip:SetShieldDamage(10000)
 		targettedShip:SetHullDamage(10000)
 
 	elseif r_succ == 1 then -- success!
-		HUD.newAlert(string.format("It's your %s now!", targettedShip:GetModelName() ) )
+		HUD.newAlert(1, string.format("It's your %s now!", targettedShip:GetModelName() ) )
 
 		local partiallyRepair = function(sprite)
 			--while sprite:IsDisabled() do
@@ -642,7 +641,7 @@ function doCapture(succ_max, destruct_max)
 		successDialog:add( UI.newButton(150, 150, 150, 30, "Use as escort", "asEscort()") )
 
 	else
-		HUD.newAlert(string.format("You were not able to gain control of the %s.", targettedShip:GetModelName() ) )
+		HUD.newAlert(1, string.format("You were not able to gain control of the %s.", targettedShip:GetModelName() ) )
 	end
 
 end
@@ -664,10 +663,10 @@ function attemptLanding()
 		
 		-- Check if the ship is close enough and moving slowly enough to land on the planet.
 		HUD.setTarget(planet:GetID())
-		HUD.newAlert(message)
+		HUD.newAlert(1, message)
 	else
 		if planet:GetForbidden() == 1 then
-			HUD.newAlert(string.format("%s: %s! You are forbidden from landing here.", planet:GetName(), PLAYER:GetName() ) )
+			HUD.newAlert(1, string.format("%s: %s! You are forbidden from landing here.", planet:GetName(), PLAYER:GetName() ) )
 			return
 		end
 		if distance > planet:GetSize() then
@@ -676,13 +675,13 @@ function attemptLanding()
 			else
 				message = "Continue your approach."
 			end
-			HUD.newAlert(message)
+			HUD.newAlert(1, message)
 		else
 			velocity = PLAYER:GetMomentumSpeed()
 			if velocity > 2 then
-				HUD.newAlert(message.."Please slow your approach.")
+				HUD.newAlert(1, message.."Please slow your approach.")
 			else
-				HUD.newAlert(string.format("Welcome to %s.",planet:GetName()))
+				HUD.newAlert(0, string.format("Welcome to %s.",planet:GetName()))
 				PLAYER:Land( planet )
 			end
 		end

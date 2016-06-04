@@ -1,6 +1,6 @@
 -- height and width of the landing window
-width = WIDTH*.6
-height = HEIGHT*.6
+width = WIDTH * 0.6
+height = HEIGHT * 0.6
 
 --- Land on a planet
 function landingDialog(id)
@@ -363,7 +363,7 @@ function tradeCommodity(transaction, commodity, count, price)
 			UI.newAlert("ARG! That wasn't supposed to happen!")
 		end
 		PLAYER:SetCredits( player_credits - trueCount*price )
-		HUD.newAlert(string.format("You bought %d tons of %s for %d credits",trueCount,commodity,price*trueCount))
+		HUD.newAlert(0, string.format("You bought %d tons of %s for %d credits",trueCount,commodity,price*trueCount))
 	elseif transaction=="sell" then
 		-- print("Tonnage stored:",cargo[commodity] or 0)
 		-- print("Tonnage requested:",count)
@@ -375,7 +375,7 @@ function tradeCommodity(transaction, commodity, count, price)
 			UI.newAlert("ARG! That wasn't supposed to happen!")
 		end
 		PLAYER:SetCredits( player_credits + trueCount*price )
-		HUD.newAlert(string.format("You sold %d tons of %s for %d credits",trueCount,commodity,price*trueCount))
+		HUD.newAlert(0, string.format("You sold %d tons of %s for %d credits",trueCount,commodity,price*trueCount))
 	else
 		error( string.format( "Sorry, trading Commodities doesn't understand transaction %q", transaction ) )
 	end

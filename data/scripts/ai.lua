@@ -133,7 +133,6 @@ Hunter = {
 		local target = Epiar.getSprite( AIData[id].target )
 		if target==nil or target:GetHull()==0 then
 			--The AI has destroyed the enemy.
-			--HUD.newAlert(string.format("%s #%d:Victory is Mine!",cur_ship:GetModelName(),id))
 			return "default"
 		else
 			tx,ty = target:GetPosition()
@@ -143,7 +142,6 @@ Hunter = {
 		if AIData[id].hostile == 1 and AIData[id].foundTarget == 0 then
 			AIData[id].foundTarget = 1
 			local machine, state = cur_ship:GetState()
-			--HUD.newAlert(string.format("%s %s: Die, %s!", machine, cur_ship:GetModelName(), target:GetName()))
 		end
 
 		cur_ship:Rotate( cur_ship:directionTowards(tx,ty) )

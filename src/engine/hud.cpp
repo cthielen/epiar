@@ -1,7 +1,7 @@
 /**\file			hud.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, July 23, 2006
- * \date			Modified: Wednesday, December 23, 2015
+ * \date			Modified: Saturday, June 4, 2016
  * \brief			Handles the Heads-Up-Display
  * \details
  */
@@ -45,6 +45,7 @@ int Hud::targetID = -1;
 int Hud::timeTargeted = 0;
 Font *Hud::AlertFont = NULL;
 Color Hud::AlertColor = WHITE;
+Sound *Hud::AlertBeep = NULL;
 
 int Radar::visibility = QUADRANTSIZE;
 //bool Radar::largeMode = false;
@@ -250,10 +251,12 @@ void StatusBar::SetName( string n )
 void Hud::Init( void ) {
 	AlertFont = new Font( SKIN("Skin/HUD/Alert/Font"), convertTo<int>( SKIN("Skin/HUD/Alert/Size") ) );
 	AlertColor = Color( SKIN("Skin/HUD/Alert/Color") );
+	AlertBeep = Sound::Get( "data/audio/interface/hud_beep.ogg" );
 }
 
 void Hud::Close( void ) {
 	delete AlertFont;
+	delete AlertBeep;
 }
 
 /**\brief Updates the HUD
@@ -290,7 +293,6 @@ void Hud::Draw( int flags, float fps, Camera* camera, SpriteManager* sprites ) {
 	if(flags & HUD_FPS)        Hud::DrawFPS(fps, sprites);
 	if(flags & HUD_StatusBars) Hud::DrawStatusBars();
 }
-
 
 /**\brief Handles Hud related User Input
  * \param events User entered Keyboard and mouse clicks
@@ -333,13 +335,13 @@ void Hud::DrawMessages() {
 	Uint32 alertDrop = OPTION(Uint32,"options/timing/alert-drop");
 
 	for( i= AlertMessages.rbegin(), j=1; (i != AlertMessages.rend()) && (j <= MAX_ALERTS); ++i,++j ){
-		//printf("[%d] %s\n", j, (*i).message.c_str() );
 		age = now - (*i).start;
-		if(age > alertFade){
+		if(age > alertFade) {
 			AlertFont->SetColor( AlertColor, 1.f - float((age-alertFade))/float(alertDrop-alertFade) );
 		} else {
 			AlertFont->SetColor( AlertColor, 1.f);
 		}
+
 		AlertFont->Render( 15, Video::GetHeight() - (j * AlertFont->LineHeight()) - HUD_MESSAGE_BOTTOM_SPACING, (*i).message);
 	}
 }
@@ -348,8 +350,9 @@ void Hud::DrawMessages() {
  */
 void Hud::DrawFPS( float fps, SpriteManager* sprites ) {
 	char frameRate[18] = {0};
+
 	BitType->SetColor( WHITE );
-	snprintf(frameRate, sizeof(frameRate) - 1, "%f fps", fps );
+	snprintf(frameRate, sizeof(frameRate) - 1, "%.2f fps", fps );
 	BitType->Render( Video::GetWidth() - 100, Video::GetHeight() - 15, frameRate );
 
 	snprintf(frameRate, sizeof(frameRate) - 1, "%d Quadrants", sprites->GetNumQuadrants());
@@ -439,19 +442,20 @@ void Hud::DrawTarget( SpriteManager* sprites ) {
  * \param message C string of message.
  * \param ... Arguments that are formated into the message.
  */
-void Hud::Alert( const char *message, ... )
-{
+void Hud::Alert( bool audible, const char *message, ... ) {
 	va_list args;
-	char msgBuffer[ 4096 ] = {0};
+	char msgBuffer[ 2048 ] = {0};
 
 	// Format the Message
 	va_start( args, message );
-	vsnprintf( msgBuffer, 4095, message, args );
+	vsnprintf( msgBuffer, 2047, message, args );
 	va_end( args );
 
 	// Store this Message as a new Alert.
 	// Use the current time so that it can fade away gracefully.
 	AlertMessages.push_back( AlertMessage( msgBuffer, Timer::GetTicks() ) );
+
+	if(audible && AlertBeep) { AlertBeep->Play(); }
 }
 
 
@@ -544,7 +548,6 @@ bool Hud::HasStatusMatching( string matchPattern ) {
 /**\brief Register Lua functions for HUD related updates.
  */
 void Hud::RegisterHud(lua_State *L) {
-
 	Lua::RegisterGlobal("UPPER_LEFT", UPPER_LEFT);
 	Lua::RegisterGlobal("UPPER_RIGHT", UPPER_RIGHT);
 	Lua::RegisterGlobal("LOWER_LEFT", LOWER_LEFT);
@@ -582,10 +585,16 @@ int Hud::setVisibity(lua_State *L) {
  */
 int Hud::newAlert(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
-	if (n != 1)
-		return luaL_error(L, "Got %d arguments expected 1 (message)", n);
-	const char* msg = luaL_checkstring(L,1);
-	Alert(msg);
+
+	if(n != 2) {
+		return luaL_error(L, "Got %d argument(s) expected 2 (audible, message)", n);
+	}
+
+	bool audible = (bool)luaL_checkint(L, 1);
+	const char* msg = luaL_checkstring(L, 2);
+
+	Alert(audible, msg);
+
 	return 0;
 }
 
@@ -593,18 +602,21 @@ int Hud::newAlert(lua_State *L) {
  */
 int Hud::newStatus(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
-	if ( (n < 3) )
-		return luaL_error(L, "Got %d arguments expected 4 (title, width, postition )", n);
+	if( n < 3 ) {
+		return luaL_error(L, "Got %d argument(s) expected 4 (title, width, postition )", n);
+	}
 
 	// Create the Status Bar
-	string title = (string)luaL_checkstring(L,1);
-	int width = (int)(luaL_checkint(L,2));
-	QuadPosition pos = (QuadPosition)(luaL_checkint(L,3));
-	if(pos<0||pos>3){
+	string title = (string)luaL_checkstring(L, 1);
+	int width = (int)(luaL_checkint(L, 2));
+	QuadPosition pos = (QuadPosition)(luaL_checkint(L, 3));
+
+	if(pos < 0 || pos > 3) {
 		return luaL_error(L, "Invalid Position %d. Valid Options are: UPPER_LEFT=0, UPPER_RIGHT=1, LOWER_LEFT=2, LOWER_RIGHT=3", pos);
 	}
-	string updater = (string)luaL_checkstring(L,4);
-	StatusBar *bar = new StatusBar(title,width,pos,updater);
+
+	string updater = (string)luaL_checkstring(L, 4);
+	StatusBar *bar = new StatusBar(title, width, pos, updater);
 
 	// Add the Bar to the Hud
 	AddStatus(bar);
@@ -612,18 +624,21 @@ int Hud::newStatus(lua_State *L) {
 	return 0;
 }
 
-
 /**\brief Closes the status (Lua callable).
  */
 int Hud::closeStatus(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
-	if (n != 1)
-		return luaL_error(L, "Got %d arguments expected 1 (Title)", n);
+	if (n != 1) {
+		return luaL_error(L, "Got %d argument(s) expected 1 (Title)", n);
+	}
+
 	string deleteTitle = luaL_checkstring(L,1);
 	bool success = DeleteStatus( deleteTitle );
-	if(!success) {
+
+	if(success == false) {
 		return luaL_error(L, "closeStatus couldn't find the StatusBar titled '%s'.", deleteTitle.c_str() );
 	}
+
 	return 0;
 }
 

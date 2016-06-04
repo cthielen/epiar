@@ -119,7 +119,7 @@ APFuncs.showAlert = function(self)
 	if self == nil or self.name ~= "player" then return end
 	local dest = self.GateRoute[#self.GateRoute]
 	local next = self.GateRoute[1]
-	HUD.newAlert( (string.format("Autopilot: engaged, en route to %s, next object is %s", dest, next) ) )
+	HUD.newAlert( 1, (string.format("Autopilot: engaged, en route to %s, next object is %s", dest, next) ) )
 end
 
 -- Calculate the shortest path from the current location to the specified destination
@@ -215,7 +215,7 @@ function APFuncs.shortestPath(self, dest)
 		--self:showGateRoute()
 
 		if self.name == "player" then
-			HUD.newAlert( string.format("Computed a route to %s: %d gate pair(s).", dest, math.floor(#self.GateRoute/2) ) )
+			HUD.newAlert( 1, string.format("Computed a route to %s: %d gate pair(s).", dest, math.floor(#self.GateRoute/2) ) )
 		end
 
 		return true
@@ -236,7 +236,7 @@ function APFuncs.shortestPath(self, dest)
 
 	if self.name == "player" then
 		PLAYER:SetLuaControlFunc("Autopilot.spcrTick()")
-		HUD.newAlert("Working...")
+		HUD.newAlert(1, "Working...")
 	end
 end
 
@@ -347,7 +347,7 @@ function APFuncs.compute (self, dest)
 
 	if dest == nil or dest == "" or exists(dest) == false then
 		if self.name == "player" then
-			HUD.newAlert("Please specify a real destination.")
+			HUD.newAlert(1, "Please specify a real destination.")
 		end
 		return
 	end
@@ -397,7 +397,7 @@ function APFuncs.autoAngle (self)
 		if distfrom(movingX, movingY, pi.X, pi.Y) < 300 then
 			table.remove(self.GateRoute, 1)
 			if self.name == "player" then
-				HUD.newAlert("You have arrived at your destination.")
+				HUD.newAlert(1, "You have arrived at your destination.")
 				Autopilot = nil
 			end
 			self = nil
@@ -423,13 +423,11 @@ function APFuncs.autoAngle (self)
 			if #self.GateRoute % 2 == 1 then
 				-- don't tell the moving to resume acceleration until he/she has cleared both the gate top and bottom
 				-- (this acceleration control could be automated)
-				--HUD.newAlert("please resume acceleration")
 				self.AllowAccel = (mySprite:directionTowards( oi.X, oi.Y ) == 0)
 				self:showAlert()
 			end
 		elseif distfrom(movingX, movingY, gi.X, gi.Y) < 800 then
 			if self.AllowAccel ~= false then
-				--HUD.newAlert("please stop acceleration")
 				self.AllowAccel = false
 			end
 		else
@@ -463,7 +461,7 @@ function playerAutopilotToggle ()
 		PLAYER:SetLuaControlFunc("playerAutopilotRun()")
 		Fleets:getShipFleet(PLAYER:GetID()):gateTravel(nil, Autopilot.GateRoute)
 	else
-		HUD.newAlert("Autopilot disengaged")
+		HUD.newAlert(1, "Autopilot disengaged")
 		Autopilot.control = false
 		Autopilot.AllowAccel = false
 		PLAYER:SetLuaControlFunc("")
@@ -475,7 +473,7 @@ function showAPConfigDialog()
 	-- The "Autopilot" global refers to the player's autopilot, if any. Any others will be stored elsewhere.
 	if Autopilot == nil then Autopilot = APInit( "player", PLAYER:GetID() ) end
 	if Autopilot:hasAutopilot(PLAYER) == false then
-		HUD.newAlert("You don't have an autopilot system.")
+		HUD.newAlert(1, "You don't have an autopilot system.")
 		Autopilot = nil
 		return
 	end

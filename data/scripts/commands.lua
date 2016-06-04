@@ -81,7 +81,7 @@ function keyboardCommands()
 				if newkey ~= oldkey then
 					Epiar.UnRegisterKey(sdlkey(oldkey), commands[i][4])
 					Epiar.RegisterKey(sdlkey(newkey), commands[i][4], commands[i][3])
-					HUD.newAlert(string.format("Registered %q to %q", newkey, name))
+					HUD.newAlert(0, string.format("Registered %q to %q", newkey, name))
 					commands[i][1] = keyinput[name]:GetText()
 				end
 			end

@@ -1,0 +1,16 @@
+File: 28853__junggle__btn043.ogg
+License: CC BY 3.0
+URL: http://www.freesound.org/samplesViewSingle.php?id=28853
+Author: junggle
+
+File: 28820__junggle__btn010.ogg
+License: CC BY 3.0
+URL: http://www.freesound.org/samplesViewSingle.php?id=28820
+Author: junggle
+
+File: hud_beep.ogg
+License: CC BY 3.0
+Original URL: http://freesound.org/people/KeyKrusher/sounds/154953/
+Author: KeyKrusher
+Modified by: Christopher Thielen (doubled, leveled, EQed, minor pitch/tempo tweaks)
+

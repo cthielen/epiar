@@ -301,33 +301,33 @@ end
 function playerFleetHunt()
 	local f = Fleets:getShipFleet( PLAYER:GetID() )
 	if f ~= nil and f:size() > 0 then
-		HUD.newAlert(
+		HUD.newAlert( 1, 
 		   f:hunt( HUD.getTarget() ) and
 		     "Escorts pursuing designated target." or
 		     "That is not an acceptable target!"
 		)
 	else
-		HUD.newAlert("You have no escorts.")
+		HUD.newAlert(1, "You have no escorts.")
 	end
 end
 
 function playerFleetFormation()
 	local f = Fleets:getShipFleet( PLAYER:GetID() )
 	if f ~= nil and f:size() > 0 then
-		HUD.newAlert("Escorts returning to formation.")
+		HUD.newAlert(1, "Escorts returning to formation.")
 		f:formation()
 	else
-		HUD.newAlert("You have no escorts.")
+		HUD.newAlert(1, "You have no escorts.")
 	end
 end
 
 function playerFleetHold()
 	local f = Fleets:getShipFleet( PLAYER:GetID() )
 	if f ~= nil and f:size() > 0 then
-		HUD.newAlert("Escorts holding position.")
+		HUD.newAlert(1, "Escorts holding position.")
 		f:hold()
 	else
-		HUD.newAlert("You have no escorts.")
+		HUD.newAlert(1, "You have no escorts.")
 	end
 end
 
