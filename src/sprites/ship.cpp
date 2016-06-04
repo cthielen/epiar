@@ -27,7 +27,7 @@
 #define NON_PLAYER_SOUND_RATIO 0.4f ///< Ratio used to quiet NON-PLAYER Ship Sounds.
 
 #define JUMP_ACCELERATION_CONSTANT 22.
-#define JUMP_ACCELERATION_DURATION 5000 ///< milliseconds a ship should accelerate before the jump 'flash'
+#define JUMP_ACCELERATION_DURATION 5000 ///< milliseconds a ship should accelerate before the jump 'flash'. Should match duration of 'jump_start.ogg' SFX.
 #define JUMP_FLASH_DURATION 100 ///< milliseconds a ship should accelerate before the jump 'flash'
 
 /**\class Ship
@@ -381,21 +381,9 @@ bool Ship::Jump( Sector* destination ) {
 	}
 
 	status.isJumping = true;
-	status.jumpStartTime = Timer::GetTicks();
 	//status.jumpDestination = position;
 
-	// TODO Start playing a sound
-	/*if (isPlayer()) {
-		Sound *aSound;
-		if (jumpDrive) {
-			aSound = Sound::Get("data/audio/effects/128590__corsica-s__transport-edit.wav");
-		} else {
-			aSound = Sound::Get("data/audio/effects/55853__sergenious__teleport.wav");
-		}
-
-		aSound -> SetVolume(10);
- 		aSound -> Play();
-	}*/
+	status.rotatedForJump = false;
 
 	Scenario *currentScenario = Menu::GetCurrentScenario();
 
@@ -441,7 +429,7 @@ void Ship::Update( lua_State *L ) {
 
 	if( status.isJumping ) {
 		// When the Jump is complete
-		if( Timer::GetTicks() - status.jumpStartTime > JUMP_ACCELERATION_DURATION ) {
+		if(status.rotatedForJump && ( Timer::GetTicks() - status.jumpStartTime > JUMP_ACCELERATION_DURATION )) {
 			status.isJumping = false;
 
 			// Set momentum to 50% max
@@ -459,9 +447,26 @@ void Ship::Update( lua_State *L ) {
 				// Switch sectors and remove first navigation route ...
 				Player *player = (Player *)this;
 				player->Jumped();
+
+				Sound *jumpSound = Sound::Get("data/audio/engines/jump_end.ogg");
+				jumpSound->SetVolume(10);
+ 				if(jumpSound) { jumpSound->Play(); }
 			}
 		}
 		if(RotateToAngle( status.jumpAngle )) {
+			if(status.rotatedForJump == false) {
+				status.rotatedForJump = true;
+				// Only begin counting down the jump once we're done rotating (and about to accelerate)
+				status.jumpStartTime = Timer::GetTicks();
+
+				// Begin the jump SFX if player ...
+				if(isPlayer()) {
+					Sound *jumpSound = Sound::Get("data/audio/engines/jump_start.ogg");
+					jumpSound->SetVolume(10);
+ 					if(jumpSound) { jumpSound->Play(); }
+				}
+			}
+
 			Accelerate( true );
 		}
 	}

@@ -154,6 +154,7 @@ class Ship : public Sprite {
 			Uint32 jumpStartTime;
 			float jumpAngle;
 			Sector* jumpDestination;
+			bool rotatedForJump;
 			
 			/* Flags */
 			bool isAccelerating; ///< Cleared by update, set by accelerate (so it's always updated twice a loop)
