@@ -187,7 +187,7 @@ void Player::Land( lua_State *L, Planet* planet ){
 	lastPlanet = planet->GetName();
 	Save( Scenario_Lua::GetScenario(L)->GetName() );
 
-  //AdvanceFromLand
+	Menu::GetCurrentScenario()->GetCalendar()->Advance();
 }
 
 /**\brief Constructor

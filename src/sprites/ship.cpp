@@ -451,6 +451,8 @@ void Ship::Update( lua_State *L ) {
 				Sound *jumpSound = Sound::Get("data/audio/engines/jump_end.ogg");
 				jumpSound->SetVolume(10);
  				if(jumpSound) { jumpSound->Play(); }
+
+				Menu::GetCurrentScenario()->GetCalendar()->Advance();
 			}
 		}
 		if(RotateToAngle( status.jumpAngle )) {

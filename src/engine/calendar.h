@@ -1,7 +1,7 @@
-/**\file			calendar.h
+/**\file		calendar.h
  * \author		Christopher Thielen (chris@epiar.net)
- * \date			Created: Sunday, June 24, 2012
- * \date			Modified: Sunday, June 24, 2012
+ * \date		Created: Sunday, June 24, 2012
+ * \date		Modified: Wednesday, August 10, 2016
  * \brief
  * \details
  *            This represents "space time". The idea is
@@ -26,20 +26,19 @@ class Calendar {
 	public:
 		Calendar();
     
-    void Update(void);    
-    void AdvanceFromJump(float distance);
-    void AdvanceFromLand();
+		void Update(void);    
+		void Advance();
     
-    string Now(void);
+		string Now(void);
     
-    int GetPeriod(void) { return period; }
-    int GetEpoch(void) { return epoch; }
+		int GetPeriod(void) { return period; }
+		int GetEpoch(void) { return epoch; }
     
-  private:
-    int period, epoch;
-    int ticker;
+	private:
+		int period, epoch;
+		int ticker;
     
-    void AdjustEpoch();
+		void AdjustEpoch();
 };
 
 #endif // __h_calendar__
