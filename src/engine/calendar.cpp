@@ -1,7 +1,7 @@
 /**\file			calendar.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 24, 2012
- * \date			Modified: Wednesday, August 10, 2016
+ * \date			Modified: Sunday, August 14, 2016
  * \brief
  * \details
  */
@@ -58,10 +58,18 @@ void Calendar::Update(void) {
  */
 void Calendar::Advance() {
 	period++;
+	ticker = 0;
   
 	AdjustEpoch();
   
 	Hud::Alert("Day changed to %s", Now().c_str());
+}
+
+/**\brief Advances the date after n seconds.
+ *
+ */
+void Calendar::AdvanceAfter(int seconds) {
+	ticker = LOGIC_FRAMES_PER_PERIOD - (seconds * LOGIC_FPS);
 }
 
 void Calendar::AdjustEpoch() {

@@ -1,7 +1,7 @@
 /**\file		calendar.h
  * \author		Christopher Thielen (chris@epiar.net)
  * \date		Created: Sunday, June 24, 2012
- * \date		Modified: Wednesday, August 10, 2016
+ * \date		Modified: Sunday, August 14, 2016
  * \brief
  * \details
  *            This represents "space time". The idea is
@@ -28,6 +28,7 @@ class Calendar {
     
 		void Update(void);    
 		void Advance();
+		void AdvanceAfter(int ticks);
     
 		string Now(void);
     
