@@ -452,7 +452,7 @@ void Ship::Update( lua_State *L ) {
 				jumpSound->SetVolume(10);
  				if(jumpSound) { jumpSound->Play(); }
 
-				Menu::GetCurrentScenario()->GetCalendar()->AdvanceAfter(2);
+				Menu::GetCurrentScenario()->GetCalendar()->AdvanceAfter(1);
 			}
 		}
 		if(RotateToAngle( status.jumpAngle )) {
