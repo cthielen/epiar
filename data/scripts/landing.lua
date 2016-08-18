@@ -144,16 +144,22 @@ function landingDialog(id)
 	function Leave()
 		Epiar.savePlayer()
 		Epiar.unpause()
+		Calendar.Advance()
 		local landingWin = UI.search(string.format("/Window'%s'/", planet:GetName()))
 		if landingWin then
 			landingWin:close()
 		end
 	end
 
-	landingWin:add(UI.newButton( 10,height-40,100,30,"Repair","PLAYER:Repair(10000)" ))
-	landingWin:add(UI.newButton( 110,height-40,100,30,"Weapon Config","weaponConfigDialog()" ))
-	landingWin:add(UI.newButton( 210,height-40,100,30,"Information","playerInformation()" ))
-	local closeButton = UI.newButton( width-110,height-40,100,30,string.format("Depart"), "Leave()" )
+	function LeaveBtn()
+		local landingWin = UI.search(string.format("/Window'%s'/", planet:GetName()))
+		landingWin:close()
+	end
+
+	landingWin:add(UI.newButton( 10, height - 40, 100, 30, "Repair", "PLAYER:Repair(10000)" ))
+	landingWin:add(UI.newButton( 110, height - 40, 100, 30, "Weapon Config", "weaponConfigDialog()" ))
+	landingWin:add(UI.newButton( 210, height - 40, 100, 30, "Information", "playerInformation()" ))
+	local closeButton = UI.newButton( width - 110, height - 40, 100, 30, string.format("Depart"), "LeaveBtn()" )
 	landingWin:add( closeButton )
 	landingWin:setFormButton( closeButton )
 	landingWin:addCallback( Action_Close, 'Leave()' )

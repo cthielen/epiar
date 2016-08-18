@@ -1,7 +1,7 @@
 /**\file			scenario.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Tuesday, April 12, 2016
+ * \date			Modified: Wednesday, August 17, 2016
  * \brief			Contains the main game loop
  * \details
  */
@@ -12,6 +12,7 @@
 #include "audio/audio_lua.h"
 #include "engine/alliances.h"
 #include "engine/calendar.h"
+#include "engine/calendar_lua.h"
 #include "engine/commodities.h"
 #include "engine/console.h"
 #include "engine/hud.h"
@@ -526,6 +527,7 @@ void Scenario::LuaRegisters(lua_State *L) {
 	Planets_Lua::RegisterPlanets(L);
 	Hud::RegisterHud(L);
 	Video::RegisterVideo(L);
+	Calendar_Lua::RegisterCalendar(L);
 }
 
 /**\brief Parses the scenario XML file

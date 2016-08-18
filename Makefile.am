@@ -12,6 +12,7 @@ epiar_SOURCES = src/main.cpp \
                 src/engine/commodities.cpp \
                 src/engine/console.cpp \
                 src/engine/calendar.cpp \
+                src/engine/calendar_lua.cpp \
                 src/engine/camera.cpp \
                 src/engine/engines.cpp \
                 src/engine/hud.cpp \
