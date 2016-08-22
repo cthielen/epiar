@@ -1,7 +1,7 @@
 /**\file			spritemanager.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Thursday, December 3, 2015
+ * \date			Modified: Sunday, August 21, 2016
  * \brief
  * \details
  */
@@ -22,11 +22,14 @@ class SpriteManager {
 		bool Delete( Sprite *sprite );
 
 		void DeleteByType( int type );
+		void DeleteAllExceptPlayer( void );
 
 		void Update( lua_State *L, bool lowFps);
 		void UpdateScreenCoordinates( void );
 		void Draw( Coordinate focus );
 		void DrawQuadrantMap( Coordinate focus );
+
+		int GetAIShipCount( void );
 
 		Sprite *GetSpriteByID(int id);
 		list<Sprite*> *GetSprites(int type = DRAW_ORDER_ALL);
@@ -44,8 +47,8 @@ class SpriteManager {
 	private:
 		// These structures each contain a complete list of all Sprites.
 		// Each one is useful for a different purpose, depending on the way that the sprites need to be accessed.
-		map<Coordinate,QuadTree*> trees;    ///< Collection of all Sprites. Use the tree when referring to the sprites at a location.
-		list<Sprite*> *spritelist;          ///< Collection of all Sprites. Use the list when referring to all sprites.
+		map<Coordinate,QuadTree*> trees;    ///< Collection of all Sprites. Use this tree when referring to the sprites at a location.
+		list<Sprite*> *spritelist;          ///< Collection of all Sprites. Use this list when referring to all sprites.
 		map<int,Sprite*> *spritelookup;     ///< Collection of all Sprites. Use the map when referring to sprites by their unique ID.
 
 		Sprite *player;                     ///< The Player Sprite.

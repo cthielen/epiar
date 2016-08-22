@@ -1,7 +1,7 @@
 /**\file			spritemanager.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Tuesday, April 12, 2016
+ * \date			Modified: Sunday, August 21, 2016
  * \brief
  * \details
  */
@@ -134,6 +134,19 @@ void SpriteManager::DeleteByType( int type ) {
 	}
 }
 
+// Remove every sprite (planet, AI ship, projectile, effect, etc.) except the player's sprite
+void SpriteManager::DeleteAllExceptPlayer( void ) {
+	list<Sprite *>::iterator i;
+
+	for( i = spritelist->begin(); i != spritelist->end(); ++i ) {
+		Sprite *s = (*i);
+		if( s->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
+			DeleteSprite( s );
+			i = spritelist->begin(); // TODO: spritelist->remove() is called which ... makes this necessary? Right?
+		}
+	}
+}
+
 /**\brief Deletes a sprite.
  * \param sprite Pointer to the sprite object
  * \details
@@ -242,6 +255,22 @@ void SpriteManager::Update( lua_State *L, bool lowFps) {
 
 	// Update the tick count after all updates for this tick are done
 	UpdateTickCount();
+}
+
+/**\brief Returns the number of non-player (AI) ships.
+ */
+int SpriteManager::GetAIShipCount( void ) {
+	list<Sprite *>::iterator i;
+	int count = 0;
+
+	for( i = spritelist->begin(); i != spritelist->end(); ++i ) {
+		Sprite *s = (*i);
+		if(( s->GetDrawOrder() == DRAW_ORDER_SHIP ) && (s != player)) {
+			count++;
+		}
+	}
+
+	return count;
 }
 
 /**\brief Deletes empty QuadTrees (Internal use)
