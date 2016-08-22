@@ -169,18 +169,6 @@ void Planet::Update( lua_State *L ) {
 	Sprite::Update( L );
 }
 
-//void Planet::GenerateTraffic( lua_State *L ) {
-	//SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
-	//list<Sprite*> *nearbySprites = sprites->GetSpritesNear( GetWorldPosition(), 0.0f, DRAW_ORDER_SHIP | DRAW_ORDER_PLAYER);
-
-	//if( nearbySprites->size() < traffic ) {
-	//	Lua::Call( "createRandomShipForPlanet", "i", GetID() );
-	//}
-	//delete nearbySprites;
-
-	//lastTrafficTime = Timer::GetLogicalFrameCount();
-//}
-
 /**\brief List of the Models that are available at this Planet
  */
 list<Model*> Planet::GetModels() {
