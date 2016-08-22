@@ -22,20 +22,22 @@ class Timer {
 		static Uint32 GetTicks( void );
 		static Uint32 GetRealTicks( void );
 		static double GetFFrame( void );
-
 		static double GetDelta( void );
-
 		static Uint32 GetLogicalFrameCount( void );
+		static void Pause( void );
+		static void Unpause( void );
 
   	private:
-  	static Uint32 lastLoopLength;
-  	static Uint32 lastLoopTick;
+		static Uint32 lastLoopLength;
+		static Uint32 lastLoopTick;
 		static Uint32 logicalFrameCount;
 		static double frames;
 		static double fframe;
 		static int lastLogicalLoops;
 		static int delayMS;
-    static Uint32 desiredFPS;
+		static Uint32 desiredFPS;
+		static Uint32 pausedAt;
+		static Uint32 pauseDelay;
 };
 
 #endif // __h_timer__
