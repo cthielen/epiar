@@ -1,7 +1,7 @@
 /**\file			scenario.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: July 2006
- * \date			Modified: Wednesday, August 17, 2016
+ * \date			Modified: Sunday, August 21, 2016
  * \brief			Contains the main game loop
  * \details
  */
@@ -43,6 +43,9 @@
 // Number of milliseconds between traffic generation checks. Traffic may be generated
 // every TRAFFIC_GENERATION_FREQUENCY intervals, but not always (randomness is used).
 #define TRAFFIC_GENERATION_FREQUENCY 10000
+// If traffic generation is needed at the given interval, this is the percentage chance
+// any traffic will be generated.
+#define TRAFFIC_GENERATION_CHANCE 35
 
 /**\class Scenario
  * \brief Handles main game loop. */
@@ -270,7 +273,8 @@ void Scenario::ResetSector( Sector *s ) {
 
 	LogMsg(INFO, "Setting up '%s' current sector ...", s->GetName().c_str());
 
-	sprites->DeleteByType( DRAW_ORDER_PLANET );
+	// Remove every sprite except the player
+	sprites->DeleteAllExceptPlayer();
 
 	// Add planets based on the current sector
 	list<string> planetList = s->GetPlanets();
@@ -282,6 +286,9 @@ void Scenario::ResetSector( Sector *s ) {
 
 		sprites->Add( p );
 	}
+
+	// Generate the necessary traffic for the sector
+	s->GenerateDefaultTraffic();
 
 	currentSector = s;
 }
@@ -423,9 +430,14 @@ void Scenario::Run() {
 
 				// Generate new sector traffic if needed
 				if( lastTrafficTime + TRAFFIC_GENERATION_FREQUENCY < Timer::GetTicks() ) {
-					cout << "Traffic generation time" << endl;
-					cout << "RAND_MAX: " << RAND_MAX << endl;
-				//	GenerateTraffic( L );
+					if( currentSector->GetTraffic() > sprites->GetAIShipCount() ) {
+						if((rand() % 100) > TRAFFIC_GENERATION_CHANCE) {
+							cout << "generating traffic" << endl;
+							currentSector->GenerateTraffic(1);
+						} else {
+							cout << "do not generate traffic, unlucky roll" << endl;
+						}
+					}
 					lastTrafficTime = Timer::GetTicks();
 				}
 

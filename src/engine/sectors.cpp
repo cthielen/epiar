@@ -1,7 +1,7 @@
 /**\file			sectors.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Thursday, October 8, 2015
- * \date			Modified: Thursday, October 8, 2015
+ * \date			Modified: Sunday, August 21, 2016
  * \brief
  * \details
  */
@@ -150,6 +150,11 @@ bool Sector::HasPlanet(string planetName) {
 	}
 
 	return false;
+}
+
+/* Creates 'count' AI ships in spriteManager based on sector characteristics */
+void Sector::GenerateTraffic( int conut ) {
+	cout << "Sector::GenerateTraffic() not implemented." << endl;
 }
 
 /**\brief Save this Sector to an xml node

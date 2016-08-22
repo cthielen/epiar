@@ -1,7 +1,7 @@
 /**\file			sectors.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Thursday, October 8, 2015
- * \date			Modified: Thursday, October 8, 2015
+ * \date			Modified: Sunday, August 21, 2016
  * \brief
  * \details
  */
@@ -46,6 +46,9 @@ class Sector : public Component {
 		Alliance* GetAlliance() const { return alliance; }
 
 		friend ostream& operator<<(ostream & out, const Sector &s );
+
+		void GenerateTraffic( int count );
+		void GenerateDefaultTraffic() { GenerateTraffic( GetTraffic() ); }
 
 	private:
 		Alliance* alliance;
