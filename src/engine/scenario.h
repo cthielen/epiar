@@ -117,6 +117,7 @@ class Scenario : public XMLFile {
 		bool loaded;
 		bool quit;
 		float mapScale;
+		Uint32 lastTrafficTime;
 };
 
 #endif // __H_SCENARIO__

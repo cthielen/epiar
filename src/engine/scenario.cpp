@@ -40,6 +40,10 @@
 // Distance from sector's center player should arrive at after jump completion
 #define JUMP_DISTANCE_FROM_CENTER 6.
 
+// Number of milliseconds between traffic generation checks. Traffic may be generated
+// every TRAFFIC_GENERATION_FREQUENCY intervals, but not always (randomness is used).
+#define TRAFFIC_GENERATION_FREQUENCY 10000
+
 /**\class Scenario
  * \brief Handles main game loop. */
 
@@ -72,6 +76,8 @@ Scenario::Scenario( void ) {
 	mapScale = -1.0f;
 
 	currentSector = NULL;
+
+	lastTrafficTime = 0;
 }
 
 bool Scenario::New( string newname ) {
@@ -142,6 +148,7 @@ void Scenario::pause() {
 	LogMsg(INFO, "Pausing.");
 	paused = true;
 	interpolateOn = false;
+	Timer::Pause();
 }
 
 void Scenario::Save() {
@@ -176,6 +183,7 @@ void Scenario::Save() {
 void Scenario::unpause() {
 	LogMsg(INFO, "Unpausing.");
 	paused = false;
+	Timer::Unpause();
 	interpolateOn = true;
 }
 
@@ -411,6 +419,14 @@ void Scenario::Run() {
 					player->SetWorldPosition( newCoordinate * -1 * player->GetJumpAngle() );
 
 					Navigation::RemoveNextSector();
+				}
+
+				// Generate new sector traffic if needed
+				if( lastTrafficTime + TRAFFIC_GENERATION_FREQUENCY < Timer::GetTicks() ) {
+					cout << "Traffic generation time" << endl;
+					cout << "RAND_MAX: " << RAND_MAX << endl;
+				//	GenerateTraffic( L );
+					lastTrafficTime = Timer::GetTicks();
 				}
 
 				sprites->Update( luaState, lowFps );

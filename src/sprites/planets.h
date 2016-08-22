@@ -36,7 +36,6 @@ class Planet : public Sprite, public Component {
 		);
 		
 		void Update( lua_State *L );
-		void GenerateTraffic( lua_State *L );
 
 		virtual int GetDrawOrder( void ) { return( DRAW_ORDER_PLANET ); }
 		
@@ -66,8 +65,6 @@ class Planet : public Sprite, public Component {
 		Image* surface;
 		string summary;
 		list<Technology*> technologies;
-
-		Uint32 lastTrafficTime;
 };
 
 // Class that holds list of all planets; manages them

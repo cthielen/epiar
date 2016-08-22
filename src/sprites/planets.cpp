@@ -42,7 +42,6 @@ Planet::Planet(){
 	surface = NULL;
 	landable = true;
 	forbidden = false;
-	lastTrafficTime = 0;
 }
 
 /**\brief Copy Constructor
@@ -167,13 +166,10 @@ bool Planet::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 }
 
 void Planet::Update( lua_State *L ) {
-	if( lastTrafficTime + 120 < Timer::GetLogicalFrameCount() ) {
-		GenerateTraffic( L );
-	}
 	Sprite::Update( L );
 }
 
-void Planet::GenerateTraffic( lua_State *L ) {
+//void Planet::GenerateTraffic( lua_State *L ) {
 	//SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 	//list<Sprite*> *nearbySprites = sprites->GetSpritesNear( GetWorldPosition(), 0.0f, DRAW_ORDER_SHIP | DRAW_ORDER_PLAYER);
 
@@ -182,8 +178,8 @@ void Planet::GenerateTraffic( lua_State *L ) {
 	//}
 	//delete nearbySprites;
 
-	lastTrafficTime = Timer::GetLogicalFrameCount();
-}
+	//lastTrafficTime = Timer::GetLogicalFrameCount();
+//}
 
 /**\brief List of the Models that are available at this Planet
  */
