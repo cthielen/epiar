@@ -1,3 +1,7 @@
+0.6.0 TODO:
+* Traffic generation should work
+* Planets should not all have the same landing image
+
 'disable-audio' should not be a permanently saved option
 
 Clean up trade tab - perhaps by creating a proper UI::Table
