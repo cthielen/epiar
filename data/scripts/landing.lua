@@ -144,7 +144,7 @@ function landingDialog(id)
 	function Leave()
 		Epiar.savePlayer()
 		Epiar.unpause()
-		Calendar.Advance()
+		Calendar.AdvanceAfter(1)
 		local landingWin = UI.search(string.format("/Window'%s'/", planet:GetName()))
 		if landingWin then
 			landingWin:close()
