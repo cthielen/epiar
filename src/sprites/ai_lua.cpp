@@ -185,7 +185,7 @@ int AI_Lua::newShip(lua_State *L){
 	//LogMsg(INFO,"Creating new Ship (%s) (%f,%f) (%s) (%s) (%s) (%s)",name.c_str(), x,y,modelname.c_str(),enginename.c_str(),statemachine.c_str(), alliancename.c_str());
 
 	// Allocate memory for a pointer to object
-	AI* s;
+	AI *s = NULL;
 	s = new AI(name,statemachine);
 	s->SetWorldPosition( Coordinate(x, y) );
 	s->SetModel( Scenario_Lua::GetScenario(L)->GetModels()->GetModel(modelname) );
