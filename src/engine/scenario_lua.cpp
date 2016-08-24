@@ -507,7 +507,7 @@ int Scenario_Lua::GetPlanetNames(lua_State *L){
 /** \brief Pushes a Sprite reference onto the Lua Stack.
  *  \note Sprites are referenced by their ID.
  */
-void Scenario_Lua::PushSprite(lua_State *L,Sprite* s){
+void Scenario_Lua::PushSprite(lua_State *L, Sprite* s) {
 	int* id = (int*)lua_newuserdata(L, sizeof(int*));
 
 	*id = s->GetID();
