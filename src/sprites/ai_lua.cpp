@@ -244,16 +244,18 @@ int AI_Lua::ShipRotate(lua_State* L) {
  */
 int AI_Lua::ShipRadarColor(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
+
 	if (n == 4) {
-		AI* ai = checkShip(L,1);
-		if(ai==NULL) return 0;
+		AI* ai = checkShip(L, 1);
+		if(ai == NULL) { return 0; }
 		int red = (int) luaL_checknumber (L, 2);
 		int green = (int) luaL_checknumber (L, 3);
 		int blue = (int) luaL_checknumber (L, 4);
-		(ai)->SetRadarColor(Color(red,green,blue));
+		(ai)->SetRadarColor(Color(red, green, blue));
 	} else {
 		luaL_error(L, "Got %d arguments expected 4 (self, red, green, blue)", n);
 	}
+
 	return 0;
 }
 

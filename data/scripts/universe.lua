@@ -50,70 +50,70 @@ end
 -- Basic Utilities
 
 --- Creates a random ship
-function createRandomShip(X,Y,Range,models,engines,weapons,alliance)
-	if models==nil then
-		local models = Epiar.models()
-	end
-	if engines==nil then
-		local engines = Epiar.engines()
-	end
-	if weapons==nil then
-		local weapons = Epiar.weapons()
-	end
-	if alliance==nil then
-		alliance = choose(Epiar.alliances())
-	end
-	local name = choose( {
-		"Bob", "Joe", "Fred", "Sally", "Frank",
-		"Hillary", "Bruce", "Patrick", "Jimbo", "Richard",
-		"John", "Chuck", "Arthur", "James", "Bill",
-		"Helen", "Ken", "Marcus", "Violet", "Ethel",
-		"Gary", "Scott", "Thomas", "Russel", "Steve",
-	} )
-	local X = X + about(Range)
-	local Y = Y + about(Range)
-	local model = choose(models)
-	local engine = choose(engines)
-	local plans = nil
-	if (PLAYER:GetCredits() > 10000) then
-		plans = {"Hunter", "Trader", "Patrol", "Bully" }
-	else
-		plans = {"Trader", "Patrol", "Bully" }
-	end
-	local pirateModels = { "Fleet Guard", "Kartanal", "Terran Assist", "Patitu", "Terran Corvert Mark I", "Large Vesper", "Raven", "Hammer Freighter"  }
-	local escortModels = { "Fleet Guard", "Terran XV", "Kartanal", "Patitu", "Terran Corvert Mark I"  }
-
-	local p = choose(plans)
-
-	-- Turn some Hunters into anti-player Pirates if the player is far enough along
-	if (PLAYER:GetCredits() > 10000)
-		and (p == "Hunter")
-		and (math.random(20) == 1)
-	then
-		p = "Pirate"
-		model = pirateModels[math.random(#pirateModels)]
-		engine = "Ion Engines"
-	end
-
-	local s = Ship.new(name, X, Y, model, engine, p, alliance)
-
-	if p == "Pirate" then
-		setHuntHostile(s:GetID(), PLAYER:GetID() )
-		local escort = Ship.new( "An Escort", X-150, Y-150, choose(escortModels), "Ion Engines", "Escort", alliance)
-		setAccompany(escort:GetID(), s:GetID())
-	end
-
-	s:SetRadarColor(255,0,0)
-
-	-- give every AI the standard weapons of their ship class
-	attachStandardWeapons(s,weapons)
-
-	local creditsMax = math.random(40,90) * math.sqrt( s:GetTotalCost() )
-	local randCredits = math.random( creditsMax )
-	s:SetCredits(randCredits)
-
-	return s
-end
+--function createRandomShip(X,Y,Range,models,engines,weapons,alliance)
+--	if models==nil then
+--		local models = Epiar.models()
+--	end
+--	if engines==nil then
+--		local engines = Epiar.engines()
+--	end
+--	if weapons==nil then
+--		local weapons = Epiar.weapons()
+--	end
+--	if alliance==nil then
+--		alliance = choose(Epiar.alliances())
+--	end
+--	local name = choose( {
+--		"Bob", "Joe", "Fred", "Sally", "Frank",
+--		"Hillary", "Bruce", "Patrick", "Jimbo", "Richard",
+--		"John", "Chuck", "Arthur", "James", "Bill",
+--		"Helen", "Ken", "Marcus", "Violet", "Ethel",
+--		"Gary", "Scott", "Thomas", "Russel", "Steve",
+--	} )
+--	local X = X + about(Range)
+--	local Y = Y + about(Range)
+--	local model = choose(models)
+--	local engine = choose(engines)
+--	local plans = nil
+--	if (PLAYER:GetCredits() > 10000) then
+--		plans = {"Hunter", "Trader", "Patrol", "Bully" }
+--	else
+--		plans = {"Trader", "Patrol", "Bully" }
+--	end
+--	local pirateModels = { "Fleet Guard", "Kartanal", "Terran Assist", "Patitu", "Terran Corvert Mark I", "Large Vesper", "Raven", "Hammer Freighter"  }
+--	local escortModels = { "Fleet Guard", "Terran XV", "Kartanal", "Patitu", "Terran Corvert Mark I"  }
+--
+--	local p = choose(plans)
+--
+--	-- Turn some Hunters into anti-player Pirates if the player is far enough along
+--	if (PLAYER:GetCredits() > 10000)
+--		and (p == "Hunter")
+--		and (math.random(20) == 1)
+--	then
+--		p = "Pirate"
+--		model = pirateModels[math.random(#pirateModels)]
+--		engine = "Ion Engines"
+--	end
+--
+--	local s = Ship.new(name, X, Y, model, engine, p, alliance)
+--
+--	if p == "Pirate" then
+--		setHuntHostile(s:GetID(), PLAYER:GetID() )
+--		local escort = Ship.new( "An Escort", X-150, Y-150, choose(escortModels), "Ion Engines", "Escort", alliance)
+--		setAccompany(escort:GetID(), s:GetID())
+--	end
+--
+--	s:SetRadarColor(255,0,0)
+--
+--	-- give every AI the standard weapons of their ship class
+--	attachStandardWeapons(s,weapons)
+--
+--	local creditsMax = math.random(40,90) * math.sqrt( s:GetTotalCost() )
+--	local randCredits = math.random( creditsMax )
+--	s:SetCredits(randCredits)
+--
+--	return s
+--end
 
 function attachStandardWeapons(cur_ship,weapons)
 	-- first clear the weapon list
@@ -244,18 +244,18 @@ function createSystems(seed)
 	end
 end
 
-function createRandomShipForPlanet(id)
-	planet = Epiar.getSprite(id)
-	if (planet ~= nil) and (planet:GetType() == SPRITE_PLANET) then
-		x,y = planet:GetPosition()
-		influence = planet:Influence()
-		models = planet:GetModels()
-		engines = planet:GetEngines()
-		weapons = planet:GetWeapons()
-		alliance = planet:GetAlliance()
-		createRandomShip(x,y,influence,models,engines,weapons)
-	end
-end
+--function createRandomShipForPlanet(id)
+--	planet = Epiar.getSprite(id)
+--	if (planet ~= nil) and (planet:GetType() == SPRITE_PLANET) then
+--		x,y = planet:GetPosition()
+--		influence = planet:Influence()
+--		models = planet:GetModels()
+--		engines = planet:GetEngines()
+--		weapons = planet:GetWeapons()
+--		alliance = planet:GetAlliance()
+--		createRandomShip(x,y,influence,models,engines,weapons)
+--	end
+--end
 
 
 function intro()

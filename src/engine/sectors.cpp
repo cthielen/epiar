@@ -14,6 +14,7 @@
 #include "utilities/lua.h"
 #include "engine/alliances.h"
 #include "engine/scenario_lua.h"
+#include "sprites/ai.h"
 
 /**\class Sector
  * \brief A Sector.
@@ -107,7 +108,7 @@ bool Sector::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 
 	if( (attr = FirstChildNamed(node, "traffic")) ){
 		value = NodeToString(doc, attr);
-		traffic = ( atoi( value.c_str() ) != 0);
+		traffic = atoi( value.c_str() );
 	} else return false;
 
 	for( attr = FirstChildNamed(node, "neighbor"); attr != NULL; attr = NextSiblingNamed(attr, "neighbor") ) {
@@ -153,8 +154,71 @@ bool Sector::HasPlanet(string planetName) {
 }
 
 /* Creates 'count' AI ships in spriteManager based on sector characteristics */
-void Sector::GenerateTraffic( int conut ) {
-	cout << "Sector::GenerateTraffic() not implemented." << endl;
+void Sector::GenerateTraffic( int count ) {
+	Scenario *currentScenario = Menu::GetCurrentScenario();
+
+	if(currentScenario == NULL) {
+		LogMsg(ERR, "Could not get current scenario while generating traffic.");
+		return;
+	}
+
+	Player *player = currentScenario->GetPlayer();
+
+	cout << "Generating traffic, count of " << count << endl;
+
+	//local X = X + about(Range)
+	//local Y = Y + about(Range)
+	//local model = choose(models)
+	//local engine = choose(engines)
+	//if (PLAYER:GetCredits() > 10000) then
+	//	statemachines = {"Hunter", "Trader", "Patrol", "Bully" }
+	//else
+	//	statemachines = {"Trader", "Patrol", "Bully" }
+	//end
+	//local pirateModels = { "Fleet Guard", "Kartanal", "Terran Assist", "Patitu", "Terran Corvert Mark I", "Large Vesper", "Raven", "Hammer Freighter"  }
+	//local escortModels = { "Fleet Guard", "Terran XV", "Kartanal", "Patitu", "Terran Corvert Mark I"  }
+
+	//local p = choose(plans)
+
+	// Turn some Hunters into anti-player Pirates if the player is far enough along
+	//if (PLAYER:GetCredits() > 10000)
+	//	and (p == "Hunter")
+	//	and (math.random(20) == 1)
+	//then
+	//	p = "Pirate"
+	//	model = pirateModels[math.random(#pirateModels)]
+	//	engine = "Ion Engines"
+	//end
+
+	//local s = Ship.new(name, X, Y, model, engine, p, alliance)
+	for(int i = 0; i < count; i++) {
+		AI *s = new AI("Violet", "Trader");
+	
+		s->SetWorldPosition( player->GetWorldPosition() );
+		s->SetModel( currentScenario->GetModels()->GetModel("Large Vesper") );
+		s->SetEngine( currentScenario->GetEngines()->GetEngine("Ion Engines") );
+		s->SetAlliance( currentScenario->GetAlliances()->GetAlliance("United Earth Alliance") );
+		//Scenario_Lua::PushSprite(L, s);
+	
+		// Add this ship to the SpriteManager
+		currentScenario->GetSpriteManager()->Add((Sprite*)(s));
+	
+		//if p == "Pirate" then
+		//	setHuntHostile(s:GetID(), PLAYER:GetID() )
+		//	local escort = Ship.new( "An Escort", X-150, Y-150, choose(escortModels), "Ion Engines", "Escort", alliance)
+		//	setAccompany(escort:GetID(), s:GetID())
+		//end
+	
+		s->SetRadarColor(Color(255,0,0));
+	
+		// Give every AI the standard weapons of their ship's class
+		//attachStandardWeapons(s, weapons)
+	
+		//local creditsMax = math.random(40, 90) * math.sqrt( s:GetTotalCost() )
+		//local randCredits = math.random( creditsMax )
+		//s:SetCredits(randCredits)
+		s->SetCredits(0);
+	}
 }
 
 /**\brief Save this Sector to an xml node
