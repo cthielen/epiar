@@ -248,7 +248,7 @@ int Font::_Render( int x, int y, const string& text, int h, XPos xpos, YPos ypos
 
 		s = TTF_RenderUTF8_Blended(font, text.c_str(), fg);
 		if(s == NULL) {
-			LogMsg(ERR, "Could not render '%s'!", text);
+			LogMsg(ERR, "Could not render '%s'!", text.c_str());
 
 			if(text.length() == 0) {
 				LogMsg(ERR, "Text length should not be zero.");
