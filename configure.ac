@@ -23,7 +23,7 @@ AC_PROG_CC
 AC_PROG_RANLIB
 AC_LANG(C++)
 
-AX_CXX_COMPILE_STDCXX_11([ext], [mandatory])
+AX_CXX_COMPILE_STDCXX_11
 
 dnl Check for a C++ compiler
 if test "$ac_cv_prog_cxx_g" == no
