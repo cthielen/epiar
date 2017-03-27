@@ -638,13 +638,13 @@ QuadTree* SpriteManager::GetQuadrant( Coordinate point ) {
 /**\brief Get the universe boundaries
  * \note Returns the values through the pointer arguments.
  */
-void SpriteManager::GetBoundaries(float *_northEdge, float *_southEdge, float *_eastEdge, float *_westEdge)
-{
-	*_northEdge = northEdge;
-	*_southEdge = southEdge;
-	*_eastEdge  = eastEdge;
-	*_westEdge  = westEdge;
-}
+//void SpriteManager::GetBoundaries(float *_northEdge, float *_southEdge, float *_eastEdge, float *_westEdge)
+//{
+//	*_northEdge = northEdge;
+//	*_southEdge = southEdge;
+//	*_eastEdge  = eastEdge;
+//	*_westEdge  = westEdge;
+//}
 
 /** Adjust the Edges based on the locations of the populated QuadTrees
  */

@@ -194,11 +194,10 @@ void Sector::GenerateTraffic( int count ) {
 	for(int i = 0; i < count; i++) {
 		AI *s = new AI("Violet", "Trader");
 	
-		s->SetWorldPosition( player->GetWorldPosition() );
+		s->SetWorldPosition( Coordinate(0, 0) ); //player->GetWorldPosition() );
 		s->SetModel( currentScenario->GetModels()->GetModel("Large Vesper") );
 		s->SetEngine( currentScenario->GetEngines()->GetEngine("Ion Engines") );
 		s->SetAlliance( currentScenario->GetAlliances()->GetAlliance("United Earth Alliance") );
-		//Scenario_Lua::PushSprite(L, s);
 	
 		// Add this ship to the SpriteManager
 		currentScenario->GetSpriteManager()->Add((Sprite*)(s));
@@ -218,13 +217,16 @@ void Sector::GenerateTraffic( int count ) {
 		//local randCredits = math.random( creditsMax )
 		//s:SetCredits(randCredits)
 		s->SetCredits(0);
+
+		cout << "New sprite at world pos: " << s->GetWorldPosition() << endl;
+		cout << "Player at: " << player->GetWorldPosition() << endl;
 	}
 }
 
 /**\brief Save this Sector to an xml node
  */
 xmlNodePtr Sector::ToXMLNode(string componentName) {
-	char buff[256];
+	char buff[256] = {0};
 	xmlNodePtr section = xmlNewNode(NULL, BAD_CAST componentName.c_str() );
 
 	xmlNewChild(section, NULL, BAD_CAST "name", BAD_CAST GetName().c_str() );
@@ -278,7 +280,7 @@ list<Sector*>* Sectors::GetAllSectors() {
 	return sectorList;
 }
 
-/* Sets pointer values such that a box containing all sector coordinates is given */
+/* Return a min/max X/Y value that covers all sector coordinates */
 void Sectors::GetBoundaries(float *north, float *south, float *east, float *west) {
 	*north = *south = *east = *west = 0;
 

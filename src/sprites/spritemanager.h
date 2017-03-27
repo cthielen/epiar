@@ -40,7 +40,7 @@ class SpriteManager {
 		Coordinate GetQuadrantCenter( Coordinate point );
 		int GetNumQuadrants() { return trees.size(); }
 		int GetNumSprites();
-		void GetBoundaries(float *northEdge, float *southEdge, float *eastEdge, float *westEdge);
+		//void GetBoundaries(float *northEdge, float *southEdge, float *eastEdge, float *westEdge);
 
 		void Save();
 
