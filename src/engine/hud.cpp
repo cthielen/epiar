@@ -39,6 +39,9 @@
 /* Number of additional, fading reticle boxes to draw while zooming in on a newly-selected target */
 #define RETICLE_BLUR       9
 
+/* Extra line height for HUD alerts/messages (in addition to the font-defined line height) */
+#define ALERT_LINE_HEIGHT_EXTRA 4
+
 list<AlertMessage> Hud::AlertMessages;
 StatusBar* Hud::Bars[MAX_STATUS_BARS] = {};
 int Hud::targetID = -1;
@@ -335,15 +338,15 @@ void Hud::DrawMessages() {
 	Uint32 alertFade = OPTION(Uint32,"options/timing/alert-fade");
 	Uint32 alertDrop = OPTION(Uint32,"options/timing/alert-drop");
 
-	for( i= AlertMessages.rbegin(), j=1; (i != AlertMessages.rend()) && (j <= MAX_ALERTS); ++i,++j ){
+	for( i = AlertMessages.rbegin(), j=1; (i != AlertMessages.rend()) && (j <= MAX_ALERTS); ++i,++j ){
 		age = now - (*i).start;
 		if(age > alertFade) {
-			AlertFont->SetColor( AlertColor, 1.f - float((age-alertFade))/float(alertDrop-alertFade) );
+			AlertFont->SetColor( AlertColor, 1.f - float((age - alertFade)) / float(alertDrop - alertFade) );
 		} else {
 			AlertFont->SetColor( AlertColor, 1.f);
 		}
 
-		AlertFont->Render( 15, Video::GetHeight() - (j * AlertFont->LineHeight()) - HUD_MESSAGE_BOTTOM_SPACING, (*i).message);
+		AlertFont->Render( 15, Video::GetHeight() - (j * (AlertFont->LineHeight() + ALERT_LINE_HEIGHT_EXTRA)) - HUD_MESSAGE_BOTTOM_SPACING, (*i).message);
 	}
 }
 
