@@ -635,16 +635,28 @@ QuadTree* SpriteManager::GetQuadrant( Coordinate point ) {
 	return newTree;
 }
 
-/**\brief Get the universe boundaries
+/**\brief Get the min/max planet positions. Useful when generating traffic.
  * \note Returns the values through the pointer arguments.
  */
-//void SpriteManager::GetBoundaries(float *_northEdge, float *_southEdge, float *_eastEdge, float *_westEdge)
-//{
-//	*_northEdge = northEdge;
-//	*_southEdge = southEdge;
-//	*_eastEdge  = eastEdge;
-//	*_westEdge  = westEdge;
-//}
+void SpriteManager::GetBoundaries(float *north, float *south, float *east, float *west)
+{
+	*north = *south = *east = *west = 0;
+
+	list<Sprite *>::iterator i;
+
+	for( i = spritelist->begin(); i != spritelist->end(); ++i ) {
+		Sprite *s = (*i);
+
+		if( s->GetDrawOrder() == DRAW_ORDER_PLANET ) {
+			Coordinate c = s->GetWorldPosition();
+
+			if(c.GetY() < *north) *north = c.GetY();
+			if(c.GetY() > *south) *south = c.GetY();
+			if(c.GetX() < *west) *west = c.GetX();
+			if(c.GetX() > *east) *east = c.GetX();
+		}
+	}
+}
 
 /** Adjust the Edges based on the locations of the populated QuadTrees
  */

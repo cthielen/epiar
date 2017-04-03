@@ -162,8 +162,6 @@ void Sector::GenerateTraffic( int count ) {
 		return;
 	}
 
-	Player *player = currentScenario->GetPlayer();
-
 	cout << "Generating traffic, count of " << count << endl;
 
 	//local X = X + about(Range)
@@ -191,10 +189,38 @@ void Sector::GenerateTraffic( int count ) {
 	//end
 
 	//local s = Ship.new(name, X, Y, model, engine, p, alliance)
+	
+	// Get the boundaries of the current sector to use when randomizing new sprite traffic coordinates
+	float north, south, east, west;
+	currentScenario->GetSpriteManager()->GetBoundaries(&north, &south, &east, &west);
+
+	// If the sector only has a single planet, its boundaries may be very small, so expand them a bit
+	if(north - south < 2500) {
+		north -= 1000;
+		south += 1000;
+	}
+	if(east - west < 2500) {
+		east += 1000;
+		west -= 1000;
+	}
+
+	// Expand the boundaries a bit
+	north *= 1.33;
+	south *= 1.33;
+	east *= 1.33;
+	west *= 1.33;
+
+	int x_range = east - west;
+	int y_range = south - north;
+
 	for(int i = 0; i < count; i++) {
 		AI *s = new AI("Violet", "Trader");
+		Coordinate c;
+
+		c.SetX( (rand() % x_range) + west );
+		c.SetY( (rand() % y_range) + north );
 	
-		s->SetWorldPosition( Coordinate(0, 0) ); //player->GetWorldPosition() );
+		s->SetWorldPosition( c );
 		s->SetModel( currentScenario->GetModels()->GetModel("Large Vesper") );
 		s->SetEngine( currentScenario->GetEngines()->GetEngine("Ion Engines") );
 		s->SetAlliance( currentScenario->GetAlliances()->GetAlliance("United Earth Alliance") );
@@ -217,9 +243,6 @@ void Sector::GenerateTraffic( int count ) {
 		//local randCredits = math.random( creditsMax )
 		//s:SetCredits(randCredits)
 		s->SetCredits(0);
-
-		cout << "New sprite at world pos: " << s->GetWorldPosition() << endl;
-		cout << "Player at: " << player->GetWorldPosition() << endl;
 	}
 }
 
