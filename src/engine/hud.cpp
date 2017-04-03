@@ -255,8 +255,9 @@ void Hud::Init( void ) {
 }
 
 void Hud::Close( void ) {
-	delete AlertFont;
-	delete AlertBeep;
+	if(AlertFont != NULL) delete AlertFont;
+
+	AlertFont = NULL;
 }
 
 /**\brief Updates the HUD
