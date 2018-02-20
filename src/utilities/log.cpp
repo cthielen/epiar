@@ -148,7 +148,7 @@ void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) 
 			}
 	
 			if( OPTION(int, "options/log/alert") == 1 ) {
-				Hud::Alert("%s - %s", lvlStrings[entry.lvl].c_str(), entry.message.c_str());
+				Hud::Alert(false, "%s - %s", lvlStrings[entry.lvl].c_str(), entry.message.c_str());
 			}
 			
 			// Save the message to a file

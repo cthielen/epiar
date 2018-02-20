@@ -49,7 +49,7 @@ void Calendar::Update(void) {
 	AdjustEpoch();
   
 	if((old_period != period) || (old_epoch != epoch)) {
-		Hud::Alert("Day changed to %s", Now().c_str());
+		Hud::Alert(true, "Day changed to %s", Now().c_str());
 	}
 }
 
@@ -62,7 +62,7 @@ void Calendar::Advance() {
   
 	AdjustEpoch();
   
-	Hud::Alert("Day changed to %s", Now().c_str());
+	Hud::Alert(true, "Day changed to %s", Now().c_str());
 }
 
 /**\brief Advances the date after n seconds.
