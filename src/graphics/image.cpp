@@ -174,8 +174,6 @@ void Image::DrawCentered( int x, int y, float angle ) {
 /**\brief Draw the image stretched within to a box
  */
 void Image::DrawStretch( int x, int y, int box_w, int box_h, float angle ) {
-	if(!this) return;
-
 	assert(this);
 	assert(this->w);
 	assert(this->h);
