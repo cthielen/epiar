@@ -137,8 +137,8 @@ bool Video::SetWindow( int w, int h, int bpp, bool fullscreen ) {
 	SDL_GetWindowSize(window, &Video::w, &Video::h);
 
 	// compute the half dimensions
-	w2 = w / 2;
-	h2 = h / 2;
+	w2 = Video::w / 2;
+	h2 = Video::h / 2;
 
 	LogMsg(DEBUG, "Video mode initialized at %dx%dxbpp fixme\n", Video::w, Video::h );
 
