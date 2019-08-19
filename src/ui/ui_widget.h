@@ -112,7 +112,7 @@ class Widget {
 		int w, h;               ///< The Width and Height of this widget.
 		int dragX, dragY;		///< If dragging, this is the offset from (x,y) to the point of click for the drag
 		Widget* parent;         ///< This widget's parent.
-		Action *(actions[Action_Last]); ///< Array of potential Actions
+		Action *actions[Action_Last]; ///< Array of potential Actions
 };
 
 #endif // __H_UI_WIDGET__

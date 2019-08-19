@@ -1152,9 +1152,9 @@ int Scenario_Lua::SetInfo(lua_State *L) {
 
 		int wsDesiredLength = Lua::getIntField(wsTable,"desiredLength");
 		vector<WeaponSlot> weaponSlots;
-		char *rowKey = (char*)malloc(6);
+		char *rowKey = (char*)malloc(7);
 		for(short int i = 0; i < wsDesiredLength; i++){
-			snprintf(rowKey, 6, "%d", i);
+			snprintf(rowKey, 7, "%d", i);
 
 			//short int row = Lua::getIntField(wsTable, rowKey);
 			int row;
