@@ -98,8 +98,9 @@ StatusBar::StatusBar(string _title, int _width, QuadPosition _pos, string _updat
 	,pos(_pos)
 	,ratio(0)
 {
-	strncpy(title,_title.c_str(),sizeof(title));
+	strncpy(title, _title.c_str(), sizeof(title) - 1);
 	title[sizeof(title)-1] = '\0';
+
 	memset( name, '\0', sizeof(name) );
 	lua_updater = _updater;
 	LogMsg (DEBUG, "Creating a new StatusBar '%s' : Name(%s) / Ratio( %f)\n", title, name, ratio);
@@ -205,8 +206,8 @@ void StatusBar::Update( lua_State* L ) {
  */
 void StatusBar::SetName( string n )
 {
-	strncpy(name,n.c_str(),sizeof(name));
-	name[sizeof(name)-1] = '\0';
+	strncpy(name, n.c_str(), sizeof(name) - 1);
+	name[sizeof(name) - 1] = '\0';
 }
 
 /**\fn StatusBar::GetName
