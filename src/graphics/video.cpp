@@ -1,7 +1,7 @@
 /**\file			video.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Thursday, December 24, 2015
+ * \date			Modified: Wednesday, July 15, 2020
  * \brief
  * \details
  */
@@ -62,6 +62,8 @@ bool Video::Initialize( void ) {
 	int w = OPTION( int, "options/video/w" );
 	int h = OPTION( int, "options/video/h" );
 	bool fullscreen = OPTION( bool, "options/video/fullscreen" );
+
+	LogMsg(DEBUG, "Creating window of size (%d, %d)\n", w, h);
 
 	Video::SetWindow( w, h, OPTION( int, "options/video/bpp"), fullscreen );
 
