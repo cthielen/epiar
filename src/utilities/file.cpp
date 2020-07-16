@@ -1,7 +1,7 @@
 /**\file			file.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Monday, April 21, 2008
- * \date			Modified: Saturday, November 21, 2009
+ * \date			Modified: Wednesday, July 15, 2020
  * \brief			Low level interface for file access.
  * \details
  * Use filesystem for higher level access.*/
@@ -54,8 +54,11 @@ bool File::OpenRead( const string& filename ) {
 	}
 
 #ifdef USE_PHYSICSFS
+	const char *realDir = PHYSFS_getRealDir(cName);
+	LogMsg(DEBUG, "Opening '%s%s' (PhysFs)", realDir, cName);
 	fp = PHYSFS_openRead( cName );
 #else
+	LogMsg(DEBUG, "Opening '%s' (no PhysFs, working directory assumed)", cName);
 	fp = fopen(cName, "rb");
 #endif
 	if( fp == NULL ) {
