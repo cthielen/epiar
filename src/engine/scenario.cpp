@@ -426,6 +426,14 @@ void Scenario::Run() {
 					player->SetWorldPosition( newCoordinate * -1 * player->GetJumpAngle() );
 
 					Navigation::RemoveNextSector();
+
+					Hud::Alert(true, "Entering %s sector", newSector->GetName().c_str());
+
+					// If sector has no planetary objects, alert the player
+					list<string> nearbyPlanets = newSector->GetPlanets();
+					if(nearbyPlanets.size() == 0) {
+						Hud::Alert(false, "No planetary objects detected");
+					}
 				}
 
 				// Generate new sector traffic if needed
