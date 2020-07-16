@@ -1,7 +1,7 @@
 /**\file			ship.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Thursday, December 3, 2015
+ * \date			Modified: Wednesday, July 15, 2020
  * \brief
  * \details
  */
@@ -26,7 +26,7 @@
 
 #define NON_PLAYER_SOUND_RATIO 0.4f ///< Ratio used to quiet NON-PLAYER Ship Sounds.
 
-#define JUMP_ACCELERATION_CONSTANT 22.
+#define JUMP_ACCELERATION_CONSTANT 33.
 #define JUMP_ACCELERATION_DURATION 5000 ///< milliseconds a ship should accelerate before the jump 'flash'. Should match duration of 'jump_start.ogg' SFX.
 #define JUMP_FLASH_DURATION 100 ///< milliseconds a ship should accelerate before the jump 'flash'
 
@@ -449,10 +449,12 @@ void Ship::Update( lua_State *L ) {
 				player->Jumped();
 
 				Sound *jumpSound = Sound::Get("data/audio/engines/jump_end.ogg");
-				jumpSound->SetVolume(10);
+				jumpSound->SetVolume(20);
  				if(jumpSound) { jumpSound->Play(); }
 
-				Menu::GetCurrentScenario()->GetCalendar()->AdvanceAfter(1);
+				Scenario *currentScenario = Menu::GetCurrentScenario();
+				assert( currentScenario != NULL );
+				currentScenario->GetCalendar()->AdvanceAfter(1);
 			}
 		}
 		if(RotateToAngle( status.jumpAngle )) {
