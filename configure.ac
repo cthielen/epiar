@@ -82,7 +82,6 @@ dnl fi
 	enable_physfs="no"
 fi
 
-
 dnl Check for libxml2
 case "$target" in
 	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd*)
@@ -91,8 +90,16 @@ case "$target" in
 	LIBS="$LIBS $libxml2_LIBS"
 esac
 case "$target" in *-apple-darwin*)
-	CFLAGS="$CFLAGS `xml2-config --cflags`"
+	CFLAGS="$CFLAGS `xml2-config --cflags`/libxml2"
 	LIBS="$LIBS `xml2-config --libs`"
+esac
+
+dnl Check for ftgl
+case "$target" in
+	*-*-linux* | *-*-cygwin* | *-*-mingw32* | *-*-freebsd* | *-apple-darwin*)
+	PKG_CHECK_MODULES([ftgl], [ftgl >= 2.1.0])
+	CFLAGS="$CFLAGS $ftgl_CFLAGS"
+	LIBS="$LIBS $ftgl_LIBS"
 esac
 
 dnl Check for SDL2
