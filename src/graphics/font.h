@@ -50,7 +50,6 @@ class Font : public Resource {
 
 			string fontname; // filename of the loaded font
 			float r, g, b, a; // color of text
-			int height, width, base;
 			unsigned int size;
 
 			TTF_Font* font;

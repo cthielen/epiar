@@ -46,7 +46,6 @@ class Scrollbar : public Widget {
 
 		int pos;        ///< The current Marker position
 		int maxpos;     ///< The Highest Marker position
-		int markersize; ///< The Size of the Marker
 
 		Image* bitmaps[6]; ///< The Scrollbar Images
 };

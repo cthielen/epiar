@@ -105,7 +105,7 @@ StatusBar::StatusBar(string _title, int _width, QuadPosition _pos, string _updat
 	lua_updater = _updater;
 	LogMsg (DEBUG, "Creating a new StatusBar '%s' : Name(%s) / Ratio( %f)\n", title, name, ratio);
 	assert(pos >= 0);
-	assert(pos <= 4);
+	assert(pos <= 3);
 
 	if( font == NULL ) {
 		font = Font::Get( SKIN("Skin/HUD/StatusBar/Font"), convertTo<int>(SKIN("Skin/HUD/StatusBar/Size")) );

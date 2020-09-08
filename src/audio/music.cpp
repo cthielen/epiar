@@ -52,7 +52,7 @@ Song::~Song() {
 /**\brief Plays the current song.
  */
 bool Song::Play( bool loop ) {
-	if( (this == NULL) || (this->song == NULL) ) {
+	if( this->song == NULL ) {
 		return false;
 	}
 

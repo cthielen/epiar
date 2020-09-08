@@ -22,7 +22,7 @@ void Options::Restore( const string& path ) {
 	// Load existing options, if file exists
 	XMLFile *optionsfile = new XMLFile();
 
-	LogMsg(DEBUG, "Loading options from %s", path);
+	LogMsg(DEBUG, "Loading options from %s", path.c_str());
 
 	if( optionsfile->Open( path ) ) {
 		// Existing options are stored. Use them to override defaults.
