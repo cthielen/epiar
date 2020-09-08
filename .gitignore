@@ -22,6 +22,8 @@ po
 m4
 compile
 .Tpo
+.autotools
+.idea
 
 ### KDE development files
 Doxyfile
