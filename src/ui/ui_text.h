@@ -29,7 +29,7 @@ class Text {
 		string GetText();
 		int GetWidth() { return width; }
 		int GetMaxWidth() { return maxwidth; }
-		int GetHeight() { return lines.size() * font->TightHeight(); }
+		int GetHeight() { return lines.size() * font->LineHeight(); }
 
 	protected:
 		Font *font; ///< The Font used to render

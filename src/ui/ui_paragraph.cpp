@@ -50,7 +50,7 @@ void Paragraph::Draw(  int relx, int rely ) {
 
 	lines.Render( x, y, xpositioning, ypositioning );
 
-	Widget::Draw(relx,rely + UI::font->TightHeight() / 2 );
+	Widget::Draw(relx, rely + UI::font->TightHeight() / 2 );
 }
 
 /**\brief Set the text string of this Widget

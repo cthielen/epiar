@@ -12,6 +12,8 @@
 #include "ui/ui.h"
 #include "ui/ui_text.h"
 
+#define UI_PARAGRAPH_BOTTOM_PADDING 15
+
 class Paragraph : public Widget {
 	public:
 		Paragraph( int x, int y, int w, int h, string text );
@@ -25,6 +27,8 @@ class Paragraph : public Widget {
 	
 		string GetType( void ) {return string("Paragraph");}
 		virtual int GetMask( void ) { return WIDGET_PARAGRAPH; }
+
+		void SetH( int _h ){ h = _h + UI_PARAGRAPH_BOTTOM_PADDING; }
 	
 	private:
 		bool centered;
