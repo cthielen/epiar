@@ -88,3 +88,7 @@ mingw32-config.cache
 .settings
 
 .dirstamp
+
+### VS Code files
+.vscode
+
