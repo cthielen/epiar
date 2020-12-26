@@ -40,16 +40,13 @@ File::File( const string& filename, bool writable ):
  * \param filename The filename path.
  * \return true if successful, false otherwise.*/
 bool File::OpenRead( const string& filename ) {
-	if ( fp != NULL )
-		this->Close();
+	if ( fp != NULL ) { this->Close(); }
 
-	const char *cName;
-
-	cName = filename.c_str();
+	const char *cName = filename.c_str();
 
 	// Check for file existence
-	if( !File::Exists(filename) ){
-		LogMsg(WARN,"Could not open file for reading. File does not exist.\n");
+	if( !File::Exists(filename) ) {
+		LogMsg(WARN, "Could not open file '%s' for reading. File does not exist.\n", cName);
 		return false;
 	}
 
@@ -62,8 +59,7 @@ bool File::OpenRead( const string& filename ) {
 	fp = fopen(cName, "rb");
 #endif
 	if( fp == NULL ) {
-		LogMsg(ERR,"Could not open file: %s.\n%s", cName,
-			PHYSFS_getLastError());
+		LogMsg(ERR, "Could not open file: %s.\n%s", cName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return false ;
 	}
 	
@@ -97,8 +93,7 @@ bool File::OpenWrite( const string& filename ) {
 	this->fp = fopen( cName, "wb");
 #endif
 	if( fp == NULL ){
-		LogMsg(ERR,"Could not open file (%s) for writing: %s\n",cName,
-				PHYSFS_getLastError());
+		LogMsg(ERR, "Could not open file (%s) for writing: %s\n", cName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return false;
 	}
 	validName.assign( filename );
@@ -140,8 +135,8 @@ bool File::Read( long numBytes, char *buffer ){
 	if ( bytesRead == numBytes ){
 		return true;
 	} else {
-		LogMsg(ERR,"%s: Unable to read specified number of bytes. %s",
-			validName.c_str(), PHYSFS_getLastError());
+		LogMsg(ERR, "%s: Unable to read specified number of bytes. %s",
+			validName.c_str(), PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return false;
 	}
 }
@@ -167,7 +162,7 @@ char *File::Read( void ){
 		return fBuffer;
 	} else {
 		delete [] fBuffer;
-		LogMsg(ERR,"%s: Unable to read file into memory. %s",
+		LogMsg(ERR, "%s: Unable to read file into memory. %s",
 			validName.c_str(), LastErrorMessage().c_str() );
 		return NULL;
 	}
@@ -186,7 +181,7 @@ bool File::Write( char *buffer, const long bufsize ){
 	long bytesWritten = fwrite(buffer,1,bufsize,fp);
 #endif
 	if ( bytesWritten != bufsize ){
-		LogMsg(ERR,"Unable to write to file '%s'. (%d/%d bytes written) %s",
+		LogMsg(ERR, "Unable to write to file '%s'. (%d/%d bytes written) %s",
 			this->validName.c_str(),
 			bytesWritten, bufsize,
 			LastErrorMessage().c_str() );
@@ -209,7 +204,7 @@ long File::Tell( void ){
 		);
 	if ( offset == -1 ){
 		LogMsg(ERR,"%s: Error using file tell. %s",
-			validName.c_str(), PHYSFS_getLastError());
+			validName.c_str(), PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	}
 	return offset;
 }
@@ -229,7 +224,7 @@ bool File::Seek( long pos ){
       retval = fseek(fp, pos, SEEK_SET);
 #endif
 	if ( retval == 0 ){
-		LogMsg(ERR,"%s: Error using file seek [%ld]. %s",
+		LogMsg(ERR, "%s: Error using file seek [%ld]. %s",
 		                validName.c_str(), pos, LastErrorMessage().c_str() );
 		return false;
 	}
@@ -247,8 +242,8 @@ long File::GetLength( void ){
 int File::SetBuffer( int bufSize ){
 #ifdef USE_PHYSICSFS
 	if ( PHYSFS_setBuffer( fp, bufSize ) == 0 ){
-		LogMsg(ERR,"Could not create internal buffer for file: %s.\n%s",
-				validName.c_str(), PHYSFS_getLastError());
+		LogMsg(ERR, "Could not create internal buffer for file: %s.\n%s",
+				validName.c_str(), PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		PHYSFS_close( fp );
 		return 0;
 	}
@@ -281,7 +276,7 @@ bool File::Close() {
 #endif
 	{
 		LogMsg(ERR, "%s: Unable to close file handle.%s",
-			validName.c_str(), PHYSFS_getLastError());
+			validName.c_str(), PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return false;
 	}
 	contentSize = 0;
@@ -330,7 +325,7 @@ bool IsBigEndian() {
 string File::LastErrorMessage( void )
 {
 #ifdef USE_PHYSICSFS
-    return PHYSFS_getLastError();
+    return PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode());
 #else
     switch( errno )
     {

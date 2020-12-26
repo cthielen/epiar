@@ -26,25 +26,27 @@ list<string> Filesystem::paths;
 int Filesystem::Init( const char* argv0 ) {
 	int retval;
 
+	LogMsg(DEBUG, "Initializing filesystem using PhysicsFS ...");
+
 	if ( (retval = PHYSFS_init(argv0)) == 0 )
-		LogMsg(ERR, "Error initializing PhysicsFS. Reason: %s", PHYSFS_getLastError());
+		LogMsg(ERR, "Error initializing PhysicsFS. Reason: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 
 	if ( (retval = PHYSFS_setSaneConfig("games", "epiar", NULL, 0, 0 ) ) == 0 )
-		LogMsg(ERR, "Could not set sane paths for PhysFS: %s", PHYSFS_getLastError());
+		LogMsg(ERR, "Could not set sane paths for PhysFS: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 
 	// Set up userDir
 	if ( (retval = PHYSFS_mkdir("saves/") ) == 0 )
-		LogMsg(ERR, "Could not set up the user dir: %s", PHYSFS_getLastError());
+		LogMsg(ERR, "Could not set up the user dir: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 
 	// Don't add Root directory.  While this can solve some problems, it will create more.
 	// Absolute paths are not portable across computers.
-	//if ( (retval = PHYSFS_addToSearchPath("/", 1)) == 0 )
-	//	LogMsg(WARN,"Could not add Root to search path: %s.", PHYSFS_getLastError());
+	//if ( (retval = PHYSFS_mount("/", NULL, 1)) == 0 )
+	//	LogMsg(WARN,"Could not add Root to search path: %s.", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 
 #ifdef DATADIR
 	// If using autotools, include this prefix to help binary find data files for cases where 'make install' was used
-	if ( (retval = PHYSFS_addToSearchPath(DATADIR, 1)) == 0 )
-		LogMsg(INFO, "Not using DATADIR directory due to an error. Guessing 'make install' has not been run yet. This is usually okay in development. Reason: %s", PHYSFS_getLastError());
+	if ( (retval = PHYSFS_mount(DATADIR, NULL, 1) ) == 0 )
+		LogMsg(INFO, "Not using DATADIR directory due to an error. Most likely 'make install' has not been run yet, which is normal while developing. Reason: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 #endif /* DATADIR */
 	
 	return retval;
@@ -55,9 +57,9 @@ int Filesystem::Init( const char* argv0 ) {
  * \return Nonzero on success */
 int Filesystem::AppendPath( const string& archivename ) {
 	int retval;
-	if ( (retval = PHYSFS_addToSearchPath(archivename.c_str(), 1)) == 0 )
-		LogMsg(ERR,"Error on appends to search path %s.\n%s",archivename.c_str(),
-				PHYSFS_getLastError());
+	if ( (retval = PHYSFS_mount(archivename.c_str(), NULL, 1)) == 0 )
+		LogMsg(ERR, "Error on appends to search path %s.\n%s",archivename.c_str(),
+				PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	return retval;
 }
 
@@ -66,9 +68,9 @@ int Filesystem::AppendPath( const string& archivename ) {
  * \return Nonzero on success */
 int Filesystem::PrependPath( const string& archivename ) {
 	int retval;
-	if ( (retval = PHYSFS_addToSearchPath(archivename.c_str(), 0)) == 0 )
-		LogMsg(ERR,"Error on prepends to search path %s.\n%s",archivename.c_str(),
-				PHYSFS_getLastError());
+	if ( (retval = PHYSFS_mount(archivename.c_str(), NULL, 0)) == 0 )
+		LogMsg(ERR, "Error on prepends to search path %s.\n%s", archivename.c_str(),
+				PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	return retval;
 }
 
@@ -79,7 +81,7 @@ bool Filesystem::DeleteFile( const string &filename ) {
 	int retval;
 
 	if( (retval = PHYSFS_delete( filename.c_str() ) ) == 0 ) {
-		LogMsg(ERR, "Could not delete file (%s): %s\n", filename.c_str(), PHYSFS_getLastError());
+		LogMsg(ERR, "Could not delete file (%s): %s\n", filename.c_str(), PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return false;
 	}
 
@@ -126,8 +128,8 @@ list<string> Filesystem::Enumerate( const string& path, const string &suffix )
 
 	rc = PHYSFS_enumerateFiles(path.c_str());
 	if (rc == NULL) {
-		LogMsg(ERR,"Failure to enumerate %s. reason: %s.\n",
-				path.c_str(),PHYSFS_getLastError());
+		LogMsg(ERR, "Failure to enumerate %s. reason: %s.\n",
+				path.c_str(), PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	}
 	else
 	{
@@ -191,7 +193,7 @@ int Filesystem::Close() {
 	int retval;
 
 	if ( (retval = PHYSFS_deinit()) == 0 )
-		LogMsg(ERR,"Error de-initializing PhysicsFS.\n%s",PHYSFS_getLastError());
+		LogMsg(ERR, "Error de-initializing PhysicsFS.\n%s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 
 	return retval;
 }
@@ -203,9 +205,10 @@ int Filesystem::Close() {
  * see the File class for dealing with specific files.
  * \sa File */
 
-/**Initialize the PhysFS system
- * \return Nonzero on success. */
+/** Stub. Empty function.
+ * \return Always 1 */
 int Filesystem::Init( const char* argv0 ) {
+	LogMsg(DEBUG, "Initializing filesystem without using PhysicsFS ...");
 	return 1;
 }
 
@@ -286,8 +289,5 @@ void Filesystem::OutputArchivers( void ){
 int Filesystem::DeInit() {
 	return 1;
 }
-
-
-
 
 #endif
