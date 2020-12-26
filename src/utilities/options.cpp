@@ -1,7 +1,7 @@
 /**\file			options.cpp
  * \author			Matt Zweig
  * \date			Created:  Sunday, May 29, 2011
- * \date			Modified: Thursday, March 24, 2016
+ * \date			Modified: Saturday, December 26, 2020
  * \brief			Global Options
  * \details
  */
@@ -12,17 +12,21 @@
 
 std::map<string,string> Options::values;
 std::map<string,string> Options::defaults;
+bool Options::isLoaded = false;
 
 /**\class Options
  * \brief Container and accessor of Game options
  *
  */
 
-void Options::Restore( const string& path ) {
+/**
+ * Load game options stored on filesystem, if any.
+ */
+void Options::Load( const string& path ) {
 	// Load existing options, if file exists
 	XMLFile *optionsfile = new XMLFile();
 
-	LogMsg(DEBUG, "Loading options from %s", path.c_str());
+	LogMsg(DEBUG, "Loading options from %s, if exists", path.c_str());
 
 	if( optionsfile->Open( path ) ) {
 		// Existing options are stored. Use them to override defaults.
@@ -40,8 +44,14 @@ void Options::Restore( const string& path ) {
 	}
 
 	delete optionsfile;
+
+	Options::isLoaded = true;
 }
 
+/**
+ * Sets in-memory defaults for Options().
+ * Values can be overriden if options are loaded from file or set via command line switch.
+ */
 void Options::Initialize( void ) {
 	// Logging
 	defaults.insert( std::pair<string,string>("options/log/xml", "0") );

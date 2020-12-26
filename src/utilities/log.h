@@ -1,7 +1,7 @@
 /**\file			log.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 4, 2006
- * \date			Modified: Wednesday, December 16, 2015
+ * \date			Modified: Saturday, December 26, 2020
  * \brief			Main logging facilities for the codebase
  * \details
  */
@@ -43,6 +43,20 @@ typedef enum {
 	ALL             /**< This is always the highest Logging level.*/
 } LogLevel;
 
+class LogEntry {
+	public:
+		LogEntry( string func, LogLevel lvl, string message ) {
+			this->func = func;
+			this->lvl = lvl;
+			this->message = message;
+		}
+
+		LogLevel lvl;
+
+		string func;
+		string message;
+};
+
 class Log {
 	public:
 		~Log();
@@ -56,7 +70,10 @@ class Log {
 		void Close( void );
 		static string GetTimestamp( void );
 
-		void realLog( LogLevel lvl, const string& func, const char *message, ... );
+		void realLog( LogLevel messageLevel, const string& func, const char *message, ... );
+
+		void flushBuffer();
+		void setBufferFlag(bool useBuffer) { this->useBuffer = useBuffer; }
 
 	private:
 		Log();
@@ -64,6 +81,7 @@ class Log {
 		Log& operator=(Log const&);
 		void Open( void );
 		LogLevel ReverseLookUp( const string& _lvl );
+		void processLogEntry( LogEntry entry );
 
 		map<LogLevel,string> lvlStrings;
 		LogLevel loglvl;
@@ -85,20 +103,13 @@ class Log {
 		char *timestamp;
 		string logFilename;
 		FILE *fp; // pointer to the log
-};
 
-class LogEntry {
-	public:
-		LogEntry( string func, LogLevel lvl, string message ) {
-			this->func = func;
-			this->lvl = lvl;
-			this->message = message;
-		}
-
-		LogLevel lvl;
-
-		string func;
-		string message;
+		// If useBuffer is true, messages are buffered and not processed for
+		// filtering or printing. This is useful when the program is starting up
+		// as the log level may not be set yet but log messages are already being
+		// generated.
+		bool useBuffer = true;
+		queue<LogEntry> logEntryBuffer;
 };
 
 #endif // __H_LOG__

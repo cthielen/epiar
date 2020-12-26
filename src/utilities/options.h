@@ -18,8 +18,10 @@
 
 class Options {
 	public:
-		static void Restore( const string& path );
 		static void Initialize( void );
+		static void Load( const string& path );
+
+		static bool IsLoaded( void ) { return isLoaded; };
 
 		static bool Save( const string& path = "" );
 
@@ -34,6 +36,7 @@ class Options {
 	private:
 		static std::map<string,string> defaults;
 		static std::map<string,string> values;
+		static bool isLoaded;
 };
 
 #endif // __H_OPTIONS

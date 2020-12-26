@@ -52,15 +52,22 @@ void Main_Close_Singletons  ( void ); ///< Close global Singletons
  *  - Calls any cleanup code
  */
 int main( int argc, char **argv ) {
+	LogMsg(DEBUG, "Starting up ...");
+
 	// Basic setup
 	Options::Initialize();
-
 	InitializeOS( argc, argv );
 	Main_Load_Options();
 
 	// Check for command line arguments
 	Main_Parse_Args( argc, argv );
-	
+
+	// Now that the log level has been set either by loading from the
+	// options file or the command line arguments, it is now safe to
+	// process and print log messages by flushing and disabling the buffer.
+	Log::Instance().flushBuffer();
+	Log::Instance().setBufferFlag(false);
+
 	LogMsg(INFO, "Epiar Version %s", EPIAR_VERSION_FULL );
 #ifdef COMP_MSVC
 	LogMsg(DEBUG, "Compiled with MSVC vers: _MSC_VER" );
@@ -128,7 +135,7 @@ void InitializeOS( int argc, char **argv ) {
  *  \todo If these files do not exist, reasonable defaults should be loaded instead.
  */
 void Main_Load_Options() {
-	Options::Restore( "options.xml" );
+	Options::Load( "options.xml" );
 
 	skinfile = new XMLFile();
 	if( !skinfile->Open("data/skin/skin.xml") ) {

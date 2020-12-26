@@ -1,7 +1,7 @@
 /**\file			log.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Sunday, June 4, 2006
- * \date			Modified: Sunday, November 22, 2009
+ * \date			Modified: Saturday, December 26, 2020
  * \brief			Main logging facilities for the codebase
  * \details
  */
@@ -35,8 +35,6 @@ bool Log::SetLevel( const string& _loglvl ) {
 
 		return false;
 	}
-
-	cout << "loglvl set to: " << this->loglvl << endl;
 
 	return true;
 }
@@ -95,26 +93,20 @@ void Log::Close( void ) {
 	fp = NULL;
 }
 
-/**\brief The real log function.
+/**\brief The _real_ log function.
  * \todo The filtering is broken and should be refactored.
+ * \details Note: If Options::Load() hasn't been called, messages are queued but not logged.
+ *                This is only an issue if debugging an issue that occurs during program init.
  */
-void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) {
-	// Check log level
-	if( lvl < this->loglvl ) {
-		return;
-	}
 
-	// Check function filter
-	if( !this->funcfilter.empty() ){
-		if( func.find(this->funcfilter) == false ) {
-			return;
-		}
-	}
+// FIXME: since command line args are parsed after options are loaded, the default option of not logging out
+// is not respected for the buffered log messages
 
+void Log::realLog( LogLevel messageLevel, const string& func, const char *message, ... ) {
+	// Compose LogEntry based on passed information
 	va_list args;
 	time_t rawtime;
-	static char logBuffer[4096] = {0};
-	static queue<LogEntry> preOptionsBuffer;
+	char logBuffer[1024] = {0};
 
 	time( &rawtime );
 
@@ -128,48 +120,69 @@ void Log::realLog( LogLevel lvl, const string& func, const char *message, ... ) 
 	// Trim the final '\n' if necessary
 	if( logBuffer[ strlen(logBuffer) - 1 ] == '\n' ) logBuffer[ strlen(logBuffer) - 1 ] = 0;
 
-	// Print the message
-	if( true ) { // Options::IsLoaded() ) {
-		// We loop over a buffer as messages may be queued up from before Options::IsLoaded() == true
-		preOptionsBuffer.push( LogEntry(func, lvl, logBuffer) );
+	LogEntry entry = LogEntry(func, messageLevel, logBuffer);
 
-		while(!preOptionsBuffer.empty()) {
-			LogEntry entry = preOptionsBuffer.front();
-			preOptionsBuffer.pop();
-
-			if( OPTION(int, "options/log/out") == 1 ) {
-#ifndef _WIN32
-				StartTermColor( entry.lvl );
-#endif
-				cout << entry.func << " (" << lvlStrings[entry.lvl] << ") - " << entry.message << endl;
-#ifndef _WIN32
-				EndTermColor( entry.lvl );
-#endif
-			}
-	
-			if( OPTION(int, "options/log/alert") == 1 ) {
-				Hud::Alert(false, "%s - %s", lvlStrings[entry.lvl].c_str(), entry.message.c_str());
-			}
-			
-			// Save the message to a file
-			if( OPTION(int, "options/log/xml") == 1 ) {
-	
-				if( fp==NULL ){
-					Log::Open();
-				}
-	
-				fprintf(fp, "<log>\n");
-				fprintf(fp, "\t<function>%s</function>\n", entry.func.c_str() );
-				fprintf(fp, "\t<type>%s</type>\n", lvlStrings[entry.lvl].c_str() );
-				fprintf(fp, "\t<time>%s</time>\n", timestamp );
-				fprintf(fp, "\t<message>%s</message>\n", entry.message.c_str() );
-				fprintf(fp, "</log>\n" );
-				fflush( fp );
-			}
-		}
+	// Buffer message for later processing or process right away, depending on flags
+	if(useBuffer) {
+		logEntryBuffer.push( entry );
 	} else {
-		// Messages before the options are available
-		preOptionsBuffer.push( LogEntry(func, lvl, logBuffer) );
+		processLogEntry( entry );
+	}
+}
+
+/**
+ * Prints a log entry whether to console, file, etc.
+ */
+void Log::processLogEntry( LogEntry entry ) {
+	// Check log level
+	if( entry.lvl < this->loglvl ) {
+		return;
+	}
+
+	// Check function filter
+	if( !this->funcfilter.empty() ){
+		if( entry.func.find(this->funcfilter) == false ) {
+			return;
+		}
+	}
+
+	if( OPTION(int, "options/log/out") == 1 ) {
+#ifndef _WIN32
+		StartTermColor( entry.lvl );
+#endif
+		cout << entry.func << " (" << lvlStrings[entry.lvl] << ") - " << entry.message << endl;
+#ifndef _WIN32
+		EndTermColor( entry.lvl );
+#endif
+	}
+
+	if( OPTION(int, "options/log/alert") == 1 ) {
+		Hud::Alert(false, "%s - %s", lvlStrings[entry.lvl].c_str(), entry.message.c_str());
+	}
+	
+	// Save the message to a file
+	if( OPTION(int, "options/log/xml") == 1 ) {
+		if( fp == NULL ) { Log::Open(); }
+
+		fprintf(fp, "<log>\n");
+		fprintf(fp, "\t<function>%s</function>\n", entry.func.c_str() );
+		fprintf(fp, "\t<type>%s</type>\n", lvlStrings[entry.lvl].c_str() );
+		fprintf(fp, "\t<time>%s</time>\n", timestamp );
+		fprintf(fp, "\t<message>%s</message>\n", entry.message.c_str() );
+		fprintf(fp, "</log>\n" );
+		fflush( fp );
+	}
+}
+
+/**
+ * Prints all messages in the buffer and empties the buffer.
+ */
+void Log::flushBuffer() {
+	while(logEntryBuffer.empty() == false) {
+		LogEntry entry = logEntryBuffer.front();
+		logEntryBuffer.pop();
+
+		processLogEntry(entry);
 	}
 }
 
