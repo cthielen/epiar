@@ -1,3 +1,8 @@
+Saturday, December 26, 2020
+	Christopher Thielen:
+		* Fixed an issue where log messages may not appear if created before
+		  log level is fully set by options.xml or CLI.
+
 Saturday, June 4, 2016
 	Christopher Thielen:
 		* Added HUD alert beeps.

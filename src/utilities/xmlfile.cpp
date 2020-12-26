@@ -50,7 +50,7 @@ bool XMLFile::Open( const string& filename ) {
 	File xmlfile;
 
 	if( xmlfile.OpenRead( filename ) == false ) {
-		LogMsg(ERR, "Could not find file %s", filename.c_str() );
+		LogMsg(WARN, "Could not find file '%s'", filename.c_str() );
 		return( false );
 	}
 

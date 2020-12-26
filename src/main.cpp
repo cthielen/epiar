@@ -81,10 +81,12 @@ int main( int argc, char **argv ) {
 	Main_Init_Singletons();
 	Menu::Run();
 
-	LogMsg(DEBUG, "Epiar shutting down." );
+	LogMsg(DEBUG, "Shutting down ..." );
 
 	// Close everything
 	Main_Close_Singletons();
+
+	LogMsg(DEBUG, "Shut down. Bye!");
 
 	return( 0 );
 }

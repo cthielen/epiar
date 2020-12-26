@@ -29,6 +29,7 @@ void Options::Load( const string& path ) {
 	LogMsg(DEBUG, "Loading options from %s, if exists", path.c_str());
 
 	if( optionsfile->Open( path ) ) {
+		cout << "2" << endl;
 		// Existing options are stored. Use them to override defaults.
 		LogMsg(DEBUG, "Found options stored on disk. Overriding defaults ...");
 
@@ -41,6 +42,8 @@ void Options::Load( const string& path ) {
 				values[key] = file_value;
 			}
 		}
+	} else {
+		LogMsg(DEBUG, "Did not find options stored on disk. Will use defaults combined with any CLI arguments.");
 	}
 
 	delete optionsfile;

@@ -286,13 +286,16 @@ bool File::Close() {
 	return true;
 }
 
+/**
+ * Returns true if the file exists, else false.
+ * May use PhysFS to search for file in multiple paths.
+ */
 bool File::Exists( const string& filename ) {
-	const char *cName;
-	cName = filename.c_str();
+	const char *cName = filename.c_str();
 
 #ifdef USE_PHYSICSFS
-	if ( !PHYSFS_exists( cName ) ){
-		LogMsg(ERR, "%s: %s.", LastErrorMessage().c_str(), cName);
+	if ( PHYSFS_exists( cName ) == false ){
+		LogMsg(DEBUG, "File '%s' does not exist. PhysFs message: '%s'", cName, LastErrorMessage().c_str());
 		return false;
 	}
 #else
@@ -300,7 +303,7 @@ bool File::Exists( const string& filename ) {
 	int stat_ret = stat(cName, &fileStatus );
 
 	if ( stat_ret != 0 ) {
-        LogMsg(ERR,"%s: %s.", LastErrorMessage().c_str(), cName); break;
+        LogMsg(DEBUG, "File '%s' does not exist. Error message: %s.", cName, LastErrorMessage().c_str());
 		return false;
 	}
 #endif
