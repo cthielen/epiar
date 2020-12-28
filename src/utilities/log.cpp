@@ -196,6 +196,7 @@ Log::Log()
 	lvlStrings[WARN] = "Warn";
 	lvlStrings[INFO] = "Info";
 	lvlStrings[DEBUG] = "Debug";
+	lvlStrings[TRACE] = "Trace";
 
 	loglvl = loglvldefault;
 
@@ -216,6 +217,7 @@ Log::Log()
 	colors[WARN]    = Brown;
 	colors[INFO]    = Cyan;
 	colors[DEBUG]   = Brown;
+	colors[TRACE]   = Brown;
 	
 	istty = isatty(fileno(stdin));
 #endif
@@ -257,4 +259,3 @@ LogLevel Log::ReverseLookUp( const string& _lvl ) {
 
 	return INVALID;
 }
-

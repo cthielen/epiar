@@ -162,7 +162,7 @@ bool Widget::MouseMotion( int xi, int yi ){
 /**\brief Event is triggered on mouse enter.
  */
 bool Widget::MouseEnter( int xi, int yi ){
-	LogMsg(DEBUG, "Mouse enter detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Mouse enter detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	hovering = true;
 
@@ -174,7 +174,7 @@ bool Widget::MouseEnter( int xi, int yi ){
 /**\brief Event is triggered on mouse leave.
  */
 bool Widget::MouseLeave( void ){
-	LogMsg(DEBUG, "Mouse leave detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Mouse leave detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	hovering = false;
 
@@ -186,7 +186,7 @@ bool Widget::MouseLeave( void ){
 /**\brief Generic mouse up function.
  */
 bool Widget::MouseLUp( int xi, int yi ){
-	LogMsg(DEBUG, "Mouse Left up detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Mouse Left up detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_MouseLUp, xi, yi);
 
@@ -196,7 +196,7 @@ bool Widget::MouseLUp( int xi, int yi ){
 /**\brief Generic mouse down function.
  */
 bool Widget::MouseLDown( int xi, int yi ) {
-	LogMsg(DEBUG, "Mouse Left up detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Mouse Left up detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	// update drag coordinates in case this is draggable
 	dragX = xi-x;
@@ -210,7 +210,7 @@ bool Widget::MouseLDown( int xi, int yi ) {
 /**\brief Generic mouse release function.
  */
 bool Widget::MouseLRelease( void ){
-	LogMsg(DEBUG, "Left Mouse released in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Left Mouse released in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_MouseLRelease, 0, 0);
 
@@ -220,7 +220,7 @@ bool Widget::MouseLRelease( void ){
 /**\brief Generic middle mouse up function.
  */
 bool Widget::MouseMUp( int xi, int yi ){
-	LogMsg(DEBUG, "Mouse Middle up detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Mouse Middle up detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_MouseMUp, xi, yi);
 
@@ -230,7 +230,7 @@ bool Widget::MouseMUp( int xi, int yi ){
 /**\brief Generic middle mouse down function.
  */
 bool Widget::MouseMDown( int xi, int yi ){
-	LogMsg(DEBUG, "Mouse Middle down detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Mouse Middle down detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_MouseMDown, xi, yi);
 
@@ -240,7 +240,7 @@ bool Widget::MouseMDown( int xi, int yi ){
 /**\brief Generic middle mouse release function.
  */
 bool Widget::MouseMRelease( void ){
-	LogMsg(DEBUG, "Middle Mouse released in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Middle Mouse released in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_MouseMRelease, 0, 0);
 
@@ -250,7 +250,7 @@ bool Widget::MouseMRelease( void ){
 /**\brief Generic right mouse up function.
  */
 bool Widget::MouseRUp( int xi, int yi ){
-	LogMsg(DEBUG, "Mouse Right up detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Mouse Right up detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_MouseRUp, xi, yi);
 
@@ -260,7 +260,7 @@ bool Widget::MouseRUp( int xi, int yi ){
 /**\brief Generic right mouse down function.
  */
 bool Widget::MouseRDown( int xi, int yi ){
-	LogMsg(DEBUG, "Mouse Right down detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Mouse Right down detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_MouseRDown, xi, yi);
 
@@ -270,7 +270,7 @@ bool Widget::MouseRDown( int xi, int yi ){
 /**\brief Generic right mouse release function.
  */
 bool Widget::MouseRRelease( void ){
-	LogMsg(DEBUG, "Right Mouse released in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Right Mouse released in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_MouseRRelease, 0, 0);
 
@@ -280,7 +280,7 @@ bool Widget::MouseRRelease( void ){
 /**\brief Generic mouse wheel up function.
  */
 bool Widget::MouseWUp( int xi, int yi ){
-	LogMsg(DEBUG, "Mouse Wheel up detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Mouse Wheel up detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_MouseWUp, xi, yi);
 
@@ -290,7 +290,7 @@ bool Widget::MouseWUp( int xi, int yi ){
 /**\brief Generic mouse wheel down function.
  */
 bool Widget::MouseWDown( int xi, int yi ){
-	LogMsg(DEBUG, "Mouse Wheel down detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Mouse Wheel down detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_MouseWDown, xi, yi);
 
@@ -300,7 +300,7 @@ bool Widget::MouseWDown( int xi, int yi ){
 /**\brief Generic keyboard focus function.
  */
 bool Widget::KeyboardEnter( void ){
-	LogMsg(DEBUG, "Keyboard enter detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Keyboard enter detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_KeyboardEnter, 0, 0);
 
@@ -312,7 +312,7 @@ bool Widget::KeyboardEnter( void ){
 /**\brief Generic keyboard unfocus function.
  */
 bool Widget::KeyboardLeave( void ){
-	LogMsg(DEBUG, "Keyboard leave detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Keyboard leave detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	Activate(Action_KeyboardLeave, 0, 0);
 
@@ -324,7 +324,7 @@ bool Widget::KeyboardLeave( void ){
 /**\brief Generic keyboard key press function.
  */
 bool Widget::KeyPress( SDL_Keycode key ) {
-	LogMsg(DEBUG, "Key press detect in %s named %s.", GetType().c_str(), GetName().c_str() );
+	LogMsg(TRACE, "Key press detect in %s named %s.", GetType().c_str(), GetName().c_str() );
 
 	return false;
 }

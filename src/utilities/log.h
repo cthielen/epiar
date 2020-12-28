@@ -33,12 +33,13 @@
 #endif//ENABLE_LOGGING
 
 typedef enum {
-	INVALID = 0,		/**< Invalid log level, used for internal purposes.*/
+	INVALID = 0,	/**< Invalid log level, used for internal purposes.*/
 	NONE,			/**< No logging. */
 	FATAL,			/**< Will kill the program. */
+	TRACE,          /**< High volume debug information, e.g. UI mouse events. Usually not needed. */
 	DEBUG,			/**< Debug information. */
 	INFO,			/**< (System level) Information that the user might want. */
-	WARN,			/**< Expected (but should be noted) problems. */
+	WARN,			/**< Recoverable but notable issues. */
 	ERR,			/**< Unexpected errors. */
 	ALL             /**< This is always the highest Logging level.*/
 } LogLevel;
