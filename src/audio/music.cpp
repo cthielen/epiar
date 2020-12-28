@@ -9,6 +9,7 @@
 #include "includes.h"
 #include "audio/music.h"
 #include "utilities/log.h"
+#include "utilities/options.h"
 #include "utilities/resource.h"
 
 /**\class Song
@@ -35,6 +36,14 @@ Song *Song::Get( const string& filename ){
  */
 Song::Song( const string& filename ) {
 	this->song = NULL;
+
+	// Mix_LoadMUS() does not appear to work if we have disabled audio, so do not
+	// bother loading songs if audio is disabled.
+	if(OPTION(bool, "options/sound/disable-audio")) {
+		LogMsg(DEBUG, "Not loading song file '%s' as audio is disabled.", filename.c_str());
+		return; // audio is disabled
+	}
+
 	this->song = Mix_LoadMUS( filename.c_str() );
 
 	if( this->song == NULL ) {
