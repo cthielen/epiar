@@ -1,4 +1,4 @@
-/**\file			ai.cpp
+/**\file			npc.cpp
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
  * \date			Modified: Thursday, December 3, 2015
@@ -9,7 +9,7 @@
 #include "includes.h"
 #include "common.h"
 #include "menu.h"
-#include "sprites/ai.h"
+#include "sprites/npc.h"
 #include "sprites/player.h"
 #include "sprites/spritemanager.h"
 #include "utilities/lua.h"
@@ -27,13 +27,13 @@
 /** \brief AI Constructor
  */
 
-AI::AI(string _name, string machine) :
+NPC::NPC(string _name, string machine) :
 	name(_name),
 	allegiance(NULL),
 	stateMachine(machine),
 	state("default")
 {
-	this -> playerCheck = false;
+	this->isPlayerFlag = false;
 	target = 0;
 	merciful = 0;
 }
@@ -41,7 +41,7 @@ AI::AI(string _name, string machine) :
 /** \brief Run the Lua Statemachine to act and possibly change state.
  */
 
-void AI::Decide( lua_State *L ) {
+void NPC::Decide( lua_State *L ) {
 	string newstate;
 	// Decide
 	const int initialStackTop = lua_gettop(L);
@@ -114,7 +114,7 @@ void AI::Decide( lua_State *L ) {
 /**\brief Updates the AI controlled ship by first calling the Lua function
  * and then calling Ship::Update()
  */
-void AI::Update( lua_State *L ) {
+void NPC::Update( lua_State *L ) {
 	//Update enemies
 	int t;
 
@@ -140,7 +140,7 @@ void AI::Update( lua_State *L ) {
  * \note We don't want to make this a destructor call because we want the rest
  * of the system to still treat the ship normally.
  */
-void AI::Killed( lua_State *L ) {
+void NPC::Killed( lua_State *L ) {
 	LogMsg( WARN, "AI %s has been killed\n", GetName().c_str() );
 	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 
@@ -160,7 +160,7 @@ void AI::Killed( lua_State *L ) {
  *
  * \see OPTION
  */
-void AI::Draw(){
+void NPC::Draw(){
 	this->Ship::Draw();
 	//if( OPTION(int,"options/development/debug-ai") ) {
 	//	Coordinate position = this->GetWorldPosition();
@@ -174,7 +174,7 @@ void AI::Draw(){
 /**\brief chooses who the AI should target given the list of the AI's enemies
  *
  */
-int AI::ChooseTarget( lua_State *L ){
+int NPC::ChooseTarget( lua_State *L ){
 	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 	list<Sprite*> *nearbySprites = sprites->GetSpritesNear(this->GetWorldPosition(), COMBAT_RANGE, DRAW_ORDER_SHIP);
 	
@@ -202,8 +202,8 @@ int AI::ChooseTarget( lua_State *L ){
 		}
 
 		if( (*it)->GetDrawOrder() == DRAW_ORDER_SHIP) {
-			if( enemyIt->id < ((AI*) (*it))->GetTarget() ){
-				while ( enemyIt!=enemies.end() && enemyIt->id < ( (AI*) (*it) )->GetTarget() ) {
+			if( enemyIt->id < ((NPC*) (*it))->GetTarget() ){
+				while ( enemyIt!=enemies.end() && enemyIt->id < ( (NPC*) (*it) )->GetTarget() ) {
 					if ( !InRange( sprites->GetSpriteByID(enemyIt->id)->GetWorldPosition() , this->GetWorldPosition() ) ) {
 						enemyIt=enemies.erase(enemyIt);
 						threat=0;
@@ -218,9 +218,10 @@ int AI::ChooseTarget( lua_State *L ){
 					enemyIt++;
 				}
 				it--;
+
 				continue;
 			}
-			if( enemyIt->id == ((AI*) (*it))->GetTarget() )
+			if( enemyIt->id == ((NPC*) (*it))->GetTarget() )
 				threat-= ( (Ship*)(*it) )->GetTotalCost();
 		} else {
 			LogMsg( ERR, "Error Sprite %d is not an AI\n", (*it)->GetID() );
@@ -252,14 +253,14 @@ int AI::ChooseTarget( lua_State *L ){
 /**\brief determines the potenital of an enemy as a target
  *
  */
-int AI::CalcCost( int threat, int damage) {
+int NPC::CalcCost( int threat, int damage) {
 	return( threat * (damage + 1) ); //damage might need to be scaled so that the damage can be adquately compared to the threat level
 }
 
 /**\brief sets the AI's target
  *
  */
-void AI::SetTarget(int t) {
+void NPC::SetTarget(int t) {
 	AddEnemy(t, 0);
 	target = t;
 }
@@ -267,7 +268,7 @@ void AI::SetTarget(int t) {
 /**\brief Adds an enemy to the AI's list of enemies
  * \todo Remove the SpriteManager Instance access.
  */
-void AI::AddEnemy(int spriteID, int damage) {
+void NPC::AddEnemy(int spriteID, int damage) {
 	Sprite *spr = Menu::GetCurrentScenario()->GetSpriteManager()->GetSpriteByID(spriteID);
 
 	if(!spr) {
@@ -291,7 +292,7 @@ void AI::AddEnemy(int spriteID, int damage) {
 	newE.damage = damage;
 
 	// Search the enemies list for this sprite, combine damage taken if found.
-	list<enemy>::iterator it = lower_bound(enemies.begin() , enemies.end(), newE, AI::EnemyComp);
+	list<enemy>::iterator it = lower_bound(enemies.begin(), enemies.end(), newE, NPC::EnemyComp);
 	if( (*it).id == spriteID ) {
 		(*it).damage += damage;
 	} else {
@@ -310,10 +311,10 @@ void AI::AddEnemy(int spriteID, int damage) {
 
 /**\brief Remove an enemy from the AI's list of enemies
  */
-void AI::RemoveEnemy(int spriteID) {
+void NPC::RemoveEnemy(int spriteID) {
 	enemy newE;
 	newE.id=spriteID;
-	list<enemy>::iterator it=lower_bound(enemies.begin(),enemies.end(),newE,AI::EnemyComp);
+	list<enemy>::iterator it = lower_bound(enemies.begin(), enemies.end(), newE, NPC::EnemyComp);
 
 	if( (*it).id == spriteID) {
 		enemies.erase(it);
@@ -327,15 +328,14 @@ void AI::RemoveEnemy(int spriteID) {
 /**\brief sets the AI to hunt the current target using the lua function setHuntHostile
 *
 */
-void AI::RegisterTarget( lua_State *L, int t ){
-	
+void NPC::RegisterTarget( lua_State *L, int t ) {
 	//Lua::Call( "setHuntHostile", "ii", this->GetID(), t );
 }
 
 /**\brief checks if a potential target is within targeting range
  *
  */
-bool AI::InRange(Coordinate a, Coordinate b){
+bool NPC::InRange(Coordinate a, Coordinate b) {
 	//printf("InRange check\n");
 	int x=a.GetX() - b.GetX();
 	int y=a.GetY() - b.GetY();
@@ -348,10 +348,10 @@ bool AI::InRange(Coordinate a, Coordinate b){
  *
  */
 
-bool AI::CompareAI(Sprite* a, Sprite* b){
+bool NPC::CompareAI(Sprite* a, Sprite* b) {
 	//printf("Start Comp AI\n");
 	if(a->GetDrawOrder()==DRAW_ORDER_SHIP && b->GetDrawOrder()==DRAW_ORDER_SHIP)
-		return(  ( (AI*)a )->GetTarget() < ( (AI*)b )->GetTarget() );
+		return(  ( (NPC*)a )->GetTarget() < ( (NPC*)b )->GetTarget() );
 	else{
 		if(a->GetDrawOrder()!=DRAW_ORDER_SHIP)
 			LogMsg( ERR, "Error Sprite %d is not a ship\n", (a)->GetID() );
@@ -387,5 +387,3 @@ bool AI::CompareAI(Sprite* a, Sprite* b){
  */
 
 /** @} */
-
-

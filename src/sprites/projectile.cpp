@@ -10,7 +10,7 @@
 #include "sprites/projectile.h"
 #include "utilities/trig.h"
 #include "sprites/spritemanager.h"
-#include "sprites/ai.h"
+#include "sprites/npc.h"
 #include "sprites/ship.h"
 #include "sprites/effects.h"
 #include "utilities/timer.h"
@@ -93,7 +93,7 @@ void Projectile::Update( lua_State *L ) {
 		((Ship*)impact)->Damage( damageDone );
 
 		if(impact->GetDrawOrder() == DRAW_ORDER_SHIP) {
-			((AI*)impact)->AddEnemy(ownerID, damageDone);
+			((NPC*)impact)->AddEnemy(ownerID, damageDone);
 		}
 
 		sprites->Delete( (Sprite*)this );

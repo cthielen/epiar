@@ -200,6 +200,7 @@ Log::Log()
 	loglvl = loglvldefault;
 
 #ifndef _WIN32
+	// Values from shell color escape codes
 	int Black   = 30;
 	//int Blue    = 34;
 	int Green   = 32;
@@ -207,24 +208,20 @@ Log::Log()
 	int Red     = 31;
 	//int Purple  = 35;
 	int Brown   = 33;
+	int Default = 39; // user's default shell foreground color
 
-	// BLACK
 	colors[NONE]    = Black;
-	// Red
 	colors[FATAL]   = Red;
 	colors[ERR]     = Red;
-	// Brown
 	colors[WARN]    = Brown;
-	// Cyan
 	colors[INFO]    = Cyan;
-	// Green
-	colors[DEBUG]  = Green;
+	colors[DEBUG]   = Brown;
 	
 	istty = isatty(fileno(stdin));
 #endif
 
 	// generate the log's filename based on the time
-	logFilename = string("Epiar-Log-") + GetTimestamp() + string(".xml");
+	logFilename = string("epiar-") + GetTimestamp() + string(".log.xml");
 
 	fp = NULL;
 }

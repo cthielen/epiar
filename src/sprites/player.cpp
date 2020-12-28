@@ -191,7 +191,7 @@ void Player::Land( lua_State *L, Planet* planet ){
 /**\brief Constructor
  */
 Player::Player() {
-	this->playerCheck = true;
+	this->isPlayerFlag = true;
 	this->SetRadarColor( WHITE );
 	this->hasJumped = false;
 }

@@ -1,4 +1,4 @@
-/**\file			ai_lua.h
+/**\file			npc_lua.h
  * \author			Matt Zweig (thezweig@gmail.com)
  * \date			Created: Thursday, October 29, 2009
  * \date			Modified: Monday, November 16 2009
@@ -6,22 +6,22 @@
  * \details
  */
 
-#ifndef __H_AI_LUA_
-#define __H_AI_LUA_
+#ifndef __H_NPC_LUA_
+#define __H_NPC_LUA_
 
-#include "sprites/ai.h"
+#include "sprites/npc.h"
 #include "utilities/lua.h"
 
 #define EPIAR_SHIP_TABLE "Epiar.Ship" ///< The Lua tag used to identify the metatable for a Ship
 #define EPIAR_SHIP "Ship" ///< The Lua tag used to identify the Library for a Ship.
 #define EPIAR_OUTFIT "Outfit" ///< The Lua tag used to identify the Library for an Outfit
 
-class AI_Lua{
+class NPC_Lua {
 	public:
 		// Functions to communicate with Lua
 		static void RegisterAI(lua_State *L);
 		//static void pushShip(lua_State *L,int id);
-		static AI *checkShip(lua_State *L, int index);
+		static NPC *checkShip(lua_State *L, int index);
 		static Outfit *checkOutfit(lua_State *L, int index);
 		static int newShip(lua_State *L);
 
@@ -117,5 +117,4 @@ class AI_Lua{
 	private:
 };
 
-
-#endif /* __H_AI_LUA_ */
+#endif /* __H_NPC_LUA_ */

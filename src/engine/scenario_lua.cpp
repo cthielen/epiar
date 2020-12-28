@@ -24,7 +24,7 @@
 #include "ui/ui_label.h"
 #include "ui/ui_button.h"
 #include "graphics/video.h"
-#include "sprites/ai_lua.h"
+#include "sprites/npc_lua.h"
 #include "sprites/player.h"
 #include "sprites/sprite.h"
 #include "sprites/planets.h"
@@ -687,7 +687,7 @@ int Scenario_Lua::GetNearestSprite(lua_State *L, int kind) {
 		closest = sprites->GetNearestSprite( position, r, kind );
 
 	} else {
-		Sprite* target = (Sprite*)AI_Lua::checkShip(L,1);
+		Sprite* target = (Sprite*)NPC_Lua::checkShip(L,1);
 		if( target == NULL ) {
 			return 0;
 		}

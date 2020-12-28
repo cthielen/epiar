@@ -23,8 +23,8 @@
 #include "engine/technologies.h"
 #include "graphics/video.h"
 #include "input/input.h"
-#include "sprites/ai.h"
-#include "sprites/ai_lua.h"
+#include "sprites/npc.h"
+#include "sprites/npc_lua.h"
 #include "sprites/effects.h"
 #include "sprites/player.h"
 #include "sprites/planets.h"
@@ -207,7 +207,7 @@ bool Scenario::Initialize() {
 	LuaRegisters( luaState );
 
 	// Load ::Run()-specific Lua registers
-	AI_Lua::RegisterAI( luaState );
+	NPC_Lua::RegisterAI( luaState );
 
 	Input::RegisterLuaVariables();
 

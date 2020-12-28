@@ -85,10 +85,10 @@ class Sprite {
 		int interpolationUpdateCheck; // we need two logical loops before interpolated coordinates can be used
 
     protected:
-        bool playerCheck;              ///< Flag for player Sprite, true if the Sprite is an instance of Player class
+        bool isPlayerFlag;              ///< Flag for player Sprite, true if the Sprite is an instance of Player class
 
         bool isPlayer() {
-            return playerCheck;
+            return isPlayerFlag;
         }
 };
 

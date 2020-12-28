@@ -8,7 +8,7 @@
 
 #include "includes.h"
 #include "common.h"
-#include "sprites/ai.h"
+#include "sprites/npc.h"
 #include "sprites/effects.h"
 #include "sprites/spritemanager.h"
 #include "utilities/log.h"
@@ -237,7 +237,7 @@ void SpriteManager::Update( lua_State *L, bool lowFps) {
 		// Tell the AI that they've been killed
 		for( i = spritesToDelete.begin(); i != spritesToDelete.end(); ++i ) {
 			if( (*i)->GetDrawOrder() == DRAW_ORDER_SHIP ) {
-				((AI*)(*i))->Killed(L);
+				((NPC*)(*i))->Killed(L);
 			}
 		}
 

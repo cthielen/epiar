@@ -1,4 +1,4 @@
-/**\file			ai.h
+/**\file			npc.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
  * \date			Modified: Saturday, January 5, 2008
@@ -6,8 +6,8 @@
  * \details
  */
 
-#ifndef AI_H_
-#define AI_H_
+#ifndef NPC_H_
+#define NPC_H_
 
 #include "sprites/ship.h"
 #include "engine/alliances.h"
@@ -16,9 +16,9 @@
 #define COMBAT_RANGE 1000 ///< Radius of ships involved in any specific battle
 #define COMBAT_RANGE_SQUARED (COMBAT_RANGE*COMBAT_RANGE) ///< Used for fast range checking.
 
-class AI : public Ship {
+class NPC : public Ship {
 	public:
-		AI(string name, string machine);
+		NPC(string name, string machine);
 
 		// Overloaded Sprite Mechanics:
 		void Update( lua_State *L );
@@ -78,9 +78,9 @@ class AI : public Ship {
 		int ChooseTarget( lua_State *L );
 		void RegisterTarget( lua_State *L, int t );
 
-		static bool EnemyComp(AI::enemy a, AI::enemy b){return(a.id<b.id);}
+		static bool EnemyComp(NPC::enemy a, NPC::enemy b) { return(a.id < b.id); }
 		static bool CompareAI(Sprite* a, Sprite* b);
 		static bool InRange(Coordinate a, Coordinate b);
 };
 
-#endif /*AI_H_*/
+#endif /* NPC_H_ */

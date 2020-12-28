@@ -14,7 +14,7 @@
 #include "utilities/lua.h"
 #include "engine/alliances.h"
 #include "engine/scenario_lua.h"
-#include "sprites/ai.h"
+#include "sprites/npc.h"
 
 /**\class Sector
  * \brief A Sector.
@@ -214,7 +214,7 @@ void Sector::GenerateTraffic( int count ) {
 	int y_range = south - north;
 
 	for(int i = 0; i < count; i++) {
-		AI *s = new AI("Violet", "Trader");
+		NPC *s = new NPC("Violet", "Trader");
 		Coordinate c;
 
 		c.SetX( (rand() % x_range) + west );

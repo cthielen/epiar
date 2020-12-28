@@ -1,4 +1,4 @@
-/**\file			ai_lua.cpp
+/**\file			npc_lua.cpp
  * \author			Matt Zweig (thezweig@gmail.com)
  * \date			Created: Thursday, October 29, 2009
  * \date			Modified: Thursday, December 3, 2015
@@ -13,25 +13,25 @@
 #include "sprites/player.h"
 #include "sprites/planets.h"
 #include "sprites/planets_lua.h"
-#include "sprites/ai_lua.h"
+#include "sprites/npc_lua.h"
 #include "audio/sound.h"
 #include "engine/camera.h"
 #include "utilities/trig.h"
 #include "engine/commodities.h"
 #include "engine/scenario_lua.h"
 
-/**\class AI_Lua
+/**\class NPC_Lua
  * \brief Lua bridge for AI.*/
 
 /**\brief Registers functions callable by Lua scripts for the AI.
  */
-void AI_Lua::RegisterAI(lua_State *L){
+void NPC_Lua::RegisterAI(lua_State *L){
 
 	// This is the Function for creating Ships
 	// Call this like:
 	// some_ship = Epiar.Ship.new()
 	static const luaL_Reg shipFunctions[] = {
-		{"new", &AI_Lua::newShip},
+		{"new", &NPC_Lua::newShip},
 		{NULL, NULL}
 	};
 
@@ -40,91 +40,91 @@ void AI_Lua::RegisterAI(lua_State *L){
 	// some_ship:Accelerate()
 	static const luaL_Reg shipMethods[] = {
 		// Actions
-		{"Accelerate", &AI_Lua::ShipAccelerate},
-		{"Rotate", &AI_Lua::ShipRotate},
-		{"SetRadarColor", &AI_Lua::ShipRadarColor},
-		{"FirePrimary", &AI_Lua::ShipFirePrimary},
-		{"FireSecondary", &AI_Lua::ShipFireSecondary},
-		{"Damage", &AI_Lua::ShipDamage},
-		{"Repair", &AI_Lua::ShipRepair},
-		{"Explode", &AI_Lua::ShipExplode},
-		{"Remove", &AI_Lua::ShipRemove},
-		{"Land", &AI_Lua::ShipLand},
-		{"SetLuaControlFunc", &AI_Lua::ShipSetLuaControlFunc},
+		{"Accelerate", &NPC_Lua::ShipAccelerate},
+		{"Rotate", &NPC_Lua::ShipRotate},
+		{"SetRadarColor", &NPC_Lua::ShipRadarColor},
+		{"FirePrimary", &NPC_Lua::ShipFirePrimary},
+		{"FireSecondary", &NPC_Lua::ShipFireSecondary},
+		{"Damage", &NPC_Lua::ShipDamage},
+		{"Repair", &NPC_Lua::ShipRepair},
+		{"Explode", &NPC_Lua::ShipExplode},
+		{"Remove", &NPC_Lua::ShipRemove},
+		{"Land", &NPC_Lua::ShipLand},
+		{"SetLuaControlFunc", &NPC_Lua::ShipSetLuaControlFunc},
 		
 		//Power Distribution
-		{"GetShieldBooster", &AI_Lua::ShipGetShieldBooster},
-		{"GetEngineBooster", &AI_Lua::ShipGetEngineBooster},
-		{"GetDamageBooster", &AI_Lua::ShipGetDamageBooster},
-		{"SetShieldBooster", &AI_Lua::ShipSetShieldBooster},
-		{"SetEngineBooster", &AI_Lua::ShipSetEngineBooster},
-		{"SetDamageBooster", &AI_Lua::ShipSetDamageBooster},
+		{"GetShieldBooster", &NPC_Lua::ShipGetShieldBooster},
+		{"GetEngineBooster", &NPC_Lua::ShipGetEngineBooster},
+		{"GetDamageBooster", &NPC_Lua::ShipGetDamageBooster},
+		{"SetShieldBooster", &NPC_Lua::ShipSetShieldBooster},
+		{"SetEngineBooster", &NPC_Lua::ShipSetEngineBooster},
+		{"SetDamageBooster", &NPC_Lua::ShipSetDamageBooster},
 		
 		// Outfit Changes
-		{"AddWeapon", &AI_Lua::ShipAddWeapon},
-		{"AddToWeaponList", &AI_Lua::ShipAddToWeaponList},
-		{"RemoveWeapon", &AI_Lua::ShipRemoveWeapon},
-		{"RemoveFromWeaponList", &AI_Lua::ShipRemoveFromWeaponList},
-		{"AddAmmo", &AI_Lua::ShipAddAmmo},
-		{"SetModel", &AI_Lua::ShipSetModel},
-		{"SetEngine", &AI_Lua::ShipSetEngine},
-		{"AddOutfit", &AI_Lua::ShipAddOutfit},
-		{"RemoveOutfit", &AI_Lua::ShipRemoveOutfit},
-		{"SetCredits", &AI_Lua::ShipSetCredits},
-		{"StoreCommodities", &AI_Lua::ShipStoreCommodities},
-		{"DiscardCommodities", &AI_Lua::ShipDiscardCommodities},
-		{"AcceptMission", &AI_Lua::ShipAcceptMission},
-		{"RejectMission", &AI_Lua::ShipRejectMission},
+		{"AddWeapon", &NPC_Lua::ShipAddWeapon},
+		{"AddToWeaponList", &NPC_Lua::ShipAddToWeaponList},
+		{"RemoveWeapon", &NPC_Lua::ShipRemoveWeapon},
+		{"RemoveFromWeaponList", &NPC_Lua::ShipRemoveFromWeaponList},
+		{"AddAmmo", &NPC_Lua::ShipAddAmmo},
+		{"SetModel", &NPC_Lua::ShipSetModel},
+		{"SetEngine", &NPC_Lua::ShipSetEngine},
+		{"AddOutfit", &NPC_Lua::ShipAddOutfit},
+		{"RemoveOutfit", &NPC_Lua::ShipRemoveOutfit},
+		{"SetCredits", &NPC_Lua::ShipSetCredits},
+		{"StoreCommodities", &NPC_Lua::ShipStoreCommodities},
+		{"DiscardCommodities", &NPC_Lua::ShipDiscardCommodities},
+		{"AcceptMission", &NPC_Lua::ShipAcceptMission},
+		{"RejectMission", &NPC_Lua::ShipRejectMission},
 
 		// Current State
-		{"GetID", &AI_Lua::ShipGetID},
-		{"GetMass", &AI_Lua::ShipGetMass},
-		{"GetName", &AI_Lua::ShipGetName},
-		{"SetName", &AI_Lua::ShipSetName},
-		{"GetAlliance", &AI_Lua::ShipGetAlliance},
-		{"GetType", &AI_Lua::ShipGetType},
-		{"GetAngle", &AI_Lua::ShipGetAngle},
-		{"GetPosition", &AI_Lua::ShipGetPosition},
-		{"GetMomentumAngle", &AI_Lua::ShipGetMomentumAngle},
-		{"GetMomentumSpeed", &AI_Lua::ShipGetMomentumSpeed},
-		{"directionTowards", &AI_Lua::ShipGetDirectionTowards},
-		{"SetMerciful", &AI_Lua::ShipSetMerciful},
-		{"GetMerciful", &AI_Lua::ShipGetMerciful},
+		{"GetID", &NPC_Lua::ShipGetID},
+		{"GetMass", &NPC_Lua::ShipGetMass},
+		{"GetName", &NPC_Lua::ShipGetName},
+		{"SetName", &NPC_Lua::ShipSetName},
+		{"GetAlliance", &NPC_Lua::ShipGetAlliance},
+		{"GetType", &NPC_Lua::ShipGetType},
+		{"GetAngle", &NPC_Lua::ShipGetAngle},
+		{"GetPosition", &NPC_Lua::ShipGetPosition},
+		{"GetMomentumAngle", &NPC_Lua::ShipGetMomentumAngle},
+		{"GetMomentumSpeed", &NPC_Lua::ShipGetMomentumSpeed},
+		{"directionTowards", &NPC_Lua::ShipGetDirectionTowards},
+		{"SetMerciful", &NPC_Lua::ShipSetMerciful},
+		{"GetMerciful", &NPC_Lua::ShipGetMerciful},
 
 		// Favor State
-		{"GetFavor", &AI_Lua::ShipGetFavor},
-		{"UpdateFavor", &AI_Lua::ShipUpdateFavor},
+		{"GetFavor", &NPC_Lua::ShipGetFavor},
+		{"UpdateFavor", &NPC_Lua::ShipUpdateFavor},
 
 		// General State
-		{"GetModelName", &AI_Lua::ShipGetModelName},
-		{"GetEngine", &AI_Lua::ShipGetEngine},
-		{"GetHull", &AI_Lua::ShipGetHull},
-		{"GetShield", &AI_Lua::ShipGetShield},
-		{"GetWeapons", &AI_Lua::ShipGetWeapons},
-		{"GetOutfits", &AI_Lua::ShipGetOutfits},
-		{"GetState", &AI_Lua::ShipGetState},
-		{"SetStateMachine", &AI_Lua::ShipSetStateMachine},
-		{"GetCredits", &AI_Lua::ShipGetCredits},
-		{"GetCargo", &AI_Lua::ShipGetCargo},
-		{"GetTotalCost", &AI_Lua::ShipGetTotalCost},
-		{"IsDisabled", &AI_Lua::ShipIsDisabled},
-		{"GetMissions", &AI_Lua::ShipGetMissions},
-		//{"GetWorldPosition", &AI_Lua::ShipGetWorldPosition},
-		//{"SetWorldPosition", &AI_Lua::ShipSetWorldPosition},
-		{"GetHullDamage", &AI_Lua::ShipGetHullDamage},
-		{"SetHullDamage", &AI_Lua::ShipSetHullDamage},
-		{"GetShieldDamage", &AI_Lua::ShipGetShieldDamage},
-		{"SetShieldDamage", &AI_Lua::ShipSetShieldDamage},
-		{"GetWeaponsAmmo", &AI_Lua::ShipGetWeaponsAmmo},
-		{"GetWeaponSlotCount", &AI_Lua::ShipGetWeaponSlotCount},
-		{"GetWeaponSlotName", &AI_Lua::ShipGetWeaponSlotName},
-		{"GetWeaponSlotStatus", &AI_Lua::ShipGetWeaponSlotStatus},
-		{"SetWeaponSlotStatus", &AI_Lua::ShipSetWeaponSlotStatus},
-		{"GetWeaponSlotContents", &AI_Lua::ShipGetWeaponSlotContents}, // builds a Lua table; no setter for this one
-		{"GetWeaponSlotFG", &AI_Lua::ShipGetWeaponSlotFG},
-		{"SetWeaponSlotFG", &AI_Lua::ShipSetWeaponSlotFG},
-		{"SetTarget", &AI_Lua::SetTarget},
-		{"AddHiredEscort", &AI_Lua::PlayerAddHiredEscort},
+		{"GetModelName", &NPC_Lua::ShipGetModelName},
+		{"GetEngine", &NPC_Lua::ShipGetEngine},
+		{"GetHull", &NPC_Lua::ShipGetHull},
+		{"GetShield", &NPC_Lua::ShipGetShield},
+		{"GetWeapons", &NPC_Lua::ShipGetWeapons},
+		{"GetOutfits", &NPC_Lua::ShipGetOutfits},
+		{"GetState", &NPC_Lua::ShipGetState},
+		{"SetStateMachine", &NPC_Lua::ShipSetStateMachine},
+		{"GetCredits", &NPC_Lua::ShipGetCredits},
+		{"GetCargo", &NPC_Lua::ShipGetCargo},
+		{"GetTotalCost", &NPC_Lua::ShipGetTotalCost},
+		{"IsDisabled", &NPC_Lua::ShipIsDisabled},
+		{"GetMissions", &NPC_Lua::ShipGetMissions},
+		//{"GetWorldPosition", &NPC_Lua::ShipGetWorldPosition},
+		//{"SetWorldPosition", &NPC_Lua::ShipSetWorldPosition},
+		{"GetHullDamage", &NPC_Lua::ShipGetHullDamage},
+		{"SetHullDamage", &NPC_Lua::ShipSetHullDamage},
+		{"GetShieldDamage", &NPC_Lua::ShipGetShieldDamage},
+		{"SetShieldDamage", &NPC_Lua::ShipSetShieldDamage},
+		{"GetWeaponsAmmo", &NPC_Lua::ShipGetWeaponsAmmo},
+		{"GetWeaponSlotCount", &NPC_Lua::ShipGetWeaponSlotCount},
+		{"GetWeaponSlotName", &NPC_Lua::ShipGetWeaponSlotName},
+		{"GetWeaponSlotStatus", &NPC_Lua::ShipGetWeaponSlotStatus},
+		{"SetWeaponSlotStatus", &NPC_Lua::ShipSetWeaponSlotStatus},
+		{"GetWeaponSlotContents", &NPC_Lua::ShipGetWeaponSlotContents}, // builds a Lua table; no setter for this one
+		{"GetWeaponSlotFG", &NPC_Lua::ShipGetWeaponSlotFG},
+		{"SetWeaponSlotFG", &NPC_Lua::ShipSetWeaponSlotFG},
+		{"SetTarget", &NPC_Lua::SetTarget},
+		{"AddHiredEscort", &NPC_Lua::PlayerAddHiredEscort},
 		{NULL, NULL}
 	};
 
@@ -143,23 +143,24 @@ void AI_Lua::RegisterAI(lua_State *L){
 
 /**\brief Validates Ship in Lua.
  */
-AI* AI_Lua::checkShip(lua_State *L, int index){
+NPC* NPC_Lua::checkShip(lua_State *L, int index){
 	int* idptr = (int*)luaL_checkudata(L, index, EPIAR_SHIP);
 	luaL_argcheck(L, idptr != NULL, index, "`EPIAR_SHIP' expected");
-	Sprite* s;
-	s = Scenario_Lua::GetScenario(L)->GetSpriteManager()->GetSpriteByID(*idptr);
+
+	Sprite* s = Scenario_Lua::GetScenario(L)->GetSpriteManager()->GetSpriteByID(*idptr);
 	/*
 	if ((s) == NULL) luaL_typerror(L, index, EPIAR_SHIP);
 	if (0==((s)->GetDrawOrder() & DRAW_ORDER_SHIP|DRAW_ORDER_PLAYER)){
 		luaL_typerror(L, index, EPIAR_SHIP);
 	}
 	*/
-	return (AI*)s;
+
+	return (NPC*)s;
 }
 
 /**\brief Validates Outfit in Lua.
  */
-Outfit* AI_Lua::checkOutfit(lua_State *L, int index){
+Outfit* NPC_Lua::checkOutfit(lua_State *L, int index){
 	int* idptr = (int*)luaL_checkudata(L, index, EPIAR_OUTFIT);
 	luaL_argcheck(L, idptr != NULL, index, "`EPIAR_OUTFIT' expected");
 	Sprite* s;
@@ -169,7 +170,7 @@ Outfit* AI_Lua::checkOutfit(lua_State *L, int index){
 
 /**\brief Spawns a new AI ship for Lua.
  */
-int AI_Lua::newShip(lua_State *L){
+int NPC_Lua::newShip(lua_State *L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n != 7)
 		return luaL_error(L, "Got %d arguments expected 5 (name, x, y, model, engine, script, alliance)", n);
@@ -185,8 +186,7 @@ int AI_Lua::newShip(lua_State *L){
 	//LogMsg(INFO,"Creating new Ship (%s) (%f,%f) (%s) (%s) (%s) (%s)",name.c_str(), x,y,modelname.c_str(),enginename.c_str(),statemachine.c_str(), alliancename.c_str());
 
 	// Allocate memory for a pointer to object
-	AI *s = NULL;
-	s = new AI(name,statemachine);
+	NPC *s = new NPC(name,statemachine);
 	s->SetWorldPosition( Coordinate(x, y) );
 	s->SetModel( Scenario_Lua::GetScenario(L)->GetModels()->GetModel(modelname) );
 	s->SetEngine( Scenario_Lua::GetScenario(L)->GetEngines()->GetEngine(enginename) );
@@ -206,12 +206,12 @@ int AI_Lua::newShip(lua_State *L){
 /**\brief Lua callable function to accelerate the ship.
  * \sa Ship::Accelerate()
  */
-int AI_Lua::ShipAccelerate(lua_State* L) {
+int NPC_Lua::ShipAccelerate(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
-		if(ai==NULL) return 0;
+		NPC* ai = checkShip(L,1);
+		if(ai == NULL) return 0;
 		luaL_argcheck(L, ai != NULL, 1, "`array' expected");
 		(ai)->Accelerate( false );
 	}
@@ -224,11 +224,11 @@ int AI_Lua::ShipAccelerate(lua_State* L) {
 /**\brief Lua callable function to rotate the ship.
  * \sa Ship::Rotate(float)
  */
-int AI_Lua::ShipRotate(lua_State* L) {
+int NPC_Lua::ShipRotate(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		float dir = static_cast<float>( luaL_checknumber(L, 2) );
 		(ai)->Rotate(dir, false);
@@ -242,11 +242,11 @@ int AI_Lua::ShipRotate(lua_State* L) {
 /**\brief Lua callable function to set ship's radar color.
  * \sa Sprite::SetRadarColor
  */
-int AI_Lua::ShipRadarColor(lua_State* L){
+int NPC_Lua::ShipRadarColor(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 4) {
-		AI* ai = checkShip(L, 1);
+		NPC* ai = checkShip(L, 1);
 		if(ai == NULL) { return 0; }
 		int red = (int) luaL_checknumber (L, 2);
 		int green = (int) luaL_checknumber (L, 3);
@@ -263,11 +263,11 @@ int AI_Lua::ShipRadarColor(lua_State* L){
  * \sa Ship::FirePrimary()
  * \returns FireStatus result of the firing attempt
  */
-int AI_Lua::ShipFirePrimary(lua_State* L){
+int NPC_Lua::ShipFirePrimary(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	int target = -1;
 	if( (n == 1) || (n == 2) ) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		if(n == 2)
 		{
@@ -284,11 +284,11 @@ int AI_Lua::ShipFirePrimary(lua_State* L){
  * \sa Ship::FireSecondary()
  * \returns FireStatus result of the firing attempt
  */
-int AI_Lua::ShipFireSecondary(lua_State* L){
+int NPC_Lua::ShipFireSecondary(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	int target = -1;
 	if( (n == 1) || (n == 2) ) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		if(n == 2)
 		{
@@ -304,10 +304,10 @@ int AI_Lua::ShipFireSecondary(lua_State* L){
 /**\brief Lua callable function to add damage to ship.
  * \sa Ship::Damage(short int)
  */
-int AI_Lua::ShipDamage(lua_State* L){
+int NPC_Lua::ShipDamage(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		short damage = (short) luaL_checknumber (L, 2);
 		(ai)->Damage( damage );
@@ -319,10 +319,10 @@ int AI_Lua::ShipDamage(lua_State* L){
 
 /**\brief Lua callable function to repair the ship.
  */
-int AI_Lua::ShipRepair(lua_State* L){
+int NPC_Lua::ShipRepair(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		short damage = (short) luaL_checkint (L, 2);
 		(ai)->Repair( damage );
@@ -335,10 +335,10 @@ int AI_Lua::ShipRepair(lua_State* L){
 /**\brief Lua callable function to explode the ship.
  * \sa Effect
  */
-int AI_Lua::ShipExplode(lua_State* L){
+int NPC_Lua::ShipExplode(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		LogMsg(INFO,"A %s Exploded!",(ai)->GetModelName().c_str());
 		// Play explode sound
@@ -359,10 +359,10 @@ int AI_Lua::ShipExplode(lua_State* L){
  *
  *  This does not create an explosion, the ship is simply removed instantly.
  */
-int AI_Lua::ShipRemove(lua_State* L){
+int NPC_Lua::ShipRemove(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		Scenario_Lua::GetScenario(L)->GetSpriteManager()->Delete((Sprite*)(ai));
 	} else {
@@ -373,10 +373,10 @@ int AI_Lua::ShipRemove(lua_State* L){
 
 /**\brief Lua callable function to add weapon to ship (but see function below)
  */
-int AI_Lua::ShipAddToWeaponList(lua_State* L){
+int NPC_Lua::ShipAddToWeaponList(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string weaponName = luaL_checkstring (L, 2);
 		(ai)->AddToShipWeaponList(weaponName);
@@ -387,10 +387,10 @@ int AI_Lua::ShipAddToWeaponList(lua_State* L){
 }	
 /**\brief Lua callable function to add weapon to ship and update the weapon slots accordingly (PREFERRED)
  */
-int AI_Lua::ShipAddWeapon(lua_State* L){
+int NPC_Lua::ShipAddWeapon(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string weaponName = luaL_checkstring (L, 2);
 		int status = (ai)->AddShipWeapon(weaponName);
@@ -405,10 +405,10 @@ int AI_Lua::ShipAddWeapon(lua_State* L){
 
 /**\brief Lua callable function to remove weapon from ship.
  */
-int AI_Lua::ShipRemoveFromWeaponList(lua_State* L){
+int NPC_Lua::ShipRemoveFromWeaponList(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		if( lua_isnumber(L,2)){
 			int weaponNum = luaL_checkinteger(L, 2);
@@ -425,10 +425,10 @@ int AI_Lua::ShipRemoveFromWeaponList(lua_State* L){
 
 /**\brief Lua callable function to remove weapon from ship and update the weapon slots accordingly (PREFERRED)
  */
-int AI_Lua::ShipRemoveWeapon(lua_State* L){
+int NPC_Lua::ShipRemoveWeapon(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string weaponName = luaL_checkstring (L, 2);
 		(ai)->RemoveShipWeapon(weaponName);
@@ -441,10 +441,10 @@ int AI_Lua::ShipRemoveWeapon(lua_State* L){
 /**\brief Lua callable function to retrieve shield boost data
  *\sa Ship::GetShieldBoost
  */
-int AI_Lua::ShipGetShieldBooster(lua_State* L){
+int NPC_Lua::ShipGetShieldBooster(lua_State* L){
 	int n = lua_gettop(L); //Number of arguments
 	if (n==1){
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		double s=(double) (ai)->GetShieldBoost();
 		lua_pushnumber (L, s);
@@ -459,10 +459,10 @@ int AI_Lua::ShipGetShieldBooster(lua_State* L){
 /**\brief Lua callable function to retrieve damage boost data
  *\sa Ship::GetDamageBoost
  */
-int AI_Lua::ShipGetDamageBooster(lua_State* L){
+int NPC_Lua::ShipGetDamageBooster(lua_State* L){
 	int n = lua_gettop(L); //Number of arguments
 	if (n==1){
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		lua_pushnumber (L, (double) (ai)->GetDamageBoost());
 	}
@@ -475,10 +475,10 @@ int AI_Lua::ShipGetDamageBooster(lua_State* L){
 /**\brief Lua callable function to retrieve engine boost data
  *\sa Ship::GetEngineBoost
  */
-int AI_Lua::ShipGetEngineBooster(lua_State* L){
+int NPC_Lua::ShipGetEngineBooster(lua_State* L){
 	int n = lua_gettop(L); //Number of arguments
 	if (n==1){
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		lua_pushnumber (L, (double) (ai)->GetEngineBoost());
 	}
@@ -491,10 +491,10 @@ int AI_Lua::ShipGetEngineBooster(lua_State* L){
 /**\brief Lua callable function to set shield boost data
  *\sa Ship::SetShieldBoost
  */
-int AI_Lua::ShipSetShieldBooster(lua_State* L){
+int NPC_Lua::ShipSetShieldBooster(lua_State* L){
 	int n = lua_gettop(L); //Number of arguments
 	if (n==2){
-		AI* ai = checkShip( L, 1 );
+		NPC* ai = checkShip( L, 1 );
 		if(ai==NULL) return 0;
 		float shield=(float) luaL_checknumber( L, 2 );
 		(ai)->SetShieldBoost(shield);
@@ -508,10 +508,10 @@ int AI_Lua::ShipSetShieldBooster(lua_State* L){
 /**\brief Lua callable function to set damage boost data
  *\sa Ship::SetDamageBoost
  */
-int AI_Lua::ShipSetDamageBooster(lua_State* L){
+int NPC_Lua::ShipSetDamageBooster(lua_State* L){
 	int n = lua_gettop(L); //Number of arguments
 	if (n==2){
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		float damage=(float) luaL_checknumber( L, 2 );
 		(ai)->SetDamageBoost(damage);
@@ -525,10 +525,10 @@ int AI_Lua::ShipSetDamageBooster(lua_State* L){
 /**\brief Lua callable function to retrieve engine boost data
  *\sa Ship::SetEngineBoost
  */
-int AI_Lua::ShipSetEngineBooster(lua_State* L){
+int NPC_Lua::ShipSetEngineBooster(lua_State* L){
 	int n = lua_gettop(L); //Number of arguments
 	if (n==2){
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		
 		float engine=(float) luaL_checknumber( L, 2 );
@@ -545,10 +545,10 @@ int AI_Lua::ShipSetEngineBooster(lua_State* L){
  * \sa Ship::addAmmo
  * \todo This should be passed an Ammo Type, not a weapon name
  */
-int AI_Lua::ShipAddAmmo(lua_State* L){
+int NPC_Lua::ShipAddAmmo(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 3) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string weaponName = luaL_checkstring (L, 2);
 		int qty = (int) luaL_checknumber (L, 3);
@@ -567,10 +567,10 @@ int AI_Lua::ShipAddAmmo(lua_State* L){
 /**\brief Lua callable function to set the ship model.
  * \sa Ship::SetModel
  */
-int AI_Lua::ShipSetModel(lua_State* L){
+int NPC_Lua::ShipSetModel(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string modelName = luaL_checkstring (L, 2);
 		Model* model = Scenario_Lua::GetScenario(L)->GetModels()->GetModel( modelName );
@@ -586,10 +586,10 @@ int AI_Lua::ShipSetModel(lua_State* L){
 /**\brief Lua callable function to set the ship engine.
  * \sa Ship::SetEngine(Engine*)
  */
-int AI_Lua::ShipSetEngine(lua_State* L){
+int NPC_Lua::ShipSetEngine(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string engineName = luaL_checkstring (L, 2);
 		Engine* engine = Scenario_Lua::GetScenario(L)->GetEngines()->GetEngine( engineName );
@@ -604,10 +604,10 @@ int AI_Lua::ShipSetEngine(lua_State* L){
 /**\brief Lua callable function to add an Outfit to a ship.
  * \sa Ship::addOutfit(Outfit*)
  */
-int AI_Lua::ShipAddOutfit(lua_State* L){
+int NPC_Lua::ShipAddOutfit(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string outfitName = luaL_checkstring (L, 2);
 		Outfit* outfit = Scenario_Lua::GetScenario(L)->GetOutfits()->GetOutfit( outfitName );
@@ -622,10 +622,10 @@ int AI_Lua::ShipAddOutfit(lua_State* L){
 /**\brief Lua callable function to remove an Outfit from a ship.
  * \sa Ship::RemoveOutfit(Outfit*)
  */
-int AI_Lua::ShipRemoveOutfit(lua_State* L){
+int NPC_Lua::ShipRemoveOutfit(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string outfitName = luaL_checkstring (L, 2);
 		Outfit* outfit = Scenario_Lua::GetScenario(L)->GetOutfits()->GetOutfit( outfitName );
@@ -641,10 +641,10 @@ int AI_Lua::ShipRemoveOutfit(lua_State* L){
 /**\brief Lua callable function to set the credits for this ship
  * \sa Ship::SetCredits()
  */
-int AI_Lua::ShipSetCredits(lua_State* L){
+int NPC_Lua::ShipSetCredits(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		int credits = luaL_checkint (L, 2);
 		luaL_argcheck(L, credits >= 0, 2, "Cannot set Credits to a negative number." );
@@ -658,14 +658,14 @@ int AI_Lua::ShipSetCredits(lua_State* L){
 /**\brief Lua callable function to Store a number of Commodities on this ship
  * \sa Ship::StoreCommodities()
  */
-int AI_Lua::ShipStoreCommodities(lua_State* L){
+int NPC_Lua::ShipStoreCommodities(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n != 3) {
 		return luaL_error(L, "Got %d arguments expected 2 (ship, commodityName, count)", n);
 	}
 
 	// Get the Inputs
-	AI* ai = checkShip(L,1);
+	NPC* ai = checkShip(L,1);
 	string commodityName = luaL_checkstring (L, 2);
 	int count = luaL_checkint (L, 3);
 
@@ -685,14 +685,14 @@ int AI_Lua::ShipStoreCommodities(lua_State* L){
 /**\brief Lua callable function to Discard a number of Commodities from this ship
  * \sa Ship::DiscardCommodities()
  */
-int AI_Lua::ShipDiscardCommodities(lua_State* L){
+int NPC_Lua::ShipDiscardCommodities(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n != 3) {
 		return luaL_error(L, "Got %d arguments expected 2 (ship, commodityName, count)", n);
 	}
 
 	// Get the Inputs
-	AI* ai = checkShip(L,1);
+	NPC* ai = checkShip(L,1);
 	string commodityName = luaL_checkstring (L, 2);
 	int count = luaL_checkint (L, 3);
 
@@ -709,7 +709,7 @@ int AI_Lua::ShipDiscardCommodities(lua_State* L){
 	return 1;
 }
 
-int AI_Lua::ShipAcceptMission(lua_State *L){
+int NPC_Lua::ShipAcceptMission(lua_State *L){
 	int n=lua_gettop(L);
 	if(n!=3){
 		return luaL_error(L, "%d arguments provided, but expected 2 (self, MissionType, MissionTable)");
@@ -735,7 +735,7 @@ int AI_Lua::ShipAcceptMission(lua_State *L){
 	return 0;
 }
 
-int AI_Lua::ShipRejectMission(lua_State *L){
+int NPC_Lua::ShipRejectMission(lua_State *L){
 	int n=lua_gettop(L);
 	if(n!=2){
 		return luaL_error(L, "%d arguments provided, but expected 2 (self, MissionName)");
@@ -762,10 +762,10 @@ int AI_Lua::ShipRejectMission(lua_State *L){
  * \sa Sprite::GetDrawOrder()
  */
 
-int AI_Lua::ShipGetType(lua_State* L){
+int NPC_Lua::ShipGetType(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		lua_pushinteger(L, (ai)->GetDrawOrder() );
 	}
@@ -778,11 +778,11 @@ int AI_Lua::ShipGetType(lua_State* L){
 /**\brief Lua callable function to get the ship's ID
  * \sa Sprite::GetID()
  */
-int AI_Lua::ShipGetID(lua_State* L){
+int NPC_Lua::ShipGetID(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 			return 1;
@@ -798,11 +798,11 @@ int AI_Lua::ShipGetID(lua_State* L){
 /**\brief Lua callable function to get the ship's mass
  * \sa Sprite::GetMass()
  */
-int AI_Lua::ShipGetMass(lua_State* L){
+int NPC_Lua::ShipGetMass(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 			return 1;
@@ -818,7 +818,7 @@ int AI_Lua::ShipGetMass(lua_State* L){
 /**\brief Lua callable function to get the ship's ID
  * \sa Ship::GetName() AI::GetName() Player::GetName()
  */
-int AI_Lua::ShipGetName(lua_State* L){
+int NPC_Lua::ShipGetName(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
 		Ship* ship = (Ship*)checkShip(L,1);
@@ -835,10 +835,10 @@ int AI_Lua::ShipGetName(lua_State* L){
 
 /**\brief Lua callable function to set the ship's name
  */
-int AI_Lua::ShipSetName(lua_State* L){
+int NPC_Lua::ShipSetName(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		string newName = luaL_checkstring (L, 2);
 		(ai)->SetName( newName );
@@ -851,10 +851,10 @@ int AI_Lua::ShipSetName(lua_State* L){
 /**\brief Lua callable function to get the ship's ID
  * \sa AI::GetAlliance()
  */
-int AI_Lua::ShipGetAlliance(lua_State* L){
+int NPC_Lua::ShipGetAlliance(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if (ai==NULL){
 			return 0;
 		} else if( ai->GetDrawOrder() & DRAW_ORDER_PLAYER ) {
@@ -876,11 +876,11 @@ int AI_Lua::ShipGetAlliance(lua_State* L){
 /**\brief Lua callable function to get the ship's angle.
  * \sa Sprite::GetAngle()
  */
-int AI_Lua::ShipGetAngle(lua_State* L){
+int NPC_Lua::ShipGetAngle(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 			return 1;
@@ -896,11 +896,11 @@ int AI_Lua::ShipGetAngle(lua_State* L){
 /**\brief Lua callable function to get the world position
  * \sa Coordinate::GetWorldPosition()
  */
-int AI_Lua::ShipGetPosition(lua_State* L){
+int NPC_Lua::ShipGetPosition(lua_State* L){
 	int n = lua_gettop(L); // Number of arguments
 
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L,0);
 			lua_pushnumber(L,0);
@@ -919,11 +919,11 @@ int AI_Lua::ShipGetPosition(lua_State* L){
  * \sa Sprite::GetMomentum()
  * \sa Sprite::GetAngle()
  */
-int AI_Lua::ShipGetMomentumAngle(lua_State* L){
+int NPC_Lua::ShipGetMomentumAngle(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		AI* ai= checkShip(L,1);
+		NPC* ai= checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 		} else {
@@ -940,11 +940,11 @@ int AI_Lua::ShipGetMomentumAngle(lua_State* L){
  * \sa Sprite::GetMomentum()
  * \sa Coordinate::GetMagnitude()
  */
-int AI_Lua::ShipGetMomentumSpeed(lua_State* L){
+int NPC_Lua::ShipGetMomentumSpeed(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 		} else {
@@ -960,10 +960,10 @@ int AI_Lua::ShipGetMomentumSpeed(lua_State* L){
 /**\brief Lua callable function to get the ship's direction towards target.
  * \sa Ship::directionTowards
  */
-int AI_Lua::ShipGetDirectionTowards(lua_State* L){
+int NPC_Lua::ShipGetDirectionTowards(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) { // Angle
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 		} else {
@@ -972,7 +972,7 @@ int AI_Lua::ShipGetDirectionTowards(lua_State* L){
 		}
 	}
 	else if(n==3){ // Coordinate
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 		} else {
@@ -989,7 +989,7 @@ int AI_Lua::ShipGetDirectionTowards(lua_State* L){
 /**\brief Lua callable function to get the ship's weapons.
  * \sa Ship::getWeapons()
  */
-int AI_Lua::ShipGetWeapons(lua_State* L){
+int NPC_Lua::ShipGetWeapons(lua_State* L){
 	vector<Weapon*>::iterator iter;
 	int newTable;
 	int n = lua_gettop(L);  // Number of arguments
@@ -997,7 +997,7 @@ int AI_Lua::ShipGetWeapons(lua_State* L){
 	if (n != 1)
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 
-	AI* ai = checkShip(L,1);
+	NPC* ai = checkShip(L,1);
 	if(ai==NULL){
 		return 0;
 	}
@@ -1017,12 +1017,12 @@ int AI_Lua::ShipGetWeapons(lua_State* L){
 ///**\brief Lua callable function to get the current weapon.
 // * \sa Ship::getCurrentWeapon()
 // */
-//int AI_Lua::ShipGetCurrentWeapon(lua_State* L){
+//int NPC_Lua::ShipGetCurrentWeapon(lua_State* L){
 //	int n = lua_gettop(L);  // Number of arguments
 //	if (n != 1)
 //		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 //
-//	AI* ai = checkShip(L,1);
+//	NPC* ai = checkShip(L,1);
 //	if(ai==NULL){
 //		return 0;
 //	}
@@ -1034,12 +1034,12 @@ int AI_Lua::ShipGetWeapons(lua_State* L){
 ///**\brief Lua callable function to get the current ammo.
 // * \sa Ship::getCurrentAmmo()
 // */
-//int AI_Lua::ShipGetCurrentAmmo(lua_State* L){
+//int NPC_Lua::ShipGetCurrentAmmo(lua_State* L){
 //	int n = lua_gettop(L);  // Number of arguments
 //	if (n != 1)
 //		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 //
-//	AI* ai = checkShip(L,1);
+//	NPC* ai = checkShip(L,1);
 //	if(ai==NULL){
 //		return 0;
 //	}
@@ -1051,12 +1051,12 @@ int AI_Lua::ShipGetWeapons(lua_State* L){
 /**\brief Lua callable function to get the ship's model name.
  * \sa Ship::GetModelName()
  */
-int AI_Lua::ShipGetModelName(lua_State* L){
+int NPC_Lua::ShipGetModelName(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n != 1)
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 
-	AI* ai = checkShip(L,1);
+	NPC* ai = checkShip(L,1);
 	if(ai==NULL){
 		return 0;
 	}
@@ -1067,12 +1067,12 @@ int AI_Lua::ShipGetModelName(lua_State* L){
 /**\brief Lua callable function to get the ship's engine name.
  * \sa Ship::GetEngine()
  */
-int AI_Lua::ShipGetEngine(lua_State* L){
+int NPC_Lua::ShipGetEngine(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n != 1)
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 
-	AI* ai = checkShip(L,1);
+	NPC* ai = checkShip(L,1);
 	if(ai==NULL){
 		return 0;
 	}
@@ -1083,10 +1083,10 @@ int AI_Lua::ShipGetEngine(lua_State* L){
 /**\brief Lua callable function to get the hull status (in %).
  * \sa Ship::getHullIntegrityPct
  */
-int AI_Lua::ShipGetHull(lua_State* L){
+int NPC_Lua::ShipGetHull(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			// The ship doesn't exist (anymore?) so it's probably dead
 			lua_pushnumber(L, 0 );
@@ -1102,10 +1102,10 @@ int AI_Lua::ShipGetHull(lua_State* L){
 /**\brief Lua callable function to get the shield status (in %).
  * \sa Ship::GetShieldIntegrityPct
  */
-int AI_Lua::ShipGetShield(lua_State* L){
+int NPC_Lua::ShipGetShield(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			// The ship doesn't exist (anymore?) so it's probably dead
 			lua_pushnumber(L, 0 );
@@ -1121,10 +1121,10 @@ int AI_Lua::ShipGetShield(lua_State* L){
 /**\brief Lua callable function to get the State Machine of an AI.
  * \sa AI::GetStateMachine
  */
-int AI_Lua::ShipGetState(lua_State* L) {
+int NPC_Lua::ShipGetState(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			return 0;
 		} else if( ai->GetDrawOrder() & DRAW_ORDER_PLAYER ) {
@@ -1144,10 +1144,10 @@ int AI_Lua::ShipGetState(lua_State* L) {
 
 /**\brief Lua callable function to set the state machine of an AI.
  */
-int AI_Lua::ShipSetStateMachine(lua_State* L){
+int NPC_Lua::ShipSetStateMachine(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			luaL_error(L, "Can't set the state machine of a null sprite.");
 		}
@@ -1169,10 +1169,10 @@ int AI_Lua::ShipSetStateMachine(lua_State* L){
 /**\brief Lua callable function to get the current credits.
  * \sa AI::GetStateMachine
  */
-int AI_Lua::ShipGetCredits(lua_State* L) {
+int NPC_Lua::ShipGetCredits(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 		} else {
@@ -1187,13 +1187,13 @@ int AI_Lua::ShipGetCredits(lua_State* L) {
 /**\brief Lua callable function to get the ship's stored Commodities.
  * \sa Ship::getCargo()
  */
-int AI_Lua::ShipGetCargo(lua_State* L){
+int NPC_Lua::ShipGetCargo(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n != 1)
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 
-	AI* ai = checkShip(L,1);
+	NPC* ai = checkShip(L,1);
 	if(ai==NULL){
 		return 0;
 	}
@@ -1225,7 +1225,7 @@ int AI_Lua::ShipGetCargo(lua_State* L){
  *
  * \sa Ship::getOutfit()
  */
-int AI_Lua::ShipGetOutfits(lua_State* L){
+int NPC_Lua::ShipGetOutfits(lua_State* L){
 	list<Outfit*>::iterator iter;
 	int newTable, tableIndex;
 	int n = lua_gettop(L);  // Number of arguments
@@ -1233,7 +1233,7 @@ int AI_Lua::ShipGetOutfits(lua_State* L){
 	if (n != 1)
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 
-	AI* ai = checkShip(L,1);
+	NPC* ai = checkShip(L,1);
 	if(ai==NULL){
 		return 0;
 	}
@@ -1254,10 +1254,10 @@ int AI_Lua::ShipGetOutfits(lua_State* L){
 /**\brief Lua callable function to get the total cost of the ship.
  * \sa Ship::GetTotalCost
  */
-int AI_Lua::ShipGetTotalCost(lua_State* L) {
+int NPC_Lua::ShipGetTotalCost(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 		} else {
@@ -1272,10 +1272,10 @@ int AI_Lua::ShipGetTotalCost(lua_State* L) {
 /**\brief Lua callable function to determine if ship is disabled.
  * \sa Ship::IsDisabled
  */
-int AI_Lua::ShipIsDisabled(lua_State* L) {
+int NPC_Lua::ShipIsDisabled(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 		} else {
@@ -1287,7 +1287,7 @@ int AI_Lua::ShipIsDisabled(lua_State* L) {
 	return 1;
 }
 
-int AI_Lua::ShipGetMissions(lua_State* L) {
+int NPC_Lua::ShipGetMissions(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 	if(n!=1){
 		return luaL_error(L, "%d arguments provided, but expected 2 (self)");
@@ -1324,11 +1324,11 @@ int AI_Lua::ShipGetMissions(lua_State* L) {
 
 /**\brief Lua callable function to get merciful status of a ship
  */
-int AI_Lua::ShipGetMerciful(lua_State* L){
+int NPC_Lua::ShipGetMerciful(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		if( ai->GetDrawOrder() == DRAW_ORDER_PLAYER ) {
 			// Players are always merciful to themselves
@@ -1345,10 +1345,10 @@ int AI_Lua::ShipGetMerciful(lua_State* L){
 
 /**\brief Lua callable function to set the merciful status of a ship
  */
-int AI_Lua::ShipSetMerciful(lua_State* L){
+int NPC_Lua::ShipSetMerciful(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		if( ai->GetDrawOrder() == DRAW_ORDER_PLAYER ) {
 			return luaL_error(L, "Cannot force players to be merciful.");
@@ -1363,11 +1363,11 @@ int AI_Lua::ShipSetMerciful(lua_State* L){
 
 /**\brief Lua callable function to get Shield damage of a ship
  */
-int AI_Lua::ShipGetShieldDamage(lua_State* L){
+int NPC_Lua::ShipGetShieldDamage(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 			return 1;
@@ -1382,10 +1382,10 @@ int AI_Lua::ShipGetShieldDamage(lua_State* L){
 
 /**\brief Lua callable function to set the Shield damage of a ship
  */
-int AI_Lua::ShipSetShieldDamage(lua_State* L){
+int NPC_Lua::ShipSetShieldDamage(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		int damage = luaL_checkint (L, 2);
 		(ai)->SetShieldDamage( damage );
@@ -1397,11 +1397,11 @@ int AI_Lua::ShipSetShieldDamage(lua_State* L){
 
 /**\brief Lua callable function to get Hull damage of a ship
  */
-int AI_Lua::ShipGetHullDamage(lua_State* L){
+int NPC_Lua::ShipGetHullDamage(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL){
 			lua_pushnumber(L, 0 );
 			return 1;
@@ -1416,10 +1416,10 @@ int AI_Lua::ShipGetHullDamage(lua_State* L){
 
 /**\brief Lua callable function to set the Hull damage of a ship
  */
-int AI_Lua::ShipSetHullDamage(lua_State* L){
+int NPC_Lua::ShipSetHullDamage(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		int damage = luaL_checkint (L, 2);
 		(ai)->SetHullDamage( damage );
@@ -1432,10 +1432,10 @@ int AI_Lua::ShipSetHullDamage(lua_State* L){
 
 /**\brief Lua callable function to set the ai's current target
  */
-int AI_Lua::SetTarget(lua_State* L){
+int NPC_Lua::SetTarget(lua_State* L){
 	int n=lua_gettop(L);//Number of arguments
 	if(n==2){
-		AI* ai = checkShip(L,1);
+		NPC* ai = checkShip(L,1);
 		if(ai==NULL) return 0;
 		int target = luaL_checknumber(L,2);
 		ai->SetTarget(target);
@@ -1447,7 +1447,7 @@ int AI_Lua::SetTarget(lua_State* L){
 
 /**\brief Lua callable function to get the model of a ship
  */
-/*int AI_Lua::ShipGetModel(lua_State* L){
+/*int NPC_Lua::ShipGetModel(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
@@ -1467,12 +1467,12 @@ int AI_Lua::SetTarget(lua_State* L){
 /**\brief Lua callable function to get the ship's weapons.
  * \sa Ship::getWeaponsAndAmmo()
  */
-int AI_Lua::ShipGetWeaponsAmmo(lua_State* L){
+int NPC_Lua::ShipGetWeaponsAmmo(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n != 1)
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 
-	AI* ai = checkShip(L,1);
+	NPC* ai = checkShip(L,1);
 	if(ai==NULL){
 		return 0;
 	}
@@ -1493,7 +1493,7 @@ int AI_Lua::ShipGetWeaponsAmmo(lua_State* L){
 
 /**\brief Lua callable function to get the number of weapon slots of any kind on an outfit (probably a ship model)
  */
-int AI_Lua::ShipGetWeaponSlotCount(lua_State* L){
+int NPC_Lua::ShipGetWeaponSlotCount(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
@@ -1513,7 +1513,7 @@ int AI_Lua::ShipGetWeaponSlotCount(lua_State* L){
 
 /**\brief Lua callable function to get name of a weapon slot
  */
-int AI_Lua::ShipGetWeaponSlotName(lua_State* L){
+int NPC_Lua::ShipGetWeaponSlotName(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 2) {
@@ -1532,7 +1532,7 @@ int AI_Lua::ShipGetWeaponSlotName(lua_State* L){
 
 /**\brief Lua callable function to get status of a weapon slot
  */
-int AI_Lua::ShipGetWeaponSlotStatus(lua_State* L){
+int NPC_Lua::ShipGetWeaponSlotStatus(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 2) {
@@ -1550,7 +1550,7 @@ int AI_Lua::ShipGetWeaponSlotStatus(lua_State* L){
 }
 /**\brief Lua callable function to set status of a weapon slot
  */
-int AI_Lua::ShipSetWeaponSlotStatus(lua_State* L){
+int NPC_Lua::ShipSetWeaponSlotStatus(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 3) {
@@ -1570,7 +1570,7 @@ int AI_Lua::ShipSetWeaponSlotStatus(lua_State* L){
 }
 /**\brief Lua callable function to set firing group of a weapon slot
  */
-int AI_Lua::ShipSetWeaponSlotFG(lua_State* L){
+int NPC_Lua::ShipSetWeaponSlotFG(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 3) {
@@ -1590,7 +1590,7 @@ int AI_Lua::ShipSetWeaponSlotFG(lua_State* L){
 
 /**\brief Lua callable function to get firing group of a weapon slot
  */
-int AI_Lua::ShipGetWeaponSlotFG(lua_State* L){
+int NPC_Lua::ShipGetWeaponSlotFG(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 2) {
@@ -1610,7 +1610,7 @@ int AI_Lua::ShipGetWeaponSlotFG(lua_State* L){
 /**\brief Lua callable function to get the ship's weapons as defined by the weapon slots
  * You don't normally want to use this function unless you are changing ships.
  */
-int AI_Lua::ShipGetWeaponSlotContents(lua_State* L){
+int NPC_Lua::ShipGetWeaponSlotContents(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n != 1)
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
@@ -1636,7 +1636,7 @@ int AI_Lua::ShipGetWeaponSlotContents(lua_State* L){
 
 /**\brief Lua callable function to set the player's Lua control function
  */
-int AI_Lua::ShipSetLuaControlFunc(lua_State* L){
+int NPC_Lua::ShipSetLuaControlFunc(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
 		Player *p = (Player *)checkShip(L,1);
@@ -1655,7 +1655,7 @@ int AI_Lua::ShipSetLuaControlFunc(lua_State* L){
 
 /**\brief Lua callable function to set the player's Lua control function
  */
-int AI_Lua::ShipLand(lua_State* L){
+int NPC_Lua::ShipLand(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n == 2) {
 		// Get the Player
@@ -1679,10 +1679,10 @@ int AI_Lua::ShipLand(lua_State* L){
 /** \brief Add an escort to the list to be put into the XML saved game file
  *  \details Keeps track of a bare minimum of information, but not details like hull integrity or non-standard outfits.
  */
-int AI_Lua::PlayerAddHiredEscort(lua_State* L){
+int NPC_Lua::PlayerAddHiredEscort(lua_State* L){
         int n = lua_gettop(L);  // Number of arguments
         if (n == 4) {
-                Player* p = (Player*)AI_Lua::checkShip(L,1);
+                Player* p = (Player*)NPC_Lua::checkShip(L,1);
                 if(p==NULL) return 0;
                 string type = luaL_checkstring (L, 2);
                 int pay = luaL_checkint (L, 3);
@@ -1697,14 +1697,14 @@ int AI_Lua::PlayerAddHiredEscort(lua_State* L){
 /**\brief Lua callable function to Store a number of Commodities on this ship
  * \sa Player::UpdateFavor()
  */
-int AI_Lua::ShipUpdateFavor(lua_State* L){
+int NPC_Lua::ShipUpdateFavor(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 	if (n != 3) {
 		return luaL_error(L, "Got %d arguments expected 2 (ship, allianceName, value)", n);
 	}
 
 	// Get the Inputs
-	Player* player = (Player*)AI_Lua::checkShip(L,1);
+	Player* player = (Player*)NPC_Lua::checkShip(L,1);
 	if( player == NULL ) return 0;
 	if( player->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
 		return luaL_error(L, "Only players may update their favor");
@@ -1727,14 +1727,14 @@ int AI_Lua::ShipUpdateFavor(lua_State* L){
 /**\brief Lua callable function to get the player's favor
  * \sa Ship::getCargo()
  */
-int AI_Lua::ShipGetFavor(lua_State* L){
+int NPC_Lua::ShipGetFavor(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if ((n < 1) || (n>2))
 		luaL_error(L, "Got %d arguments expected 1 (player) or 2 (player, allianceName)", n);
 
 	// Get the Inputs
-	Player* player = (Player*)AI_Lua::checkShip(L,1);
+	Player* player = (Player*)NPC_Lua::checkShip(L,1);
 	if( player == NULL ) return 0;
 	if( player->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
 		return luaL_error(L, "Only players have favor");
