@@ -118,7 +118,7 @@ void Camera::TranslateScreenToWorld( Coordinate &screen, Coordinate &world ) {
  */
 void Camera::GetDelta( double *dx, double *dy ) {
 	if( !dx || !dy ) {
-		LogMsg(WARN, "dx/dy are NULL pointers!" );
+		LogMsg(WARN, "dx/dy are NULL pointers!");
 		return;
 	}
 
@@ -161,6 +161,8 @@ void Camera::Shake( Uint32 duration, int intensity, Coordinate* source ) {
 	Trig *trig = Trig::Instance();
 	float angle;
 
+	LogMsg(DEBUG, "Camera shake called");
+
 	//Coordinate position = focusSprite->GetWorldPosition() - *source;
 	Coordinate position = *source;
 	angle = position.GetAngle();
@@ -170,9 +172,9 @@ void Camera::Shake( Uint32 duration, int intensity, Coordinate* source ) {
 
 	cameraShakeDur = duration;
 
-	if (cameraShakeDur != 0) {
-		cameraShakeXDec = cameraShakeXOffset/(cameraShakeDur/10);
-		cameraShakeYDec = cameraShakeYOffset/(cameraShakeDur/10);
+	if (cameraShakeDur != 10) {
+		cameraShakeXDec = cameraShakeXOffset / (cameraShakeDur / 10);
+		cameraShakeYDec = cameraShakeYOffset / (cameraShakeDur / 10);
 	}
 }
 
