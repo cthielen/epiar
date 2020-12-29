@@ -39,7 +39,7 @@
  * ship can swap out the engine for a different one.
  *
  * Ships themselves are inert objects and are alway controlled by either a
- * Player or an AI.
+ * Player or a NPC.
  *
  * \b Movement:
  *

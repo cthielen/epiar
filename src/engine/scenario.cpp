@@ -215,7 +215,7 @@ bool Scenario::Initialize() {
 	       && Lua::Load("data/scripts/universe.lua")
 	       && Lua::Load("data/scripts/landing.lua")
 	       && Lua::Load("data/scripts/commands.lua")
-	       && Lua::Load("data/scripts/ai.lua")
+	       && Lua::Load("data/scripts/npc.lua")
 	       && Lua::Load("data/scripts/missions.lua")
 	       && Lua::Load("data/scripts/player.lua")
 	       && Lua::Load("data/scripts/fleet.lua");

@@ -21,9 +21,9 @@
 #include "engine/scenario_lua.h"
 
 /**\class NPC_Lua
- * \brief Lua bridge for AI.*/
+ * \brief Lua bridge for NPC.*/
 
-/**\brief Registers functions callable by Lua scripts for the AI.
+/**\brief Registers functions callable by Lua scripts for the NPC.
  */
 void NPC_Lua::RegisterAI(lua_State *L){
 
@@ -1118,7 +1118,7 @@ int NPC_Lua::ShipGetShield(lua_State* L){
 	return 1;
 }
 
-/**\brief Lua callable function to get the State Machine of an AI.
+/**\brief Lua callable function to get the State Machine of an NPC.
  * \sa AI::GetStateMachine
  */
 int NPC_Lua::ShipGetState(lua_State* L) {
@@ -1142,7 +1142,7 @@ int NPC_Lua::ShipGetState(lua_State* L) {
 	return 2;
 }
 
-/**\brief Lua callable function to set the state machine of an AI.
+/**\brief Lua callable function to set the state machine of an NPC.
  */
 int NPC_Lua::ShipSetStateMachine(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments

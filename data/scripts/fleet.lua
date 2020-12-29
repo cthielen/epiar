@@ -11,7 +11,7 @@
 -- Current status: Partially working
 --
 -- To-do: 
---   - Make ai.lua pull values from Fleets rather than having them pushed into AIData
+--   - Make npc.lua pull values from Fleets rather than having them pushed into AIData
 --   - Do garbage collection for stale fleets
 --   - Make IDs get more promptly de-listed upon destruction, and watch out for consequences of sprite ID re-use
 --   - More
