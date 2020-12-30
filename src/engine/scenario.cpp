@@ -355,7 +355,7 @@ void SaveMapScale( void *scenarioInstance ) {
  */
 void Scenario::Run() {
 	int fpsCount = 0;          // for FPS calculations
-	int fpsTotal= 0;           // for FPS calculations
+	int fpsTotal = 0;          // for FPS calculations
 	Uint32 fpsTS = 0;          // timestamp of last FPS printing
 	fpsTS = Timer::GetTicks();
 
@@ -403,13 +403,11 @@ void Scenario::Run() {
 		}
 
 		if( !paused ) {
-      			// Logical update cycle
+      		// Logical update cycle
 			while(logicLoops--) {
-        			HandleInput();
+        		HandleInput();
 
-				if(lowFps) {
-					lowFpsFrameCount--;
-        			}
+				if(lowFps) { lowFpsFrameCount--; }
 
 				if(player->DidJump()) {
 					player->ResetJump();
@@ -452,16 +450,16 @@ void Scenario::Run() {
 				}
 
 				sprites->Update( luaState, lowFps );
-        			camera->Update( sprites );
-        			sprites->UpdateScreenCoordinates();
+        		camera->Update( sprites );
+        		sprites->UpdateScreenCoordinates();
 				calendar->Update();
-        			starfield.Update( camera );
+        		starfield.Update( camera );
 			}
 		} else {
-      			// We prefer input to be inside the logic loop (for the Hz) but
-      			// we need to respond to input outside it as well.
-      			HandleInput();
-    		}
+			// We prefer input to be inside the logic loop (for the Hz) but
+			// we need to respond to input outside it as well.
+			HandleInput();
+    	}
 
 		Hud::Update( luaState );
 

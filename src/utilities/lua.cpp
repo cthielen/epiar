@@ -75,7 +75,7 @@ int Lua::Run( string line, bool allowReturns ) {
 
 	// Run the String!
 	if( luaL_dostring(L,line.c_str()) ) {
-		LogMsg(ERR,"Error running '%s': %s", line.c_str(), lua_tostring(L, -1));
+		LogMsg(ERR, "Error running '%s': %s", line.c_str(), lua_tostring(L, -1));
 		lua_settop(L, stack_before);  /* pop error message from the stack */
 		Lua::stackDump( L );
 		return 0;
