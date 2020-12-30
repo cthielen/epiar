@@ -234,6 +234,14 @@ void Video::DrawLine( int x1, int y1, int x2, int y2, float r, float g, float b,
 }
 
 /**\brief Draws a filled rectangle
+ * \param x
+ * \param y
+ * \param w
+ * \param h
+ * \param r
+ * \param g
+ * \param b
+ * \param a
  */
 void Video::DrawRect( int x, int y, int w, int h, float r, float g, float b, float a ) {
 	SDL_Rect rect;
@@ -243,7 +251,8 @@ void Video::DrawRect( int x, int y, int w, int h, float r, float g, float b, flo
 	rect.w = w;
 	rect.h = h;
  
-	SDL_SetRenderDrawColor( renderer, r * 255., g * 255., b * 255., a * 255. );
+	SDL_SetRenderDrawBlendMode(renderer, (a == 255) ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(renderer, r * 255., g * 255., b * 255., a * 255.);
   
 	SDL_RenderFillRect( renderer, &rect );
 }
