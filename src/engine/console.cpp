@@ -124,12 +124,13 @@ void Console::HandleInput( list<InputEvent> & events ) {
 void Console::Draw() {
 	if( enabled ) {
 		int pos = 8;
-		// draw bg
-		Video::DrawRect(150, 5, 550, Mono->LineHeight()*(pos+1),
-				static_cast<float>(.5), static_cast<float>(.5),
-				static_cast<float>(.5), static_cast<float>(.3) );
 
-		Mono->SetColor(.9f,.9f,.9f,1.0);
+		// Draw background
+		Video::DrawRect(150, 5, 550, Mono->LineHeight() * (pos + 1),
+				static_cast<float>(.3), static_cast<float>(.3),
+				static_cast<float>(.3), static_cast<float>(.5) );
+
+		Mono->SetColor(.9f, .9f, .9f, 1.0);
 
 		Mono->Render(155, pos-- * Mono->LineHeight() + 5,  PROMPT + command.substr(0,cursor) + CURSOR + command.substr(cursor)  );
 
@@ -160,7 +161,7 @@ void Console::RunCommand() {
 	cursor = 0;
 
 	// Insert each result value as a new line
-	for(int n=returnvals; n>0; --n) {
+	for(int n = returnvals; n > 0; --n) {
 		returnval = lua_tostring(L, -n);
 		if( returnval != NULL ) {
 			InsertResult( returnval );
@@ -170,7 +171,7 @@ void Console::RunCommand() {
 	}
 
 	// Cleanup the Stack
-	lua_pop(L,returnvals);
+	lua_pop(L, returnvals);
 }
 
 /**\brief Used by lua functions, eg echo.
