@@ -180,21 +180,19 @@ void SpriteManager::Update( lua_State *L, bool lowFps) {
 	if( ! lowFps || tickCount == 0) {
 		//need to get all of the quadrants in our map
 		GetAllQuadrants(&quadList);
-	}
-	else
-	{
+	} else {
 		//wave update mode with tickCount != 0 -- update some quadrants
 		Camera* camera = Scenario_Lua::GetScenario(L)->GetCamera();
-		Coordinate currentPoint (camera->GetFocusCoordinate());	//always update centered on where we're at
+		Coordinate currentPoint(camera->GetFocusCoordinate());	//always update centered on where we're at
 
-		quadList.push_back (GetQuadrant (currentPoint)); //we ALWAYS update the current quadrant
+		quadList.push_back(GetQuadrant (currentPoint)); //we ALWAYS update the current quadrant
 
 		//we also ALWAYS update the 'regular' bands
 		//	the first band is at index 1 - index 0 would be the single quadrant in the middle
 		//	when we get the list of quadrants back we splice them onto the end of our overall list
 		for (int i = 1; i <= numRegularBands; i ++) {
-			list<QuadTree*> tempBandList = GetQuadrantsInBand (currentPoint, i);
-			quadList.splice (quadList.end(), tempBandList);
+			list<QuadTree*> tempBandList = GetQuadrantsInBand(currentPoint, i);
+			quadList.splice(quadList.end(), tempBandList);
 		}
 
 		//now - we SOMETIMES update the semi-regular bands
@@ -206,7 +204,7 @@ void SpriteManager::Update( lua_State *L, bool lowFps) {
 		if (findBand != ticksToBandNum.end()) {		//found the key
 			//cout << "tick = " << tickCount << ", semiRegularTick = " << semiRegularTick << ", band = " << findBand->second << endl;
 			list<QuadTree*> tempBandList = GetQuadrantsInBand (currentPoint, findBand->second);
-			quadList.splice (quadList.end(), tempBandList);
+			quadList.splice(quadList.end(), tempBandList);
 		}
 		else {
 			//no semi-regular bands to update at this tick, do nothing

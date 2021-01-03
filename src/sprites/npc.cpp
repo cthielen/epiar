@@ -111,15 +111,12 @@ void NPC::Decide( lua_State *L ) {
 	lua_settop(L,initialStackTop);
 }
 
-/**\brief Updates the AI controlled ship by first calling the Lua function
+/**\brief Updates the NPC controlled ship by first calling the Lua function
  * and then calling Ship::Update()
  */
 void NPC::Update( lua_State *L ) {
-	//Update enemies
-	int t;
-
 	if(enemies.size() > 0) {
-		t = ChooseTarget( L );
+		int t = ChooseTarget( L );
 		if(t != -1) {
 			target = t;
 			RegisterTarget( L, t );
