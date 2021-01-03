@@ -49,8 +49,7 @@ void NPC::Decide( lua_State *L ) {
 	// Get the current state machine
 	lua_getglobal(L, stateMachine.c_str() );
 	int machineIndex = lua_gettop(L);
-	if( ! lua_istable(L, machineIndex) )
-	{
+	if( ! lua_istable(L, machineIndex) ) {
 		LogMsg(ERR, "There is no State Machine named '%s'!", stateMachine.c_str() );
 		return; // This ship will just sit idle...
 	}
@@ -58,16 +57,18 @@ void NPC::Decide( lua_State *L ) {
 	// Get the current state
 	lua_pushstring(L, state.c_str() );
 	lua_gettable(L, machineIndex);
-	if( ! lua_isfunction(L,lua_gettop(L)) )
-	{
+	if( ! lua_isfunction(L,lua_gettop(L)) ) {
 		LogMsg(WARN, "The State Machine '%s' has no state '%s'.", stateMachine.c_str(), state.c_str() );
+
 		lua_getglobal(L, stateMachine.c_str() );
 		lua_pushstring(L, "default" );
-		lua_gettable(L,machineIndex);
-		if( !lua_isfunction(L,lua_gettop(L)) )
-		{
+		lua_gettable(L, machineIndex);
+
+		if( !lua_isfunction(L,lua_gettop(L)) ) {
 			LogMsg(ERR, "The State Machine '%s' has no default state.", stateMachine.c_str() );
+
 			lua_settop(L, initialStackTop);
+
 			return; // This ship will just sit idle...
 		}
 	}
@@ -80,11 +81,11 @@ void NPC::Decide( lua_State *L ) {
 	lua_pushnumber( L, this->GetMomentum().GetMagnitude() ); // Speed
 	lua_pushnumber( L, this->GetMomentum().GetAngle() ); // Vector
 
-	// Run the current AI state
+	// Run the current NPC state
 	//printf("Call:"); Lua::stackDump(L); // DEBUG
 	if( lua_pcall(L, 6, 1, 0) != 0)
 	{
-		LogMsg(ERR,"Failed to run %s(%s): %s\n", stateMachine.c_str(), state.c_str(), lua_tostring(L, -1));
+		LogMsg(ERR, "Failed to run %s(%s): %s\n", stateMachine.c_str(), state.c_str(), lua_tostring(L, -1));
 		lua_settop(L, initialStackTop);
 		return;
 	}
@@ -96,7 +97,7 @@ void NPC::Decide( lua_State *L ) {
 
 		// Verify that this new state exists
 		lua_pushstring(L, newstate.c_str() );
-		lua_gettable(L,machineIndex);
+		lua_gettable(L, machineIndex);
 		if( lua_isfunction(L, lua_gettop(L) ))
 		{
 			state = newstate;
@@ -108,7 +109,7 @@ void NPC::Decide( lua_State *L ) {
 	}
 
 	//printf("Complete:");Lua::stackDump(L); // DEBUG
-	lua_settop(L,initialStackTop);
+	lua_settop(L, initialStackTop);
 }
 
 /**\brief Updates the NPC controlled ship by first calling the Lua function
@@ -138,7 +139,7 @@ void NPC::Update( lua_State *L ) {
  * of the system to still treat the ship normally.
  */
 void NPC::Killed( lua_State *L ) {
-	LogMsg( WARN, "AI %s has been killed\n", GetName().c_str() );
+	LogMsg(DEBUG, "NPC %s has been killed", GetName().c_str() );
 	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 
 	Sprite* killer = sprites->GetSpriteByID( target );
@@ -221,7 +222,7 @@ int NPC::ChooseTarget( lua_State *L ){
 			if( enemyIt->id == ((NPC*) (*it))->GetTarget() )
 				threat-= ( (Ship*)(*it) )->GetTotalCost();
 		} else {
-			LogMsg( ERR, "Error Sprite %d is not an AI\n", (*it)->GetID() );
+			LogMsg(ERR, "Error Sprite %d is not an NPC", (*it)->GetID() );
 		}
 	
 	}
