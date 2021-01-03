@@ -28,15 +28,18 @@ int Filesystem::Init( const char* argv0 ) {
 
 	LogMsg(DEBUG, "Initializing filesystem using PhysicsFS ...");
 
-	if ( (retval = PHYSFS_init(argv0)) == 0 )
+	if ( (retval = PHYSFS_init(argv0)) == 0 ) {
 		LogMsg(ERR, "Error initializing PhysicsFS. Reason: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+	}
 
-	if ( (retval = PHYSFS_setSaneConfig("games", "epiar", NULL, 0, 0 ) ) == 0 )
+	if ( (retval = PHYSFS_setSaneConfig("games", "epiar", NULL, 0, 0 ) ) == 0 ) {
 		LogMsg(ERR, "Could not set sane paths for PhysFS: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+	}
 
 	// Set up userDir
-	if ( (retval = PHYSFS_mkdir("saves/") ) == 0 )
+	if ( (retval = PHYSFS_mkdir("saves/") ) == 0 ) {
 		LogMsg(ERR, "Could not set up the user dir: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+	}
 
 	// Don't add Root directory.  While this can solve some problems, it will create more.
 	// Absolute paths are not portable across computers.
@@ -45,9 +48,17 @@ int Filesystem::Init( const char* argv0 ) {
 
 #ifdef DATADIR
 	// If using autotools, include this prefix to help binary find data files for cases where 'make install' was used
-	if ( (retval = PHYSFS_mount(DATADIR, NULL, 1) ) == 0 )
+	if ( (retval = PHYSFS_mount(DATADIR, NULL, 1) ) == 0 ) {
 		LogMsg(WARN, "Not using DATADIR directory due to an error. Most likely 'make install' has not been run yet, which is normal while developing. Reason: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+	}
 #endif /* DATADIR */
+
+	// Log the various PhysFS search paths to DEBUG
+	char **search_path = PHYSFS_getSearchPath();
+	for (char **i = search_path; *i != NULL; i++) {
+		LogMsg(DEBUG, "PhysFS search path: %s", (*i));
+	}
+	PHYSFS_freeList(search_path);
 	
 	return retval;
 }
