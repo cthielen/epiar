@@ -382,4 +382,3 @@ bool Input::HandleSpecificEvent( list<InputEvent> & events, InputEvent trigger )
 
 	return found;
 }
-

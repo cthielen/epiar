@@ -553,15 +553,18 @@ list<Sprite*> *SpriteManager::GetSpritesNear(Coordinate c, float r, int type) {
  */
 Sprite* SpriteManager::GetNearestSprite(Sprite* obj, float r, int type) {
 	float tmpdist;
-	Sprite* closest=NULL;
-	Sprite* possible=NULL;
-	if(obj==NULL)
+	Sprite* closest = NULL;
+	Sprite* possible = NULL;
+
+	if(obj == NULL) {
 		return (Sprite*)NULL;
-	list<QuadTree*> nearbyQuadrants = GetQuadrantsNear(obj->GetWorldPosition(),r);
+	}
+	
+	list<QuadTree*> nearbyQuadrants = GetQuadrantsNear(obj->GetWorldPosition(), r);
 	list<QuadTree*>::iterator it;
 	for(it = nearbyQuadrants.begin(); it != nearbyQuadrants.end(); ++it) {
 		possible = (*it)->GetNearestSprite(obj,r, type);
-		if(possible!=NULL) {
+		if(possible != NULL) {
 			tmpdist = (obj->GetWorldPosition()-possible->GetWorldPosition()).GetMagnitude();
 			if(tmpdist<r) {
 				r = tmpdist;
@@ -569,6 +572,7 @@ Sprite* SpriteManager::GetNearestSprite(Sprite* obj, float r, int type) {
 			}
 		}
 	}
+
 	return closest;
 }
 

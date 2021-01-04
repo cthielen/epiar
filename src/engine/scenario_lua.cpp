@@ -680,23 +680,23 @@ int Scenario_Lua::GetNearestSprite(lua_State *L, int kind) {
 	SpriteManager* sprites = GetScenario(L)->GetSpriteManager();
 
 	// Get the target position
-	if( lua_isnumber(L,1) && lua_isnumber(L,2) ){
+	if( lua_isnumber(L,1) && lua_isnumber(L,2) ) {
 		Coordinate position( luaL_checknumber(L, 1), luaL_checknumber(L, 2) );
-		if( lua_isnumber(L,3) )
+		if( lua_isnumber(L, 3) ) {
 			r = luaL_checknumber(L,3);
+		}
 		closest = sprites->GetNearestSprite( position, r, kind );
-
 	} else {
 		Sprite* target = (Sprite*)NPC_Lua::checkShip(L,1);
 		if( target == NULL ) {
 			return 0;
 		}
 		if( lua_isnumber(L,2) )
-			r = luaL_checknumber(L,2);
+			r = luaL_checknumber(L, 2);
 		closest = sprites->GetNearestSprite( target, r, kind );
 	}
 
-	if(closest!=NULL){
+	if(closest != NULL) {
 		assert(closest->GetDrawOrder() & (kind));
 		PushSprite(L,(closest));
 		return 1;
@@ -711,7 +711,7 @@ int Scenario_Lua::GetNearestSprite(lua_State *L, int kind) {
  * \see Scenario_Lua::GetNearestSprite
  */
 int Scenario_Lua::GetNearestShip(lua_State *L) {
-	return Scenario_Lua::GetNearestSprite(L,DRAW_ORDER_SHIP|DRAW_ORDER_PLAYER);
+	return Scenario_Lua::GetNearestSprite(L, DRAW_ORDER_SHIP|DRAW_ORDER_PLAYER);
 }
 
 /** \brief Get the nearest Planet to another sprite
@@ -720,7 +720,7 @@ int Scenario_Lua::GetNearestShip(lua_State *L) {
  *  \see Scenario_Lua::GetNearestSprite
  */
 int Scenario_Lua::GetNearestPlanet(lua_State *L) {
-	return Scenario_Lua::GetNearestSprite(L,DRAW_ORDER_PLANET);
+	return Scenario_Lua::GetNearestSprite(L, DRAW_ORDER_PLANET);
 }
 
 /** \brief Get Information about the Scenario
@@ -739,13 +739,15 @@ int Scenario_Lua::GetScenarioInfo(lua_State *L) {
  */
 int Scenario_Lua::GetCommodityInfo(lua_State *L) {
 	int n = lua_gettop(L);  // Number of arguments
-	if( n!=1 )
-		return luaL_error(L, "Got %d arguments expected 1 (AllianceName)", n);
+
+	if(n != 1) { return luaL_error(L, "Got %d arguments expected 1 (AllianceName)", n); }
+
 	string name = (string)luaL_checkstring(L,1);
 	Commodity *commodity = GetScenario(L)->GetCommodities()->GetCommodity(name);
-	if(commodity==NULL){ commodity = new Commodity(); }
+	if(commodity == NULL) { commodity = new Commodity(); }
 
 	lua_newtable(L);
+
 	Lua::setField("Name", commodity->GetName().c_str());
 	Lua::setField("MSRP", commodity->GetMSRP());
 
