@@ -212,7 +212,6 @@ bool Lua::Close() {
 
 void Lua::RegisterFunctions() {
 	lua_atpanic(L, &Lua::ErrorCatch);
-
 }
 
 int Lua::ErrorCatch(lua_State *L) {
@@ -301,7 +300,6 @@ void Lua::pushStringList(lua_State *L, list<string> *names){
 	}
 }
 
-
 list<string> Lua::getStringListField(int index) {
 	list<string> results;
 
@@ -327,7 +325,6 @@ list<string> Lua::getStringListField(int index, const char* name) {
 	// This needs to be a list of strings
 	int stringTable = lua_gettop(L);
 	assert(lua_istable(L,stringTable));
-	
 
 	// Go to the nil element of the array
 	lua_pushnil(L);
@@ -404,7 +401,6 @@ int Lua::ConvertFromXML( lua_State *L, xmlDocPtr doc, xmlNodePtr node )
 	string type;
 	string keytype;
 
-
 	keytype = (const char *)xmlGetProp(node, BAD_CAST "keytype");
 	type    = (const char *)xmlGetProp(node, BAD_CAST "type");
 
@@ -455,7 +451,7 @@ int Lua::ConvertFromXML( lua_State *L, xmlDocPtr doc, xmlNodePtr node )
 }
 
 //can be found here  http://www.lua.org/pil/24.2.3.html
-void Lua::stackDump (lua_State *L) {
+void Lua::stackDump(lua_State *L) {
 	int i;
 	int top = lua_gettop(L);
 	for (i = 1; i <= top; i++) {  /* repeat for each level */
@@ -483,5 +479,3 @@ void Lua::stackDump (lua_State *L) {
 	}
 	printf("\n");  /* end the listing */
 }
-
-

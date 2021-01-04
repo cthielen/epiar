@@ -235,6 +235,8 @@ Trader = {
 	end,
 	New_Planet = FindADestination,
 	default = function(id,x,y,angle,speed,vector,state)
+		--io.write("Trader.default running ...")
+		--io.flush()
 		if AIData[id] == nil then AIData[id] = { } end
 		local cur_ship = Epiar.getSprite(id)
 

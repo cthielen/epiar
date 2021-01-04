@@ -42,29 +42,28 @@ NPC::NPC(string _name, string machine) :
  */
 
 void NPC::Decide( lua_State *L ) {
-	string newstate;
 	// Decide
 	const int initialStackTop = lua_gettop(L);
 
 	// Get the current state machine
-	lua_getglobal(L, stateMachine.c_str() );
+	lua_getglobal(L, stateMachine.c_str());
 	int machineIndex = lua_gettop(L);
-	if( ! lua_istable(L, machineIndex) ) {
+	if(lua_istable(L, machineIndex) == false) {
 		LogMsg(ERR, "There is no State Machine named '%s'!", stateMachine.c_str() );
 		return; // This ship will just sit idle...
 	}
 
 	// Get the current state
-	lua_pushstring(L, state.c_str() );
+	lua_pushstring(L, state.c_str());
 	lua_gettable(L, machineIndex);
-	if( ! lua_isfunction(L,lua_gettop(L)) ) {
+	if(lua_isfunction(L, lua_gettop(L)) == false) {
 		LogMsg(WARN, "The State Machine '%s' has no state '%s'.", stateMachine.c_str(), state.c_str() );
 
-		lua_getglobal(L, stateMachine.c_str() );
-		lua_pushstring(L, "default" );
+		lua_getglobal(L, stateMachine.c_str());
+		lua_pushstring(L, "default");
 		lua_gettable(L, machineIndex);
 
-		if( !lua_isfunction(L,lua_gettop(L)) ) {
+		if(lua_isfunction(L, lua_gettop(L)) == false) {
 			LogMsg(ERR, "The State Machine '%s' has no default state.", stateMachine.c_str() );
 
 			lua_settop(L, initialStackTop);
@@ -83,23 +82,20 @@ void NPC::Decide( lua_State *L ) {
 
 	// Run the current NPC state
 	//printf("Call:"); Lua::stackDump(L); // DEBUG
-	if( lua_pcall(L, 6, 1, 0) != 0)
-	{
+	if( lua_pcall(L, 6, 1, 0) != 0) {
 		LogMsg(ERR, "Failed to run %s(%s): %s\n", stateMachine.c_str(), state.c_str(), lua_tostring(L, -1));
 		lua_settop(L, initialStackTop);
 		return;
 	}
 	//printf("Return:"); Lua::stackDump(L); // DEBUG
 
-	if( lua_isstring( L, lua_gettop(L) ) )
-	{
-		newstate = (string)luaL_checkstring(L, lua_gettop(L));
+	if(lua_isstring(L, lua_gettop(L))) {
+		string newstate = (string)luaL_checkstring(L, lua_gettop(L));
 
 		// Verify that this new state exists
-		lua_pushstring(L, newstate.c_str() );
+		lua_pushstring(L, newstate.c_str());
 		lua_gettable(L, machineIndex);
-		if( lua_isfunction(L, lua_gettop(L) ))
-		{
+		if(lua_isfunction(L, lua_gettop(L))) {
 			state = newstate;
 		} else {
 			LogMsg(ERR, "The State Machine '%s' has no state '%s'. Could not transition from '%s'. Resetting StateMachine.", stateMachine.c_str(), newstate.c_str(), state.c_str() );
