@@ -71,7 +71,6 @@ epiar_SOURCES = src/main.cpp \
                 src/utilities/log.cpp \
                 src/utilities/lua.cpp \
                 src/utilities/options.cpp \
-                src/utilities/quadtree.cpp \
                 src/utilities/resource.cpp \
                 src/utilities/timer.cpp \
                 src/utilities/trig.cpp \

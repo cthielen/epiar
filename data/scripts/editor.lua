@@ -831,9 +831,8 @@ registerCommands(debugCommands)
 function debugZoomKeys()
 	for k =1,9 do
 		local keyval = string.byte(k)
-		local vis = 1000*math.pow(2,k-1)
 		local delta = 10*math.pow(2,k-1)
-		local cmd = string.format("DX,DY=%f,%f;HUD.setVisibity(%d)",delta,delta,vis)
+		local cmd = string.format("DX,DY=%f,%f;",delta,delta)
 		Epiar.RegisterKey(keyval, KEYTYPED, cmd)
 	end
 end

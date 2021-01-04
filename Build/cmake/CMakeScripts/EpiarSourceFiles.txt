@@ -149,8 +149,6 @@ set (Epiar_src ${Epiar_src}
 	${Epiar_SRC_DIR}/Utilities/lua.h
 	${Epiar_SRC_DIR}/Utilities/options.cpp
 	${Epiar_SRC_DIR}/Utilities/options.h
-	${Epiar_SRC_DIR}/Utilities/quadtree.cpp
-	${Epiar_SRC_DIR}/Utilities/quadtree.h
 	${Epiar_SRC_DIR}/Utilities/resource.cpp
 	${Epiar_SRC_DIR}/Utilities/resource.h
 	${Epiar_SRC_DIR}/Utilities/string_convert.h

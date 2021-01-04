@@ -50,7 +50,7 @@ Font *Hud::AlertFont = NULL;
 Color Hud::AlertColor = WHITE;
 Sound *Hud::AlertBeep = NULL;
 
-int Radar::visibility = QUADRANTSIZE;
+int Radar::visibility = 4096.0f;
 //bool Radar::largeMode = false;
 
 Font *StatusBar::font = NULL;
@@ -93,7 +93,7 @@ bool MessageExpired(const AlertMessage& msg){
  * \brief Status bar
  */
 
-StatusBar::StatusBar(string _title, int _width, QuadPosition _pos, string _updater)
+StatusBar::StatusBar(string _title, int _width, StatusBarPosition _pos, string _updater)
 	:width(_width)
 	,pos(_pos)
 	,ratio(0)
@@ -139,7 +139,7 @@ void StatusBar::Draw(int x, int y) {
 	Image *BackgroundMiddle = Image::Get( "data/skin/hud_bar_middle.png" );
 	Image *BackgroundRight= Image::Get( "data/skin/hud_bar_right.png" );
 
-	if(pos == UPPER_RIGHT || pos == LOWER_RIGHT) {
+	if(pos == SBP_UPPER_RIGHT || pos == SBP_LOWER_RIGHT) {
 		x = Video::GetWidth() - BackgroundLeft->GetWidth() - width - BackgroundRight->GetWidth();
 	}
 
@@ -197,7 +197,7 @@ void StatusBar::Update( lua_State* L ) {
 	lua_pop(L,returnvals);
 }
 
-/**\fn StatusBar::StatusBar(string _title, int _width, QuadPosition _pos, string _name, float _ratio) : title(_title), width(_width), pos(_pos), name(_name), ratio(_ratio)
+/**\fn StatusBar::StatusBar(string _title, int _width, StatusBarPosition _pos, string _name, float _ratio) : title(_title), width(_width), pos(_pos), name(_name), ratio(_ratio)
  * \brief Empty constructor.
  */
 
@@ -224,7 +224,7 @@ void StatusBar::SetName( string n )
  */
 
 /**\fn StatusBar::GetPosition
- * \brief Returns the QuadPosition
+ * \brief Returns the StatusBarPosition
  */
 
 //Protect members
@@ -237,7 +237,7 @@ void StatusBar::SetName( string n )
  */
 
 /**\var StatusBar::pos
- * \brief QuadPosition of the StatusBar
+ * \brief StatusBarPosition of the StatusBar
  */
 
 /**\var StatusBar::name
@@ -360,11 +360,8 @@ void Hud::DrawFPS( float fps, SpriteManager* sprites ) {
 	snprintf(frameRate, sizeof(frameRate) - 1, "%.2f fps", fps );
 	BitType->Render( Video::GetWidth() - 100, Video::GetHeight() - 15, frameRate );
 
-	snprintf(frameRate, sizeof(frameRate) - 1, "%d Quadrants", sprites->GetNumQuadrants());
-	BitType->Render( Video::GetWidth() - 100, Video::GetHeight() - 30, frameRate );
-
 	snprintf(frameRate, sizeof(frameRate) - 1, "%d Sprites", sprites->GetNumSprites());
-	BitType->Render( Video::GetWidth() - 100, Video::GetHeight() - 45, frameRate );
+	BitType->Render( Video::GetWidth() - 100, Video::GetHeight() - 30, frameRate );
 }
 
 /**\brief Draws the status bar.
@@ -374,10 +371,10 @@ void Hud::DrawStatusBars() {
 	int barHeight = Image::Get( "data/skin/hud_bar_left.png" )->GetHeight() + 5;
 
 	Coordinate startCoords[4];
-	startCoords[UPPER_LEFT]  = Coordinate(5, Image::Get( "data/skin/hud_shieldintegrity.png" )->GetHeight() + 9);
-	startCoords[UPPER_RIGHT] = Coordinate(5, Radar::GetHeight() + 9);
-	startCoords[LOWER_LEFT]  = Coordinate(5, Video::GetHeight()-barHeight);
-	startCoords[LOWER_RIGHT] = Coordinate(5, Video::GetHeight()-barHeight);
+	startCoords[SBP_UPPER_LEFT]  = Coordinate(5, Image::Get( "data/skin/hud_shieldintegrity.png" )->GetHeight() + 9);
+	startCoords[SBP_UPPER_RIGHT] = Coordinate(5, Radar::GetHeight() + 9);
+	startCoords[SBP_LOWER_LEFT]  = Coordinate(5, Video::GetHeight()-barHeight);
+	startCoords[SBP_LOWER_RIGHT] = Coordinate(5, Video::GetHeight()-barHeight);
 	Coordinate offsetCoords[4]= {
 		Coordinate(0,barHeight), Coordinate(0,barHeight),
 		Coordinate(0,-barHeight), Coordinate(0,-barHeight)};
@@ -553,10 +550,10 @@ bool Hud::HasStatusMatching( string matchPattern ) {
 /**\brief Register Lua functions for HUD related updates.
  */
 void Hud::RegisterHud(lua_State *L) {
-	Lua::RegisterGlobal("UPPER_LEFT", UPPER_LEFT);
-	Lua::RegisterGlobal("UPPER_RIGHT", UPPER_RIGHT);
-	Lua::RegisterGlobal("LOWER_LEFT", LOWER_LEFT);
-	Lua::RegisterGlobal("LOWER_RIGHT", LOWER_RIGHT);
+	Lua::RegisterGlobal("UPPER_LEFT", SBP_UPPER_LEFT);
+	Lua::RegisterGlobal("UPPER_RIGHT", SBP_UPPER_RIGHT);
+	Lua::RegisterGlobal("LOWER_LEFT", SBP_LOWER_LEFT);
+	Lua::RegisterGlobal("LOWER_RIGHT", SBP_LOWER_RIGHT);
 
 	static const luaL_Reg hudFunctions[] = {
 		{"setVisibity", &Hud::setVisibity},
@@ -614,7 +611,7 @@ int Hud::newStatus(lua_State *L) {
 	// Create the Status Bar
 	string title = (string)luaL_checkstring(L, 1);
 	int width = (int)(luaL_checkint(L, 2));
-	QuadPosition pos = (QuadPosition)(luaL_checkint(L, 3));
+	StatusBarPosition pos = (StatusBarPosition)(luaL_checkint(L, 3));
 
 	if(pos < 0 || pos > 3) {
 		return luaL_error(L, "Invalid Position %d. Valid Options are: UPPER_LEFT=0, UPPER_RIGHT=1, LOWER_LEFT=2, LOWER_RIGHT=3", pos);

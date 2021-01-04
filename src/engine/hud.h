@@ -17,7 +17,6 @@
 #include "graphics/image.h"
 #include "sprites/spritemanager.h"
 #include "utilities/lua.h"
-#include "utilities/quadtree.h"
 
 #define EPIAR_HUD_TABLE "Epiar.HUD"
 #define EPIAR_HUD "HUD"
@@ -50,9 +49,11 @@ class AlertMessage {
 		Uint32 start;
 };
 
+enum StatusBarPosition { SBP_UPPER_LEFT, SBP_UPPER_RIGHT, SBP_LOWER_LEFT, SBP_LOWER_RIGHT };
+
 class StatusBar {
 	public:
-		StatusBar(string _title, int _width, QuadPosition _pos, string _updater);
+		StatusBar(string _title, int _width, StatusBarPosition _pos, string _updater);
 		StatusBar& operator=( StatusBar& object );
 		void Update( lua_State *L );
 		void Draw(int x, int y);
@@ -63,12 +64,12 @@ class StatusBar {
 		string GetTitle() { return string(title); }
 		string GetName() { return string(name); }
 		float GetRatio() { return ratio; }
-		QuadPosition GetPosition(){ return pos; }
+		StatusBarPosition GetPosition(){ return pos; }
 		
 	protected:
 		char title[40];
 		const int width;
-		const QuadPosition pos;
+		const StatusBarPosition pos;
 		char name[100]; // TODO: the name 'name' is bad
 		float ratio;
 		string lua_updater;
@@ -88,7 +89,7 @@ class Hud {
 		
 		static void Alert( bool audible, const char *, ... );
 		static void Target(int id);
-		static int GetTarget() {return targetID;}
+		static int GetTarget() { return targetID; }
 		
 		static void AddStatus( StatusBar* bar );
 		static bool DeleteStatus( StatusBar* bar );

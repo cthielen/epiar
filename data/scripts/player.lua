@@ -75,7 +75,7 @@ end
 function targetShip()
 	if Epiar.ispaused()==1 then return end
 	local x,y = PLAYER:GetPosition()
-	local nearby = Epiar.ships(x,y,4096)
+	local nearby = Epiar.ships(x,y,0)
 	if #nearby==0 then return end
 	
 	local nextTarget = 1
@@ -711,11 +711,11 @@ end
 
 --- Register the player functions
 function radarZoomKeys()
-	for k = 1,9 do
-		kn = string.byte(k)
-		ks = string.format("%d", 1024*math.pow(2,k-1))
-		Epiar.RegisterKey(kn, KEYTYPED, "HUD.setVisibity("..ks..")")
-	end
+	--for k = 1,9 do
+		--kn = string.byte(k)
+		--ks = string.format("%d", 1024*math.pow(2,k-1))
+		--Epiar.RegisterKey(kn, KEYTYPED, "HUD.setVisibity("..ks..")")
+	--end
 end
 radarZoomKeys()
 

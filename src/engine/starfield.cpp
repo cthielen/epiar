@@ -7,6 +7,7 @@
  */
 
 #include "includes.h"
+#include "common.h"
 #include "engine/starfield.h"
 #include "graphics/video.h"
 #include "engine/camera.h"

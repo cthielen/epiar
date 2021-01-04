@@ -14,7 +14,6 @@
 #define __h_calendar__
 
 #include "includes.h"
-#include "utilities/quadtree.h"
 #include "utilities/timer.h"
 
 #define SECONDS_PER_PERIOD      45

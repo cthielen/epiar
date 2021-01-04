@@ -576,20 +576,22 @@ int Scenario_Lua::GetSprites(lua_State *L, int kind){
 	int n = lua_gettop(L);  // Number of arguments
 
 	list<Sprite *> *sprites = NULL;
-	if( n==3 ){
+	if( n == 3 ){
 		double x = luaL_checknumber (L, 1);
 		double y = luaL_checknumber (L, 2);
 		double r = luaL_checknumber (L, 3);
-		sprites = GetScenario(L)->GetSpriteManager()->GetSpritesNear(Coordinate(x,y),static_cast<float>(r),kind);
+		sprites = GetScenario(L)->GetSpriteManager()->GetSpritesNear(Coordinate(x,y), static_cast<float>(r), kind);
 	} else {
 		sprites = GetScenario(L)->GetSpriteManager()->GetSprites(kind);
 	}
 
 	// Populate a Lua table with Sprites
 	lua_createtable(L, sprites->size(), 0);
+
 	int newTable = lua_gettop(L);
 	int index = 1;
 	list<Sprite *>::const_iterator iter = sprites->begin();
+
 	while(iter != sprites->end()) {
 		// push userdata
 		PushSprite(L,(*iter));
@@ -597,7 +599,9 @@ int Scenario_Lua::GetSprites(lua_State *L, int kind){
 		++iter;
 		++index;
 	}
+
 	delete sprites;
+
 	return 1;
 }
 
@@ -637,7 +641,7 @@ int Scenario_Lua::GetMSRP(lua_State *L) {
  * \returns list of Ship References
  */
 int Scenario_Lua::GetShips(lua_State *L) {
-	return Scenario_Lua::GetSprites(L,DRAW_ORDER_SHIP);
+	return Scenario_Lua::GetSprites(L, DRAW_ORDER_SHIP);
 }
 
 /** Get Lua references to All Planets
@@ -676,7 +680,7 @@ int Scenario_Lua::GetNearestSprite(lua_State *L, int kind) {
 	}
 
 	Sprite *closest;
-	float r = QUADRANTSIZE;
+	float r = 4096.0f;
 	SpriteManager* sprites = GetScenario(L)->GetSpriteManager();
 
 	// Get the target position

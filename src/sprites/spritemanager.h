@@ -10,7 +10,6 @@
 #define __H_SPRITEMANAGER__
 
 #include "sprites/sprite.h"
-#include "utilities/quadtree.h"
 
 class SpriteManager {
 	public:
@@ -27,7 +26,6 @@ class SpriteManager {
 		void Update( lua_State *L, bool lowFps);
 		void UpdateScreenCoordinates( void );
 		void Draw( Coordinate focus );
-		void DrawQuadrantMap( Coordinate focus );
 
 		int GetAIShipCount( void );
 
@@ -37,8 +35,6 @@ class SpriteManager {
 		Sprite* GetNearestSprite(Sprite *obj, float r, int type = DRAW_ORDER_ALL);
 		Sprite* GetNearestSprite(Coordinate c, float r, int type = DRAW_ORDER_ALL);
 
-		Coordinate GetQuadrantCenter( Coordinate point );
-		int GetNumQuadrants() { return trees.size(); }
 		int GetNumSprites();
 		void GetBoundaries(float *northEdge, float *southEdge, float *eastEdge, float *westEdge);
 
@@ -47,7 +43,6 @@ class SpriteManager {
 	private:
 		// These structures each contain a complete list of all Sprites.
 		// Each one is useful for a different purpose, depending on the way that the sprites need to be accessed.
-		map<Coordinate,QuadTree*> trees;    ///< Collection of all Sprites. Use this tree when referring to the sprites at a location.
 		list<Sprite*> *spritelist;          ///< Collection of all Sprites. Use this list when referring to all sprites.
 		map<int,Sprite*> *spritelookup;     ///< Collection of all Sprites. Use the map when referring to sprites by their unique ID.
 
@@ -63,17 +58,8 @@ class SpriteManager {
 		const int numSemiRegularBands;      ///< The number of bands surrounding the centre point that are updated semi-regularly
 		map<int, int> ticksToBandNum;       ///< The key is the tick# that the value band# will be updated at
 
-		float northEdge, southEdge, eastEdge, westEdge; ///< The Edges of the universe
-
 		bool DeleteSprite( Sprite *sprite );
-		void DeleteEmptyQuadrants( void );
-		QuadTree* GetQuadrant( Coordinate point );
-		list<QuadTree*> GetQuadrantsNear( Coordinate c, float r);
-		list<QuadTree*> GetQuadrantsInBand ( Coordinate c, int bandIndex);
-		void AdjustBoundaries();
 		void UpdateTickCount();
-
-		void GetAllQuadrants( list<QuadTree*> *newTree);
 };
 
 #endif // __H_SPRITEMANAGER__
