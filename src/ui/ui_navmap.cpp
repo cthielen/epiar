@@ -139,8 +139,12 @@ void NavMap::Draw( int relx, int rely ) {
 	for( iter = sectors->begin(); iter != sectors->end(); ++iter ) {
 		Sector *sector = (Sector *)(*iter);
 
-		// TODO: If sector has no planets, draw as WHITE instead of BLUE
-		col = BLUE;
+		// If sector has no planets, draw as WHITE instead of BLUE
+		if(sector->HasPlanets()) {
+			col = BLUE;
+		} else {
+			col = WHITE;
+		}
 		pos = WorldToMap(Coordinate(sector->GetX(), sector->GetY()));
 
 		field = sector->GetAlliance()->GetColor();

@@ -36,6 +36,7 @@ class Sector : public Component {
 		~Sector();
 
 		list<string> GetPlanets();
+		bool HasPlanets() { return planets.size() > 0; }
 		string GetName() { return name; }
 		bool HasPlanet(string planetName);
 		int GetTraffic() { return traffic; }
