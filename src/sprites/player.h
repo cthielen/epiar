@@ -56,6 +56,9 @@ class Player : public Ship {
 		// Escort-related functions (needed for XML saving/loading)
 		void AddHiredEscort(string type, int pay, int spriteID);
 
+		// Sector-related functions
+		void RevealSector(Sector *s, bool revealNeighbors);
+
 		friend class PlayerList;
 
 	protected:
@@ -72,6 +75,7 @@ class Player : public Ship {
 		map<Alliance*,int> favor;
 		string luaControlFunc;
 		bool hasJumped;
+		list<string> revealedSectors;
 
 		// This list of hired escorts is only needed for XML saving/loading and doesn't control the game itself.
 		// Escorts from missions should not be listed here.

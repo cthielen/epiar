@@ -290,6 +290,10 @@ void Scenario::ResetSector( Sector *s ) {
 	// Generate the necessary traffic for the sector
 	s->GenerateDefaultTraffic();
 
+	// Reveal this sector on player's map, if needed
+	Player *player = GetPlayer();
+	player->RevealSector(s, true);
+
 	currentSector = s;
 }
 
@@ -383,9 +387,9 @@ void Scenario::Run() {
 	Starfield starfield( 700 );
 
 	// Load sample game music
-	if(bgmusic && OPTION(int, "options/sound/background")) {
+	//if(bgmusic && OPTION(int, "options/sound/background")) {
 		//bgmusic->Play();
-	}
+	//}
 
 	// main game loop
 	bool lowFps = false;
@@ -403,9 +407,9 @@ void Scenario::Run() {
 		}
 
 		if( !paused ) {
-      		// Logical update cycle
+			// Logical update cycle
 			while(logicLoops--) {
-        		HandleInput();
+				HandleInput();
 
 				if(lowFps) { lowFpsFrameCount--; }
 
@@ -450,16 +454,16 @@ void Scenario::Run() {
 				}
 
 				sprites->Update( luaState, lowFps );
-        		camera->Update( sprites );
-        		sprites->UpdateScreenCoordinates();
+				camera->Update( sprites );
+				sprites->UpdateScreenCoordinates();
 				calendar->Update();
-        		starfield.Update( camera );
+				starfield.Update( camera );
 			}
 		} else {
 			// We prefer input to be inside the logic loop (for the Hz) but
 			// we need to respond to input outside it as well.
 			HandleInput();
-    	}
+		}
 
 		Hud::Update( luaState );
 
@@ -487,8 +491,7 @@ void Scenario::Run() {
 					((float)fpsCount / (Timer::GetTicks() - fpsTS)));
 			fpsTS = Timer::GetTicks();
 			fpsCount = 0;
-			if( currentFPS < -0.1f )
-			{
+			if( currentFPS < -0.1f ) {
 				// The game has effectively stopped..
 				LogMsg(ERR, "The framerate has dropped to zero. Please report this as a bug to 'epiar-devel@epiar.net'");
 				UI::Save();
@@ -501,10 +504,8 @@ void Scenario::Run() {
 			 *  - if fps goes below 15, set lowFps to true for 600 logical frames
 			 *  - after 600 frames, either turn it off or leave it on for another 600
 			 **************************/
-			if (lowFps)
-			{
-				if (lowFpsFrameCount <= 0)
-				{
+			if (lowFps) {
+				if (lowFpsFrameCount <= 0) {
 					LogMsg (DEBUG, "Turning off wave-updates for sprites as 600 frames have passed.");
 					lowFps = false;
 				}

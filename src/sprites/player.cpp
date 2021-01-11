@@ -245,17 +245,17 @@ void Player::Save( string scenario ) {
 /**\brief Parse one player out of an xml node
  */
 bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
-	xmlNodePtr  attr;
+	xmlNodePtr attr;
 	string value;
 	Coordinate pos;
 
-	if( (attr = FirstChildNamed(node,"name")) ){
-		SetName(NodeToString(doc,attr));
+	if( (attr = FirstChildNamed(node, "name")) ){
+		SetName(NodeToString(doc, attr));
 	}
 
 	if( (attr = FirstChildNamed(node, "planet"))) {
 		string temp;
-		xmlNodePtr name = FirstChildNamed(attr,"name");
+		xmlNodePtr name = FirstChildNamed(attr, "name");
 		lastPlanet = NodeToString(doc, name);
 		Planet* p = Menu::GetCurrentScenario()->GetPlanets()->GetPlanet( lastPlanet );
 		if( p != NULL ) {
@@ -263,67 +263,65 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		}
 	} else return false;
 
-	if( (attr = FirstChildNamed(node,"model")) ) {
+	if( (attr = FirstChildNamed(node, "model")) ) {
 		value = NodeToString(doc, attr);
 		Model* model = Menu::GetCurrentScenario()->GetModels()->GetModel( value );
 		if( NULL != model) {
 			SetModel( model );
 		} else {
-			LogMsg(ERR,"No such model as '%s'", value.c_str());
+			LogMsg(ERR, "No such model as '%s'", value.c_str());
 			return false;
 		}
 	} else return false;
 
-	if( (attr = FirstChildNamed(node,"engine")) ) {
-		value = NodeToString(doc,attr);
+	if( (attr = FirstChildNamed(node, "engine")) ) {
+		value = NodeToString(doc, attr);
 		Engine* engine = Menu::GetCurrentScenario()->GetEngines()->GetEngine( value );
 		if( NULL != engine) {
 			SetEngine( engine );
 		} else {
-			LogMsg(ERR,"No such engine as '%s'", value.c_str());
+			LogMsg(ERR, "No such engine as '%s'", value.c_str());
 			return false;
 		}
 	} else return false;
 
-
-	if( (attr = FirstChildNamed(node,"credits")) ) {
-		value = NodeToString(doc,attr);
+	if( (attr = FirstChildNamed(node, "credits")) ) {
+		value = NodeToString(doc, attr);
 		SetCredits( atoi(value.c_str()) );
 	} else return false;
 
-	for( attr = FirstChildNamed(node,"weapon"); attr != NULL; attr = NextSiblingNamed(attr,"weapon") ){
-		AddShipWeapon( NodeToString(doc,attr) );
+	for( attr = FirstChildNamed(node, "weapon"); attr != NULL; attr = NextSiblingNamed(attr, "weapon") ){
+		AddShipWeapon( NodeToString(doc, attr) );
 	}
 
-	for( attr = FirstChildNamed(node,"outfit"); attr != NULL; attr = NextSiblingNamed(attr,"outfit") ){
-		AddOutfit( NodeToString(doc,attr) );
+	for( attr = FirstChildNamed(node, "outfit"); attr != NULL; attr = NextSiblingNamed(attr, "outfit") ){
+		AddOutfit( NodeToString(doc, attr) );
 	}
 
-	for( attr = FirstChildNamed(node,"cargo"); attr != NULL; attr = NextSiblingNamed(attr,"cargo") ){
+	for( attr = FirstChildNamed(node, "cargo"); attr != NULL; attr = NextSiblingNamed(attr, "cargo") ){
 		xmlNodePtr type = FirstChildNamed(attr, "type");
 		xmlNodePtr ammt = FirstChildNamed(attr, "amount");
-		if(!type || !ammt)
-			return false;
-		if( NodeToInt(doc,ammt) > 0 )
-		{
+
+		if(!type || !ammt) { return false; }
+
+		if( NodeToInt(doc,ammt) > 0 ) {
 			StoreCommodities( NodeToString(doc,type), NodeToInt(doc,ammt) );
 		}
 	}
 
-	for( attr = FirstChildNamed(node,"ammo"); attr != NULL; attr = NextSiblingNamed(attr,"ammo") ){
+	for( attr = FirstChildNamed(node, "ammo"); attr != NULL; attr = NextSiblingNamed(attr, "ammo") ){
 		xmlNodePtr type = FirstChildNamed(attr, "type");
 		xmlNodePtr ammt = FirstChildNamed(attr, "amount");
-		if(!type || !ammt)
-			return false;
-		AmmoType ammoType = Weapon::AmmoNameToType( NodeToString(doc,type) );
-		int ammoCount = NodeToInt(doc,ammt);
+		if(!type || !ammt) { return false; }
+		AmmoType ammoType = Weapon::AmmoNameToType( NodeToString(doc, type) );
+		int ammoCount = NodeToInt(doc, ammt);
 		if( ammoType < max_ammo ) {
 			AddAmmo( ammoType, ammoCount );
 		} else return false;
 	}
 
-	for( attr = FirstChildNamed(node,"Mission"); attr != NULL; attr = NextSiblingNamed(attr,"Mission") ){
-		Mission *mission = Mission::FromXMLNode(doc,attr);
+	for( attr = FirstChildNamed(node, "Mission"); attr != NULL; attr = NextSiblingNamed(attr, "Mission") ){
+		Mission *mission = Mission::FromXMLNode(doc, attr);
 		if( mission != NULL ) {
 			LogMsg(INFO, "Successfully loaded the %s mission of player '%s'", mission->GetName().c_str(), this->GetName().c_str() );
 			missions.push_back( mission );
@@ -332,7 +330,7 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		}
 	}
 
-	for( attr = FirstChildNamed(node, "favor"); attr != NULL; attr = NextSiblingNamed(attr,"favor") ) {
+	for( attr = FirstChildNamed(node, "favor"); attr != NULL; attr = NextSiblingNamed(attr, "favor") ) {
 		xmlNodePtr alliance = FirstChildNamed(attr, "alliance");
 		xmlNodePtr value = FirstChildNamed(attr, "value");
 		if(!alliance || !value) {
@@ -343,7 +341,15 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 		}
 	}
 
-	for( attr = FirstChildNamed(node, "hiredEscort"); attr != NULL; attr = NextSiblingNamed(attr,"hiredEscort") ) {
+	xmlNodePtr revealedSectors = FirstChildNamed(node, "revealedSectors");
+	if(revealedSectors != NULL) {
+		for( attr = FirstChildNamed(revealedSectors, "sector"); attr != NULL; attr = NextSiblingNamed(attr, "sector") ) {
+			string value = NodeToString(doc, attr);
+			this->revealedSectors.push_back(value);
+		}
+	}
+
+	for( attr = FirstChildNamed(node, "hiredEscort"); attr != NULL; attr = NextSiblingNamed(attr, "hiredEscort") ) {
 		xmlNodePtr typePtr = FirstChildNamed(attr, "type");
 		xmlNodePtr payPtr = FirstChildNamed(attr, "pay");
 		assert(typePtr && payPtr);
@@ -376,7 +382,6 @@ bool Player::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
   * from the model, then updating it according to the saved player XML.
  */
 bool Player::ConfigureWeaponSlots( xmlDocPtr doc, xmlNodePtr node ) {
-
 	xmlNodePtr slotPtr;
 	string value;
 
@@ -384,7 +389,6 @@ bool Player::ConfigureWeaponSlots( xmlDocPtr doc, xmlNodePtr node ) {
 	// This makes a copy, not a pointer or reference, so we don't have to worry
 	// that it might alter the slots in the model.
 	this->weaponSlots = this->GetModel()->GetWeaponSlots();
-
 
 	for( slotPtr = FirstChildNamed(node,"weapSlot"); slotPtr != NULL; slotPtr = NextSiblingNamed(slotPtr,"weapSlot") ){
 		WeaponSlot *existingSlot = NULL;
@@ -428,9 +432,7 @@ bool Player::ConfigureWeaponSlots( xmlDocPtr doc, xmlNodePtr node ) {
 	return true;
 }
 
-
-
-/**\brief Save this Player to an xml node
+/**\brief Serialize this Player as an XML node, e.g. location, credits, weapons, etc.
  */
 xmlNodePtr Player::ToXMLNode(string componentName) {
 	char buff[256];
@@ -515,7 +517,7 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 	// Missions
 	list<Mission*>::iterator iter_mission;
 	for(iter_mission = missions.begin(); iter_mission != missions.end(); ++iter_mission){
-		xmlAddChild( section,  (*iter_mission)->ToXMLNode() );
+		xmlAddChild( section, (*iter_mission)->ToXMLNode() );
 	}
 
 	// Favor
@@ -550,6 +552,15 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 		}
 	}
 
+	// Revealed sectors
+	list<string>::iterator iter_revealed_sectors;
+	xmlNodePtr revealedSector = xmlNewNode(NULL, BAD_CAST "revealedSectors");
+	for(iter_revealed_sectors = revealedSectors.begin(); iter_revealed_sectors != revealedSectors.end(); ++iter_revealed_sectors) {
+		snprintf(buff, sizeof(buff), "%s", (*iter_revealed_sectors).c_str() );
+		xmlNewChild(revealedSector, NULL, BAD_CAST "sector", BAD_CAST buff );
+	}
+	xmlAddChild(section, revealedSector);
+
 	// Last Load Time
 	snprintf(buff, sizeof(buff), "%d", (int)lastLoadTime );
 	xmlNewChild(section, NULL, BAD_CAST "lastLoadTime", BAD_CAST buff );
@@ -561,6 +572,30 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 	xmlAddChild( section, xmlNewComment( BAD_CAST timestamp));
 
 	return section;
+}
+
+/* Adds 's' to the player's revealed sectors list, which controls what appears on the nav map.
+ * If 'revealNeighbors' is true, it will recursively call this function on neighbors. That recursive
+ * call sets the flag to false, else we'd reveal the entire map. */
+void Player::RevealSector(Sector *s, bool revealNeighbors) {
+	assert(s != NULL);
+	if(std::find(std::begin(revealedSectors), std::end(revealedSectors), s->GetName()) != std::end(revealedSectors)) {
+		cout << "sector already revealed: " << s->GetName() << endl;
+	} else {
+		cout << "revealing sector: " << s->GetName() << endl;
+		revealedSectors.push_back(s->GetName());
+	}
+
+	if(revealNeighbors) {
+		Sectors *sectorsHandle = Menu::GetCurrentScenario()->GetSectors();
+		list<string> neighbors = s->GetNeighbors();
+
+		for(list<string>::iterator i = neighbors.begin(); i != neighbors.end(); ++i ) {
+			Sector *neighbor = sectorsHandle->GetSector(*i);
+			cout << "also revealing neighbor: " << neighbor->GetName() << endl;
+			RevealSector(neighbor, false);
+		}
+	}
 }
 
 /**\brief Record that a Hired Escort
@@ -675,17 +710,17 @@ void PlayerInfo::Update( Player* player, string simName ) {
  * \returns true if the PlayerInfo was loaded correctly.
 */
 bool PlayerInfo::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
-	xmlNodePtr  attr;
+	xmlNodePtr attr;
 
 	// If the node has a Model then it is using the old format.
 	// Create that player's XML File before continuing
-	if( (attr = FirstChildNamed(node,"model")) ) {
+	if( (attr = FirstChildNamed(node, "model")) ) {
 		node = ConvertOldVersion( doc, node );
 	}
 
 	// The file attribute is the saved game xml file.
-	if( (attr = FirstChildNamed(node,"file")) ) {
-		file = NodeToString(doc,attr);
+	if( (attr = FirstChildNamed(node, "file")) ) {
+		file = NodeToString(doc, attr);
 		if( File::Exists( file ) == false ) {
 			LogMsg(ERR, "Player %s is corrupt. There is no file '%s'.", name.c_str(), file.c_str() );
 			return false;
@@ -696,22 +731,22 @@ bool PlayerInfo::FromXMLNode( xmlDocPtr doc, xmlNodePtr node ) {
 	}
 
 	// A corrupt avatar isn't fatal, just don't try to draw it.
-	if( (attr = FirstChildNamed(node,"avatar")) ){
-		avatar = Image::Get( NodeToString(doc,attr) );
+	if( (attr = FirstChildNamed(node, "avatar")) ){
+		avatar = Image::Get( NodeToString(doc, attr) );
 		if( avatar == NULL ) {
 			LogMsg(WARN, "Player %s has a corrupt avatar.  There is no image '%s' ", name.c_str(), NodeToString(doc,attr).c_str() );
 		}
 	}
 
 	if( (attr = FirstChildNamed(node, "scenario")) ){
-		scenario = NodeToString(doc,attr);
+		scenario = NodeToString(doc, attr);
 	} else {
 		scenario = "default";
 	}
 
 	// A corrupt lastLoadTime isn't fatal, just use January 1, 1970.
-	if( (attr = FirstChildNamed(node,"lastLoadTime")) ){
-		lastLoadTime = NodeToInt(doc,attr);
+	if( (attr = FirstChildNamed(node, "lastLoadTime")) ){
+		lastLoadTime = NodeToInt(doc, attr);
 	} else {
 		lastLoadTime = (time_t)0;
 	}
