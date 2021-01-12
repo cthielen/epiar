@@ -9,6 +9,7 @@
 #include "engine/navigation.h"
 #include "includes.h"
 #include "input/input.h"
+#include "menu.h"
 #include "ui/ui_navmap.h"
 #include "sprites/planets.h"
 #include "sprites/effects.h"
@@ -60,6 +61,8 @@ NavMap::NavMap( int x, int y, int w, int h, Coordinate center, Scenario* scenari
 		scale = size / (1.5 * edge);
 	}
 
+	this->sectorList = sectors->GetAllSectors();
+
 	if( NavMapFont == NULL ) {
 		NavMapFont = new Font( SKIN("Skin/HUD/Map/Font"), convertTo<int>( SKIN("Skin/HUD/Map/Size") ));
 		NavMapFont->SetColor( Color( SKIN("Skin/HUD/Map/Color") ) );
@@ -78,9 +81,9 @@ NavMap::NavMap( int x, int y, int w, int h, Coordinate center, Scenario* scenari
  */
 NavMap::~NavMap() {
 	scenario = NULL;
-	delete NavMapFont;
-	NavMapFont = NULL;
+	delete NavMapFont; NavMapFont = NULL;
 	clearRouteButton = NULL; // Let the Container Destructor delete the button
+	delete sectorList; sectorList = NULL;
 }
 
 /** \brief Draw Map
@@ -88,7 +91,6 @@ NavMap::~NavMap() {
  */
 void NavMap::Draw( int relx, int rely ) {
 	list<Sector*>::iterator iter;
-	list<Sector*>* sectors = NULL;
 	Sector* currentSector = this->scenario->GetCurrentSector();
 
 	// These variables are used for almost every sprite symbol
@@ -98,7 +100,8 @@ void NavMap::Draw( int relx, int rely ) {
 	Sectors* sectorsHandle = this->scenario->GetSectors();
 	if(sectorsHandle == NULL) return;
 
-	sectors = sectorsHandle->GetAllSectors();
+	Player *player = Menu::GetCurrentScenario()->GetPlayer();
+	assert(player != NULL);
 
 	// Draw the backdrop
 	Video::DrawRect( relx + GetX(), rely + GetY(), w, h, BLACK, alpha);
@@ -106,8 +109,11 @@ void NavMap::Draw( int relx, int rely ) {
 	Video::SetCropRect( relx + GetX(), rely + GetY(), w, h );
 
 	// Draw sector connection lines
-	for( iter = sectors->begin(); iter != sectors->end(); ++iter ) {
+	for( iter = sectorList->begin(); iter != sectorList->end(); ++iter ) {
 		Sector *sector = (Sector *)(*iter);
+
+		if(player->SectorIsRevealed(sector->GetName()) == false) continue;
+
 		list<string> neighbors = sector->GetNeighbors();
 		list<string>::iterator neighborItr;
 		Coordinate startPos;
@@ -132,12 +138,26 @@ void NavMap::Draw( int relx, int rely ) {
 				// Draw the connecting line
 				Video::DrawLine( startPos.GetX(), startPos.GetY(), endPos.GetX(), endPos.GetY(), DARKGREY);
 			}
+
+			// Draw the neighboring sector in grey, indicating it hasn't been visited
+			// It may actually have been visited, in which case it'll be drawn over
+			// in code later in this function
+			Video::DrawFilledCircle( endPos, (55 * scale) / 3, BLACK, alpha );
+			Video::DrawCircle( endPos, (55 * scale) / 3, 1, GREY, alpha );
 		}
 	}
 
 	// Draw the sectors
-	for( iter = sectors->begin(); iter != sectors->end(); ++iter ) {
+	for( iter = sectorList->begin(); iter != sectorList->end(); ++iter ) {
 		Sector *sector = (Sector *)(*iter);
+
+		pos = WorldToMap(Coordinate(sector->GetX(), sector->GetY()));
+
+		if(sector == selectedSector) {
+			Video::DrawTarget( pos.GetX(), pos.GetY(), (50 * scale), (50 * scale), 3, 0.8, 0.8, 0.8 );
+		}
+
+		if(player->SectorIsRevealed(sector->GetName()) == false) continue;
 
 		// If sector has no planets, draw as WHITE instead of BLUE
 		if(sector->HasPlanets()) {
@@ -145,32 +165,25 @@ void NavMap::Draw( int relx, int rely ) {
 		} else {
 			col = WHITE;
 		}
-		pos = WorldToMap(Coordinate(sector->GetX(), sector->GetY()));
 
-		field = sector->GetAlliance()->GetColor();
+		//field = sector->GetAlliance()->GetColor();
 
 		Video::DrawFilledCircle( pos, (55 * scale) / 3, BLACK, alpha );
 		if(sector == currentSector) {
 			Video::DrawFilledCircle( pos, (55 * scale) / 3, LIGHTBLUE, alpha );
 		}
 		Video::DrawCircle( pos, (55 * scale) / 3, 1, col, alpha );
-
-		if(sector == selectedSector) {
-			Video::DrawTarget( pos.GetX(), pos.GetY(), (50 * scale), (50 * scale), 3, 0.8, 0.8, 0.8 );
-		}
 	}
 
 	// Do a second pass to draw planet Names on top
-	for( iter = sectors->begin(); iter != sectors->end(); ++iter ) {
+	for( iter = sectorList->begin(); iter != sectorList->end(); ++iter ) {
 		Sector *sector = (Sector *)(*iter);
+		if(player->SectorIsRevealed(sector->GetName()) == false) continue;
 		pos = WorldToMap(Coordinate(sector->GetX(), sector->GetY()));
 		NavMapFont->Render( pos.GetX() + 5, pos.GetY(), sector->GetName().c_str() );
 	}
 
 	Video::UnsetCropRect();
-
-	delete sectors;
-	sectors = NULL;
 
 	Container::Draw(relx, rely);
 }
@@ -221,17 +234,38 @@ bool NavMap::MouseLUp( int x, int y ) {
 	Coordinate click(x, y);
 
 	// Determine if they clicked on a sector
-	list<Sector*>* sectors = NULL;
 	list<Sector*>::iterator iter;
+
 	Sectors* sectorsHandle = this->scenario->GetSectors();
 	assert(sectorsHandle != NULL);
 
+	Player *player = Menu::GetCurrentScenario()->GetPlayer();
+	assert(player != NULL);
+
+	list<Sector*>* sectors = NULL;
 	sectors = sectorsHandle->GetAllSectors();
 
 	for( iter = sectors->begin(); iter != sectors->end(); ++iter ) {
 		Sector *sector = (Sector *)(*iter);
-		
+
 		if(SectorNearClick(sector, click)) {
+			// User can only click on a revealed planet or a neighbor of a revealed planet
+			if(player->SectorIsRevealed(sector->GetName()) == false) {
+				// User clicked a sector that isn't revealed. If it is also not a neighbor of a revealed planet, we ignore the click
+				list<string> neighbors = sector->GetNeighbors();
+
+				list<string>::iterator i;
+				bool hasRevealedNeighbor = false;
+				for(i = neighbors.begin(); i != neighbors.end(); ++i) {
+					if(player->SectorIsRevealed(*i)) {
+						hasRevealedNeighbor = true;
+						break;
+					}
+				}
+
+				if(hasRevealedNeighbor == false) { continue; }
+			}
+
 			selectedSector = sector;
 
 			// Is shift held down? If so, they are trying to plot a course ...
@@ -239,9 +273,13 @@ bool NavMap::MouseLUp( int x, int y ) {
 				Navigation::AddSector(selectedSector->GetName());
 			}
 
+			delete sectors; sectors = NULL;
+
 			return true;
 		}
 	}
+
+	delete sectors; sectors = NULL;
 
 	return Container::MouseLUp( x, y );
 }

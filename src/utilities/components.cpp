@@ -190,7 +190,7 @@ bool Components::Load(string filename, bool fileoptional, bool skipcorrupt) {
 	int versionMajor = 0, versionMinor = 0, versionMacro = 0;
 	int numObjs = 0;
 	bool success = true;
-	
+
 	File xmlfile = File (filename);
 	long filelen = xmlfile.GetLength();
 	char *buffer = xmlfile.Read();

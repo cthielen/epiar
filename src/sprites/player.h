@@ -57,7 +57,8 @@ class Player : public Ship {
 		void AddHiredEscort(string type, int pay, int spriteID);
 
 		// Sector-related functions
-		void RevealSector(Sector *s, bool revealNeighbors);
+		void RevealSector(Sector *s);
+		bool SectorIsRevealed(string sectorName);
 
 		friend class PlayerList;
 

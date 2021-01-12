@@ -62,6 +62,9 @@ class NavMap: public Container {
 
 		Sector* selectedSector;
 
+		// Copy of the revealedSectors list, fetched in constructor and freed in destructor
+		list<Sector*>* sectorList;
+
 		static Font* NavMapFont;
 
 		Button* clearRouteButton;

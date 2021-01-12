@@ -41,6 +41,7 @@ class Sector : public Component {
 		bool HasPlanet(string planetName);
 		int GetTraffic() { return traffic; }
 		list<string> GetNeighbors() const { return neighbors; }
+		void AddNeighbor(string neighbor) { neighbors.push_back(neighbor); }
 
 		float GetX() { return x; }
 		float GetY() { return y; }
@@ -70,6 +71,8 @@ class Sectors : public Components {
 		Component* newComponent() { return new Sector(); }
 		void GetBoundaries(float *north, float *south, float *east, float *west);
 		bool SectorHasNeighbor(Sector *origin, Sector *possibleNeighbor);
+
+		bool Load(string filename, bool fileoptional = false, bool skipcorrupt = false);
 };
 
 #endif // __h_sectors__

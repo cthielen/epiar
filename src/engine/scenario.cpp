@@ -291,8 +291,7 @@ void Scenario::ResetSector( Sector *s ) {
 	s->GenerateDefaultTraffic();
 
 	// Reveal this sector on player's map, if needed
-	Player *player = GetPlayer();
-	player->RevealSector(s, true);
+	GetPlayer()->RevealSector(s);
 
 	currentSector = s;
 }

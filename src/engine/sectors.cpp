@@ -53,12 +53,12 @@ Sector& Sector::operator=(const Sector& other) {
 /**\brief Constructor using a full Full Description
  */
 Sector::Sector( string _name,
-				float _x,
-				float _y,
-				Alliance* _alliance,
-				list<string> _planets,
-				list<string> _neighbors,
-				int _traffic
+		float _x,
+		float _y,
+		Alliance* _alliance,
+		list<string> _planets,
+		list<string> _neighbors,
+		int _traffic
 	):
 	alliance(_alliance),
 	planets(_planets),
@@ -335,6 +335,31 @@ bool Sectors::SectorHasNeighbor(Sector *origin, Sector *possibleNeighbor) {
 	}
 
 	return false;
+}
+
+bool Sectors::Load(string filename, bool fileoptional, bool skipcorrupt) {
+	if(Components::Load(filename, fileoptional, skipcorrupt) == false) { return false; }
+
+	// Ensure sector neighbor references are symmetric, e.g. A references B so B must reference A
+	for( map<string,Component*>::iterator i = components.begin(); i != components.end(); ++i ) {
+		Sector *s = (Sector *)i->second;
+		assert(s != NULL);
+
+		list<string> neighbors = s->GetNeighbors();
+
+		// Check this sector's neighbors to ensure they refer to this sector
+		for( list<string>::iterator ii = neighbors.begin(); ii != neighbors.end(); ++ii ) {
+			Sector *ss = GetSector(*ii);
+			assert(ss != NULL);
+
+			list<string> neighborsNeighbors = ss->GetNeighbors();
+			if(std::find(neighborsNeighbors.begin(), neighborsNeighbors.end(), s->GetName()) == std::end(neighborsNeighbors)) {
+				ss->AddNeighbor(s->GetName());
+			}
+		}
+	}
+
+	return true;
 }
 
 /** @} */

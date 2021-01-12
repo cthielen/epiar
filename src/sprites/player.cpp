@@ -577,7 +577,7 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
 /* Adds 's' to the player's revealed sectors list, which controls what appears on the nav map.
  * If 'revealNeighbors' is true, it will recursively call this function on neighbors. That recursive
  * call sets the flag to false, else we'd reveal the entire map. */
-void Player::RevealSector(Sector *s, bool revealNeighbors) {
+void Player::RevealSector(Sector *s) {
 	assert(s != NULL);
 	if(std::find(std::begin(revealedSectors), std::end(revealedSectors), s->GetName()) != std::end(revealedSectors)) {
 		cout << "sector already revealed: " << s->GetName() << endl;
@@ -585,17 +585,11 @@ void Player::RevealSector(Sector *s, bool revealNeighbors) {
 		cout << "revealing sector: " << s->GetName() << endl;
 		revealedSectors.push_back(s->GetName());
 	}
+}
 
-	if(revealNeighbors) {
-		Sectors *sectorsHandle = Menu::GetCurrentScenario()->GetSectors();
-		list<string> neighbors = s->GetNeighbors();
-
-		for(list<string>::iterator i = neighbors.begin(); i != neighbors.end(); ++i ) {
-			Sector *neighbor = sectorsHandle->GetSector(*i);
-			cout << "also revealing neighbor: " << neighbor->GetName() << endl;
-			RevealSector(neighbor, false);
-		}
-	}
+// Returns true if sector with name 'sectorName' is in player's revealed sectors list
+bool Player::SectorIsRevealed(string sectorName) {
+	return std::find(std::begin(revealedSectors), std::end(revealedSectors), sectorName) != std::end(revealedSectors);
 }
 
 /**\brief Record that a Hired Escort
