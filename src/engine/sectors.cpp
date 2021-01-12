@@ -162,7 +162,7 @@ void Sector::GenerateTraffic( int count ) {
 		return;
 	}
 
-	cout << "Generating traffic, count of " << count << endl;
+	//cout << "Generating traffic, count of " << count << endl;
 
 	//local X = X + about(Range)
 	//local Y = Y + about(Range)

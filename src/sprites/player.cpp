@@ -579,10 +579,7 @@ xmlNodePtr Player::ToXMLNode(string componentName) {
  * call sets the flag to false, else we'd reveal the entire map. */
 void Player::RevealSector(Sector *s) {
 	assert(s != NULL);
-	if(std::find(std::begin(revealedSectors), std::end(revealedSectors), s->GetName()) != std::end(revealedSectors)) {
-		cout << "sector already revealed: " << s->GetName() << endl;
-	} else {
-		cout << "revealing sector: " << s->GetName() << endl;
+	if((std::find(std::begin(revealedSectors), std::end(revealedSectors), s->GetName()) != std::end(revealedSectors)) == false) {
 		revealedSectors.push_back(s->GetName());
 	}
 }

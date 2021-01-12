@@ -441,14 +441,14 @@ void Scenario::Run() {
 				if( lastTrafficTime + TRAFFIC_GENERATION_FREQUENCY < Timer::GetTicks() ) {
 					if( currentSector->GetTraffic() < sprites->GetAIShipCount() ) {
 						if((rand() % 100) > TRAFFIC_GENERATION_CHANCE) {
-							cout << "generating traffic" << endl;
+							//cout << "generating traffic" << endl;
 							currentSector->GenerateTraffic(1);
-						} else {
-							cout << "do not generate traffic, unlucky roll" << endl;
-						}
-					} else {
-						cout << "no traffic: too much (sector ask: " << currentSector->GetTraffic() << "), current count: " << sprites->GetAIShipCount() << endl;
-					}
+						} //else {
+							//cout << "do not generate traffic, unlucky roll" << endl;
+						//}
+					}// else {
+						//cout << "no traffic: too much (sector ask: " << currentSector->GetTraffic() << "), current count: " << sprites->GetAIShipCount() << endl;
+					//}
 					lastTrafficTime = Timer::GetTicks();
 				}
 
