@@ -239,17 +239,16 @@ bool compareSpritePtrs(Sprite* a, Sprite* b){
  */
 void SpriteManager::Draw( Coordinate focus ) {
 	list<Sprite *>::iterator i;
-	list<Sprite*> *onscreen = NULL;
 	float r = (Video::GetHalfHeight() < Video::GetHalfWidth() ? Video::GetHalfWidth() : Video::GetHalfHeight()) * V_SQRT2;
-	onscreen = GetSpritesNear(focus, r, DRAW_ORDER_ALL);
+	list<Sprite*> *onScreen = GetSpritesNear(focus, r, DRAW_ORDER_ALL);
 
-	onscreen->sort(compareSpritePtrs);
+	onScreen->sort(compareSpritePtrs);
 
-	for( i = onscreen->begin(); i != onscreen->end(); ++i ) {
+	for( i = onScreen->begin(); i != onScreen->end(); ++i ) {
 		(*i)->Draw();
 	}
 
-	delete onscreen;
+	delete onScreen;
 }
 
 /**\brief Retrieves a list of the current sprites.
@@ -317,12 +316,14 @@ struct compareSpriteDistFromPoint
  */
 list<Sprite*> *SpriteManager::GetSpritesNear(Coordinate c, float r, int type) {
 	list<Sprite*> *sprites = new list<Sprite*>();
-	float r2 = r * r;
 
 	for( list<Sprite*>::iterator i = spritelist->begin(); i != spritelist->end(); ++i ) {
 		if( ((*i)->GetDrawOrder() & type) == 0) continue;
 
-		if( (r2 == 0) || ((c - (*i)->GetWorldPosition()).GetMagnitudeSquared() <= r2) ) {
+		float rr = r + ((*i)->GetImage()->GetHalfWidth() > (*i)->GetImage()->GetHalfHeight() ? (*i)->GetImage()->GetHalfWidth() : (*i)->GetImage()->GetHalfHeight());
+		rr *= rr;
+
+		if( (r == 0) || ((c - (*i)->GetWorldPosition()).GetMagnitudeSquared() <= rr) ) {
 			sprites->push_back( *i);
 		}
 	}
