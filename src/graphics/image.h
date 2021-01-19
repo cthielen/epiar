@@ -50,6 +50,7 @@ class Image : public Resource {
 		void DrawAlpha( int x, int y, float alpha );
 		// Draw the image centered on (x,y) (angle in degrees)
 		void DrawCentered( int x, int y, float angle = 0. );
+		void DrawCentered( int x, int y, float angle, float alpha );
 		// Draw the image tiled to fill a rectangle of w/h - will crop to meet w/h and won't overflow
 		void DrawTiled( int x, int y, int w, int h, float alpha = 1. );
 		// Draw the image stretched within to a box

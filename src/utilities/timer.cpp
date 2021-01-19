@@ -123,3 +123,7 @@ void Timer::Unpause( void ) {
 	pausedAt = 0;
 }
 
+/* Returns ticks since 'timestamp' relative to Timer::GetTicks() */
+Uint32 Timer::TicksSince( Uint32 timestamp ) {
+	return Timer::GetTicks() - timestamp;
+}

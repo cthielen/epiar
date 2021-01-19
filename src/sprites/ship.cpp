@@ -30,6 +30,8 @@
 #define JUMP_ACCELERATION_DURATION 5000 ///< milliseconds a ship should accelerate before the jump 'flash'. Should match duration of 'jump_start.ogg' SFX.
 #define JUMP_FLASH_DURATION 100 ///< milliseconds a ship should accelerate before the jump 'flash'
 
+#define ACCELERATION_FLARE_FADEOUT_DURATION 50
+
 /**\class Ship
  * \brief A Ship Sprite that moves, Fires Weapons, has cargo, and ultimately explodes.
  * \details
@@ -180,8 +182,7 @@ bool Ship::SetEngine( Engine *newEngine ) {
 		engine = newEngine;
 
 		// Creates a new Flare Animation specific for this Ship
-		if( flareAnimation )
-			delete flareAnimation;
+		if( flareAnimation ) { delete flareAnimation; }
 		flareAnimation = new Animation( engine->GetFlareAnimation() );
 		flareAnimation->Reset();
 		flareAnimation->SetLoopPercent(0.25f);
@@ -320,6 +321,7 @@ void Ship::Accelerate( bool acceleratingToJump ) {
 	SetMomentum( momentum );
 
 	status.isAccelerating = true;
+	status.lastAccelerationAt = Timer::GetTicks();
 
 	// Play engine sound
 	if( engine->GetSound() != NULL) {
@@ -489,13 +491,11 @@ void Ship::Draw( void ) {
 	Trig *trig = Trig::Instance();
 	Coordinate position = GetWorldPosition();
 	Coordinate screenPosition = GetScreenPosition();
-
-	/*
-    // Shields
-	Video::DrawFilledCircle(
-			position.GetScreenX(), position.GetScreenY(),
-			static_cast<float>(GetRadarSize()), 0.0f,0.0f,0.3f,0.3f);
-	*/
+	
+    // // Shields
+	// Video::DrawFilledCircle(
+	// 		screenPosition.GetX(), screenPosition.GetY(),
+	// 		static_cast<float>(GetRadarSize()), 0.0f,0.0f,0.3f,0.3f);
 
 	if( status.isJumping ) {
 		// When the ship is jumping, move it to the screen edge
@@ -507,7 +507,8 @@ void Ship::Draw( void ) {
 	Sprite::Draw();
 
 	// Draw the flare animation, if required
-	if( status.isAccelerating ) {
+	Uint32 ticksAfterLastAccel = Timer::TicksSince(status.lastAccelerationAt);
+	if( status.isAccelerating || ticksAfterLastAccel <= ACCELERATION_FLARE_FADEOUT_DURATION ) {
 		float direction = GetAngle();
 		float tx, ty;
 
@@ -517,7 +518,8 @@ void Ship::Draw( void ) {
 				static_cast<float>(screenPosition.GetX()),
 				static_cast<float>(screenPosition.GetY()), &tx, &ty,
 				static_cast<float>( trig->DegToRad( direction ) ));
-		flareAnimation->Draw( (int)tx, (int)ty, direction );
+		
+		flareAnimation->Draw( (int)tx, (int)ty, direction, 1.0f );
 
 		status.isAccelerating = false;
 	}
@@ -545,14 +547,14 @@ void Ship::Draw( void ) {
  * \return FireStatus
  */
 FireStatus Ship::FirePrimary( int target ) {
-	return Fire(PRIMARY,target);
+	return Fire(PRIMARY, target);
 }
 
 /**\brief Fire's ship Secondary weapons.
  * \return FireStatus
  */
 FireStatus Ship::FireSecondary( int target ) {
-	return Fire(SECONDARY,target);
+	return Fire(SECONDARY, target);
 }
 
 /**\brief Fire a ship's weapon group.

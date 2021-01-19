@@ -168,7 +168,11 @@ void Image::_Draw( int x, int y, float r, float g, float b, float alpha, float a
 /**\brief Draw the image centered on (x,y)
  */
 void Image::DrawCentered( int x, int y, float angle ) {
-	Draw( x - (w / 2), y - (h / 2), angle );
+	DrawCentered(x, y, angle, 1.0);
+}
+
+void Image::DrawCentered( int x, int y, float angle, float alpha ) {
+	_Draw( x - (w / 2), y - (h / 2), 1.f, 1.f, 1.f, 1.f, angle, alpha );
 }
 
 /**\brief Draw the image stretched within to a box

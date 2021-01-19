@@ -50,7 +50,7 @@ void Effect::Update( lua_State *L ) {
  */
 void Effect::Draw( void ) {
 	Coordinate pos = GetScreenPosition();
-	visual->Draw( pos.GetX(), pos.GetY(), this->GetAngle());
+	visual->Draw( pos.GetX(), pos.GetY(), this->GetAngle(), 1.0 );
 }
 
 /**\fn Effect::GetDrawOrder( )
@@ -58,4 +58,3 @@ void Effect::Draw( void ) {
  */
 
 /** @} */
-

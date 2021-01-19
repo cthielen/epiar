@@ -13,7 +13,7 @@
 #include "utilities/resource.h"
 #include "includes.h"
 
-class Ani: public Resource {
+class Ani : public Resource {
 	public:
 		Ani();
 		Ani( string& filename );
@@ -38,7 +38,7 @@ class Animation {
 		Animation();
 		Animation( string filename );
 		bool Update( void );
-		void Draw( int x, int y, float ang );
+		void Draw( int x, int y, float ang, float alpha );
 		void SetLoopPercent( float loopPercent );
 		float GetLoopPercent( void ) { return loopPercent; };
 		void Reset( void );

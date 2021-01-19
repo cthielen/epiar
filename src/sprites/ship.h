@@ -155,6 +155,10 @@ class Ship : public Sprite {
 			float jumpAngle;
 			Sector* jumpDestination;
 			bool rotatedForJump;
+
+			/* Acceleration */
+			Uint32 lastAccelerationAt; // timestamp of last time the player accelerated,
+			                           // used so we can fade out the animation instead of abruptly stopping it
 			
 			/* Flags */
 			bool isAccelerating; ///< Cleared by update, set by accelerate (so it's always updated twice a loop)

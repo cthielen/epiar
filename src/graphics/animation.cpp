@@ -67,11 +67,13 @@ Ani::Ani() {
  * \sa Ani::Load
  */
 Ani::Ani( string& filename ) {
-	LogMsg(INFO,"New Animation from '%s'", filename.c_str() );
+	LogMsg(INFO, "New Animation from '%s'", filename.c_str() );
+
 	frames = NULL;
 	delay = 0;
 	numFrames = 0;
 	w = h = 0;
+
 	Load( filename );
 }
 
@@ -186,7 +188,7 @@ Image* Ani::GetFrame(int frameNum) {
 /**\brief Empty constructor.
  */
 Animation::Animation() {
-	fnum=0;
+	fnum = 0;
 	startTime = 0;
 	loopPercent = 0.0f;
 }
@@ -196,7 +198,7 @@ Animation::Animation() {
  * \sa Ani::Get
  */
 Animation::Animation( string filename ) {
-	fnum=0;
+	fnum = 0;
 	startTime = 0;
 	loopPercent = 0.0f;
 	ani = Ani::Get( filename );
@@ -214,16 +216,14 @@ bool Animation::Update() {
 		fnum = (SDL_GetTicks() - startTime) / ani->GetDelay();
 
 		if( fnum > ani->GetNumFrames() - 1 ) {
-			fnum = TO_INT(ani->GetNumFrames() * (1.0f-loopPercent)); // Step back a few frames.
-			startTime = SDL_GetTicks() - ani->GetDelay()*fnum; // Pretend that we started fnum frames ago
+			fnum = TO_INT(ani->GetNumFrames() * (1.0f - loopPercent)); // Step back a few frames if loopPercent indicates
+			startTime = SDL_GetTicks() - ani->GetDelay() * fnum; // Pretend that we started fnum frames ago
 			if( loopPercent <= 0.0f ) {
 				finished = true;
 			}
 		}
-
 	} else {
 		startTime = SDL_GetTicks();
-		//frame = ani->GetFrame(0);
 	}
 
 	return finished;
@@ -231,16 +231,15 @@ bool Animation::Update() {
 
 /**\brief Draws the animation at given coordinate.
  */
-void Animation::Draw( int x, int y, float ang ) {
+void Animation::Draw( int x, int y, float ang, float alpha ) {
 	Image* frame = ani->GetFrame( fnum );
-	frame->DrawCentered( x, y, ang );
+	frame->DrawCentered( x, y, ang, alpha );
 }
-
 
 /**\brief Resets animation data back to the first frame.
  */
 void Animation::Reset( void ) {
-	fnum=0;
+	fnum = 0;
 	startTime = 0;
 }
 
@@ -261,13 +260,8 @@ void Animation::SetLoopPercent( float newLoopPercent ) {
 	}
 }
 
-/* \fn Animation::GetLooping( void )
- *  \brief Returns the status of the looping.
- */
-
 /**\fn Animation::GetHalfWidth( void )]
  *  \brief Returns half the width of the animation
  * \fn Animation::GetHalfHeight( void )
  *  \brief Returns half the height of the animation
  */
-

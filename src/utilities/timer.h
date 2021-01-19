@@ -26,6 +26,7 @@ class Timer {
 		static Uint32 GetLogicalFrameCount( void );
 		static void Pause( void );
 		static void Unpause( void );
+		static Uint32 TicksSince( Uint32 timestamp );
 
   	private:
 		static Uint32 lastLoopLength;
