@@ -210,13 +210,13 @@ int NPC_Lua::ShipAccelerate(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		NPC* ai = checkShip(L,1);
+		NPC* ai = checkShip(L, 1);
 		if(ai == NULL) return 0;
 		luaL_argcheck(L, ai != NULL, 1, "`array' expected");
 		(ai)->Accelerate( false );
-	}
-	else
+	} else {
 		luaL_error(L, "Got %d arguments expected 2 (self, direction)", n);
+	}
 
 	return 0;
 }
