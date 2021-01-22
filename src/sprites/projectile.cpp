@@ -34,14 +34,14 @@
 
 /**\brief Constructor
  */
-Projectile::Projectile(float damageBooster, float angleToFire, Coordinate worldPosition, Coordinate firedMomentum, Weapon* _weapon)
-{
-	damageBoost=damageBooster;
+Projectile::Projectile(float damageBooster, float angleToFire, Coordinate worldPosition, Coordinate firedMomentum, Weapon* _weapon) {
+	damageBoost = damageBooster;
+
 	// All Projectiles get these
 	ownerID = 0;
 	targetID = 0;
 	start = Timer::GetTicks();
-	SetRadarColor (Color(0x55,0x55,0x55));
+	SetRadarColor(Color(0x55,0x55,0x55));
 
 	// These are based off of the Ship firing this projectile
 	SetWorldPosition( worldPosition );
@@ -58,7 +58,7 @@ Projectile::Projectile(float damageBooster, float angleToFire, Coordinate worldP
 
 	momentum = firedMomentum +
 	           Coordinate( trig->GetCos( angle ) * weapon->GetVelocity(),
-	                      -trig->GetSin( angle ) * weapon->GetVelocity() );
+	                       trig->GetSin( angle ) * weapon->GetVelocity() );
 	
 	SetMomentum( momentum );
 }
