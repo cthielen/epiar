@@ -35,7 +35,7 @@ class Scenario_Lua {
 
 		// Scenario Interfaces
 		static int Unpause(lua_State *L);
-		static int Ispaused(lua_State *L);
+		static int IsPaused(lua_State *L);
 		static int GetCamera(lua_State *L);
 		static int MoveCamera(lua_State *L);
 		static int FocusCamera(lua_State *L);
@@ -53,7 +53,7 @@ class Scenario_Lua {
 		static int GetNearestSprite(lua_State *L, int type=DRAW_ORDER_ALL);
 		static int GetNearestShip(lua_State *L);
 		static int GetNearestPlanet(lua_State *L);
-		static int GetShips(lua_State *L);
+		static int GetNearbyNPCs(lua_State *L);
 		static int GetPlanets(lua_State *L);
 
 		// Game Components

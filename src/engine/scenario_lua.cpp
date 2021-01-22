@@ -60,7 +60,7 @@ void Scenario_Lua::RegisterScenario(lua_State *L) {
 		//{"echo", &Scenario_Lua::Console_echo},
 		{"pause", &Scenario_Lua::Pause},
 		{"unpause", &Scenario_Lua::Unpause},
-		{"ispaused", &Scenario_Lua::Ispaused},
+		{"isPaused", &Scenario_Lua::IsPaused},
 
 		// OPTION Functions
 		{"getoption", &Scenario_Lua::GetOption},
@@ -91,7 +91,7 @@ void Scenario_Lua::RegisterScenario(lua_State *L) {
 
 		// Sprite Searching Functions
 		{"getSprite", &Scenario_Lua::GetSpriteByID},
-		{"ships", &Scenario_Lua::GetShips},
+		{"getNearbyNPCsships", &Scenario_Lua::GetNearbyNPCs},
 		{"planets", &Scenario_Lua::GetPlanets},
 		{"nearestShip", &Scenario_Lua::GetNearestShip},
 		{"nearestPlanet", &Scenario_Lua::GetNearestPlanet},
@@ -203,7 +203,7 @@ int Scenario_Lua::Unpause(lua_State *L){
 /** \brief Check if the Scenario is paused
  *  \returns true if the Scenario is paused
  */
-int Scenario_Lua::Ispaused(lua_State *L){
+int Scenario_Lua::IsPaused(lua_State *L){
 	Scenario *sim = GetScenario(L);
 	lua_pushnumber(L, (int) sim->isPaused() );
 	return 1;
@@ -576,10 +576,11 @@ int Scenario_Lua::GetSprites(lua_State *L, int kind){
 	int n = lua_gettop(L);  // Number of arguments
 
 	list<Sprite *> *sprites = NULL;
-	if( n == 3 ){
+	if( n == 3 ) {
 		double x = luaL_checknumber (L, 1);
 		double y = luaL_checknumber (L, 2);
 		double r = luaL_checknumber (L, 3);
+
 		sprites = GetScenario(L)->GetSpriteManager()->GetSpritesNear(Coordinate(x,y), static_cast<float>(r), kind);
 	} else {
 		sprites = GetScenario(L)->GetSpriteManager()->GetSprites(kind);
@@ -640,7 +641,7 @@ int Scenario_Lua::GetMSRP(lua_State *L) {
  * \see Scenario_Lua::GetSprites
  * \returns list of Ship References
  */
-int Scenario_Lua::GetShips(lua_State *L) {
+int Scenario_Lua::GetNearbyNPCs(lua_State *L) {
 	return Scenario_Lua::GetSprites(L, DRAW_ORDER_SHIP);
 }
 
@@ -715,7 +716,7 @@ int Scenario_Lua::GetNearestSprite(lua_State *L, int kind) {
  * \see Scenario_Lua::GetNearestSprite
  */
 int Scenario_Lua::GetNearestShip(lua_State *L) {
-	return Scenario_Lua::GetNearestSprite(L, DRAW_ORDER_SHIP|DRAW_ORDER_PLAYER);
+	return Scenario_Lua::GetNearestSprite(L, DRAW_ORDER_SHIP | DRAW_ORDER_PLAYER);
 }
 
 /** \brief Get the nearest Planet to another sprite
