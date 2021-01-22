@@ -566,11 +566,11 @@ FireStatus Ship::Fire( Group group, int target ) {
 	bool emptyFiringGroup = true;
 
 	// Check that some weapons are attached
-	if ( shipWeapons.empty() ) {
+	if( shipWeapons.empty() ) {
 		return FireNoWeapons;
 	}
 	// Check that the ship is not jumping
-	if(  status.isJumping == true ) {
+	if( status.isJumping == true ) {
 		return FireNotReady;
 	}
 
@@ -598,8 +598,7 @@ FireStatus Ship::Fire( Group group, int target ) {
 /**\brief Fire a single weapon slot.
  * \return FireStatus
  */
-FireStatus Ship::FireSlot( int slot, int target )
-{
+FireStatus Ship::FireSlot( int slot, int target ) {
 	Trig *trig = Trig::Instance();
 	SpriteManager *sprites = Menu::GetCurrentScenario()->GetSpriteManager();
 	Weapon* currentWeapon = weaponSlots[slot].content;
@@ -616,13 +615,11 @@ FireStatus Ship::FireSlot( int slot, int target )
 
 	Sprite *targetSprite = sprites->GetSpriteByID(target);
 
-	// A regular fixed weapon slot
 	if(weaponSlots[slot].motionAngle == 0) {
+		// A regular fixed weapon slot
 		projectileAngle = GetAngle() + weaponSlots[slot].angle;
-	}
-
-	// A Turret weapon slot
-	else if(targetSprite != NULL) {
+	} else if(targetSprite != NULL) {
+		// A Turret weapon slot
 		float angleToTarget = GetDirectionTowards(targetSprite->GetWorldPosition());
 		float angleFromSlot = fabs(weaponSlots[slot].angle - angleToTarget);
 		if( (weaponSlots[slot].motionAngle == 360)
@@ -633,10 +630,8 @@ FireStatus Ship::FireSlot( int slot, int target )
 		} else {
 			return FireNoClearShot; // This Slot cannot aim at the target
 		}
-	}
-
-	// A Turret but no target
-	else {
+	} else {
+		// A Turret but no target
 		return FireNoTarget;
 	}
 

@@ -13,24 +13,23 @@
 #include "sprites/sprite.h"
 #include "engine/weapons.h"
 #include "includes.h"
-class Projectile :
-	public Sprite
-{
-public:
-	Projectile(float damageBooster, float angleToFire, Coordinate worldPosition, Coordinate firedMomentum, Weapon* weapon);
-	~Projectile(void);
-	void Update( lua_State *L );
-	void SetOwnerID(int id) { ownerID = id; }
-	void SetTargetID(int id) { targetID = id; }
-	int GetDrawOrder( void ) {
-			return( DRAW_ORDER_PROJECTILE );
-	}
-private:
-	Uint32 secondsOfLife; //time to live before projectile blows up
-	Uint32 start;
-	int ownerID;
-	int targetID;
-	float damageBoost;
-	Weapon *weapon;
+
+class Projectile : public Sprite {
+	public:
+		Projectile(float damageBooster, float angleToFire, Coordinate worldPosition, Coordinate firedMomentum, Weapon* weapon);
+		~Projectile(void);
+		void Update( lua_State *L );
+		void SetOwnerID(int id) { ownerID = id; }
+		void SetTargetID(int id) { targetID = id; }
+		int GetDrawOrder( void ) { return( DRAW_ORDER_PROJECTILE ); }
+
+	private:
+		Uint32 secondsOfLife; //time to live before projectile blows up
+		Uint32 start;
+		int ownerID;
+		int targetID;
+		float damageBoost;
+		Weapon *weapon;
 };
+
 #endif // __h_PROJECTILE__
