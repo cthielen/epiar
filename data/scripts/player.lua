@@ -73,18 +73,22 @@ end
 
 --- Target ship
 function targetShip()
-	if Epiar.ispaused()==1 then return end
+	if Epiar.isPaused() == 1 then return end
+
 	local x,y = PLAYER:GetPosition()
-	local nearby = Epiar.ships(x,y,0)
-	if #nearby==0 then return end
+	local nearby = Epiar.getNearbyNPCs(x, y, 0)
+	
+	-- Nothing to target
+	if #nearby == 0 then return end
 	
 	local nextTarget = 1
 	local currentTarget = HUD.getTarget()
 	local lastdist = 0
 
-	for s = 1,#nearby-1 do
+	for s = 1, #nearby - 1 do
 		if nearby[s]:GetID() == currentTarget then
-			nextTarget = s+1
+			-- Already targeting a ship, target next
+			nextTarget = s + 1
 		end
 	end
 	
@@ -94,7 +98,9 @@ end
 ---Target closest ship
 function targetClosestShip()
 	local nextTarget = Epiar.nearestShip( PLAYER, 4096 )
+
 	if not nextTarget then return end
+	
 	HUD.newAlert(1, "Targeting "..nextTarget:GetModelName().." "..nextTarget:GetName())
 	HUD.setTarget(nextTarget:GetID())
 end
@@ -235,7 +241,7 @@ function lowerBoundCheck(a, b, c, newa, newb, newc) --lower bound check for powe
 end
 
 function playerFire( primary )
-	if Epiar.ispaused() == 1 then return end
+	if Epiar.isPaused() == 1 then return end
 
 	if primary == 1 then
 		local result = PLAYER:FirePrimary( HUD.getTarget() )
