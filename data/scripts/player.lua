@@ -245,12 +245,12 @@ function playerFire( primary )
 
 	if result == 0 then -- FireSuccess
 	elseif result == 1 then -- FireNoWeapons
-		HUD.newAlert(1, "No weapons to fire!")
+		HUD.newAlert(1, "No weapons to fire")
 	elseif result == 2 then -- FireNotReady
 	elseif result == 3 then -- FireNoAmmo
-		HUD.newAlert(1, "Out of Ammo!")
+		HUD.newAlert(1, "Out of ammo")
 	elseif result == 4 then -- FireEmptyGroup
-		HUD.newAlert(1, "No weapons assigned to this firing group")
+		HUD.newAlert(1, "No weapon assigned to this firing group")
 	else
 		-- Some other error
 	end
