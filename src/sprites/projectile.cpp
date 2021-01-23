@@ -86,7 +86,7 @@ void Projectile::Update( lua_State *L ) {
 	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 
 	// Check for projectile collisions
-	Sprite* impact = sprites->GetNearestSprite( (Sprite*)this, 100,DRAW_ORDER_SHIP|DRAW_ORDER_PLAYER );
+	Sprite* impact = sprites->GetNearestSprite( (Sprite*)this, 100, DRAW_ORDER_SHIP | DRAW_ORDER_PLAYER );
 	if( (impact != NULL) && (impact->GetID() != ownerID) && ((this->GetWorldPosition() - impact->GetWorldPosition()).GetMagnitude() < impact->GetRadarSize() )) {
 		int damageDone = (weapon->GetPayload())*damageBoost;
 

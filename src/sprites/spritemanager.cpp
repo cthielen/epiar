@@ -318,13 +318,24 @@ list<Sprite*> *SpriteManager::GetSpritesNear(Coordinate c, float r, int type) {
 	list<Sprite*> *sprites = new list<Sprite*>();
 
 	for( list<Sprite*>::iterator i = spritelist->begin(); i != spritelist->end(); ++i ) {
-		if( ((*i)->GetDrawOrder() & type) == 0) continue;
+		Sprite* s = *i;
+		if( (s->GetDrawOrder() & type) == 0) continue;
 
-		float rr = r + ((*i)->GetImage()->GetHalfWidth() > (*i)->GetImage()->GetHalfHeight() ? (*i)->GetImage()->GetHalfWidth() : (*i)->GetImage()->GetHalfHeight());
+		Image *spriteImage = s->GetImage();
+		int half_w, half_h;
+
+		if(spriteImage == NULL) {
+			// Effect sprites have animations, not images
+			half_w = half_h = 0;
+		} else {
+			half_w = s->GetImage()->GetHalfWidth();
+			half_h = s->GetImage()->GetHalfHeight();
+		}
+		float rr = r + (half_w > half_h ? half_w : half_h);
 		rr *= rr;
 
-		if( (r == 0) || ((c - (*i)->GetWorldPosition()).GetMagnitudeSquared() <= rr) ) {
-			sprites->push_back( *i);
+		if( (r == 0) || ((c - s->GetWorldPosition()).GetMagnitudeSquared() <= rr) ) {
+			sprites->push_back(s);
 		}
 	}
 
