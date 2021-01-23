@@ -264,7 +264,7 @@ list<Sprite *> *SpriteManager::GetSprites(int type) {
 		filtered = new list<Sprite*>();
 		// Collect only the Sprites of this type
 		for( i = spritelist->begin(); i != spritelist->end(); ++i ) {
-			if( (*i)->GetDrawOrder() & type){
+			if( (*i)->GetDrawOrder() & type) {
 				filtered->push_back( (*i) );
 			}
 		}
@@ -314,7 +314,7 @@ struct compareSpriteDistFromPoint
  * \param r Radius - zero indicates infinite radius
  * \return std::list of Sprite pointers.
  */
-list<Sprite*> *SpriteManager::GetSpritesNear(Coordinate c, float r, int type) {
+list<Sprite*> *SpriteManager::GetSpritesNear(Coordinate c, float r, int type, bool sorted) {
 	list<Sprite*> *sprites = new list<Sprite*>();
 
 	for( list<Sprite*>::iterator i = spritelist->begin(); i != spritelist->end(); ++i ) {
@@ -339,8 +339,10 @@ list<Sprite*> *SpriteManager::GetSpritesNear(Coordinate c, float r, int type) {
 		}
 	}
 
-	// Sort sprites by their distance from the coordinate c
-	//sprites->sort(compareSpriteDistFromPoint(c));
+	if(sorted) {
+		// Sort sprites by their distance from the coordinate c
+		sprites->sort(compareSpriteDistFromPoint(c));
+	}
 
 	return( sprites );
 }

@@ -75,15 +75,15 @@ end
 function targetShip()
 	if Epiar.isPaused() == 1 then return end
 
-	local x,y = PLAYER:GetPosition()
+	local x, y = PLAYER:GetPosition()
 	local nearby = Epiar.getNearbyNPCs(x, y, 0)
 	
 	-- Nothing to target
 	if #nearby == 0 then return end
 	
+	-- Target the nearest sprite, else the next nearest from an existing target
 	local nextTarget = 1
 	local currentTarget = HUD.getTarget()
-	local lastdist = 0
 
 	for s = 1, #nearby - 1 do
 		if nearby[s]:GetID() == currentTarget then
@@ -92,15 +92,22 @@ function targetShip()
 		end
 	end
 	
-	HUD.setTarget(nearby[nextTarget]:GetID()) -- First ID in the list
+	HUD.setTarget(nearby[nextTarget]:GetID())
 end
 
 ---Target closest ship
 function targetClosestShip()
-	local nextTarget = Epiar.nearestShip( PLAYER, 4096 )
+	local x, y = PLAYER:GetPosition()
+	local nearby = Epiar.getNearbyNPCs(x, y, 0)
+
+	-- Nothing to target
+	if #nearby == 0 then return end
+
+	-- local nextTarget = Epiar.nearestShip( PLAYER, 4096 )
+	local nextTarget = nearby[1]
 
 	if not nextTarget then return end
-	
+
 	HUD.newAlert(1, "Targeting "..nextTarget:GetModelName().." "..nextTarget:GetName())
 	HUD.setTarget(nextTarget:GetID())
 end

@@ -49,8 +49,8 @@ class Scenario_Lua {
 		// Sprite Fetchers
 		static int GetPlayer(lua_State *L);
 		static int GetSpriteByID(lua_State *L);
-		static int GetSprites(lua_State *L, int type);
-		static int GetNearestSprite(lua_State *L, int type=DRAW_ORDER_ALL);
+		static int GetSprites(lua_State *L, int includeKind, int excludeKind);
+		static int GetNearestSprite(lua_State *L, int type = DRAW_ORDER_ALL);
 		static int GetNearestShip(lua_State *L);
 		static int GetNearestPlanet(lua_State *L);
 		static int GetNearbyNPCs(lua_State *L);
