@@ -89,7 +89,7 @@ void Camera::TranslateWorldToScreen( Coordinate &world, Coordinate &screen ) {
 	int tx, ty;
 
 	tx = (int)(world.GetX() - x + Video::GetHalfWidth());
-	ty = (int)(world.GetY() - y + Video::GetHalfHeight());
+	ty = (int)(y - world.GetY() + Video::GetHalfHeight());
 
 	screen.SetX( tx );
 	screen.SetY( ty );
@@ -212,4 +212,3 @@ void Camera::Draw( void ) {
 void Camera::Flash( short duration ) {
 	flashUntil = Timer::GetTicks() + duration;
 }
-

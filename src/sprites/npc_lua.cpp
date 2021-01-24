@@ -225,16 +225,16 @@ int NPC_Lua::ShipAccelerate(lua_State* L) {
  * \sa Ship::Rotate(float)
  */
 int NPC_Lua::ShipRotate(lua_State* L) {
-	int n = lua_gettop(L);  // Number of arguments
+	int n = lua_gettop(L); // Number of arguments
 
 	if (n == 2) {
-		NPC* ai = checkShip(L,1);
-		if(ai==NULL) return 0;
+		NPC* ai = checkShip(L, 1);
+		if(ai == NULL) { return 0; }
 		float dir = static_cast<float>( luaL_checknumber(L, 2) );
 		(ai)->Rotate(dir, false);
-	}
-	else
+	} else {
 		luaL_error(L, "Got %d arguments expected 2 (self, direction)", n);
+	}
 
 	return 0;
 }

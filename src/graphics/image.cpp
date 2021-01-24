@@ -162,7 +162,12 @@ void Image::_Draw( int x, int y, float r, float g, float b, float alpha, float a
 	dest.h = h * resize_ratio_h;
 
 	SDL_SetTextureAlphaMod(image, alpha * 255.);
-	SDL_RenderCopyEx(Video::GetRenderer(), image, NULL, &dest, angle, NULL, SDL_FLIP_NONE );
+	// Use the negative of the angle as SDL_RenderCopyEx rotates clockwise while our system uses
+	// the mathematical unit circle system which rotates counter-clockwise
+	// This ensures that e.g. a 90 degree rotation means rotation 90 degrees counter-clockwise,
+	// and that any sprites with an angle of 0 will point to the right, 90 points to the top of the
+	// screen, etc.
+	SDL_RenderCopyEx(Video::GetRenderer(), image, NULL, &dest, -angle, NULL, SDL_FLIP_NONE );
 }
 
 /**\brief Draw the image centered on (x,y)

@@ -71,6 +71,6 @@ void Trig::RotatePoint( float x, float y, float ax, float ay, float *nx, float *
 	float ntheta = theta + ang;
 
 	*nx = ax + (dist * cos( ntheta ) );
-	*ny = ay + (dist * sin( ntheta ) );
+	*ny = ay - (dist * sin( ntheta ) );
 }
 

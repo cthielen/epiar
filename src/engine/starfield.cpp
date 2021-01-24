@@ -80,7 +80,7 @@ void Starfield::Update( Camera *camera ) {
 		stars[i].oy = stars[i].y;
 
 		stars[i].x -= (float)dx * stars[i].clr;
-		stars[i].y -= (float)dy * stars[i].clr;
+		stars[i].y += (float)dy * stars[i].clr;
 
 		// handle wrapping the stars around if they go offscreen top/left
 		while( stars[i].x < 0.0f ) {

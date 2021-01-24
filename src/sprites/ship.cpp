@@ -249,6 +249,12 @@ void Ship::Rotate( float direction, bool rotatingToJump ) {
 	timerDelta = Timer::GetDelta();
 	maxTurning = static_cast<float>((rotPerSecond * timerDelta) * 360.);
 
+	if(this->isPlayer()) {
+		cout << "rotating!" << endl;
+		cout << "\tangle: " << angle << endl;
+		cout << "\tdirection: " << direction << endl;
+	}
+
 	// Cap the ship rotation
 	if (fabs(direction) > maxTurning) {
 		if (direction > 0 ) {
@@ -312,7 +318,14 @@ void Ship::Accelerate( bool acceleratingToJump ) {
 	}
 
 	momentum += Coordinate( trig->GetCos( angle ) * acceleration * Timer::GetDelta(),
-	                trig->GetSin( angle ) * acceleration * Timer::GetDelta() );
+	                        trig->GetSin( angle ) * acceleration * Timer::GetDelta() );
+	
+	if(this->isPlayer()) {
+		cout << "angle: " << angle << endl;
+		cout << "cos: " << trig->GetCos(angle) << endl;
+		cout << "sin: " << trig->GetSin(angle) << endl;
+		cout << "accelerated to momentum: " << momentum << endl;
+	}
 
 	if( status.isJumping == false ) {
 		momentum.EnforceMagnitude(speed);

@@ -309,12 +309,9 @@ void Hud::HandleInput( list<InputEvent> & events, Camera* camera, SpriteManager*
 		// Mouse Clicks
 		if( i->type == MOUSE && i->mstate==MOUSELDOWN) {
 			if( (i->mx > Video::GetWidth() - 129)
-			 && (i->my < Image::Get( "data/skin/hud_radarnav.png" )->GetHeight() + 5) )
-			{
+			 && (i->my < Image::Get( "data/skin/hud_radarnav.png" )->GetHeight() + 5) ) {
 				//Radar::StartLargeMode(camera, sprites);
-			}
-			else
-			{
+			} else {
 				Coordinate screenPos(i->mx, i->my), worldPos;
 				camera->TranslateScreenToWorld( screenPos, worldPos );
 				// Target any clicked Sprite
@@ -746,8 +743,7 @@ void Radar::Draw( Camera* camera, SpriteManager* sprites ) {
 	}*/
 
 	list<Sprite*> *spriteList = sprites->GetSpritesNear(camera->GetFocusCoordinate(), (float)visibility);
-	for( list<Sprite*>::const_iterator iter = spriteList->begin(); iter != spriteList->end(); iter++)
-	{
+	for( list<Sprite*>::const_iterator iter = spriteList->begin(); iter != spriteList->end(); iter++) {
 		Coordinate blip;
 		Sprite *sprite = *iter;
 
@@ -785,7 +781,7 @@ void Radar::Draw( Camera* camera, SpriteManager* sprites ) {
  */
 void Radar::WorldToBlip( Coordinate focus, Coordinate &w, Coordinate &b ) {
 	b.SetX( ( ( w.GetX() - focus.GetX() ) / float(visibility) ) * ( RADAR_WIDTH / 2.0 ) );
-	b.SetY( ( ( w.GetY() - focus.GetY() ) / float(visibility) ) * ( RADAR_HEIGHT / 2.0 ) );
+	b.SetY( ( ( focus.GetY() - w.GetY() ) / float(visibility) ) * ( RADAR_HEIGHT / 2.0 ) );
 }
 
 int Radar::GetHeight() {

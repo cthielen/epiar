@@ -205,10 +205,10 @@ Trader = {
 		local p = Epiar.getSprite( AIData[id].destination )
 
 		local px,py = p:GetPosition()
-		local dist = distfrom(px,py,x,y)
+		local dist = distfrom(px, py, x, y)
 		if speed > 0.5 then
 			cur_ship:Rotate( - cur_ship:directionTowards( cur_ship:GetMomentumAngle() ) )
-			if dist>100 and math.abs(180 - math.abs(cur_ship:GetMomentumAngle() - cur_ship:GetAngle())) <= 10 then
+			if dist > 100 and math.abs(180 - math.abs(cur_ship:GetMomentumAngle() - cur_ship:GetAngle())) <= 10 then
 				cur_ship:Accelerate()
 			end
 		end
@@ -219,17 +219,26 @@ Trader = {
 	end,
 	--ComputingRoute = GateTraveler.ComputingRoute,
 	--GateTravelling = GateTraveler.GateTravelling,
-	Travelling = function(id,x,y,angle,speed,vector)
+	Travelling = function(id, x, y, angle, speed, vector)
 		if AIData[id].hostile == 1 then return "Hunting" end
+
 		-- Get to the planet
 		local cur_ship = Epiar.getSprite(id)
 
 		local p = Epiar.getSprite( AIData[id].destination )
 		if p == nil then return "New_Planet" end
+
 		local px,py = p:GetPosition()
-		cur_ship:Rotate( cur_ship:directionTowards(px,py) )
+
+		cur_ship:Rotate( cur_ship:directionTowards(px, py) )
 		cur_ship:Accelerate()
-		if distfrom(px,py,x,y) < 800 then
+
+		--if id == 6 then
+		--	io.write("Trader["..id.."] at ("..x..","..y..") heading toward ("..px..","..py..")\n")
+		--	io.flush()
+		--end
+
+		if distfrom(px, py, x, y) < 800 then
 			return "New_Planet"
 		end
 	end,
@@ -532,4 +541,3 @@ Escort = {
 		return "Accompanying"
 	end,
 }
-

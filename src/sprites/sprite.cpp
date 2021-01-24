@@ -106,16 +106,26 @@ void Sprite::Draw( void ) {
 	double fframe = Timer::GetFFrame();
 
 	if( image ) {
-		if(interpolateOn && (interpolationUpdateCheck >= 2)) {
-			Coordinate interpolatedScreenPosition;
+		// if(interpolateOn && (interpolationUpdateCheck >= 2)) {
+		// 	Coordinate interpolatedScreenPosition;
 
-			interpolatedScreenPosition.SetX(oldScreenPosition.GetX() * (1.0f - fframe) + screenPosition.GetX() * fframe);
-			interpolatedScreenPosition.SetY(oldScreenPosition.GetY() * (1.0f - fframe) + screenPosition.GetY() * fframe);
+		// 	interpolatedScreenPosition.SetX(oldScreenPosition.GetX() * (1.0f - fframe) + screenPosition.GetX() * fframe);
+		// 	interpolatedScreenPosition.SetY(oldScreenPosition.GetY() * (1.0f - fframe) + screenPosition.GetY() * fframe);
 
-			image->DrawCentered( interpolatedScreenPosition.GetX(), interpolatedScreenPosition.GetY(), angle );
-		} else {
+		// 	image->DrawCentered( interpolatedScreenPosition.GetX(), interpolatedScreenPosition.GetY(), angle );
+		// } else {
 			image->DrawCentered( screenPosition.GetX(), screenPosition.GetY(), angle );
-		}
+		// }
+
+				SansSerif->SetColor( WHITE );
+		std::ostringstream stringStream;
+  		stringStream << "(" << worldPosition.GetX() << "," << worldPosition.GetY() << ")";;
+  		string coords = stringStream.str();
+		SansSerif->Render( screenPosition.GetX(), screenPosition.GetY() + GetImage()->GetHalfHeight(), coords);
+		std::ostringstream stringStream2;
+		stringStream2 << this->GetAngle();
+		SansSerif->Render( screenPosition.GetX(), screenPosition.GetY() + GetImage()->GetHalfHeight() + 50, stringStream2.str());
+
 	} else {
 		LogMsg(WARN, "Attempt to draw a sprite before an image was assigned." );
 	}

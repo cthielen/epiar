@@ -9,8 +9,8 @@ playerCommands = {
 	-- KEYPRESSED triggers every update loop so long as that key is held down
 	-- KEYTYPED triggers once every time the key is typed
 	{'up', "Accelerate", "PLAYER:Accelerate()",KEYPRESSED},
-	{'left', "Turn Left", "PLAYER:Rotate(-30)",KEYPRESSED},
-	{'right', "Turn Right", "PLAYER:Rotate(30)",KEYPRESSED},
+	{'left', "Turn Left", "PLAYER:Rotate(30)",KEYPRESSED},
+	{'right', "Turn Right", "PLAYER:Rotate(-30)",KEYPRESSED},
 	{'down', "Reverse", "PLAYER:Rotate(PLAYER:directionTowards(PLAYER:GetMomentumAngle() + 180 ))",KEYPRESSED},
 
 	-- Basic Actions

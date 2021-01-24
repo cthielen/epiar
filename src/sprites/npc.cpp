@@ -156,11 +156,12 @@ void NPC::Killed( lua_State *L ) {
  */
 void NPC::Draw(){
 	this->Ship::Draw();
+
 	//if( OPTION(int,"options/development/debug-ai") ) {
-	//	Coordinate position = this->GetWorldPosition();
-	//	SansSerif->SetColor( WHITE );
-	//	SansSerif->Render(position.GetScreenX(),position.GetScreenY()+GetImage()->GetHalfHeight(),stateMachine);
-	//	SansSerif->Render(position.GetScreenX(),position.GetScreenY()+GetImage()->GetHalfHeight()+20,state);
+		Coordinate position = this->GetScreenPosition();
+		SansSerif->SetColor( WHITE );
+		SansSerif->Render( position.GetX(), position.GetY() + GetImage()->GetHalfHeight(), stateMachine);
+		SansSerif->Render(position.GetX(), position.GetY() + GetImage()->GetHalfHeight() + 20, state);
 	//}
 }
 
