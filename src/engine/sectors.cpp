@@ -234,7 +234,7 @@ void Sector::GenerateTraffic( int count ) {
 		//	setAccompany(escort:GetID(), s:GetID())
 		//end
 	
-		s->SetRadarColor(Color(255,0,0));
+		s->SetRadarColor(LIGHTBLUE);
 	
 		// Give every AI the standard weapons of their ship's class
 		//attachStandardWeapons(s, weapons)
