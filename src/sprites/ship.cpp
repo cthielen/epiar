@@ -122,6 +122,7 @@ Ship::Ship() {
 	status.isRotatingRight = false;
 	status.isDisabled = false;
 	status.isJumping = false;
+	status.isDocked = false;
 
 	for(int a = 0; a < max_ammo; a++) {
 		ammo[a] = 0;
@@ -351,6 +352,58 @@ void Ship::Accelerate( bool acceleratingToJump ) {
 	}
 }
 
+/**\brief Decelerates the ship.
+ * \sa Model::GetAcceleration
+ */
+void Ship::Decelerate( void ) {
+	if( status.isJumping == true ) {
+		return;
+	}
+
+	Trig *trig = Trig::Instance();
+	Coordinate momentum = GetMomentum();
+	float angle = static_cast<float>(trig->DegToRad( GetAngle() ));
+	// float speed = shipStats.GetMaxSpeed() * status.engineBooster;
+
+	float deceleration = 0.97; // 9.0f * Timer::GetDelta(); // -1.0 / ((shipStats.GetForceOutput() * status.engineBooster ) / shipStats.GetMass());
+
+	// Coordinate decelCoord = Coordinate( trig->GetCos( angle ) * deceleration * Timer::GetDelta(),
+	                        // trig->GetSin( angle ) * deceleration * Timer::GetDelta() );
+
+	// momentum += decelCoord;
+	momentum *= deceleration;
+	
+	if(this->GetID() == 6) {
+		cout << "deceleration : " << deceleration << endl;
+		// cout << "decelCoord   : " << decelCoord << endl;
+		cout << "momentum     : " << momentum << endl;
+	}
+	
+	if(momentum.GetMagnitudeSquared() < 0.1) {
+		momentum.SetX(0);
+		momentum.SetY(0);
+	}
+
+	//momentum.EnforceMagnitude(speed);
+	SetMomentum( momentum );
+
+	//status.isAccelerating = true;
+	//status.lastAccelerationAt = Timer::GetTicks();
+
+	// // Play engine sound
+	// if( engine->GetSound() != NULL) {
+	// 	float engvol = OPTION(float, "options/sound/engines");
+
+	// 	Coordinate offset = GetWorldPosition() - Menu::GetCurrentScenario()->GetCamera()->GetFocusCoordinate();
+
+	// 	if ( this->GetDrawOrder() == DRAW_ORDER_SHIP ) {
+	// 		engvol = engvol * NON_PLAYER_SOUND_RATIO;
+	// 	}
+
+	// 	this->engine->GetSound()->SetVolume( engvol );
+	// 	this->engine->GetSound()->PlayNoRestart( offset );
+	// }
+}
 
 /**\brief Adds damage to hull or shield
  */

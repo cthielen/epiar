@@ -31,6 +31,7 @@ class Ship : public Sprite {
 		void Rotate( float direction, bool rotatingToJump );
 		bool RotateToAngle( float angle );
 		void Accelerate( bool acceleratingToJump );
+		void Decelerate( void );
 		bool Jump( Sector* destination );
 		float GetJumpAngle() { return status.jumpAngle; };
 
@@ -111,7 +112,8 @@ class Ship : public Sprite {
 		virtual int GetDrawOrder( void ) {
 			return( DRAW_ORDER_SHIP );
 		}
-		//Power Distirubution functions
+
+		// Power Distirubution functions
 		float GetShieldBoost() { return status.shieldBooster; }
 		float GetEngineBoost() { return status.engineBooster; }
 		float GetDamageBoost() { return status.damageBooster; }
@@ -127,9 +129,10 @@ class Ship : public Sprite {
 		Engine *engine;
 		Animation *flareAnimation;
 		Outfit shipStats;
+
 		//power distribution variables
 
-		enum Group{ PRIMARY, SECONDARY, MAX_GROUPS };
+		enum Group { PRIMARY, SECONDARY, MAX_GROUPS };
 
 		FireStatus Fire( Group group, int target = -1 );
 		FireStatus FireSlot( int slot, int target = -1 );
@@ -156,6 +159,10 @@ class Ship : public Sprite {
 			Sector* jumpDestination;
 			bool rotatedForJump;
 
+			/* Docking */
+			Uint32 lastDockedAt; // timestamp of the start of most recent docking, used by AI to determine when to
+			                     // consider docking complete and fly away
+
 			/* Acceleration */
 			Uint32 lastAccelerationAt; // timestamp of last time the player accelerated,
 			                           // used so we can fade out the animation instead of abruptly stopping it
@@ -166,6 +173,7 @@ class Ship : public Sprite {
 			bool isRotatingRight;  ///< Cleared by update, set by turning right (so it's always updated twice a loop)
 			bool isDisabled; ///< Set when a ship is disabled (cannot move, may self-repair)
 			bool isJumping; ///< Set when a ship is currently jumping
+			bool isDocked;
 		} status;
 
 		// Weapon Systems

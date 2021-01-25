@@ -198,8 +198,9 @@ Hunter = {
 Trader = {
 	Hunting = Hunter.Hunting,
 	Killing = Hunter.Killing,
-	Docking = function(id,x,y,angle,speed,vector)
+	Docking = function(id, x, y, angle, speed, vector)
 		if AIData[id].hostile == 1 then return "Hunting" end
+
 		-- Stop on this planet
 		local cur_ship = Epiar.getSprite(id)
 		local p = Epiar.getSprite( AIData[id].destination )
@@ -228,7 +229,7 @@ Trader = {
 		local p = Epiar.getSprite( AIData[id].destination )
 		if p == nil then return "New_Planet" end
 
-		local px,py = p:GetPosition()
+		local px, py = p:GetPosition()
 
 		cur_ship:Rotate( cur_ship:directionTowards(px, py) )
 		cur_ship:Accelerate()
@@ -238,9 +239,17 @@ Trader = {
 		--	io.flush()
 		--end
 
-		if distfrom(px, py, x, y) < 800 then
-			return "New_Planet"
+		if distfrom(px, py, x, y) < 300 then
+			return "Docking"
 		end
+	end,
+	Docking = function(id,x,y,angle,speed,vector,state)
+		local cur_ship = Epiar.getSprite(id)
+		--local speed = cur_ship:GetMomentumSpeed()
+
+		--if cur_ship:GetMomentumSpeed() ~= 0 then
+		 	cur_ship:Decelerate()
+		--end
 	end,
 	New_Planet = FindADestination,
 	default = function(id,x,y,angle,speed,vector,state)

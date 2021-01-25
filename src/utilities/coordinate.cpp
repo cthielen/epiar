@@ -64,9 +64,8 @@ SDL_Rect  Coordinate::getRectWithDim ( int w, int h ) {
 
 float Coordinate::GetAngle() {
 	// 0 is right, 90 is up
-	// Due to the way coordinates are displayed, use negative Y
 	Trig *trig = Trig::Instance();
-	return static_cast<float>(trig->RadToDeg( static_cast<float>(atan2( static_cast<float>(-m_y)
+	return static_cast<float>(trig->RadToDeg( static_cast<float>(atan2( static_cast<float>(m_y)
 					,static_cast<float>( m_x ))) ));
 }
 

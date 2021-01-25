@@ -27,6 +27,7 @@ class NPC_Lua {
 
 		// Actions
 		static int ShipAccelerate(lua_State* L);
+		static int ShipDecelerate(lua_State* L);
 		static int ShipRotate(lua_State* L);
 		static int ShipRadarColor(lua_State* L);
 		static int ShipFirePrimary(lua_State* L);

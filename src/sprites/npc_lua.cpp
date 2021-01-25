@@ -41,6 +41,7 @@ void NPC_Lua::RegisterAI(lua_State *L){
 	static const luaL_Reg shipMethods[] = {
 		// Actions
 		{"Accelerate", &NPC_Lua::ShipAccelerate},
+		{"Decelerate", &NPC_Lua::ShipDecelerate},
 		{"Rotate", &NPC_Lua::ShipRotate},
 		{"SetRadarColor", &NPC_Lua::ShipRadarColor},
 		{"FirePrimary", &NPC_Lua::ShipFirePrimary},
@@ -214,6 +215,24 @@ int NPC_Lua::ShipAccelerate(lua_State* L) {
 		if(ai == NULL) return 0;
 		luaL_argcheck(L, ai != NULL, 1, "`array' expected");
 		(ai)->Accelerate( false );
+	} else {
+		luaL_error(L, "Got %d arguments expected 2 (self, direction)", n);
+	}
+
+	return 0;
+}
+
+/**\brief Lua callable function to decelerate the ship.
+ * \sa Ship::Accelerate()
+ */
+int NPC_Lua::ShipDecelerate(lua_State* L) {
+	int n = lua_gettop(L);  // Number of arguments
+
+	if (n == 1) {
+		NPC* ai = checkShip(L, 1);
+		if(ai == NULL) return 0;
+		luaL_argcheck(L, ai != NULL, 1, "`array' expected");
+		(ai)->Decelerate();
 	} else {
 		luaL_error(L, "Got %d arguments expected 2 (self, direction)", n);
 	}
@@ -923,16 +942,16 @@ int NPC_Lua::ShipGetMomentumAngle(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		NPC* ai= checkShip(L,1);
-		if(ai==NULL){
+		NPC* ai = checkShip(L,1);
+		if(ai == NULL){
 			lua_pushnumber(L, 0 );
 		} else {
 			lua_pushnumber(L, (double) (ai)->GetMomentum().GetAngle() );
 		}
-	}
-	else {
+	} else {
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 	}
+
 	return 1;
 }
 
@@ -940,49 +959,50 @@ int NPC_Lua::ShipGetMomentumAngle(lua_State* L){
  * \sa Sprite::GetMomentum()
  * \sa Coordinate::GetMagnitude()
  */
-int NPC_Lua::ShipGetMomentumSpeed(lua_State* L){
+int NPC_Lua::ShipGetMomentumSpeed(lua_State* L) {
 	int n = lua_gettop(L);  // Number of arguments
 
 	if (n == 1) {
-		NPC* ai = checkShip(L,1);
-		if(ai==NULL){
+		NPC* ai = checkShip(L, 1);
+		if(ai == NULL){
 			lua_pushnumber(L, 0 );
 		} else {
-		lua_pushnumber(L, (double) (ai)->GetMomentum().GetMagnitude() );
+			lua_pushnumber(L, (double) (ai)->GetMomentum().GetMagnitude() );
 		}
-	}
-	else {
+	} else {
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 	}
+
 	return 1;
 }
 
 /**\brief Lua callable function to get the ship's direction towards target.
  * \sa Ship::directionTowards
  */
-int NPC_Lua::ShipGetDirectionTowards(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
+int NPC_Lua::ShipGetDirectionTowards(lua_State* L) {
+	int n = lua_gettop(L); // Number of arguments
+
 	if (n == 2) { // Angle
-		NPC* ai = checkShip(L,1);
-		if(ai==NULL){
-			lua_pushnumber(L, 0 );
+		NPC* ai = checkShip(L, 1);
+		if(ai == NULL){
+			lua_pushnumber(L, 0);
 		} else {
 			float angle = static_cast<float>( luaL_checknumber(L, 2) );
 			lua_pushnumber(L, (double) (ai)->GetDirectionTowards(angle) );
 		}
-	}
-	else if(n==3){ // Coordinate
-		NPC* ai = checkShip(L,1);
-		if(ai==NULL){
+	} else if(n == 3) { // Coordinate
+		NPC* ai = checkShip(L, 1);
+		if(ai == NULL) {
 			lua_pushnumber(L, 0 );
 		} else {
 			double x = static_cast<float>( luaL_checknumber(L, 2) );
 			double y = static_cast<float>( luaL_checknumber(L, 3) );
-			lua_pushnumber(L, (double) (ai)->GetDirectionTowards(Coordinate(x,y)) );
+			lua_pushnumber(L, (double) (ai)->GetDirectionTowards(Coordinate(x, y)) );
 		}
 	} else {
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 	}
+
 	return 1;
 }
 
