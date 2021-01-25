@@ -413,7 +413,6 @@ bool Ship::Jump( Sector* destination ) {
 
 	// Calculate angle between currentSector and nextSector
 	Coordinate c = Coordinate(destination->GetX() - currentSector->GetX(), destination->GetY() - currentSector->GetY());
-	c.SetY( c.GetY() * -1 ); // invert y axis
 	status.jumpAngle = c.GetAngle();
 
 	return true;
