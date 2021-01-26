@@ -42,7 +42,7 @@ int Timer::Update( void ) {
 
 	if(pausedAt > 0) { pauseDelay += lastLoopLength; }
 
-	double dt = (double)lastLoopLength * 0.001f;
+	double dt = (double)lastLoopLength / 1000.0f;
 	double new_frames = dt * LOGIC_FPS;
 
 	int logical_loops = static_cast<int>(floor(frames + new_frames) - floor(frames));

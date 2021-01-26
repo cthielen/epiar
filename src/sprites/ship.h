@@ -18,6 +18,9 @@
 #include "sprites/projectile.h"
 #include <map>
 
+// SECONDS_TO_FULL_STOP is used when NPCs are coming to a stop while docking
+#define SECONDS_TO_FULL_STOP 1.5
+
 class Ship : public Sprite {
 	public:
 		Ship();

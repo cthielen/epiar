@@ -360,24 +360,12 @@ void Ship::Decelerate( void ) {
 		return;
 	}
 
-	Trig *trig = Trig::Instance();
 	Coordinate momentum = GetMomentum();
-	float angle = static_cast<float>(trig->DegToRad( GetAngle() ));
-	// float speed = shipStats.GetMaxSpeed() * status.engineBooster;
 
-	float deceleration = 0.97; // 9.0f * Timer::GetDelta(); // -1.0 / ((shipStats.GetForceOutput() * status.engineBooster ) / shipStats.GetMass());
+	int logicalFramesToStop = SECONDS_TO_FULL_STOP * LOGIC_FPS;
+	float deceleration = (1.0 - (1.0 / logicalFramesToStop));
 
-	// Coordinate decelCoord = Coordinate( trig->GetCos( angle ) * deceleration * Timer::GetDelta(),
-	                        // trig->GetSin( angle ) * deceleration * Timer::GetDelta() );
-
-	// momentum += decelCoord;
 	momentum *= deceleration;
-	
-	if(this->GetID() == 6) {
-		cout << "deceleration : " << deceleration << endl;
-		// cout << "decelCoord   : " << decelCoord << endl;
-		cout << "momentum     : " << momentum << endl;
-	}
 	
 	if(momentum.GetMagnitudeSquared() < 0.1) {
 		momentum.SetX(0);

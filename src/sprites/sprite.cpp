@@ -103,7 +103,7 @@ void Sprite::UpdateScreenCoordinates( void ) {
  * \sa SpriteManager::Draw
  */
 void Sprite::Draw( void ) {
-	double fframe = Timer::GetFFrame();
+	// double fframe = Timer::GetFFrame();
 
 	if( image ) {
 		// if(interpolateOn && (interpolationUpdateCheck >= 2)) {

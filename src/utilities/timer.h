@@ -1,7 +1,7 @@
 /**\file			timer.h
  * \author			Christopher Thielen (chris@epiar.net)
  * \date			Created: Unknown (2006?)
- * \date			Modified: Saturday, January 5, 2008
+ * \date			Modified: Monday, January 25, 2021
  * \brief
  * \details
  */
@@ -9,7 +9,9 @@
 #ifndef __h_timer__
 #define __h_timer__
 
-#define LOGIC_FPS     30.0 /* DO NOT CHANGE THIS. THE VELOCITIES IN THIS GAME ARE BASED ON A LOGICAL FPS of 30 / s. THIS IS THE GAME LOGIC RATE, NOT THE VIDEO FRAME RATE! */
+/* DO NOT CHANGE LOGIC_FPS. THE VELOCITIES IN THIS GAME ARE BASED ON A LOGICAL FPS of 30 / s.
+ * THIS IS THE GAME LOGIC RATE, NOT THE VIDEO FRAME RATE! */
+#define LOGIC_FPS     30.0
 #define INITIAL_DELAY 5
 
 #include "includes.h"
@@ -32,7 +34,7 @@ class Timer {
 		static Uint32 lastLoopLength;
 		static Uint32 lastLoopTick;
 		static Uint32 logicalFrameCount;
-		static double frames;
+		static double frames; // running count of total logic frames that should have occurred
 		static double fframe;
 		static int lastLogicalLoops;
 		static int delayMS;
