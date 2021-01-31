@@ -333,10 +333,10 @@ void Hud::DrawMessages() {
 	int now = Timer::GetTicks();
 	list<AlertMessage>::reverse_iterator i;
 	Uint32 age;
-	Uint32 alertFade = OPTION(Uint32,"options/timing/alert-fade");
-	Uint32 alertDrop = OPTION(Uint32,"options/timing/alert-drop");
+	Uint32 alertFade = OPTION(Uint32, "options/timing/alert-fade");
+	Uint32 alertDrop = OPTION(Uint32, "options/timing/alert-drop");
 
-	for( i = AlertMessages.rbegin(), j=1; (i != AlertMessages.rend()) && (j <= MAX_ALERTS); ++i,++j ){
+	for( i = AlertMessages.rbegin(), j = 1; (i != AlertMessages.rend()) && (j <= MAX_ALERTS); ++i,++j ){
 		age = now - (*i).start;
 		if(age > alertFade) {
 			AlertFont->SetColor( AlertColor, 1.f - float((age - alertFade)) / float(alertDrop - alertFade) );

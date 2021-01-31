@@ -21,6 +21,9 @@
 // SECONDS_TO_FULL_STOP is used when NPCs are coming to a stop while docking
 #define SECONDS_TO_FULL_STOP 1.5
 
+// Minimum distance required to start a jump for all ships
+#define MIN_DIST_FROM_PLANET_TO_JUMP 2000
+
 class Ship : public Sprite {
 	public:
 		Ship();

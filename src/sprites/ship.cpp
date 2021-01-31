@@ -436,6 +436,19 @@ bool Ship::Jump( Sector* destination ) {
 		return false;
 	}
 
+	// Check whether 'this' ship is too close to a planet to jump
+	SpriteManager *sprites = Menu::GetCurrentScenario()->GetSpriteManager();
+	Sprite *s = sprites->GetNearestSprite(this, MIN_DIST_FROM_PLANET_TO_JUMP, DRAW_ORDER_PLANET);
+	if( s != NULL ) {
+		if(this->isPlayer()) {
+			Planet *p = (Planet *)s;
+			// Put a HUD message
+			Hud::Alert(true, "Cannot initiate jump sequence, too close to planet %s", p->GetName().c_str());
+		}
+		return false;
+	}
+
+
 	status.isJumping = true;
 	//status.jumpDestination = position;
 

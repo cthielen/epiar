@@ -86,8 +86,8 @@ void Options::Initialize( void ) {
 	// Timing
 	defaults.insert( std::pair<string,string>("options/timing/mouse-fade", "500") );
 	defaults.insert( std::pair<string,string>("options/timing/target-zoom", "500") );
-	defaults.insert( std::pair<string,string>("options/timing/alert-drop", "3500") );
-	defaults.insert( std::pair<string,string>("options/timing/alert-fade", "2500") );
+	defaults.insert( std::pair<string,string>("options/timing/alert-drop", "7500") );
+	defaults.insert( std::pair<string,string>("options/timing/alert-fade", "4500") );
 
 	// Development
 	defaults.insert( std::pair<string,string>("options/development/debug-ai", "0") );
