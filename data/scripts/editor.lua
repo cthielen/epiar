@@ -241,10 +241,12 @@ function showComponent(kind, name)
 					Audio.playSound( sound )
 				end
 			end
+
 			-- TODO: This should be a Picture of a Speaker rather than (((
-			theWin:add( UI.newButton( 190, yoff, 20,20, "(((", string.format("previewSound( %q, %q )", subgroup, thisDropdown) ) )
+			theWin:add( UI.newButton( 190, yoff, 20, 20, "(((", string.format("previewSound( %q, %q )", subgroup, thisDropdown) ) )
 			theWin:add(field)
-			yoff = yoff+20
+
+			yoff = yoff + 20
 		elseif fieldType == "Component" then
 			theWin:add(UI.newLabel( 10, yoff, title..":"))
 			componentsFunc = layout[3]

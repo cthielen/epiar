@@ -13,7 +13,7 @@
 #include "sound.h"
 
 /**\class Audio_Lua
- * \brief Lua bridge fro UI. */
+ * \brief Lua bridge for UI. */
 
 /**\brief Register's C++ functions to be callable in Lua.
  */
@@ -38,7 +38,7 @@ void Audio_Lua::RegisterAudio(lua_State *L){
 
 	luaL_openlib(L, EPIAR_AUDIO, auFunctions, 0);
 
-	lua_pop(L,2);
+	lua_pop(L, 2);
 }
 
 int Audio_Lua::setSoundVolume(lua_State *L) {

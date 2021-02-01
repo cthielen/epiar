@@ -73,6 +73,7 @@ epiar_SOURCES = src/main.cpp \
                 src/utilities/options.cpp \
                 src/utilities/resource.cpp \
                 src/utilities/timer.cpp \
+                src/utilities/timer_lua.cpp \
                 src/utilities/trig.cpp \
                 src/utilities/xmlfile.cpp
 

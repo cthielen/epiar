@@ -29,7 +29,7 @@
 
 /**\brief Load all Planet related Lua functions
  */
-void Planets_Lua::RegisterPlanets(lua_State *L){
+void Planets_Lua::RegisterPlanets(lua_State *L) {
 	static const luaL_Reg PlanetFunctions[] = {
 		// Normally we would put a "new" function here.
 		// Lua may not ever need to create planets though.

@@ -63,6 +63,7 @@ double Timer::GetFFrame( void ) {
 	return fframe;
 }
 
+// Similar to SDL's GetTicks() but accounts for game pause (ticks do not increase during pause)
 Uint32 Timer::GetTicks( void ) {
 	return lastLoopTick - pauseDelay;
 }
@@ -126,4 +127,9 @@ void Timer::Unpause( void ) {
 /* Returns ticks since 'timestamp' relative to Timer::GetTicks() */
 Uint32 Timer::TicksSince( Uint32 timestamp ) {
 	return Timer::GetTicks() - timestamp;
+}
+
+// Returns the logical timestamp in ticks after 's' seconds from now
+Uint32 Timer::TimestampAfterSeconds( int s ) {
+	return Timer::GetTicks() + (s * 1000);
 }

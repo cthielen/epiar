@@ -35,6 +35,7 @@
 #include "utilities/file.h"
 #include "utilities/log.h"
 #include "utilities/timer.h"
+#include "utilities/timer_lua.h"
 #include "utilities/lua.h"
 
 // Distance from sector's center player should arrive at after jump completion
@@ -564,6 +565,7 @@ void Scenario::LuaRegisters(lua_State *L) {
 	Hud::RegisterHud(L);
 	Video::RegisterVideo(L);
 	Calendar_Lua::RegisterCalendar(L);
+	Timer_Lua::RegisterTimer(L);
 }
 
 /**\brief Parses the scenario XML file

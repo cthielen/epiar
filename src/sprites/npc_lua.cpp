@@ -51,9 +51,10 @@ void NPC_Lua::RegisterAI(lua_State *L){
 		{"Explode", &NPC_Lua::ShipExplode},
 		{"Remove", &NPC_Lua::ShipRemove},
 		{"Land", &NPC_Lua::ShipLand},
+		{"Dock", &NPC_Lua::ShipDock},
 		{"SetLuaControlFunc", &NPC_Lua::ShipSetLuaControlFunc},
 		
-		//Power Distribution
+		// Power Distribution
 		{"GetShieldBooster", &NPC_Lua::ShipGetShieldBooster},
 		{"GetEngineBooster", &NPC_Lua::ShipGetEngineBooster},
 		{"GetDamageBooster", &NPC_Lua::ShipGetDamageBooster},
@@ -110,8 +111,6 @@ void NPC_Lua::RegisterAI(lua_State *L){
 		{"GetTotalCost", &NPC_Lua::ShipGetTotalCost},
 		{"IsDisabled", &NPC_Lua::ShipIsDisabled},
 		{"GetMissions", &NPC_Lua::ShipGetMissions},
-		//{"GetWorldPosition", &NPC_Lua::ShipGetWorldPosition},
-		//{"SetWorldPosition", &NPC_Lua::ShipSetWorldPosition},
 		{"GetHullDamage", &NPC_Lua::ShipGetHullDamage},
 		{"SetHullDamage", &NPC_Lua::ShipSetHullDamage},
 		{"GetShieldDamage", &NPC_Lua::ShipGetShieldDamage},
@@ -139,7 +138,7 @@ void NPC_Lua::RegisterAI(lua_State *L){
 
 	luaL_openlib(L, EPIAR_SHIP, shipFunctions, 0);
 
-	lua_pop(L,2);
+	lua_pop(L, 2);
 }
 
 /**\brief Validates Ship in Lua.
@@ -798,19 +797,21 @@ int NPC_Lua::ShipGetType(lua_State* L){
  * \sa Sprite::GetID()
  */
 int NPC_Lua::ShipGetID(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
+	int n = lua_gettop(L); // Number of arguments
 
 	if (n == 1) {
-		NPC* ai = checkShip(L,1);
-		if(ai==NULL){
-			lua_pushnumber(L, 0 );
+		NPC* ai = checkShip(L, 1);
+
+		if(ai == NULL) {
+			lua_pushnumber(L, 0);
 			return 1;
 		}
+
 		lua_pushinteger(L, (ai)->GetID() );
-	}
-	else {
+	} else {
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 	}
+
 	return 1;
 }
 
@@ -1591,52 +1592,60 @@ int NPC_Lua::ShipSetWeaponSlotStatus(lua_State* L){
 /**\brief Lua callable function to set firing group of a weapon slot
  */
 int NPC_Lua::ShipSetWeaponSlotFG(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
+	int n = lua_gettop(L); // Number of arguments
 
 	if (n == 3) {
-		Ship* s = checkShip(L,1);
+		Ship* s = checkShip(L, 1);
+
 		int slotNum = luaL_checkint (L, 2);
 		short int fg = luaL_checkint (L, 3);
-		if(s==NULL){
+
+		if(s == NULL) {
 			lua_pushstring(L, "");
 			return 1;
 		}
+
 		s->SetWeaponSlotFG(slotNum, fg);
 	} else {
 		luaL_error(L, "Got %d arguments expected 3 (ship, slot, fg)", n);
 	}
+
 	return 1;
 }
 
 /**\brief Lua callable function to get firing group of a weapon slot
  */
 int NPC_Lua::ShipGetWeaponSlotFG(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
+	int n = lua_gettop(L); // Number of arguments
 
 	if (n == 2) {
-		Ship* s = checkShip(L,1);
+		Ship* s = checkShip(L, 1);
 		int slotNum = luaL_checkint (L, 2);
-		if(s==NULL){
+
+		if(s == NULL) {
 			lua_pushstring(L, "");
 			return 1;
 		}
+
 		lua_pushinteger(L, (s)->GetWeaponSlotFG(slotNum) );
 	} else {
 		luaL_error(L, "Got %d arguments expected 2 (ship, slot)", n);
 	}
+
 	return 1;
 }
 
 /**\brief Lua callable function to get the ship's weapons as defined by the weapon slots
  * You don't normally want to use this function unless you are changing ships.
  */
-int NPC_Lua::ShipGetWeaponSlotContents(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
-	if (n != 1)
+int NPC_Lua::ShipGetWeaponSlotContents(lua_State* L) {
+	int n = lua_gettop(L); // Number of arguments
+	if (n != 1) {
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
+	}
 
-	Ship* s = checkShip(L,1);
-	if(s==NULL){
+	Ship* s = checkShip(L, 1);
+	if(s == NULL) {
 		return 0;
 	}
 
@@ -1645,12 +1654,14 @@ int NPC_Lua::ShipGetWeaponSlotContents(lua_State* L){
 
 	lua_createtable(L, weaps.size(), 0);
 	int newTable = lua_gettop(L);
-	while( it!=weaps.end() ) {
+
+	while( it != weaps.end() ) {
 		lua_pushfstring(L, ((*it).first).c_str() );
 		lua_pushfstring(L, ((*it).second).c_str() );
-		lua_settable(L,newTable);
+		lua_settable(L, newTable);
 		++it;
 	}
+
 	return 1;
 }
 
@@ -1658,73 +1669,111 @@ int NPC_Lua::ShipGetWeaponSlotContents(lua_State* L){
  */
 int NPC_Lua::ShipSetLuaControlFunc(lua_State* L){
 	int n = lua_gettop(L);  // Number of arguments
+
 	if (n == 2) {
-		Player *p = (Player *)checkShip(L,1);
+		Player *p = (Player *)checkShip(L, 1);
 		if( p == NULL ) return 0;
+
 		if( p->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
 			return luaL_error(L, "Only players may be controlled ");
 		}
+
 		string controlFunc = luaL_checkstring (L, 2);
+		
 		(p)->SetLuaControlFunc( controlFunc );
 	} else {
 		luaL_error(L, "Got %d arguments expected 2 (ship, controlFunc)", n);
 	}
+
 	return 0;
 }
 
 
 /**\brief Lua callable function to set the player's Lua control function
  */
-int NPC_Lua::ShipLand(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
+int NPC_Lua::ShipLand(lua_State* L) {
+	int n = lua_gettop(L); // Number of arguments
+
 	if (n == 2) {
 		// Get the Player
-		Player *player = (Player *)checkShip(L,1);
+		Player *player = (Player *)checkShip(L, 1);
 		if( player == NULL ) return 0;
 		if( player->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
 			return luaL_error(L, "Only players may accept Missions");
 		}
 
 		// Get the Planet
-		Planet *planet = Planets_Lua::checkPlanet(L,2);
+		Planet *planet = Planets_Lua::checkPlanet(L, 2);
 		if( planet == NULL ) return 0;
 		
 		player->Land( L, planet );
 	} else {
 		luaL_error(L, "Got %d arguments expected 2 (ship, controlFunc)", n);
 	}
+
 	return 0;
+}
+
+/**
+ * "Docking" for NPCs is really waiting a certain number of seconds
+ * while stopped before doing something else.
+ * 
+ * Sets a random duration to remain still for 'docking'.
+ * npc.lua will check when this time expires and exit
+ * the 'docking' state. */
+int NPC_Lua::ShipDock(lua_State* L) {
+	int n = lua_gettop(L); // Number of arguments
+
+	if (n == 1) {
+		// Get the ship
+		Ship *ship = checkShip(L, 1);
+		if( ship == NULL ) return 0;
+
+		// Generate a random duration to dock between 5 and 15 seconds
+		int duration = Timer::TimestampAfterSeconds( (rand() % 10) + 5 );
+
+		lua_pushinteger(L, duration );
+	} else {
+		luaL_error(L, "Got %d arguments expected 1 (ship)", n);
+	}
+
+	return 1;
 }
 
 /** \brief Add an escort to the list to be put into the XML saved game file
  *  \details Keeps track of a bare minimum of information, but not details like hull integrity or non-standard outfits.
  */
-int NPC_Lua::PlayerAddHiredEscort(lua_State* L){
-        int n = lua_gettop(L);  // Number of arguments
-        if (n == 4) {
-                Player* p = (Player*)NPC_Lua::checkShip(L,1);
-                if(p==NULL) return 0;
-                string type = luaL_checkstring (L, 2);
-                int pay = luaL_checkint (L, 3);
-                int spriteID = luaL_checkint (L, 4);
-                (p)->AddHiredEscort(type, pay, spriteID);
-        } else {
-                luaL_error(L, "Got %d arguments expected 4 (player, type, pay, spriteID)", n);
-        }
-        return 0;
+int NPC_Lua::PlayerAddHiredEscort(lua_State* L) {
+	int n = lua_gettop(L); // Number of arguments
+
+	if (n == 4) {
+			Player* p = (Player*)NPC_Lua::checkShip(L, 1);
+			if(p == NULL) return 0;
+
+			string type = luaL_checkstring (L, 2);
+			int pay = luaL_checkint (L, 3);
+			int spriteID = luaL_checkint (L, 4);
+
+			(p)->AddHiredEscort(type, pay, spriteID);
+	} else {
+			luaL_error(L, "Got %d arguments expected 4 (player, type, pay, spriteID)", n);
+	}
+
+	return 0;
 }
 
 /**\brief Lua callable function to Store a number of Commodities on this ship
  * \sa Player::UpdateFavor()
  */
 int NPC_Lua::ShipUpdateFavor(lua_State* L){
-	int n = lua_gettop(L);  // Number of arguments
+	int n = lua_gettop(L); // Number of arguments
+
 	if (n != 3) {
 		return luaL_error(L, "Got %d arguments expected 2 (ship, allianceName, value)", n);
 	}
 
 	// Get the Inputs
-	Player* player = (Player*)NPC_Lua::checkShip(L,1);
+	Player* player = (Player*)NPC_Lua::checkShip(L, 1);
 	if( player == NULL ) return 0;
 	if( player->GetDrawOrder() != DRAW_ORDER_PLAYER ) {
 		return luaL_error(L, "Only players may update their favor");
@@ -1735,12 +1784,14 @@ int NPC_Lua::ShipUpdateFavor(lua_State* L){
 	LogMsg(INFO, "Updating %s Favor by %d.", allianceName.c_str(), value);
 
 	// Check Inputs
-	if(player==NULL) { return 0; }
+	if(player == NULL) { return 0; }
+
 	Alliance *alliance = Scenario_Lua::GetScenario(L)->GetAlliances()->GetAlliance( allianceName );
 	luaL_argcheck(L, alliance != NULL, 2, string("There is no alliance named `" + allianceName + "'").c_str());
 
 	// Update the favor
 	player->UpdateFavor( allianceName, value );
+
 	return 0;
 }
 

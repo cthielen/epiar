@@ -54,8 +54,9 @@ class NPC_Lua {
 		static int ShipSetLuaControlFunc(lua_State* L);
 		static int ShipRemoveLuaControlFunc(lua_State* L);
 		static int ShipLand(lua_State* L);
+		static int ShipDock(lua_State* L);
 
-		//Power Distribution
+		// Power Distribution
 		static int ShipGetShieldBooster(lua_State* L);
 		static int ShipGetEngineBooster(lua_State* L);
 		static int ShipGetDamageBooster(lua_State* L);		
@@ -72,7 +73,6 @@ class NPC_Lua {
 		static int ShipGetAlliance(lua_State* L);
 		static int ShipGetAngle(lua_State* L);
 		static int ShipGetPosition(lua_State* L);
-		//static int ShipSetPosition(lua_State* L);
 		static int ShipGetMomentumAngle(lua_State* L);
 		static int ShipGetMomentumSpeed(lua_State* L);
 		static int ShipGetDirectionTowards(lua_State* L); // Accepts either Angles or Coordinates
@@ -95,7 +95,7 @@ class NPC_Lua {
 		static int ShipUpdateFavor(lua_State* L);
 		static int ShipGetFavor(lua_State* L);
 	
-		// Weapon slot related functions
+		// Weapon slot-related functions
 		static int ShipGetWeaponsAmmo(lua_State* L);
 		static int ShipGetWeaponSlotCount(lua_State* L);
 		static int ShipGetWeaponSlotName(lua_State* L);

@@ -34,7 +34,6 @@ class Audio_Lua {
 		static int getMusicVolume(lua_State *L);
 
 		static int playSound(lua_State *L);
-
-	private:
 };
-#endif /*__H_AUDIO_LUA*/
+
+#endif /*__H_AUDIO_LUA */
