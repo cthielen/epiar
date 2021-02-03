@@ -127,22 +127,24 @@ Coordinate Coordinate::RotateBy( float angle ) {
 	return *this;
 }
 
+// newangle: degrees (out of 360)
 Coordinate Coordinate::RotateTo( float newangle ) {
 	Trig *trig = Trig::Instance();
+	
 	int angle = TO_INT( newangle );
 	float radius = GetMagnitude();
-	m_x = trig->GetCos( angle )*radius;
-	m_y = -trig->GetSin( angle )*radius;
+	
+	m_x = trig->GetCos( angle ) * radius;
+	m_y = trig->GetSin( angle ) * radius;
+
 	return *this;
 }
 
-float randf()
-{
-	return (float)rand()/(float)RAND_MAX;
+float randf() {
+	return (float)rand() / (float)RAND_MAX;
 }
 
-float gaussian()
-{
+float gaussian() {
 	// from http://www.taygeta.com/random/gaussian.html
 	// Algorithm by Dr. Everett (Skip) Carter, Jr.
 
@@ -150,13 +152,11 @@ float gaussian()
 	static float y2;
 	static int use_last = 0;
 
-	if (use_last)		        /* use value from previous call */
-	{
+	if (use_last) {
+		/* use value from previous call */
 		y1 = y2;
 		use_last = 0;
-	}
-	else
-	{
+	} else {
 		do {
 			x1 = 2.0 * randf() - 1.0;
 			x2 = 2.0 * randf() - 1.0;

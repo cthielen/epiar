@@ -207,6 +207,7 @@ Trader = {
 		if AIData[id] == nil then AIData[id] = { } end
 
 		AIData[id].dockingCompleteTimestamp = 0
+		AIData[id].jumping = 0
 
 		local cur_ship = Epiar.getSprite(id)
 
@@ -272,33 +273,29 @@ Trader = {
 		local cur_ship = Epiar.getSprite(id)
 
 		if cur_ship:GetMomentumSpeed() ~= 0 then
-			if id == 6 then
-				io.write("Trader["..id.."] slowing down...\n")
-				io.flush()
-			end
+			-- if id == 6 then
+			-- 	io.write("Trader["..id.."] slowing down...\n")
+			-- 	io.flush()
+			-- end
 			-- Need to slow down ...
 			cur_ship:Decelerate()
 		elseif AIData[id].dockingCompleteTimestamp == 0 then
-			if id == 6 then
-				io.write("Trader["..id.."] setting dock duration...\n")
-				io.flush()
-			end
+			-- if id == 6 then
+			-- 	io.write("Trader["..id.."] setting dock duration...\n")
+			-- 	io.flush()
+			-- end
 			-- No longer moving, time to dock
 			AIData[id].dockingCompleteTimestamp = cur_ship:Dock()
 		else
-			if id == 6 then
-				io.write("Trader["..id.."] waiting dock duration...\n")
-				io.flush()
-				local ticks = Timer.GetTicks()
-				io.write("ticks is "..ticks.."\n")
-				io.flush()
-				if ticks > AIData[id].dockingCompleteTimestamp then
-					-- Done waiting, change state
-					return "Jump_Away"
-				else
-					io.write("waiting ...\n")
-					io.flush()
-				end
+			-- io.write("Trader["..id.."] waiting dock duration...\n")
+			-- io.flush()
+			local ticks = Timer.GetTicks()
+			-- io.write("ticks is "..ticks.."\n")
+			-- io.flush()
+			if ticks > AIData[id].dockingCompleteTimestamp then
+				-- Done waiting, change state
+				AIData[id].dockingCompleteTimestamp = 0
+				return "Jump_Away"
 			end
 			-- Wait the docking duration, then change state from 'Docking'
 		end
@@ -306,11 +303,28 @@ Trader = {
 	end,
 	New_Planet = FindADestination,
 	Jump_Away = function(id, x, y, angle, speed, vector, state)
-		local cur_ship = Epiar.getSprite(id)
+		-- If we're not already jumping ...
+		if AIData[id].jumping == 0 then
+			local cur_ship = Epiar.getSprite(id)
 
-		if id == 6 then
-			io.write("Time to jump away...\n")
-			io.flush()
+			-- Ensure we have jumpable coordinates to travel to
+			if AIData[id].jumpableCoordX == nil then
+				local jx, jy = cur_ship:GetJumpableCoordinates()
+				AIData[id].jumpableCoordX = jx
+				AIData[id].jumpableCoordY = jy
+			end
+
+			-- Head toward the jumpable coordinates ...
+			cur_ship:Rotate( cur_ship:directionTowards(AIData[id].jumpableCoordX, AIData[id].jumpableCoordY) )
+			cur_ship:Accelerate()
+
+			-- Constantly try jumping
+			local jumpStarted = cur_ship:Jump()
+			if jumpStarted == 1 then
+				AIData[id].jumping = 1
+				AIData[id].jumpableCoordX = nil
+				AIData[id].jumpableCoordY = nil
+			end
 		end
 	end
 }
@@ -319,8 +333,8 @@ Patrol = {
 	default = function(id,x,y,angle,speed,vector)
 		local cur_ship = Epiar.getSprite(id)
 		AIData[id] = {}
-		destination = Epiar.nearestPlanet(cur_ship,4096)
-		if destination==nil then
+		destination = Epiar.nearestPlanet(cur_ship, 4096)
+		if destination == nil then
 			return "New_Planet"
 		end
 	  	AIData[id].destination = destination:GetID()

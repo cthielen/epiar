@@ -8,6 +8,7 @@
 
 #include "includes.h"
 #include "common.h"
+#include "menu.h"
 #include "utilities/lua.h"
 #include "sprites/effects.h"
 #include "sprites/player.h"
@@ -52,6 +53,8 @@ void NPC_Lua::RegisterAI(lua_State *L){
 		{"Remove", &NPC_Lua::ShipRemove},
 		{"Land", &NPC_Lua::ShipLand},
 		{"Dock", &NPC_Lua::ShipDock},
+		{"Jump", &NPC_Lua::ShipJump},
+		{"GetJumpableCoordinates", &NPC_Lua::ShipGetJumpableCoordinates},
 		{"SetLuaControlFunc", &NPC_Lua::ShipSetLuaControlFunc},
 		
 		// Power Distribution
@@ -916,22 +919,23 @@ int NPC_Lua::ShipGetAngle(lua_State* L){
 /**\brief Lua callable function to get the world position
  * \sa Coordinate::GetWorldPosition()
  */
-int NPC_Lua::ShipGetPosition(lua_State* L){
+int NPC_Lua::ShipGetPosition(lua_State* L) {
 	int n = lua_gettop(L); // Number of arguments
 
 	if (n == 1) {
-		NPC* ai = checkShip(L,1);
-		if(ai==NULL){
-			lua_pushnumber(L,0);
-			lua_pushnumber(L,0);
+		NPC* ai = checkShip(L, 1);
+
+		if(ai == NULL){
+			lua_pushnumber(L, 0);
+			lua_pushnumber(L, 0);
 		} else {
 			lua_pushnumber(L, (double) (ai)->GetWorldPosition().GetX() );
 			lua_pushnumber(L, (double) (ai)->GetWorldPosition().GetY() );
 		}
-	}
-	else {
+	} else {
 		luaL_error(L, "Got %d arguments expected 1 (self)", n);
 	}
+
 	return 2;
 }
 
@@ -1738,6 +1742,84 @@ int NPC_Lua::ShipDock(lua_State* L) {
 	}
 
 	return 1;
+}
+
+/**
+ * "Jumping" for NPCs is really picking a random nearby sector and going away. */
+int NPC_Lua::ShipJump(lua_State* L) {
+	int n = lua_gettop(L); // Number of arguments
+
+	if (n == 1) {
+		// Get the ship
+		Ship *ship = checkShip(L, 1);
+		if( ship == NULL ) return 0;
+
+		// Set a random destination
+		Sector *currentSector = Menu::GetCurrentScenario()->GetCurrentSector();
+		list<string> neighbors = currentSector->GetNeighbors();
+		int index = rand() % neighbors.size();
+		std::list<std::string>::iterator it = neighbors.begin();
+		std::advance(it, index);
+		string randomSectorName = *it;
+
+		// cout << "NPC will jump to sector: " << randomSectorName << endl;
+
+		Sectors *sectors = Menu::GetCurrentScenario()->GetSectors();
+		Sector *s = sectors->GetSector(randomSectorName);
+
+		// Jump!
+		int jumpSuccess = (int)ship->Jump(s);
+		lua_pushinteger(L, jumpSuccess); // pass along true/false value from ship-Jump, indicating whether
+		                                 // we are too close to a planet (false) or not (true)
+	} else {
+		luaL_error(L, "Got %d arguments expected 1 (ship)", n);
+	}
+
+	return 1;
+}
+
+int NPC_Lua::ShipGetJumpableCoordinates(lua_State* L) {
+	int n = lua_gettop(L); // Number of arguments
+
+	if (n == 1) {
+		// Get the ship
+		Ship *ship = checkShip(L, 1);
+		if( ship == NULL ) return 0;
+
+		SpriteManager *sprites = Menu::GetCurrentScenario()->GetSpriteManager();
+		Coordinate destCoordinate = ship->GetWorldPosition();
+
+		// Attempt to find a destination coordinate by picking a random angle that is
+		// MIN_DIST_FROM_PLANET_TO_JUMP away and checking if it is too close to a planet.
+		// It may be in the case of multi-planet sectors. If so, we keep increasing the distance.
+		// This simple algorithm will guarantee a jumpable coordinate though it may not be the
+		// closest.
+		int distToTry = (int) ((float)MIN_DIST_FROM_PLANET_TO_JUMP / 0.6);
+		while(sprites->GetNearestSprite(destCoordinate, MIN_DIST_FROM_PLANET_TO_JUMP, DRAW_ORDER_PLANET) != NULL) {
+			int randomAngle = rand() % 360;
+			// TODO: angle shouldn't be random, it should be based on the sector the NPC wants to go
+			//       this not only makes more sense but it will stop the NPC ships from zipping through
+			//       need planets where theren't shouldn't be jump traffic ...
+
+			distToTry *= 2; // double the distance each time we try to find a jumpable coordinate
+			Coordinate c = Coordinate(distToTry, 0);
+			// cout << "new coord is: " << c << endl;
+			c.RotateTo(randomAngle);
+			// cout << "randomAngle: " << randomAngle << endl;
+			// cout << "rotated coord is: " << c << endl;
+
+			destCoordinate = ship->GetWorldPosition() + c;
+		}
+
+		// cout << "jumpable coord is: " << destCoordinate << endl;
+
+		lua_pushinteger(L, (double)destCoordinate.GetX());
+		lua_pushinteger(L, (double)destCoordinate.GetY());
+	} else {
+		luaL_error(L, "Got %d arguments expected 1 (ship)", n);
+	}
+
+	return 2;
 }
 
 /** \brief Add an escort to the list to be put into the XML saved game file

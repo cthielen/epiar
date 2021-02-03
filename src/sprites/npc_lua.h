@@ -1,7 +1,7 @@
 /**\file			npc_lua.h
  * \author			Matt Zweig (thezweig@gmail.com)
  * \date			Created: Thursday, October 29, 2009
- * \date			Modified: Monday, November 16 2009
+ * \date			Modified: Sunday, January 31, 2021
  * \brief			Lua Bridge for AI objects
  * \details
  */
@@ -55,6 +55,8 @@ class NPC_Lua {
 		static int ShipRemoveLuaControlFunc(lua_State* L);
 		static int ShipLand(lua_State* L);
 		static int ShipDock(lua_State* L);
+		static int ShipJump(lua_State* L);
+		static int ShipGetJumpableCoordinates(lua_State* L);
 
 		// Power Distribution
 		static int ShipGetShieldBooster(lua_State* L);

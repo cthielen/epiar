@@ -25,10 +25,10 @@ class Coordinate {
 	
 		~Coordinate();
 	
-		double  GetX () const;
-		double  GetY () const;
-		void  SetX ( double x );
-		void  SetY ( double y );
+		double GetX () const;
+		double GetY () const;
+		void SetX ( double x );
+		void SetY ( double y );
 	
 		float GetAngle();
 		float GetMagnitude();
@@ -94,7 +94,7 @@ class Coordinate {
 		}
 	
 		Coordinate operator*(double r) {
-			return Coordinate(m_x * r,m_y * r);
+			return Coordinate(m_x * r, m_y * r);
 		}
 		Coordinate operator*=(double r) {
 			m_x *= r;

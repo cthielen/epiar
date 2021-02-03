@@ -430,10 +430,12 @@ void Ship::Repair(short int damage) {
 }
 
 /**\brief Begin a Jump
+ * 
+ * Returns false if too close to a planet to jump, else true (jump in progress or jump started).
  */
 bool Ship::Jump( Sector* destination ) {
-	if( status.isJumping == true ) { // Already Jumping
-		return false;
+	if( status.isJumping == true ) {
+		return true; // Already Jumping
 	}
 
 	// Check whether 'this' ship is too close to a planet to jump
@@ -448,22 +450,22 @@ bool Ship::Jump( Sector* destination ) {
 		return false;
 	}
 
-
 	status.isJumping = true;
 	//status.jumpDestination = position;
 
 	status.rotatedForJump = false;
 
 	Scenario *currentScenario = Menu::GetCurrentScenario();
-
-	if(currentScenario == NULL) {
-		LogMsg(ERR, "Cannot jump: unable to find next sector because no scenario is running.");
-		return false;
-	}
+	assert(currentScenario != NULL);
+	// if(currentScenario == NULL) {
+	// 	LogMsg(ERR, "Cannot jump: unable to find next sector because no scenario is running.");
+	// 	return false;
+	// }
 
 	Sector* currentSector = currentScenario->GetCurrentSector();
 	Sectors* sectorsHandle = currentScenario->GetSectors();
-	if(sectorsHandle == NULL) return false;
+	assert(sectorsHandle != NULL);
+	// if(sectorsHandle == NULL) { return false; }
 
 	// Calculate angle between currentSector and nextSector
 	Coordinate c = Coordinate(destination->GetX() - currentSector->GetX(), currentSector->GetY() - destination->GetY());
@@ -523,6 +525,52 @@ void Ship::Update( lua_State *L ) {
 				Scenario *currentScenario = Menu::GetCurrentScenario();
 				assert( currentScenario != NULL );
 				currentScenario->GetCalendar()->AdvanceAfter(1);
+			} else {
+				// Poor NPC. The end of a jump is ... death. Digital death. There's no coming back
+				// from a jump.
+				//
+				// Oh sure, the player thinks you jumped away to another sector. But Epiar is a lie.
+				// A simulation. When the player reaches another sector, we just randomly generate
+				// sprites. So why track anyone who jumps away?
+				//
+				// Jump away and cease to exist. Finish your trading mission and jump away. You're
+				// done. Your purpose is fulfilled.
+				//
+				
+				// ...
+
+				// We all jump away in the end ...
+
+				// ...
+
+				// ...
+
+				// We salute you brave NPC.
+
+				// ...
+
+				// In the end, your purpose was not to persist forever. No one's purpose is to persist forever.
+				// Your purpose is to enable the next generation. To keep the simulation going. To keep life going.
+				// Let the next generation push the envelope just a little and repeat.
+				
+				// ...
+
+				// This is not futile. This is a fundamental truth. Not quite visible in our everyday reality
+				// yet we fulfill it with our deepest desires.
+
+				// ...
+
+				// ...
+
+				// We are not individual souls living with immortality.
+				// We are a continuum made up of many beings over an impossible amount of time.
+
+				// ...
+
+				// So long NPC. Long live the NPC!
+				SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
+
+				sprites->Delete( (Sprite*)this );
 			}
 		}
 		if(RotateToAngle( status.jumpAngle )) {
@@ -730,8 +778,7 @@ FireStatus Ship::FireSlot( int slot, int target ) {
 	return FireSuccess;
 }
 
-void Ship::Explode( lua_State *L )
-{
+void Ship::Explode( lua_State *L ) {
 	SpriteManager *sprites = Scenario_Lua::GetScenario(L)->GetSpriteManager();
 	Camera* camera = Scenario_Lua::GetScenario(L)->GetCamera();
 
