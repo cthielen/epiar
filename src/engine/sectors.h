@@ -51,7 +51,7 @@ class Sector : public Component {
 		friend ostream& operator<<(ostream & out, const Sector &s );
 
 		void GenerateTraffic( int count );
-		void GenerateDefaultTraffic() { GenerateTraffic( GetTraffic() ); }
+		void GenerateDefaultTraffic() { GenerateTraffic( rand() % GetTraffic() ); }
 
 	private:
 		Alliance* alliance;
